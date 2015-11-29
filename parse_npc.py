@@ -2,31 +2,45 @@
 
 import re
 import os
+import argparse
 
 # TODO cli args
 # search_root
 # paths to ignore
 
-# regexes for parsing important elements
+def main():
+    parser = argparse.ArgumentParser()
+    subparsers = parser.add_subparsers()
+    # subparsers.add_parser
+    # parser.set_defaults(func=foo)
+
+if __name__ == '__main__':
+    main()
+
+# Regexes for parsing important elements
 name_regex = '([\w\s]+)(?: - )?.*'
 section_regex = '^--.+--\s*$'
 tag_regex = '^@(?P<tag>\w+)\s+(?P<value>.*)$'
 
-# List of group-like tags. These all accept an accompanying `rank` tag.
+# Group-like tags. These all accept an accompanying `rank` tag.
 group_tags = ['group', 'court', 'motley']
 
-def main():
+# Recognized extensions
+valid_exts = ('.nwod')
+
+def parse(search_root, ignore_paths = []):
     search_root = '.'
-    valid_exts = ('.nwod')
 
     characters = []
     for dirpath, dirnames, files in os.walk(search_root):
+        if dirpath in ignore_paths:
+            continue
         for name in files:
             base, ext = os.path.splitext(name)
             if ext in valid_exts or not ext:
                 characters.append(parse_character(os.path.join(dirpath, name)))
 
-    print(characters)
+    return characters
 
     # TODO
     # sort the characters?
@@ -92,6 +106,3 @@ def parse_character(char_file_path):
             char_properties.setdefault(tag, []).append(value)
 
     return char_properties
-
-if __name__ == '__main__':
-    main()
