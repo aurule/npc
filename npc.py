@@ -9,10 +9,19 @@ import argparse
 # paths to ignore
 
 def main():
-    parser = argparse.ArgumentParser()
+    parser = argparse.ArgumentParser(description = 'GM helper script to manage game files')
     subparsers = parser.add_subparsers()
-    # subparsers.add_parser
-    # parser.set_defaults(func=foo)
+
+    parser_new = subparsers.add_parser('new')
+    parser_new.set_defaults(func=create_new)
+    # parser_new.add_argument('artifact', choices=[''], required=True, help='The type of object to create', metavar='object', dest='typename')
+
+    args = parser.parse_args()
+    args.func(args)
+
+def create_new(args):
+    # create a new object
+    pass
 
 if __name__ == '__main__':
     main()
@@ -41,11 +50,6 @@ def parse(search_root, ignore_paths = []):
                 characters.append(parse_character(os.path.join(dirpath, name)))
 
     return characters
-
-    # TODO
-    # sort the characters?
-    # output characters to a template
-    #   during output, allow max one blank line between description lines
 
 def parse_character(char_file_path):
     name_re = re.compile(name_regex)
