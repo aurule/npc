@@ -28,6 +28,9 @@ def main():
     parser_human.add_argument('name', help="character's name", metavar='name')
     parser_human.add_argument('-g', '--group', help='name of a group that counts the character as a member', metavar='group')
 
+    parser_session = subparsers.add_parser('session')
+    parser_session.set_defaults(func=create_session)
+
     parser_update = subparsers.add_parser('update', aliases=['u'])
     parser_update.set_defaults(funct=update_dependencies)
 
@@ -67,6 +70,11 @@ def create_changeling(args):
     #   @type Human
     #   @group
     # write to new file
+
+def create_session(args):
+    # copy old plot file with new number
+    # create new session file with new number
+    pass
 
 def update_dependencies(args):
     # parse characters
