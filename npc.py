@@ -1,26 +1,85 @@
-#!/usr/bin/python3
+#!/usr/bin/env python3
 
 import re
 import os
 import argparse
 
 # TODO cli args
-# search_root
-# paths to ignore
+# scanning:
+#   search_root
+#   paths to ignore
 
 def main():
     parser = argparse.ArgumentParser(description = 'GM helper script to manage game files')
+    parser.add_argument('-o', '--open', action='store_true', default=False, help="immediately open all newly created files")
     subparsers = parser.add_subparsers()
 
-    parser_new = subparsers.add_parser('new')
-    parser_new.set_defaults(func=create_new)
-    # parser_new.add_argument('artifact', choices=[''], required=True, help='The type of object to create', metavar='object', dest='typename')
+    parser_changeling = subparsers.add_parser('changeling')
+    parser_changeling.set_defaults(func=create_changeling)
+    parser_changeling.add_argument('name', help="character's name", metavar='name')
+    parser_changeling.add_argument('seeming', help="character's Seeming", metavar='seeming')
+    parser_changeling.add_argument('kith', help="character's Kith", metavar='kith')
+    parser_changeling.add_argument('-c', '--court', help="the character's Court", metavar='court')
+    parser_changeling.add_argument('-m', '--motley', help="the character's Motley", metavar='motley')
+    parser_changeling.add_argument('-g', '--group', help='name of a group that counts the character as a member', metavar='group')
+
+    parser_human = subparsers.add_parser('human')
+    parser_human.set_defaults(func=create_human)
+    parser_human.add_argument('name', help="character's name", metavar='name')
+    parser_human.add_argument('-g', '--group', help='name of a group that counts the character as a member', metavar='group')
+
+    parser_update = subparsers.add_parser('update', aliases=['u'])
+    parser_update.set_defaults(funct=update_dependencies)
+
+    parser_webpage = subparsers.add_parser('webpage', aliases=['web', 'w'])
+    parser_webpage.set_defaults(funct=make_webpage)
 
     args = parser.parse_args()
     args.func(args)
 
-def create_new(args):
-    # create a new object
+def create_changeling(args):
+    characters_root = 'Characters'
+
+    # derive folder location
+    #   if a folder exists named Changelings, add to path
+    #   if a folder exists named args.court, add to path
+    #   foreach args.group in order, if a folder exists, add to path
+    # ensure the character does not already exist
+    # store monolithic string from changeling template
+    # prepend tags as appropriate
+    #   @changeling args.seeming args.kith
+    #   @court
+    #   @motley
+    #   @group
+    # insert seeming and kith in advantages block
+    #   look up curse and blessings
+    # write to new file
+
+def create_changeling(args):
+    characters_root = 'Characters'
+
+    # derive folder location
+    #   if a folder exists named Humans, add to path
+    #   foreach args.group in order, if a folder exists, add to path
+    # ensure the character does not already exist
+    # store monolithic string from human template file
+    # prepend tags as appropriate
+    #   @type Human
+    #   @group
+    # write to new file
+
+def update_dependencies(args):
+    # parse characters
+    # foreach motley tag in the characters
+    #   ensure the corresponding motley file exists
+    #   ensure the character appears in the list of motley members
+    pass
+
+def make_webpage(args):
+    # parse characters
+    # sort them?
+    # add html snippets for each character
+    # output a final html file
     pass
 
 if __name__ == '__main__':
