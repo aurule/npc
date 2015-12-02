@@ -34,10 +34,17 @@ group_tags = ['group', 'court', 'motley']
 # Recognized extensions
 valid_exts = ('.nwod')
 
-# List of file paths that can be opened
-openable = []
 # Program to use when opening files
 editor = "subl"
+
+class Result:
+    """Holds data about the result of a subcommand"""
+    def __init__(self, success, openable = None, errcode = 0, errmsg = ''):
+        super(Result, self).__init__()
+        self.success = success
+        self.openable = openable
+        self.errcode = errcode
+        self.errmsg = errmsg
 
 def main():
     parser = argparse.ArgumentParser(description = 'GM helper script to manage game files')
@@ -71,13 +78,14 @@ def main():
     parser_lint.set_defaults(func=lint)
 
     args = parser.parse_args()
-    retval = args.func(args)
+    result = args.func(args)
 
-    if retval != 0:
-        return retval
+    if not result.success:
+        print(result.errmsg)
+        return result.errcode
 
-    if args.open and openable:
-        call([editor] + openable)
+    if args.open and result.openable:
+        call([editor] + result.openable)
 
 def create_changeling(args):
     target_path = _add_path_if_exists(characters_root, 'Changelings')
@@ -93,8 +101,7 @@ def create_changeling(args):
     filename = args.name + '.nwod'
     target_path = os.path.join(target_path, filename)
     if os.path.exists(target_path):
-        print("Character '%s' already exists!" % args.name)
-        return 1
+        return Result(False, errmsg="Character '%s' already exists!" % args.name, errcode = 1)
 
     tags = ['@changeling %s %s' % (args.seeming.title(), args.kith.title())]
     if args.motley is not None:
@@ -105,10 +112,11 @@ def create_changeling(args):
     header = "\n".join(tags)
 
     # store monolithic string from changeling template
-    # insert seeming and kith in advantages block
+    # TODO insert seeming and kith in advantages block
     #   look up curse and blessings
     # prepend header
     # write to new file
+    return Result(False, errmsg="Not yet implemented", errcode=3)
 
 def create_human(args):
     target_path = _add_path_if_exists(characters_root, 'Humans')
@@ -119,8 +127,7 @@ def create_human(args):
     filename = args.name + '.nwod'
     target_path = os.path.join(target_path, filename)
     if os.path.exists(target_path):
-        print("Character '%s' already exists!" % args.name)
-        return 1
+        return Result(False, errmsg="Character '%s' already exists!" % args.name, errcode = 1)
 
     tags = ['@type Human'] + ["@group %s" % g for g in args.group]
     header = "\n".join(tags)
@@ -128,6 +135,7 @@ def create_human(args):
     # store monolithic string from human template file
     # prepend header
     # write to new file
+    return Result(False, errmsg="Not yet implemented", errcode=3)
 
 def _add_path_if_exists(base, potential):
     test_path = os.path.join(base, potential)
@@ -149,8 +157,7 @@ def create_session(args):
     session_number = int(session_match.group(1))
 
     if plot_number != session_number:
-        print("Cannot create new plot and session files: latest files have different numbers (plot %i, session %i)" % (plot_number, session_number))
-        return 1
+        return Result(False, errmsg="Cannot create new plot and session files: latest files have different numbers (plot %i, session %i)" % (plot_number, session_number), errcode=2)
 
     new_number = plot_number + 1
 
@@ -162,8 +169,7 @@ def create_session(args):
     new_session_path = os.path.join(session_base, ("session %i" % new_number) + latest_session_ext)
     shutil.copy(session_template, new_session_path)
 
-    openable = [new_session_path, new_plot_path, old_plot_path, old_session_path]
-    return 0
+    return Result(True, openable=[new_session_path, new_plot_path, old_plot_path, old_session_path])
 
 def _is_plot_file(f):
     really_a_file = os.path.isfile(os.path.join(plot_base, f))
@@ -180,30 +186,28 @@ def _is_session_file(f):
     return really_a_file and match
 
 def update_dependencies(args):
-    # parse characters
+    characters = _parse(characters_root)
     # foreach motley tag in the characters
     #   ensure the corresponding motley file exists
     #   ensure the character appears in the list of motley members
-    pass
+    return Result(False, errmsg="Not yet implemented", errcode=3)
 
 def make_webpage(args):
-    # parse characters
+    characters = _parse(characters_root)
     # sort them?
     # add html snippets for each character
     # output a final html file
-    pass
+    return Result(False, errmsg="Not yet implemented", errcode=3)
 
 def lint(args):
-    # parse characters
+    characters = _parse(characters_root)
     # ensure each character at least has a description and @type tag
-    pass
+    return Result(False, errmsg="Not yet implemented", errcode=3)
 
 if __name__ == '__main__':
     main()
 
-def parse(search_root, ignore_paths = []):
-    search_root = '.'
-
+def _parse(search_root, ignore_paths = []):
     characters = []
     for dirpath, dirnames, files in os.walk(search_root):
         if dirpath in ignore_paths:
@@ -215,7 +219,7 @@ def parse(search_root, ignore_paths = []):
 
     return characters
 
-def parse_character(char_file_path):
+def _parse_character(char_file_path):
     name_re = re.compile(name_regex)
     section_re = re.compile(section_regex)
     tag_re = re.compile(tag_regex)
