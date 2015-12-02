@@ -32,6 +32,9 @@ group_tags = ['group', 'court', 'motley']
 # Recognized extensions
 valid_exts = ('.nwod')
 
+# List of file paths that can be opened
+openable = []
+
 def main():
     parser = argparse.ArgumentParser(description = 'GM helper script to manage game files')
     parser.add_argument('-o', '--open', action='store_true', default=False, help="immediately open all newly created files")
@@ -61,7 +64,13 @@ def main():
     parser_webpage.set_defaults(funct=make_webpage)
 
     args = parser.parse_args()
-    return args.func(args)
+    retval = args.func(args)
+
+    if retval != 0:
+        return retval
+
+    if args.open:
+        call(["subl"] + openable)
 
 def create_changeling(args):
     # derive folder location
@@ -119,8 +128,8 @@ def create_session(args):
     new_session_path = os.path.join(session_base, ("session %i" % new_number) + latest_session_ext)
     shutil.copy(session_template, new_session_path)
 
-    if args.open:
-        call(["subl", new_session_path, new_plot_path, old_plot_path, old_session_path])
+    openable = [new_session_path, new_plot_path, old_plot_path, old_session_path]
+    return 0
 
 def _is_plot_file(f):
     really_a_file = os.path.isfile(os.path.join(plot_base, f))
@@ -151,7 +160,7 @@ def make_webpage(args):
     pass
 
 if __name__ == '__main__':
-    main()
+    return main()
 
 def parse(search_root, ignore_paths = []):
     search_root = '.'
