@@ -67,6 +67,9 @@ def main():
     parser_webpage = subparsers.add_parser('webpage', aliases=['web', 'w'])
     parser_webpage.set_defaults(funct=make_webpage)
 
+    parser_lint = subparsers.add_parser('lint', help="Check the character files for minimum completeness.")
+    parser_lint.set_defaults(func=lint)
+
     args = parser.parse_args()
     retval = args.func(args)
 
@@ -185,6 +188,11 @@ def make_webpage(args):
     # sort them?
     # add html snippets for each character
     # output a final html file
+    pass
+
+def lint(args):
+    # parse characters
+    # ensure each character at least has a description and @type tag
     pass
 
 if __name__ == '__main__':
