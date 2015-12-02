@@ -76,7 +76,7 @@ def main():
     if retval != 0:
         return retval
 
-    if args.open:
+    if args.open and openable:
         call([editor] + openable)
 
 def create_changeling(args):
