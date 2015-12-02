@@ -44,6 +44,10 @@ class Result:
         self.success = success
         self.openable = openable
         self.errcode = errcode
+        # Error codes:
+        # 0. Everything's fine
+        # 1. Tried to create a file that already exists
+        # 2. Latest plot and session files have different numbers
         self.errmsg = errmsg
 
 def main():
