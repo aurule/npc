@@ -83,6 +83,9 @@ def create_changeling(args):
     target_path = _add_path_if_exists(characters_root, 'Changelings')
     if args.court is not None:
         target_path = _add_path_if_exists(target_path, args.court.title())
+    else:
+        target_path = _add_path_if_exists(target_path, 'Courtless')
+
     for group_raw in args.group:
         group_name = group_raw.title()
         target_path = _add_path_if_exists(target_path, group_name)
