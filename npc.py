@@ -42,9 +42,9 @@ editor = "subl"
 def main():
     parser = argparse.ArgumentParser(description = 'GM helper script to manage game files')
     parser.add_argument('-o', '--open', action='store_true', default=False, help="immediately open all newly created files")
-    subparsers = parser.add_subparsers()
+    subparsers = parser.add_subparsers(title='Subcommands', description="Commands that can be run on the current campaign", metavar="changeling, human, session, update, webpage, lint")
 
-    parser_changeling = subparsers.add_parser('changeling')
+    parser_changeling = subparsers.add_parser('changeling', help="Create a new changeling character")
     parser_changeling.set_defaults(func=create_changeling)
     parser_changeling.add_argument('name', help="character's name", metavar='name')
     parser_changeling.add_argument('seeming', help="character's Seeming", metavar='seeming')
@@ -53,18 +53,18 @@ def main():
     parser_changeling.add_argument('-m', '--motley', help="the character's Motley", metavar='motley')
     parser_changeling.add_argument('-g', '--group', nargs="*", help='name of a group that counts the character as a member', metavar='group')
 
-    parser_human = subparsers.add_parser('human')
+    parser_human = subparsers.add_parser('human', help="Create a new human character")
     parser_human.set_defaults(func=create_human)
     parser_human.add_argument('name', help="character's name", metavar='name')
     parser_human.add_argument('-g', '--group', nargs="*", help='name of a group that counts the character as a member', metavar='group')
 
-    parser_session = subparsers.add_parser('session')
+    parser_session = subparsers.add_parser('session', help="Create files for a new game session")
     parser_session.set_defaults(func=create_session)
 
-    parser_update = subparsers.add_parser('update', aliases=['u'])
+    parser_update = subparsers.add_parser('update', aliases=['u'], help="Update various support files (motleys, etc.) using the content of the character files")
     parser_update.set_defaults(funct=update_dependencies)
 
-    parser_webpage = subparsers.add_parser('webpage', aliases=['web', 'w'])
+    parser_webpage = subparsers.add_parser('webpage', aliases=['web', 'w'], help="Generate the NPC Listing webpage")
     parser_webpage.set_defaults(funct=make_webpage)
 
     parser_lint = subparsers.add_parser('lint', help="Check the character files for minimum completeness.")
