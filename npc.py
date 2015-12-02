@@ -34,6 +34,8 @@ valid_exts = ('.nwod')
 
 # List of file paths that can be opened
 openable = []
+# Program to use when opening files
+editor = "subl"
 
 def main():
     parser = argparse.ArgumentParser(description = 'GM helper script to manage game files')
@@ -70,7 +72,7 @@ def main():
         return retval
 
     if args.open:
-        call(["subl"] + openable)
+        call([editor] + openable)
 
 def create_changeling(args):
     # derive folder location
