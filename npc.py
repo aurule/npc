@@ -17,6 +17,8 @@ session_base = "Session History"
 characters_root = 'Characters'
 
 # Template paths
+human_template = os.path.expanduser("~/Templates/Human Character Sheet.nwod")
+changeling_template = os.path.expanduser("~/Templates/Changeling Character Sheet.nwod")
 session_template = os.path.expanduser("~/Templates/Session Log.md")
 
 # Regexes for parsing important elements
@@ -49,12 +51,12 @@ def main():
     parser_changeling.add_argument('kith', help="character's Kith", metavar='kith')
     parser_changeling.add_argument('-c', '--court', help="the character's Court", metavar='court')
     parser_changeling.add_argument('-m', '--motley', help="the character's Motley", metavar='motley')
-    parser_changeling.add_argument('-g', '--group', help='name of a group that counts the character as a member', metavar='group')
+    parser_changeling.add_argument('-g', '--group', nargs="*", help='name of a group that counts the character as a member', metavar='group')
 
     parser_human = subparsers.add_parser('human')
     parser_human.set_defaults(func=create_human)
     parser_human.add_argument('name', help="character's name", metavar='name')
-    parser_human.add_argument('-g', '--group', help='name of a group that counts the character as a member', metavar='group')
+    parser_human.add_argument('-g', '--group', nargs="*", help='name of a group that counts the character as a member', metavar='group')
 
     parser_session = subparsers.add_parser('session')
     parser_session.set_defaults(func=create_session)
@@ -75,33 +77,57 @@ def main():
         call([editor] + openable)
 
 def create_changeling(args):
-    # derive folder location
-    #   if a folder exists named Changelings, add to path
-    #   if a folder exists named args.court, add to path
-    #   foreach args.group in order, if a folder exists, add to path
-    # ensure the character does not already exist
+    target_path = _add_path_if_exists(characters_root, 'Changelings')
+    if args.court is not None:
+        target_path = _add_path_if_exists(target_path, args.court.title())
+    for group_raw in args.group:
+        group_name = group_raw.title()
+        target_path = _add_path_if_exists(target_path, group_name)
+
+    filename = args.name + '.nwod'
+    target_path = os.path.join(target_path, filename)
+    if os.path.exists(target_path):
+        print("Character '%s' already exists!" % args.name)
+        return 1
+
+    tags = ['@changeling %s %s' % (args.seeming.title(), args.kith.title())]
+    if args.motley is not None:
+        tags.append('@motley %s' % args.motley)
+    if args.court is not None:
+        tags.append('@court %s' % args.court.title())
+    tags.extend(["@group %s" % g for g in args.group])
+    header = "\n".join(tags)
+
     # store monolithic string from changeling template
-    # prepend tags as appropriate
-    #   @changeling args.seeming args.kith
-    #   @court
-    #   @motley
-    #   @group
     # insert seeming and kith in advantages block
     #   look up curse and blessings
+    # prepend header
     # write to new file
-    pass
 
 def create_human(args):
-    # derive folder location
-    #   if a folder exists named Humans, add to path
-    #   foreach args.group in order, if a folder exists, add to path
-    # ensure the character does not already exist
+    target_path = _add_path_if_exists(characters_root, 'Humans')
+    for group_raw in args.group:
+        group_name = group_raw.title()
+        target_path = _add_path_if_exists(target_path, group_name)
+
+    filename = args.name + '.nwod'
+    target_path = os.path.join(target_path, filename)
+    if os.path.exists(target_path):
+        print("Character '%s' already exists!" % args.name)
+        return 1
+
+    tags = ['@type Human'] + ["@group %s" % g for g in args.group]
+    header = "\n".join(tags)
+
     # store monolithic string from human template file
-    # prepend tags as appropriate
-    #   @type Human
-    #   @group
+    # prepend header
     # write to new file
-    pass
+
+def _add_path_if_exists(base, potential):
+    test_path = os.path.join(base, potential)
+    if os.path.exists(test_path):
+        return test_path
+    return base
 
 def create_session(args):
     plot_files = [f for f in os.listdir(plot_base) if _is_plot_file(f)]
@@ -162,7 +188,7 @@ def make_webpage(args):
     pass
 
 if __name__ == '__main__':
-    return main()
+    main()
 
 def parse(search_root, ignore_paths = []):
     search_root = '.'
