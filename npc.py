@@ -48,6 +48,8 @@ class Result:
         # 0. Everything's fine
         # 1. Tried to create a file that already exists
         # 2. Latest plot and session files have different numbers
+        # 3. Feature is not yet implemented
+        # 4. Filesystem error
         self.errmsg = errmsg
 
 def main():
@@ -134,12 +136,21 @@ def create_human(args):
         return Result(False, errmsg="Character '%s' already exists!" % args.name, errcode = 1)
 
     tags = ['@type Human'] + ["@group %s" % g for g in args.group]
-    header = "\n".join(tags)
+    header = "\n".join(tags) + '\n\n'
 
-    # store monolithic string from human template file
-    # prepend header
-    # write to new file
-    return Result(False, errmsg="Not yet implemented", errcode=3)
+    try:
+        with open(human_template, 'r') as f:
+            data = header + f.read()
+    except IOError as e:
+        return Result(False, errmsg=e.strerror + " (%s)" % human_template, errcode=4)
+
+    try:
+        with open(target_path, 'w') as f:
+            f.write(data)
+    except IOError as e:
+        return Result(False, errmsg=e.strerror + " (%s)" % target_path, errcode=4)
+
+    return Result(True, openable = [target_path])
 
 def _add_path_if_exists(base, potential):
     test_path = os.path.join(base, potential)
