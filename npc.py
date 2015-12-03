@@ -238,13 +238,13 @@ def _add_path_if_exists(base, potential):
     return base
 
 def create_session(args, prefs):
-    plot_files = [f for f in os.listdir(prefs.get('paths.plot')) if _is_plot_file(f)]
+    plot_files = [f for f in os.listdir(prefs.get('paths.plot')) if _is_plot_file(f, prefs)]
     latest_plot = max(plot_files, key=lambda plot_files:re.split(r"\s", plot_files)[1])
     (latest_plot_name, latest_plot_ext) = os.path.splitext(latest_plot)
     plot_match = re.match(plot_regex, latest_plot_name)
     plot_number = int(plot_match.group(1))
 
-    session_files = [f for f in os.listdir(prefs.get('paths.session')) if _is_session_file(f)]
+    session_files = [f for f in os.listdir(prefs.get('paths.session')) if _is_session_file(f, prefs)]
     latest_session = max(session_files, key=lambda session_files:re.split(r"\s", session_files)[1])
     (latest_session_name, latest_session_ext) = os.path.splitext(latest_session)
     session_match = re.match(session_regex, latest_session_name)
@@ -265,14 +265,14 @@ def create_session(args, prefs):
 
     return Result(True, openable=[new_session_path, new_plot_path, old_plot_path, old_session_path])
 
-def _is_plot_file(f):
+def _is_plot_file(f, prefs):
     really_a_file = os.path.isfile(os.path.join(prefs.get('paths.plot'), f))
     basename = os.path.basename(f)
     match = re.match(plot_regex, os.path.splitext(basename)[0])
 
     return really_a_file and match
 
-def _is_session_file(f):
+def _is_session_file(f, prefs):
     really_a_file = os.path.isfile(os.path.join(prefs.get('paths.session'), f))
     basename = os.path.basename(f)
     match = re.match(session_regex, os.path.splitext(basename)[0])
