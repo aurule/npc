@@ -23,7 +23,7 @@ changeling_template = os.path.expanduser("~/Templates/Changeling Character Sheet
 session_template = os.path.expanduser("~/Templates/Session Log.md")
 
 # Helper files
-changeling_bonuses = 'support/seeming-kith.json'
+changeling_bonuses = os.path.join(os.path.dirname(__file__), 'support/seeming-kith.json')
 
 # Regexes for parsing important elements
 name_re = re.compile('([\w\s]+)(?: - )?.*')
@@ -104,12 +104,12 @@ def main():
     parser_changeling.add_argument('kith', help="character's Kith", metavar='kith')
     parser_changeling.add_argument('-c', '--court', help="the character's Court", metavar='court')
     parser_changeling.add_argument('-m', '--motley', help="the character's Motley", metavar='motley')
-    parser_changeling.add_argument('-g', '--group', nargs="*", help='name of a group that counts the character as a member', metavar='group')
+    parser_changeling.add_argument('-g', '--group', default=[], nargs="*", help='name of a group that counts the character as a member', metavar='group')
 
     parser_human = subparsers.add_parser('human', help="Create a new human character")
     parser_human.set_defaults(func=create_human)
     parser_human.add_argument('name', help="character's name", metavar='name')
-    parser_human.add_argument('-g', '--group', nargs="*", help='name of a group that counts the character as a member', metavar='group')
+    parser_human.add_argument('-g', '--group', default=[], nargs="*", help='name of a group that counts the character as a member', metavar='group')
 
     parser_session = subparsers.add_parser('session', help="Create files for a new game session")
     parser_session.set_defaults(func=create_session)
@@ -130,7 +130,7 @@ def main():
         print(result.errmsg)
         return result.errcode
 
-    if args.open and result.openable:
+    if not args.batch and result.openable:
         call([editor] + result.openable)
 
 def create_changeling(args):
