@@ -115,14 +115,25 @@ def create_changeling(args):
     if args.court is not None:
         tags.append('@court %s' % args.court.title())
     tags.extend(["@group %s" % g for g in args.group])
-    header = "\n".join(tags)
 
-    # store monolithic string from changeling template
+    header = "\n".join(tags) + '\n\n'
+
+    try:
+        with open(changeling_template, 'r') as f:
+            data = header + f.read()
+    except IOError as e:
+        return Result(False, errmsg=e.strerror + " (%s)" % changeling_template, errcode=4)
+
     # TODO insert seeming and kith in advantages block
     #   look up curse and blessings
-    # prepend header
-    # write to new file
-    return Result(False, errmsg="Not yet implemented", errcode=3)
+
+    try:
+        with open(target_path, 'w') as f:
+            f.write(data)
+    except IOError as e:
+        return Result(False, errmsg=e.strerror + " (%s)" % target_path, errcode=4)
+
+    return Result(True, openable = [target_path])
 
 def create_human(args):
     target_path = _add_path_if_exists(characters_root, 'Humans')
