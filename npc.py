@@ -68,9 +68,6 @@ class Result:
         # 4. Filesystem error
         self.errmsg = errmsg
 
-    def __setattr__(cls, attr, value):
-        raise AttributeError("Cannot modify Result objects")
-
 def _load_json(filename):
     """ Parse a JSON file
         First remove all comments, then use the standard json package
