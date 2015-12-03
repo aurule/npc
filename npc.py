@@ -86,7 +86,7 @@ def _load_json(filename):
 
 class Settings:
     """Stores settings for later use"""
-    path_default = os.path.join(os.path.dirname(__file__), 'support/settings-default.json')
+    path_default = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'support/settings-default.json')
 
     def __init__(self, path = path_default):
         self.settings_files = [_load_json(path)]
@@ -104,7 +104,7 @@ class Settings:
 
 def main():
     parser = argparse.ArgumentParser(description = 'GM helper script to manage game files')
-    parser.add_argument('-b', '--batch', action='store_false', default=True, help="Do not open any newly created files")
+    parser.add_argument('-b', '--batch', action='store_true', default=False, help="Do not open any newly created files")
     subparsers = parser.add_subparsers(title='Subcommands', description="Commands that can be run on the current campaign", metavar="changeling, human, session, update, webpage, lint")
 
     parser_changeling = subparsers.add_parser('changeling', help="Create a new changeling character")
@@ -143,7 +143,7 @@ def main():
         print(result.errmsg)
         return result.errcode
 
-    if not args.batch and result.openable:
+    if result.openable and not args.batch:
         call([prefs.get("editor")] + result.openable)
 
 def create_changeling(args, prefs):
