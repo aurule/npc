@@ -94,7 +94,7 @@ def _load_json(filename):
 
 def main():
     parser = argparse.ArgumentParser(description = 'GM helper script to manage game files')
-    parser.add_argument('-o', '--open', action='store_true', default=False, help="immediately open all newly created files")
+    parser.add_argument('-b', '--batch', action='store_false', default=True, help="Do not open any newly created files")
     subparsers = parser.add_subparsers(title='Subcommands', description="Commands that can be run on the current campaign", metavar="changeling, human, session, update, webpage, lint")
 
     parser_changeling = subparsers.add_parser('changeling', help="Create a new changeling character")
