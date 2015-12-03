@@ -92,6 +92,24 @@ def _load_json(filename):
         # Return parsed json
         return json.loads(content)
 
+class Settings:
+    """Stores settings for later use"""
+    path_default = os.path.join(os.path.dirname(__file__), 'support/settings-default.json')
+
+    def __init__(self, path = path_default):
+        self.settings_files = [_load_json(path)]
+
+    def get(self, key):
+        """Get the value of a settings key"""
+        key_parts = key.split('.')
+        arr = self.settings_files[0]
+        for k in key_parts:
+            try:
+                arr = arr[k]
+            except KeyError:
+                return None
+        return arr
+
 def main():
     parser = argparse.ArgumentParser(description = 'GM helper script to manage game files')
     parser.add_argument('-b', '--batch', action='store_false', default=True, help="Do not open any newly created files")
@@ -124,7 +142,10 @@ def main():
     parser_lint.set_defaults(func=lint)
 
     args = parser.parse_args()
-    result = args.func(args)
+
+    prefs = Settings()
+
+    result = args.func(args, prefs)
 
     if not result.success:
         print(result.errmsg)
@@ -133,8 +154,8 @@ def main():
     if not args.batch and result.openable:
         call([editor] + result.openable)
 
-def create_changeling(args):
-    target_path = _add_path_if_exists(characters_root, 'Changelings')
+def create_changeling(args, prefs):
+    target_path = _add_path_if_exists(prefs.get('paths.characters'), 'Changelings')
     if args.court is not None:
         target_path = _add_path_if_exists(target_path, args.court.title())
     else:
@@ -190,8 +211,8 @@ def create_changeling(args):
 
     return Result(True, openable = [target_path])
 
-def create_human(args):
-    target_path = _add_path_if_exists(characters_root, 'Humans')
+def create_human(args, prefs):
+    target_path = _add_path_if_exists(prefs.get('paths.characters'), 'Humans')
     for group_raw in args.group:
         group_name = group_raw.title()
         target_path = _add_path_if_exists(target_path, group_name)
@@ -224,7 +245,7 @@ def _add_path_if_exists(base, potential):
         return test_path
     return base
 
-def create_session(args):
+def create_session(args, prefs):
     plot_files = [f for f in os.listdir(plot_base) if _is_plot_file(f)]
     latest_plot = max(plot_files, key=lambda plot_files:re.split(r"\s", plot_files)[1])
     (latest_plot_name, latest_plot_ext) = os.path.splitext(latest_plot)
@@ -266,22 +287,22 @@ def _is_session_file(f):
 
     return really_a_file and match
 
-def update_dependencies(args):
-    characters = _parse(characters_root)
+def update_dependencies(args, prefs):
+    characters = _parse(prefs.get('paths.characters'))
     # foreach motley tag in the characters
     #   ensure the corresponding motley file exists
     #   ensure the character appears in the list of motley members
     return Result(False, errmsg="Not yet implemented", errcode=3)
 
-def make_webpage(args):
-    characters = _parse(characters_root)
+def make_webpage(args, prefs):
+    characters = _parse(prefs.get('paths.characters'))
     # sort them?
     # add html snippets for each character
     # output a final html file
     return Result(False, errmsg="Not yet implemented", errcode=3)
 
-def lint(args):
-    characters = _parse(characters_root)
+def lint(args, prefs):
+    characters = _parse(prefs.get('paths.characters'))
     # ensure each character at least has a description and @type tag
     # ensure every changeling sheet has notes for seeming and kith
     return Result(False, errmsg="Not yet implemented", errcode=3)
