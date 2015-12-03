@@ -4,6 +4,7 @@ import re
 import os
 import argparse
 import shutil
+import json
 from subprocess import call
 
 # TODO cli args
@@ -21,12 +22,27 @@ human_template = os.path.expanduser("~/Templates/Human Character Sheet.nwod")
 changeling_template = os.path.expanduser("~/Templates/Changeling Character Sheet.nwod")
 session_template = os.path.expanduser("~/Templates/Session Log.md")
 
+# Helper files
+changeling_bonuses = 'support/seeming-kith.json'
+
 # Regexes for parsing important elements
-name_regex = '([\w\s]+)(?: - )?.*'
-section_regex = '^--.+--\s*$'
-tag_regex = '^@(?P<tag>\w+)\s+(?P<value>.*)$'
+name_re = re.compile('([\w\s]+)(?: - )?.*')
+section_re = re.compile('^--.+--\s*$')
+tag_re = re.compile('^@(?P<tag>\w+)\s+(?P<value>.*)$')
 plot_regex = '^plot (\d+)$'
 session_regex = '^session (\d+)$'
+comment_re = re.compile(
+    '(^)?[^\S\n]*/(?:\*(.*?)\*/[^\S\n]*|/[^\n]*)($)?',
+    re.DOTALL | re.MULTILINE
+)
+seeming_re = re.compile(
+    '^(\s+)seeming(\s+)\w+$',
+    re.MULTILINE | re.IGNORECASE
+)
+kith_re = re.compile(
+    '^(\s+)kith(\s+)\w+$',
+    re.MULTILINE | re.IGNORECASE
+)
 
 # Group-like tags. These all accept an accompanying `rank` tag.
 group_tags = ['group', 'court', 'motley']
@@ -51,6 +67,30 @@ class Result:
         # 3. Feature is not yet implemented
         # 4. Filesystem error
         self.errmsg = errmsg
+
+def _load_json(filename):
+    """ Parse a JSON file
+        First remove all comments, then use the standard json package
+
+        Comments look like :
+            // ...
+        or
+            /*
+            ...
+            */
+    """
+    with open(filename) as f:
+        content = ''.join(f.readlines())
+
+        ## Looking for comments
+        match = comment_re.search(content)
+        while match:
+            # single line comment
+            content = content[:match.start()] + content[match.end():]
+            match = comment_re.search(content)
+
+        # Return parsed json
+        return json.loads(content)
 
 def main():
     parser = argparse.ArgumentParser(description = 'GM helper script to manage game files')
@@ -109,7 +149,9 @@ def create_changeling(args):
     if os.path.exists(target_path):
         return Result(False, errmsg="Character '%s' already exists!" % args.name, errcode = 1)
 
-    tags = ['@changeling %s %s' % (args.seeming.title(), args.kith.title())]
+    seeming_name = args.seeming.title()
+    kith_name = args.kith.title()
+    tags = ['@changeling %s %s' % (seeming_name, kith_name)]
     if args.motley is not None:
         tags.append('@motley %s' % args.motley)
     if args.court is not None:
@@ -124,8 +166,21 @@ def create_changeling(args):
     except IOError as e:
         return Result(False, errmsg=e.strerror + " (%s)" % changeling_template, errcode=4)
 
-    # TODO insert seeming and kith in advantages block
-    #   look up curse and blessings
+    # insert seeming and kith in advantages block
+    try:
+        sk = _load_json(changeling_bonuses)
+    except IOError as e:
+        return Result(False, errmsg=e.strerror + " (%s)" % changeling_bonuses, errcode=4)
+    seeming_notes = "%s; %s" % (sk['blessing'][args.seeming.lower()], sk['curse'][args.seeming.lower()])
+    kith_notes = sk['blessing'][args.kith.lower()]
+    data = seeming_re.sub(
+        '\g<1>Seeming\g<2>%s (%s)' % (seeming_name, seeming_notes),
+        data
+    )
+    data = kith_re.sub(
+        '\g<1>Kith\g<2>%s (%s)' % (kith_name, kith_notes),
+        data
+    )
 
     try:
         with open(target_path, 'w') as f:
@@ -228,6 +283,7 @@ def make_webpage(args):
 def lint(args):
     characters = _parse(characters_root)
     # ensure each character at least has a description and @type tag
+    # ensure every changeling sheet has notes for seeming and kith
     return Result(False, errmsg="Not yet implemented", errcode=3)
 
 if __name__ == '__main__':
@@ -246,9 +302,6 @@ def _parse(search_root, ignore_paths = []):
     return characters
 
 def _parse_character(char_file_path):
-    name_re = re.compile(name_regex)
-    section_re = re.compile(section_regex)
-    tag_re = re.compile(tag_regex)
 
     # derive character name from basename
     basename = os.path.basename(char_file_path)
