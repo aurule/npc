@@ -3,5 +3,6 @@
         "characters": "Characters",
         "session": "Session History",
         "plot": "Plot"
-    }
+    },
+    "editor": "subl"
 }

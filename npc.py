@@ -45,9 +45,6 @@ group_tags = ['group', 'court', 'motley']
 # Recognized extensions
 valid_exts = ('.nwod')
 
-# Program to use when opening files
-editor = "subl"
-
 class Result:
     """Holds data about the result of a subcommand"""
     def __init__(self, success, openable = None, errcode = 0, errmsg = ''):
@@ -147,7 +144,7 @@ def main():
         return result.errcode
 
     if not args.batch and result.openable:
-        call([editor] + result.openable)
+        call([prefs.get("editor")] + result.openable)
 
 def create_changeling(args, prefs):
     target_path = _add_path_if_exists(prefs.get('paths.characters'), 'Changelings')
