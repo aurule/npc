@@ -293,13 +293,13 @@ repository:
           Antiquarian | Gravewight | Leechfinger | Mirrorskin | Tunnelgrub |
           Lurkglider |
           Airtouched | Earthbones | Fireheart | Manikin | Snowskin | Waterborn |
-          Woodblood | Sandharrowed |
+          Woodblood
           Bright One | Dancer | Draconic | Flowering | Muse | Telluric |
           Treasured |
           Cyclopean | Farwalker | Gargantuan | Gristlegrinder | Stonebones |
           Waterdweller |
-          Artist | Brewer | Cjate;aome | Chirurgeon | Oracle | Smith | Soldier |
-          Woodwalker
+          Artist | Brewer | Chatelaine | Chirurgeon | Oracle | Smith | Soldier |
+          Woodwalker | Drudge
         )\b
       name: 'support.constant.kith.nwod'
 ...
