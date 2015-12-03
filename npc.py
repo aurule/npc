@@ -15,7 +15,6 @@ from subprocess import call
 # Canonical base paths
 plot_base = "Plot"
 session_base = "Session History"
-characters_root = 'Characters'
 
 # Template paths
 human_template = os.path.expanduser("~/Templates/Human Character Sheet.nwod")
