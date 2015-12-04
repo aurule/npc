@@ -13,8 +13,6 @@ from subprocess import call
 #   paths to ignore
 
 # Template paths
-human_template = os.path.expanduser("~/Templates/Human Character Sheet.nwod")
-changeling_template = os.path.expanduser("~/Templates/Changeling Character Sheet.nwod")
 session_template = os.path.expanduser("~/Templates/Session Log.md")
 
 # Regexes for parsing important elements
@@ -88,6 +86,7 @@ class Settings:
 
     def __init__(self, path = path_default):
         self.settings_files = [_load_json(path)]
+        self._localize_default_paths()
 
     def get(self, key):
         """Get the value of a settings key"""
@@ -99,6 +98,12 @@ class Settings:
             except KeyError:
                 return None
         return arr
+
+    def _localize_default_paths(self):
+        """Make a set of paths local to the script installation directory"""
+        paths = self.settings_files[0]['templates']
+        for k, v in paths.items():
+            paths[k] = os.path.join(self.install_base, v)
 
 def main():
     parser = argparse.ArgumentParser(description = 'GM helper script to manage game files')
@@ -174,10 +179,10 @@ def create_changeling(args, prefs):
     header = "\n".join(tags) + '\n\n'
 
     try:
-        with open(changeling_template, 'r') as f:
+        with open(prefs.get('templates.changeling'), 'r') as f:
             data = header + f.read()
     except IOError as e:
-        return Result(False, errmsg=e.strerror + " (%s)" % changeling_template, errcode=4)
+        return Result(False, errmsg=e.strerror + " (%s)" % prefs.get('templates.changeling'), errcode=4)
 
     # insert seeming and kith in advantages block
     try:
@@ -218,10 +223,10 @@ def create_human(args, prefs):
     header = "\n".join(tags) + '\n\n'
 
     try:
-        with open(human_template, 'r') as f:
+        with open(prefs.get('templates.human'), 'r') as f:
             data = header + f.read()
     except IOError as e:
-        return Result(False, errmsg=e.strerror + " (%s)" % human_template, errcode=4)
+        return Result(False, errmsg=e.strerror + " (%s)" % prefs.get('templates.human'), errcode=4)
 
     try:
         with open(target_path, 'w') as f:
