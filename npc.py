@@ -3,7 +3,7 @@
 import re
 from os import path, listdir, walk
 import argparse
-import shutil
+import shutil import copy as shcopy
 import json
 from subprocess import call
 
@@ -253,11 +253,11 @@ def create_session(args, prefs):
 
     old_plot_path = path.join(prefs.get('paths.plot'), latest_plot)
     new_plot_path = path.join(prefs.get('paths.plot'), ("plot %i" % new_number) + latest_plot_ext)
-    shutil.copy(old_plot_path, new_plot_path)
+    shcopy(old_plot_path, new_plot_path)
 
     old_session_path = path.join(prefs.get('paths.session'), latest_session)
     new_session_path = path.join(prefs.get('paths.session'), ("session %i" % new_number) + latest_session_ext)
-    shutil.copy(session_template, new_session_path)
+    shcopy(session_template, new_session_path)
 
     return Result(True, openable=[new_session_path, new_plot_path, old_plot_path, old_session_path])
 
