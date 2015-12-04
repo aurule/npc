@@ -18,7 +18,7 @@ changeling_template = os.path.expanduser("~/Templates/Changeling Character Sheet
 session_template = os.path.expanduser("~/Templates/Session Log.md")
 
 # Helper files
-changeling_bonuses = os.path.join(os.path.dirname(__file__), 'support/seeming-kith.json')
+changeling_bonuses = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'support/seeming-kith.json')
 
 # Regexes for parsing important elements
 name_re = re.compile('([\w\s]+)(?: - )?.*')
