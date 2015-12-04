@@ -12,18 +12,9 @@ from subprocess import call
 #   search_root
 #   paths to ignore
 
-# Template paths
-session_template = os.path.expanduser("~/Templates/Session Log.md")
-
 # Regexes for parsing important elements
 plot_regex = '^plot (\d+)$'
 session_regex = '^session (\d+)$'
-
-# Group-like tags. These all accept an accompanying `rank` tag.
-group_tags = ['group', 'court', 'motley']
-
-# Recognized extensions
-valid_exts = ('.nwod')
 
 class Result:
     """Holds data about the result of a subcommand"""
@@ -240,6 +231,8 @@ def _add_path_if_exists(base, potential):
     return base
 
 def create_session(args, prefs):
+    session_template = os.path.expanduser("~/Templates/Session Log.md")
+
     plot_files = [f for f in os.listdir(prefs.get('paths.plot')) if _is_plot_file(f, prefs)]
     latest_plot = max(plot_files, key=lambda plot_files:re.split(r"\s", plot_files)[1])
     (latest_plot_name, latest_plot_ext) = os.path.splitext(latest_plot)
@@ -320,6 +313,12 @@ def _parse_character(char_file_path):
     name_re = re.compile('([\w\s]+)(?: - )?.*')
     section_re = re.compile('^--.+--\s*$')
     tag_re = re.compile('^@(?P<tag>\w+)\s+(?P<value>.*)$')
+
+    # Group-like tags. These all accept an accompanying `rank` tag.
+    group_tags = ['group', 'court', 'motley']
+
+    # Recognized extensions
+    valid_exts = ('.nwod')
 
     # derive character name from basename
     basename = os.path.basename(char_file_path)
