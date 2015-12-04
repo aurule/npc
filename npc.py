@@ -312,10 +312,18 @@ def make_webpage(args, prefs):
 def lint(args, prefs):
     characters = _parse(prefs.get('paths.characters'))
     for c in characters:
-        # ensure every character at least has a description and @type tag
-        # changelings
-        #   has `@changeling seeming kith` tag
-        #   if seeming and kith appear in sheet, they have the right notes
+        if not c['description'].strip():
+            # TODO warn about missing description
+            pass
+
+        if not 'type' in c:
+            # TODO warn about missing @type
+            pass
+        else:
+            if 'changeling' in c['type'].lower():
+                # if seeming and kith appear in sheet, they have the right notes
+                pass
+
         # show a warning for each infraction
         # fix automatically if possible and args.fix
         pass
