@@ -107,6 +107,11 @@ def main():
     parser_human.add_argument('name', help="character's name", metavar='name')
     parser_human.add_argument('-g', '--group', default=[], nargs="*", help='name of a group that counts the character as a member', metavar='group')
 
+    parser_fetch = subparsers.add_parser('fetch', aliases=['f'], help="Create a new fetch character")
+    parser_fetch.set_defaults(func=create_fetch)
+    parser_fetch.add_argument('name', help="character's name", metavar='name')
+    parser_fetch.add_argument('-g', '--group', default=[], nargs="*", help='name of a group that counts the character as a member', metavar='group')
+
     parser_session = subparsers.add_parser('session', aliases=['s'], help="Create files for a new game session")
     parser_session.set_defaults(func=create_session)
 
@@ -205,6 +210,15 @@ def create_changeling(args, prefs):
 
 def create_human(args, prefs):
     target_path = _add_path_if_exists(prefs.get('paths.characters'), 'Humans')
+    template = prefs.get('templates.human')
+    return _create_simple_character(args, target_path, template, 'Human')
+
+def create_fetch(args, prefs):
+    target_path = _add_path_if_exists(prefs.get('paths.characters'), 'Fetches')
+    template = prefs.get('templates.fetch')
+    return _create_simple_character(args, target_path, template, 'Fetch')
+
+def _create_simple_character(args, target_path, template, typetag):
     for group_raw in args.group:
         group_name = group_raw.title()
         target_path = _add_path_if_exists(target_path, group_name)
@@ -214,14 +228,14 @@ def create_human(args, prefs):
     if path.exists(target_path):
         return Result(False, errmsg="Character '%s' already exists!" % args.name, errcode = 1)
 
-    tags = ['@type Human'] + ["@group %s" % g for g in args.group]
+    tags = ['@type %s' % typetag] + ["@group %s" % g for g in args.group]
     header = "\n".join(tags) + '\n\n'
 
     try:
-        with open(prefs.get('templates.human'), 'r') as f:
+        with open(template, 'r') as f:
             data = header + f.read()
     except IOError as e:
-        return Result(False, errmsg=e.strerror + " (%s)" % prefs.get('templates.human'), errcode=4)
+        return Result(False, errmsg=e.strerror + " (%s)" % template, errcode=4)
 
     try:
         with open(target_path, 'w') as f:
