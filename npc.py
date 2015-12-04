@@ -17,9 +17,6 @@ human_template = os.path.expanduser("~/Templates/Human Character Sheet.nwod")
 changeling_template = os.path.expanduser("~/Templates/Changeling Character Sheet.nwod")
 session_template = os.path.expanduser("~/Templates/Session Log.md")
 
-# Helper files
-changeling_bonuses = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'support/seeming-kith.json')
-
 # Regexes for parsing important elements
 name_re = re.compile('([\w\s]+)(?: - )?.*')
 section_re = re.compile('^--.+--\s*$')
@@ -86,7 +83,8 @@ def _load_json(filename):
 
 class Settings:
     """Stores settings for later use"""
-    path_default = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'support/settings-default.json')
+    install_base = os.path.dirname(os.path.realpath(__file__))
+    path_default = os.path.join(install_base, 'support/settings-default.json')
 
     def __init__(self, path = path_default):
         self.settings_files = [_load_json(path)]
@@ -147,6 +145,8 @@ def main():
         call([prefs.get("editor")] + result.openable)
 
 def create_changeling(args, prefs):
+    changeling_bonuses = os.path.join(prefs.install_base, 'support/seeming-kith.json')
+
     target_path = _add_path_if_exists(prefs.get('paths.characters'), 'Changelings')
     if args.court is not None:
         target_path = _add_path_if_exists(target_path, args.court.title())
