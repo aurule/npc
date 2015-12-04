@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 import re
-import os
+from os import path, listdir, walk
 import argparse
 import shutil
 import json
@@ -61,11 +61,11 @@ def _load_json(filename):
 
 class Settings:
     """Stores settings for later use"""
-    install_base = os.path.dirname(os.path.realpath(__file__))
-    path_default = os.path.join(install_base, 'support/settings-default.json')
+    install_base = path.dirname(path.realpath(__file__))
+    path_default = path.join(install_base, 'support/settings-default.json')
 
-    def __init__(self, path = path_default):
-        self.settings_files = [_load_json(path)]
+    def __init__(self, settings_path = path_default):
+        self.settings_files = [_load_json(settings_path)]
         self._localize_default_paths()
 
     def get(self, key):
@@ -83,7 +83,7 @@ class Settings:
         """Make a set of paths local to the script installation directory"""
         paths = self.settings_files[0]['templates']
         for k, v in paths.items():
-            paths[k] = os.path.join(self.install_base, v)
+            paths[k] = path.join(self.install_base, v)
 
 def main():
     parser = argparse.ArgumentParser(description = 'GM helper script to manage game files')
@@ -131,7 +131,7 @@ def main():
         call([prefs.get("editor")] + result.openable)
 
 def create_changeling(args, prefs):
-    changeling_bonuses = os.path.join(prefs.install_base, 'support/seeming-kith.json')
+    changeling_bonuses = path.join(prefs.install_base, 'support/seeming-kith.json')
     seeming_re = re.compile(
         '^(\s+)seeming(\s+)\w+$',
         re.MULTILINE | re.IGNORECASE
@@ -152,8 +152,8 @@ def create_changeling(args, prefs):
         target_path = _add_path_if_exists(target_path, group_name)
 
     filename = args.name + '.nwod'
-    target_path = os.path.join(target_path, filename)
-    if os.path.exists(target_path):
+    target_path = path.join(target_path, filename)
+    if path.exists(target_path):
         return Result(False, errmsg="Character '%s' already exists!" % args.name, errcode = 1)
 
     seeming_name = args.seeming.title()
@@ -204,8 +204,8 @@ def create_human(args, prefs):
         target_path = _add_path_if_exists(target_path, group_name)
 
     filename = args.name + '.nwod'
-    target_path = os.path.join(target_path, filename)
-    if os.path.exists(target_path):
+    target_path = path.join(target_path, filename)
+    if path.exists(target_path):
         return Result(False, errmsg="Character '%s' already exists!" % args.name, errcode = 1)
 
     tags = ['@type Human'] + ["@group %s" % g for g in args.group]
@@ -226,23 +226,23 @@ def create_human(args, prefs):
     return Result(True, openable = [target_path])
 
 def _add_path_if_exists(base, potential):
-    test_path = os.path.join(base, potential)
-    if os.path.exists(test_path):
+    test_path = path.join(base, potential)
+    if path.exists(test_path):
         return test_path
     return base
 
 def create_session(args, prefs):
-    session_template = os.path.expanduser("~/Templates/Session Log.md")
+    session_template = path.expanduser("~/Templates/Session Log.md")
 
-    plot_files = [f for f in os.listdir(prefs.get('paths.plot')) if _is_plot_file(f, prefs)]
+    plot_files = [f for f in listdir(prefs.get('paths.plot')) if _is_plot_file(f, prefs)]
     latest_plot = max(plot_files, key=lambda plot_files:re.split(r"\s", plot_files)[1])
-    (latest_plot_name, latest_plot_ext) = os.path.splitext(latest_plot)
+    (latest_plot_name, latest_plot_ext) = path.splitext(latest_plot)
     plot_match = re.match(plot_regex, latest_plot_name)
     plot_number = int(plot_match.group(1))
 
-    session_files = [f for f in os.listdir(prefs.get('paths.session')) if _is_session_file(f, prefs)]
+    session_files = [f for f in listdir(prefs.get('paths.session')) if _is_session_file(f, prefs)]
     latest_session = max(session_files, key=lambda session_files:re.split(r"\s", session_files)[1])
-    (latest_session_name, latest_session_ext) = os.path.splitext(latest_session)
+    (latest_session_name, latest_session_ext) = path.splitext(latest_session)
     session_match = re.match(session_regex, latest_session_name)
     session_number = int(session_match.group(1))
 
@@ -251,27 +251,27 @@ def create_session(args, prefs):
 
     new_number = plot_number + 1
 
-    old_plot_path = os.path.join(prefs.get('paths.plot'), latest_plot)
-    new_plot_path = os.path.join(prefs.get('paths.plot'), ("plot %i" % new_number) + latest_plot_ext)
+    old_plot_path = path.join(prefs.get('paths.plot'), latest_plot)
+    new_plot_path = path.join(prefs.get('paths.plot'), ("plot %i" % new_number) + latest_plot_ext)
     shutil.copy(old_plot_path, new_plot_path)
 
-    old_session_path = os.path.join(prefs.get('paths.session'), latest_session)
-    new_session_path = os.path.join(prefs.get('paths.session'), ("session %i" % new_number) + latest_session_ext)
+    old_session_path = path.join(prefs.get('paths.session'), latest_session)
+    new_session_path = path.join(prefs.get('paths.session'), ("session %i" % new_number) + latest_session_ext)
     shutil.copy(session_template, new_session_path)
 
     return Result(True, openable=[new_session_path, new_plot_path, old_plot_path, old_session_path])
 
 def _is_plot_file(f, prefs):
-    really_a_file = os.path.isfile(os.path.join(prefs.get('paths.plot'), f))
-    basename = os.path.basename(f)
-    match = re.match(plot_regex, os.path.splitext(basename)[0])
+    really_a_file = path.isfile(path.join(prefs.get('paths.plot'), f))
+    basename = path.basename(f)
+    match = re.match(plot_regex, path.splitext(basename)[0])
 
     return really_a_file and match
 
 def _is_session_file(f, prefs):
-    really_a_file = os.path.isfile(os.path.join(prefs.get('paths.session'), f))
-    basename = os.path.basename(f)
-    match = re.match(session_regex, os.path.splitext(basename)[0])
+    really_a_file = path.isfile(path.join(prefs.get('paths.session'), f))
+    basename = path.basename(f)
+    match = re.match(session_regex, path.splitext(basename)[0])
 
     return really_a_file and match
 
@@ -305,13 +305,13 @@ if __name__ == '__main__':
 
 def _parse(search_root, ignore_paths = []):
     characters = []
-    for dirpath, dirnames, files in os.walk(search_root):
+    for dirpath, dirnames, files in walk(search_root):
         if dirpath in ignore_paths:
             continue
         for name in files:
-            base, ext = os.path.splitext(name)
+            base, ext = path.splitext(name)
             if ext in valid_exts or not ext:
-                characters.append(parse_character(os.path.join(dirpath, name)))
+                characters.append(parse_character(path.join(dirpath, name)))
 
     return characters
 
@@ -327,8 +327,8 @@ def _parse_character(char_file_path):
     valid_exts = ('.nwod')
 
     # derive character name from basename
-    basename = os.path.basename(char_file_path)
-    match = name_re.match(os.path.splitext(basename)[0])
+    basename = path.basename(char_file_path)
+    match = name_re.match(path.splitext(basename)[0])
     name = match.group(1)
 
     # rank uses a dict keyed by group name instead of an array
