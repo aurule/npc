@@ -16,6 +16,9 @@ from subprocess import call
 plot_regex = '^plot (\d+)$'
 session_regex = '^session (\d+)$'
 
+# Recognized extensions
+valid_exts = ('.nwod')
+
 class Result:
     """Holds data about the result of a subcommand"""
     def __init__(self, success, openable = None, errcode = 0, errmsg = ''):
@@ -312,9 +315,6 @@ def init_dirs(args, prefs):
 
     return Result(True)
 
-if __name__ == '__main__':
-    main()
-
 def _parse(search_root, ignore_paths = []):
     characters = []
     for dirpath, dirnames, files in walk(search_root):
@@ -323,7 +323,7 @@ def _parse(search_root, ignore_paths = []):
         for name in files:
             base, ext = path.splitext(name)
             if ext in valid_exts or not ext:
-                characters.append(parse_character(path.join(dirpath, name)))
+                characters.append(_parse_character(path.join(dirpath, name)))
 
     return characters
 
@@ -334,9 +334,6 @@ def _parse_character(char_file_path):
 
     # Group-like tags. These all accept an accompanying `rank` tag.
     group_tags = ['group', 'court', 'motley']
-
-    # Recognized extensions
-    valid_exts = ('.nwod')
 
     # derive character name from basename
     basename = path.basename(char_file_path)
@@ -392,3 +389,6 @@ def _parse_character(char_file_path):
             char_properties.setdefault(tag, []).append(value)
 
     return char_properties
+
+if __name__ == '__main__':
+    main()
