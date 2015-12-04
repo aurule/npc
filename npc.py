@@ -90,7 +90,7 @@ def main():
     parser.add_argument('-b', '--batch', action='store_true', default=False, help="Do not open any newly created files")
     subparsers = parser.add_subparsers(title='Subcommands', description="Commands that can be run on the current campaign", metavar="changeling, human, session, update, webpage, lint")
 
-    parser_changeling = subparsers.add_parser('changeling', help="Create a new changeling character")
+    parser_changeling = subparsers.add_parser('changeling', aliases=['c'], help="Create a new changeling character")
     parser_changeling.set_defaults(func=create_changeling)
     parser_changeling.add_argument('name', help="character's name", metavar='name')
     parser_changeling.add_argument('seeming', help="character's Seeming", metavar='seeming')
@@ -99,18 +99,18 @@ def main():
     parser_changeling.add_argument('-m', '--motley', help="the character's Motley", metavar='motley')
     parser_changeling.add_argument('-g', '--group', default=[], nargs="*", help='name of a group that counts the character as a member', metavar='group')
 
-    parser_human = subparsers.add_parser('human', help="Create a new human character")
+    parser_human = subparsers.add_parser('human', aliases=['h'], help="Create a new human character")
     parser_human.set_defaults(func=create_human)
     parser_human.add_argument('name', help="character's name", metavar='name')
     parser_human.add_argument('-g', '--group', default=[], nargs="*", help='name of a group that counts the character as a member', metavar='group')
 
-    parser_session = subparsers.add_parser('session', help="Create files for a new game session")
+    parser_session = subparsers.add_parser('session', aliases=['s'], help="Create files for a new game session")
     parser_session.set_defaults(func=create_session)
 
     parser_update = subparsers.add_parser('update', aliases=['u'], help="Update various support files (motleys, etc.) using the content of the character files")
     parser_update.set_defaults(funct=update_dependencies)
 
-    parser_webpage = subparsers.add_parser('webpage', aliases=['web', 'w'], help="Generate the NPC Listing webpage")
+    parser_webpage = subparsers.add_parser('webpage', aliases=['web', 'w'], help="Generate an NPC Listing")
     parser_webpage.set_defaults(funct=make_webpage)
 
     parser_lint = subparsers.add_parser('lint', help="Check the character files for minimum completeness.")
@@ -291,7 +291,9 @@ def make_webpage(args, prefs):
 def lint(args, prefs):
     characters = _parse(prefs.get('paths.characters'))
     # ensure each character at least has a description and @type tag
-    # ensure every changeling sheet has notes for seeming and kith
+    # ensure every changeling sheet has correct notes for seeming and kith
+    # show a warning for each infraction
+    # fix automatically if possible
     return Result(False, errmsg="Not yet implemented", errcode=3)
 
 if __name__ == '__main__':
