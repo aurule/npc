@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 
 import re
-from os import path, listdir, walk
 import argparse
-import shutil import copy as shcopy
 import json
+from os import path, listdir, walk, makedirs
+from shutil import copy as shcopy
 from subprocess import call
 
 # TODO cli args
@@ -116,6 +116,9 @@ def main():
     parser_lint = subparsers.add_parser('lint', help="Check the character files for minimum completeness.")
     parser_lint.add_argument('-f', '--fix', action='store_true', default=False, help="Automatically fix some problems")
     parser_lint.set_defaults(func=lint)
+
+    parser_init = subparsers.add_parser('init', help="Set up the basic directory structure for campaign files")
+    parser_init.set_defaults(func=init_dirs)
 
     args = parser.parse_args()
 
@@ -299,6 +302,15 @@ def lint(args, prefs):
         pass
 
     return Result(False, errmsg="Not yet implemented", errcode=3)
+
+def init_dirs(args, prefs):
+    """Create the basic directories for a campaign"""
+
+    for k, p in prefs.get('paths').items():
+        if not path.exists(p):
+            makedirs(p)
+
+    return Result(True)
 
 if __name__ == '__main__':
     main()
