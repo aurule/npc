@@ -337,7 +337,10 @@ def _parse(search_root, ignore_paths = []):
         for name in files:
             base, ext = path.splitext(name)
             if ext in valid_exts or not ext:
-                characters.append(_parse_character(path.join(dirpath, name)))
+                target_path = path.join(dirpath, name)
+                data = _parse_character(target_path)
+                data['path'] = target_path
+                characters.append(data)
 
     return characters
 
