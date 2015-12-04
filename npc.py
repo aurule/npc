@@ -16,23 +16,8 @@ from subprocess import call
 session_template = os.path.expanduser("~/Templates/Session Log.md")
 
 # Regexes for parsing important elements
-name_re = re.compile('([\w\s]+)(?: - )?.*')
-section_re = re.compile('^--.+--\s*$')
-tag_re = re.compile('^@(?P<tag>\w+)\s+(?P<value>.*)$')
 plot_regex = '^plot (\d+)$'
 session_regex = '^session (\d+)$'
-comment_re = re.compile(
-    '(^)?[^\S\n]*/(?:\*(.*?)\*/[^\S\n]*|/[^\n]*)($)?',
-    re.DOTALL | re.MULTILINE
-)
-seeming_re = re.compile(
-    '^(\s+)seeming(\s+)\w+$',
-    re.MULTILINE | re.IGNORECASE
-)
-kith_re = re.compile(
-    '^(\s+)kith(\s+)\w+$',
-    re.MULTILINE | re.IGNORECASE
-)
 
 # Group-like tags. These all accept an accompanying `rank` tag.
 group_tags = ['group', 'court', 'motley']
@@ -66,6 +51,10 @@ def _load_json(filename):
             ...
             */
     """
+    comment_re = re.compile(
+        '(^)?[^\S\n]*/(?:\*(.*?)\*/[^\S\n]*|/[^\n]*)($)?',
+        re.DOTALL | re.MULTILINE
+    )
     with open(filename) as f:
         content = ''.join(f.readlines())
 
@@ -151,6 +140,14 @@ def main():
 
 def create_changeling(args, prefs):
     changeling_bonuses = os.path.join(prefs.install_base, 'support/seeming-kith.json')
+    seeming_re = re.compile(
+        '^(\s+)seeming(\s+)\w+$',
+        re.MULTILINE | re.IGNORECASE
+    )
+    kith_re = re.compile(
+        '^(\s+)kith(\s+)\w+$',
+        re.MULTILINE | re.IGNORECASE
+    )
 
     target_path = _add_path_if_exists(prefs.get('paths.characters'), 'Changelings')
     if args.court is not None:
@@ -320,6 +317,9 @@ def _parse(search_root, ignore_paths = []):
     return characters
 
 def _parse_character(char_file_path):
+    name_re = re.compile('([\w\s]+)(?: - )?.*')
+    section_re = re.compile('^--.+--\s*$')
+    tag_re = re.compile('^@(?P<tag>\w+)\s+(?P<value>.*)$')
 
     # derive character name from basename
     basename = os.path.basename(char_file_path)
