@@ -114,6 +114,7 @@ def main():
     parser_webpage.set_defaults(funct=make_webpage)
 
     parser_lint = subparsers.add_parser('lint', help="Check the character files for minimum completeness.")
+    parser_lint.add_argument('-f', '--fix', action='store_true', default=False, help="Automatically fix some problems")
     parser_lint.set_defaults(func=lint)
 
     args = parser.parse_args()
@@ -290,10 +291,13 @@ def make_webpage(args, prefs):
 
 def lint(args, prefs):
     characters = _parse(prefs.get('paths.characters'))
-    # ensure each character at least has a description and @type tag
-    # ensure every changeling sheet has correct notes for seeming and kith
-    # show a warning for each infraction
-    # fix automatically if possible
+    for c in characters:
+        # ensure each character at least has a description and @type tag
+        # ensure every changeling sheet has correct notes for seeming and kith
+        # show a warning for each infraction
+        # fix automatically if possible and args.fix
+        pass
+
     return Result(False, errmsg="Not yet implemented", errcode=3)
 
 if __name__ == '__main__':
