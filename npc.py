@@ -17,7 +17,14 @@ plot_regex = '^plot (\d+)$'
 session_regex = '^session (\d+)$'
 
 class Result:
-    """Holds data about the result of a subcommand"""
+    """Data about the result of a subcommand
+
+    Attributes:
+    * success - boolean indicating whether the subcommand ran correctly
+    * openable - list of paths to files which were changed by or are relevant to the subcommand
+    * errcode - integer error code indicating the type of error encountered
+    * errmsg - human-readable error message. Will be displayed to the user
+    """
     def __init__(self, success, openable = None, errcode = 0, errmsg = ''):
         super(Result, self).__init__()
         self.success = success
@@ -60,7 +67,12 @@ def _load_json(filename):
         return json.loads(content)
 
 class Settings:
-    """Stores settings for later use"""
+    """Load and store settings
+
+    Default settings are loaded from support/settings-default.json in the install path.
+
+    Do not access settings values directly. Use the get() method.
+    """
     install_base = path.dirname(path.realpath(__file__))
     path_default = path.join(install_base, 'support/settings-default.json')
 
@@ -69,7 +81,10 @@ class Settings:
         self._localize_default_paths()
 
     def get(self, key):
-        """Get the value of a settings key"""
+        """Get the value of a settings key
+
+        Use the period character to indicate a nested key.
+        """
         key_parts = key.split('.')
         arr = self.settings_files[0]
         for k in key_parts:
@@ -80,12 +95,14 @@ class Settings:
         return arr
 
     def _localize_default_paths(self):
-        """Make a set of paths local to the script installation directory"""
+        """Expand some default paths so they point to script install directory"""
         paths = self.settings_files[0]['templates']
         for k, v in paths.items():
             paths[k] = path.join(self.install_base, v)
 
 def main():
+    """Run the interface"""
+
     parser = argparse.ArgumentParser(description = 'GM helper script to manage game files')
     parser.add_argument('-b', '--batch', action='store_true', default=False, help="Do not open any newly created files")
     subparsers = parser.add_subparsers(title='Subcommands', description="Commands that can be run on the current campaign", metavar="changeling, human, session, update, webpage, lint")
@@ -128,7 +145,6 @@ def main():
     parser_init.set_defaults(func=init_dirs)
 
     args = parser.parse_args()
-
     prefs = Settings()
 
     result = args.func(args, prefs)
@@ -141,6 +157,19 @@ def main():
         call([prefs.get("editor")] + result.openable)
 
 def create_changeling(args, prefs):
+    """Create a Changeling character
+
+    Arguments:
+    * args - object containing runtime data. Must contain the following attributes:
+        + name              string  Base file name
+        + seeming           string  Name of the character's Seeming. Added to the file with notes.
+        + kith              string  Name of the character's Kith. Added to the file with notes.
+        + court (optional)  string  Name of the character's Court. Used to derive path.
+        + motley (optional) string  Name of the character's Motley.
+        + group (optional)  list    One or more names of groups the character belongs to. Used to
+                                    derive path for the file.
+    * prefs - Settings object
+    """
     changeling_bonuses = path.join(prefs.install_base, 'support/seeming-kith.json')
     seeming_re = re.compile(
         '^(\s+)seeming(\s+)\w+$',
@@ -151,6 +180,7 @@ def create_changeling(args, prefs):
         re.MULTILINE | re.IGNORECASE
     )
 
+    # Derive the path for the new file
     target_path = _add_path_if_exists(prefs.get('paths.characters'), 'Changelings')
     if args.court is not None:
         target_path = _add_path_if_exists(target_path, args.court.title())
@@ -166,6 +196,7 @@ def create_changeling(args, prefs):
     if path.exists(target_path):
         return Result(False, errmsg="Character '%s' already exists!" % args.name, errcode = 1)
 
+    # Create tags
     seeming_name = args.seeming.title()
     kith_name = args.kith.title()
     tags = ['@changeling %s %s' % (seeming_name, kith_name)]
@@ -177,13 +208,14 @@ def create_changeling(args, prefs):
 
     header = "\n".join(tags) + '\n\n'
 
+    # Copy template data
     try:
         with open(prefs.get('templates.changeling'), 'r') as f:
             data = header + f.read()
     except IOError as e:
         return Result(False, errmsg=e.strerror + " (%s)" % prefs.get('templates.changeling'), errcode=4)
 
-    # insert seeming and kith in advantages block
+    # insert seeming and kith in the advantages block
     try:
         sk = _load_json(changeling_bonuses)
     except IOError as e:
@@ -199,6 +231,7 @@ def create_changeling(args, prefs):
         data
     )
 
+    # Save the new character
     try:
         with open(target_path, 'w') as f:
             f.write(data)
@@ -208,16 +241,34 @@ def create_changeling(args, prefs):
     return Result(True, openable = [target_path])
 
 def create_human(args, prefs):
+    """Create a new Human character"""
     target_path = _add_path_if_exists(prefs.get('paths.characters'), 'Humans')
     template = prefs.get('templates.human')
     return _create_simple_character(args, target_path, template, 'Human')
 
 def create_fetch(args, prefs):
+    """Create a new Fetch character"""
     target_path = _add_path_if_exists(prefs.get('paths.characters'), 'Fetches')
     template = prefs.get('templates.fetch')
     return _create_simple_character(args, target_path, template, 'Fetch')
 
 def _create_simple_character(args, target_path, template, typetag):
+    """Create a character without extra processing
+
+    Simple characters don't have any unique tags or file annotations. This method is used by
+    create_human() and create_fetch().
+
+    Arguments:
+    * args          object  Object with runtime data. Must contain the following attributes:
+        + name              string  Base file name
+        + group (optional)  list    One or more names of groups the character belongs to. Used to
+                                    derive path for the file.
+    * target_path   string  Base destination of the created file. This is modified to get the final
+                            destination folder.
+    * template      string  Path to the template file to copy
+    * typetag       string  Name of the character's type. Inserted as @type tag.
+    """
+    # Derive destination path
     for group_raw in args.group:
         group_name = group_raw.title()
         target_path = _add_path_if_exists(target_path, group_name)
@@ -227,15 +278,18 @@ def _create_simple_character(args, target_path, template, typetag):
     if path.exists(target_path):
         return Result(False, errmsg="Character '%s' already exists!" % args.name, errcode = 1)
 
+    # Add tags
     tags = ['@type %s' % typetag] + ["@group %s" % g for g in args.group]
     header = "\n".join(tags) + '\n\n'
 
+    # Copy template
     try:
         with open(template, 'r') as f:
             data = header + f.read()
     except IOError as e:
         return Result(False, errmsg=e.strerror + " (%s)" % template, errcode=4)
 
+    # Write the new file
     try:
         with open(target_path, 'w') as f:
             f.write(data)
@@ -245,20 +299,28 @@ def _create_simple_character(args, target_path, template, typetag):
     return Result(True, openable = [target_path])
 
 def _add_path_if_exists(base, potential):
+    """Add a directory to the base path if that directory exists"""
     test_path = path.join(base, potential)
     if path.exists(test_path):
         return test_path
     return base
 
 def create_session(args, prefs):
+    """Creates the files for a new game session
+
+    Finds the plot and session log files for the last session, copies the plot,
+    and creates a new empty session log.
+    """
     session_template = path.expanduser("~/Templates/Session Log.md")
 
+    # find latest plot file and its number
     plot_files = [f for f in listdir(prefs.get('paths.plot')) if _is_plot_file(f, prefs)]
     latest_plot = max(plot_files, key=lambda plot_files:re.split(r"\s", plot_files)[1])
     (latest_plot_name, latest_plot_ext) = path.splitext(latest_plot)
     plot_match = re.match(plot_regex, latest_plot_name)
     plot_number = int(plot_match.group(1))
 
+    # find latest session log and its number
     session_files = [f for f in listdir(prefs.get('paths.session')) if _is_session_file(f, prefs)]
     latest_session = max(session_files, key=lambda session_files:re.split(r"\s", session_files)[1])
     (latest_session_name, latest_session_ext) = path.splitext(latest_session)
@@ -270,10 +332,12 @@ def create_session(args, prefs):
 
     new_number = plot_number + 1
 
+    # copy old plot
     old_plot_path = path.join(prefs.get('paths.plot'), latest_plot)
     new_plot_path = path.join(prefs.get('paths.plot'), ("plot %i" % new_number) + latest_plot_ext)
     shcopy(old_plot_path, new_plot_path)
 
+    # create new session log
     old_session_path = path.join(prefs.get('paths.session'), latest_session)
     new_session_path = path.join(prefs.get('paths.session'), ("session %i" % new_number) + latest_session_ext)
     shcopy(session_template, new_session_path)
@@ -281,6 +345,7 @@ def create_session(args, prefs):
     return Result(True, openable=[new_session_path, new_plot_path, old_plot_path, old_session_path])
 
 def _is_plot_file(f, prefs):
+    """Get whether f is a plot file"""
     really_a_file = path.isfile(path.join(prefs.get('paths.plot'), f))
     basename = path.basename(f)
     match = re.match(plot_regex, path.splitext(basename)[0])
@@ -288,6 +353,7 @@ def _is_plot_file(f, prefs):
     return really_a_file and match
 
 def _is_session_file(f, prefs):
+    """Get whether f is a session log"""
     really_a_file = path.isfile(path.join(prefs.get('paths.session'), f))
     basename = path.basename(f)
     match = re.match(session_regex, path.splitext(basename)[0])
@@ -309,6 +375,19 @@ def make_webpage(args, prefs):
     return Result(False, errmsg="Not yet implemented", errcode=3)
 
 def lint(args, prefs):
+    """Check character files for completeness and correctness
+
+    This method checks that every character file has a few required tags, and
+    applies extra checking for some character types.
+
+    Required tags:
+    * description - Not a tag, but the file must have description content
+    * @type - Character type
+
+    Extra checks for Changelings:
+    * @seeming tag is present and valid
+    * @kith tag is present and valid
+    """
     characters = _parse(prefs.get('paths.characters'))
 
     changeling_bonuses = path.join(prefs.install_base, 'support/seeming-kith.json')
@@ -319,12 +398,16 @@ def lint(args, prefs):
         problems = []
         fixes = []
         data = None
+
+        # Check description
         if not c['description'].strip():
             problems.append("Missing description")
 
+        # Check type tag
         if not 'type' in c:
             problems.append("Missing @type tag")
         else:
+            # Do special processing based on reported type
             if 'changeling' in c['type'][0].lower():
                 if not sk:
                     try:
@@ -332,6 +415,7 @@ def lint(args, prefs):
                     except IOError as e:
                         return Result(False, errmsg=e.strerror + " (%s)" % changeling_bonuses, errcode=4)
 
+                # Check that seeming tag exists and is valid
                 if not 'seeming' in c:
                     problems.append("Missing @seeming tag")
                 else:
@@ -339,6 +423,7 @@ def lint(args, prefs):
                     if seeming_tag not in sk['blessing']:
                         problems.append("Unrecognized @seeming '%s'" % seeming_tag.title())
 
+                # Check that kith tag exists and is valid
                 if not 'kith' in c:
                     problems.append("Missing @kith tag")
                 else:
@@ -346,9 +431,10 @@ def lint(args, prefs):
                     if kith_tag not in sk['blessing']:
                         problems.append("Unrecognized @kith '%s'" % kith_tag.title())
 
-                # find (and fix) format-specific problems
+                # find (and fix) changeling-specific problems in the body of the sheet
                 problems.extend(_fix_changeling(c, sk, args.fix))
 
+        # Report problems on one line if possible, or as a block if there's more than one
         if len(problems):
             openable.append(c['path'])
             if len(problems) > 1:
@@ -361,6 +447,19 @@ def lint(args, prefs):
     return Result(True, openable)
 
 def _fix_changeling(c, sk, fix = False):
+    """Verify the more complex elements in a changeling sheet
+
+    This method checks for changeling-specific problems within the rules blocks
+    of the character sheet. The problems it checks for relate to the seeming and
+    kith notes.
+
+    1. Both elements must appear in the sheet's body -- not just the tags.
+    2. Both elements must match the value of the corresponding tag.
+    3. Both elements must have correct notes about its blessing (and curse for
+        Seeming)
+
+    Missing or incorrect notes can be fixed automatically if desired.
+    """
     problems = []
     dirty = False
     seeming_re = re.compile(
@@ -373,12 +472,15 @@ def _fix_changeling(c, sk, fix = False):
     )
     with open(c['path'], 'r') as f:
         data = f.read()
+
+        # Must list seeming
         seeming_match = seeming_re.search(data)
         if not seeming_match:
             problems.append("Missing Seeming in stats")
             # TODO might be able to create the annotation
         else:
             if 'seeming' in c:
+                # Listed seeming must match @seeming tag
                 seeming_tag = c['seeming'][0].lower()
                 seeming_stat = seeming_match.group('seeming').lower()
                 if seeming_stat != seeming_tag:
@@ -394,6 +496,7 @@ def _fix_changeling(c, sk, fix = False):
                                 '\g<1>\g<2> %s' % seeming_notes,
                                 data
                             )
+                            problems[-1] += ' (FIXED)'
                             dirty = True
                     else:
                         seeming_notes = "(%s; %s)" % (sk['blessing'][seeming_tag], sk['curse'][seeming_tag])
@@ -404,14 +507,17 @@ def _fix_changeling(c, sk, fix = False):
                                     '\g<1>\g<2> %s' % seeming_notes,
                                     data
                                 )
+                                problems[-1] += ' (FIXED)'
                                 dirty = True
 
+        # Must list kith
         kith_match = kith_re.search(data)
         if not kith_match:
             problems.append("Missing Kith in stats")
             # TODO might be able to create the annotation
         else:
             if 'kith' in c:
+                # Listed kith must match @kith tag
                 kith_tag = c['kith'][0].lower()
                 kith_stat = kith_match.group('kith').lower()
                 if kith_stat != kith_tag:
@@ -427,6 +533,7 @@ def _fix_changeling(c, sk, fix = False):
                                 '\g<1>\g<2> %s' % kith_notes,
                                 data
                             )
+                            problems[-1] += ' (FIXED)'
                             dirty = True
                     else:
                         kith_notes = "(%s)" % sk['blessing'][c['kith'][0].lower()]
@@ -437,6 +544,7 @@ def _fix_changeling(c, sk, fix = False):
                                     '\g<1>\g<2> %s' % kith_notes,
                                     data
                                 )
+                                problems[-1] += ' (FIXED)'
                                 dirty = True
     if dirty and data:
         with open(c['path'], 'w') as f:
@@ -445,8 +553,11 @@ def _fix_changeling(c, sk, fix = False):
     return problems
 
 def init_dirs(args, prefs):
-    """Create the basic directories for a campaign"""
+    """Create the basic directories for a campaign
 
+    This will create the directories this tool expects to find within a
+    campaign. Other directories are left to the user.
+    """
     for k, p in prefs.get('paths').items():
         if not path.exists(p):
             makedirs(p)
@@ -454,6 +565,11 @@ def init_dirs(args, prefs):
     return Result(True)
 
 def _parse(search_root, ignore_paths = [], include_bare = False):
+    """Parse all the character files in a directory
+
+    Set include_bare to True to scan files without an extension in addition to
+    .nwod files.
+    """
     characters = []
     for dirpath, dirnames, files in walk(search_root):
         if dirpath in ignore_paths:
@@ -469,6 +585,7 @@ def _parse(search_root, ignore_paths = [], include_bare = False):
     return characters
 
 def _parse_character(char_file_path):
+    """Parse a single character file"""
     name_re = re.compile('([\w\s]+)(?: - )?.*')
     section_re = re.compile('^--.+--\s*$')
     tag_re = re.compile('^@(?P<tag>\w+)\s+(?P<value>.*)$')
