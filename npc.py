@@ -337,10 +337,14 @@ def lint(args, prefs):
                 else:
                     seeming_tag = c['seeming'][0].lower()
                     if seeming_tag not in sk['blessing']:
-                        problems.append("Unrecognized @seeming")
+                        problems.append("Unrecognized @seeming '%s'" % seeming_tag.title())
 
                 if not 'kith' in c:
                     problems.append("Missing @kith tag")
+                else:
+                    kith_tag = c['kith'][0].lower()
+                    if kith_tag not in sk['blessing']:
+                        problems.append("Unrecognized @kith '%s'" % kith_tag.title())
 
                 # find (and fix) format-specific problems
                 problems.extend(_fix_changeling(c, sk, args.fix))
@@ -376,34 +380,31 @@ def _fix_changeling(c, sk, fix = False):
         else:
             if 'seeming' in c:
                 seeming_tag = c['seeming'][0].lower()
-            else:
-                seeming_tag = 'none'
-
-            seeming_stat = seeming_match.group('seeming').lower()
-            if seeming_stat != seeming_tag:
-                problems.append("Seeming stat '%s' does not match @seeming tag '%s'" % (seeming_stat, seeming_tag))
-            else:
-                # Tag and annotation match. Now make sure the notes are present and correct.
-                loaded_seeming_notes = seeming_match.group('notes')
-                if not loaded_seeming_notes:
-                    problems.append("Missing Seeming notes")
-                    if fix:
-                        seeming_notes = "(%s; %s)" % (sk['blessing'][seeming_tag], sk['curse'][seeming_tag])
-                        data = seeming_re.sub(
-                            '\g<1>\g<2> %s' % seeming_notes,
-                            data
-                        )
-                        dirty = True
+                seeming_stat = seeming_match.group('seeming').lower()
+                if seeming_stat != seeming_tag:
+                    problems.append("Seeming stat '%s' does not match @seeming tag '%s'" % (seeming_stat.title(), seeming_tag.title()))
                 else:
-                    seeming_notes = "(%s; %s)" % (sk['blessing'][seeming_tag], sk['curse'][seeming_tag])
-                    if loaded_seeming_notes != seeming_notes:
-                        problems.append("Incorrect Seeming notes")
+                    # Tag and annotation match. Now make sure the notes are present and correct.
+                    loaded_seeming_notes = seeming_match.group('notes')
+                    if not loaded_seeming_notes:
+                        problems.append("Missing Seeming notes")
                         if fix:
+                            seeming_notes = "(%s; %s)" % (sk['blessing'][seeming_tag], sk['curse'][seeming_tag])
                             data = seeming_re.sub(
                                 '\g<1>\g<2> %s' % seeming_notes,
                                 data
                             )
                             dirty = True
+                    else:
+                        seeming_notes = "(%s; %s)" % (sk['blessing'][seeming_tag], sk['curse'][seeming_tag])
+                        if loaded_seeming_notes != seeming_notes:
+                            problems.append("Incorrect Seeming notes")
+                            if fix:
+                                data = seeming_re.sub(
+                                    '\g<1>\g<2> %s' % seeming_notes,
+                                    data
+                                )
+                                dirty = True
 
         kith_match = kith_re.search(data)
         if not kith_match:
@@ -412,34 +413,31 @@ def _fix_changeling(c, sk, fix = False):
         else:
             if 'kith' in c:
                 kith_tag = c['kith'][0].lower()
-            else:
-                kith_tag = 'none'
-
-            kith_stat = kith_match.group('kith').lower()
-            if kith_stat != kith_tag:
-                problems.append("Kith stat '%s' does not match @kith tag '%s'" % (kith_stat, kith_tag))
-            else:
-                # Tag and annotation match. Now make sure the notes are present and correct.
-                loaded_kith_notes = kith_match.group('notes')
-                if not loaded_kith_notes:
-                    problems.append("Missing Kith notes")
-                    if fix:
-                        kith_notes = "(%s)" % sk['blessing'][c['kith'][0].lower()]
-                        data = kith_re.sub(
-                            '\g<1>\g<2> %s' % kith_notes,
-                            data
-                        )
-                        dirty = True
+                kith_stat = kith_match.group('kith').lower()
+                if kith_stat != kith_tag:
+                    problems.append("Kith stat '%s' does not match @kith tag '%s'" % (kith_stat.title(), kith_tag.title()))
                 else:
-                    kith_notes = "(%s)" % sk['blessing'][c['kith'][0].lower()]
-                    if loaded_kith_notes != kith_notes:
-                        problems.append("Incorrect Kith notes")
+                    # Tag and annotation match. Now make sure the notes are present and correct.
+                    loaded_kith_notes = kith_match.group('notes')
+                    if not loaded_kith_notes:
+                        problems.append("Missing Kith notes")
                         if fix:
+                            kith_notes = "(%s)" % sk['blessing'][c['kith'][0].lower()]
                             data = kith_re.sub(
                                 '\g<1>\g<2> %s' % kith_notes,
                                 data
                             )
                             dirty = True
+                    else:
+                        kith_notes = "(%s)" % sk['blessing'][c['kith'][0].lower()]
+                        if loaded_kith_notes != kith_notes:
+                            problems.append("Incorrect Kith notes")
+                            if fix:
+                                data = kith_re.sub(
+                                    '\g<1>\g<2> %s' % kith_notes,
+                                    data
+                                )
+                                dirty = True
     if dirty and data:
         with open(c['path'], 'w') as f:
             f.write(data)
