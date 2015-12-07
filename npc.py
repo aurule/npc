@@ -311,9 +311,14 @@ def make_webpage(args, prefs):
 def lint(args, prefs):
     characters = _parse(prefs.get('paths.characters'))
 
+    changeling_bonuses = path.join(prefs.install_base, 'support/seeming-kith.json')
+    sk = None
+
     openable = []
     for c in characters:
         problems = []
+        fixes = []
+        data = None
         if not c['description'].strip():
             problems.append("Missing description")
 
@@ -321,12 +326,24 @@ def lint(args, prefs):
             problems.append("Missing @type tag")
         else:
             if 'changeling' in c['type'][0].lower():
+                if not sk:
+                    try:
+                        sk = _load_json(changeling_bonuses)
+                    except IOError as e:
+                        return Result(False, errmsg=e.strerror + " (%s)" % changeling_bonuses, errcode=4)
+
                 if not 'seeming' in c:
                     problems.append("Missing @seeming tag")
+                else:
+                    seeming_tag = c['seeming'][0].lower()
+                    if seeming_tag not in sk['blessing']:
+                        problems.append("Unrecognized @seeming")
+
                 if not 'kith' in c:
                     problems.append("Missing @kith tag")
-                # seeming and kith are in the character sheet along with correct notes
-                #   fix automatically if args.fix
+
+                # find (and fix) format-specific problems
+                problems.extend(_fix_changeling(c, sk, args.fix))
 
         if len(problems):
             openable.append(c['path'])
@@ -338,6 +355,96 @@ def lint(args, prefs):
                 print("%s in '%s'" % (problems[0], c['path']))
 
     return Result(True, openable)
+
+def _fix_changeling(c, sk, fix = False):
+    problems = []
+    dirty = False
+    seeming_re = re.compile(
+        '^(?P<name>\s+seeming\s+)(?P<seeming>\w+)\s*(?P<notes>\(.*\))?$',
+        re.MULTILINE | re.IGNORECASE
+    )
+    kith_re = re.compile(
+        '^(?P<name>\s+kith\s+)(?P<kith>\w+)\s*(?P<notes>\(.*\))?$',
+        re.MULTILINE | re.IGNORECASE
+    )
+    with open(c['path'], 'r') as f:
+        data = f.read()
+        seeming_match = seeming_re.search(data)
+        if not seeming_match:
+            problems.append("Missing Seeming in stats")
+            # TODO might be able to create the annotation
+        else:
+            if 'seeming' in c:
+                seeming_tag = c['seeming'][0].lower()
+            else:
+                seeming_tag = 'none'
+
+            seeming_stat = seeming_match.group('seeming').lower()
+            if seeming_stat != seeming_tag:
+                problems.append("Seeming stat '%s' does not match @seeming tag '%s'" % (seeming_stat, seeming_tag))
+            else:
+                # Tag and annotation match. Now make sure the notes are present and correct.
+                loaded_seeming_notes = seeming_match.group('notes')
+                if not loaded_seeming_notes:
+                    problems.append("Missing Seeming notes")
+                    if fix:
+                        seeming_notes = "(%s; %s)" % (sk['blessing'][seeming_tag], sk['curse'][seeming_tag])
+                        data = seeming_re.sub(
+                            '\g<1>\g<2> %s' % seeming_notes,
+                            data
+                        )
+                        dirty = True
+                else:
+                    seeming_notes = "(%s; %s)" % (sk['blessing'][seeming_tag], sk['curse'][seeming_tag])
+                    if loaded_seeming_notes != seeming_notes:
+                        problems.append("Incorrect Seeming notes")
+                        if fix:
+                            data = seeming_re.sub(
+                                '\g<1>\g<2> %s' % seeming_notes,
+                                data
+                            )
+                            dirty = True
+
+        kith_match = kith_re.search(data)
+        if not kith_match:
+            problems.append("Missing Kith in stats")
+            # TODO might be able to create the annotation
+        else:
+            if 'kith' in c:
+                kith_tag = c['kith'][0].lower()
+            else:
+                kith_tag = 'none'
+
+            kith_stat = kith_match.group('kith').lower()
+            if kith_stat != kith_tag:
+                problems.append("Kith stat '%s' does not match @kith tag '%s'" % (kith_stat, kith_tag))
+            else:
+                # Tag and annotation match. Now make sure the notes are present and correct.
+                loaded_kith_notes = kith_match.group('notes')
+                if not loaded_kith_notes:
+                    problems.append("Missing Kith notes")
+                    if fix:
+                        kith_notes = "(%s)" % sk['blessing'][c['kith'][0].lower()]
+                        data = kith_re.sub(
+                            '\g<1>\g<2> %s' % kith_notes,
+                            data
+                        )
+                        dirty = True
+                else:
+                    kith_notes = "(%s)" % sk['blessing'][c['kith'][0].lower()]
+                    if loaded_kith_notes != kith_notes:
+                        problems.append("Incorrect Kith notes")
+                        if fix:
+                            data = kith_re.sub(
+                                '\g<1>\g<2> %s' % kith_notes,
+                                data
+                            )
+                            dirty = True
+    if dirty and data:
+        with open(c['path'], 'w') as f:
+            f.write(data)
+
+    return problems
 
 def init_dirs(args, prefs):
     """Create the basic directories for a campaign"""
