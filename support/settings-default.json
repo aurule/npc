@@ -9,6 +9,7 @@
         "human": "templates/Human Character Sheet.nwod",
         "changeling": "templates/Changeling Character Sheet.nwod",
         "fetch": "templates/Fetch Character Sheet.nwod",
+        "goblin": "templates/Goblin Character Sheet.nwod",
         "session": "templates/Session Log.md"
     }
 }

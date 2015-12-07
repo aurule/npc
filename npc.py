@@ -124,6 +124,11 @@ def main():
     parser_fetch.add_argument('name', help="character's name", metavar='name')
     parser_fetch.add_argument('-g', '--group', default=[], nargs="*", help='name of a group that counts the character as a member', metavar='group')
 
+    parser_goblin = subparsers.add_parser('goblin', help="Create a new goblin character")
+    parser_goblin.set_defaults(func=create_goblin)
+    parser_goblin.add_argument('name', help="character's name", metavar='name')
+    parser_goblin.add_argument('-g', '--group', default=[], nargs="*", help='name of a group that counts the character as a member', metavar='group')
+
     parser_session = subparsers.add_parser('session', aliases=['s'], help="Create files for a new game session")
     parser_session.set_defaults(func=create_session)
 
@@ -257,6 +262,12 @@ def create_fetch(args, prefs):
     target_path = _add_path_if_exists(prefs.get('paths.characters'), 'Fetches')
     template = prefs.get('templates.fetch')
     return _create_simple_character(args, target_path, template, 'Fetch')
+
+def create_goblin(args, prefs):
+    """Create a new Goblin character"""
+    target_path = _add_path_if_exists(prefs.get('paths.characters'), 'Goblins')
+    template = prefs.get('templates.goblin')
+    return _create_simple_character(args, target_path, template, 'Goblin')
 
 def _create_simple_character(args, target_path, template, typetag):
     """Create a character without extra processing
