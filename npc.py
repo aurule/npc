@@ -7,11 +7,6 @@ from os import path, listdir, walk, makedirs
 from shutil import copy as shcopy
 from subprocess import call
 
-# TODO cli args
-# scanning:
-#   search_root
-#   paths to ignore
-
 # Regexes for parsing important elements
 plot_re = re.compile('^plot (\d+)$')
 session_regex = '^session (\d+)$'
@@ -143,6 +138,10 @@ def main():
     parser_lint.add_argument('-f', '--fix', action='store_true', default=False, help="automatically fix certain problems")
     parser_lint.add_argument('-a', '--bare', action="store_true", default=False, help="include NPC files without a recognized extension")
     parser_lint.set_defaults(func=lint)
+    # TODO add more args
+    #   search_root
+    #   paths to ignore
+    #   list of explicit paths to lint
 
     parser_init = subparsers.add_parser('init', help="Set up the basic directory structure for campaign files")
     parser_init.set_defaults(func=init_dirs)
