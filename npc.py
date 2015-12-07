@@ -20,10 +20,12 @@ class Result:
     """Data about the result of a subcommand
 
     Attributes:
-    * success - boolean indicating whether the subcommand ran correctly
-    * openable - list of paths to files which were changed by or are relevant to the subcommand
-    * errcode - integer error code indicating the type of error encountered
-    * errmsg - human-readable error message. Will be displayed to the user
+    * success   boolean Whether the subcommand ran correctly
+    * openable  list    Paths to files which were changed by or are relevant to
+                        the subcommand
+    * errcode   integer Error code indicating the type of error encountered
+    * errmsg    string  Human-readable error message. Will be displayed to the
+                        user
     """
     def __init__(self, success, openable = None, errcode = 0, errmsg = ''):
         super(Result, self).__init__()
@@ -69,7 +71,8 @@ def _load_json(filename):
 class Settings:
     """Load and store settings
 
-    Default settings are loaded from support/settings-default.json in the install path.
+    Default settings are loaded from support/settings-default.json in the
+    install path.
 
     Do not access settings values directly. Use the get() method.
     """
@@ -160,14 +163,18 @@ def create_changeling(args, prefs):
     """Create a Changeling character
 
     Arguments:
-    * args - object containing runtime data. Must contain the following attributes:
+    * args - object containing runtime data. Must contain the following
+             attributes:
         + name              string  Base file name
-        + seeming           string  Name of the character's Seeming. Added to the file with notes.
-        + kith              string  Name of the character's Kith. Added to the file with notes.
-        + court (optional)  string  Name of the character's Court. Used to derive path.
+        + seeming           string  Name of the character's Seeming. Added to
+                                    the file with notes.
+        + kith              string  Name of the character's Kith. Added to the
+                                    file with notes.
+        + court (optional)  string  Name of the character's Court. Used to
+                                    derive path.
         + motley (optional) string  Name of the character's Motley.
-        + group (optional)  list    One or more names of groups the character belongs to. Used to
-                                    derive path for the file.
+        + group (optional)  list    One or more names of groups the character
+                                    belongs to. Used to derive path.
     * prefs - Settings object
     """
     changeling_bonuses = path.join(prefs.install_base, 'support/seeming-kith.json')
@@ -255,16 +262,17 @@ def create_fetch(args, prefs):
 def _create_simple_character(args, target_path, template, typetag):
     """Create a character without extra processing
 
-    Simple characters don't have any unique tags or file annotations. This method is used by
-    create_human() and create_fetch().
+    Simple characters don't have any unique tags or file annotations. This
+    method is used by create_human() and create_fetch().
 
     Arguments:
-    * args          object  Object with runtime data. Must contain the following attributes:
+    * args          object  Object with runtime data. Must contain the following
+                            attributes:
         + name              string  Base file name
-        + group (optional)  list    One or more names of groups the character belongs to. Used to
-                                    derive path for the file.
-    * target_path   string  Base destination of the created file. This is modified to get the final
-                            destination folder.
+        + group (optional)  list    One or more names of groups the character
+                                    belongs to. Used to derive path for the file.
+    * target_path   string  Base destination of the created file. This is
+                            modified to get the final destination folder.
     * template      string  Path to the template file to copy
     * typetag       string  Name of the character's type. Inserted as @type tag.
     """
@@ -376,6 +384,12 @@ def make_webpage(args, prefs):
 
 def lint(args, prefs):
     """Check character files for completeness and correctness
+
+    Arguments:
+    * args  object  Object with runtime data. Must contain the following
+                    attributes:
+        + fix   boolean     Whether to automatically fix errors when possible
+    * prefs object  Settings object
 
     This method checks that every character file has a few required tags, and
     applies extra checking for some character types.
