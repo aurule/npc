@@ -16,9 +16,6 @@ from subprocess import call
 plot_regex = '^plot (\d+)$'
 session_regex = '^session (\d+)$'
 
-# Recognized extensions
-valid_exts = ('.nwod')
-
 class Result:
     """Holds data about the result of a subcommand"""
     def __init__(self, success, openable = None, errcode = 0, errmsg = ''):
@@ -118,11 +115,14 @@ def main():
     parser_update = subparsers.add_parser('update', aliases=['u'], help="Update various support files (motleys, etc.) using the content of the character files")
     parser_update.set_defaults(funct=update_dependencies)
 
-    parser_webpage = subparsers.add_parser('webpage', aliases=['web', 'w'], help="Generate an NPC Listing")
+    parser_webpage = subparsers.add_parser('build', aliases=['b'], help="Generate an NPC Listing")
+    parser_webpage.add_argument('-o', '--outfile', nargs="?", help="file where the listing will be saved")
+    parser_webpage.add_argument('-a', '--bare', action="store_true", default=False, help="include NPC files without a recognized extension")
     parser_webpage.set_defaults(funct=make_webpage)
 
     parser_lint = subparsers.add_parser('lint', help="Check the character files for minimum completeness.")
-    parser_lint.add_argument('-f', '--fix', action='store_true', default=False, help="Automatically fix some problems")
+    parser_lint.add_argument('-f', '--fix', action='store_true', default=False, help="automatically fix certain problems")
+    parser_lint.add_argument('-a', '--bare', action="store_true", default=False, help="include NPC files without a recognized extension")
     parser_lint.set_defaults(func=lint)
 
     parser_init = subparsers.add_parser('init', help="Set up the basic directory structure for campaign files")
@@ -310,25 +310,35 @@ def make_webpage(args, prefs):
     return Result(False, errmsg="Not yet implemented", errcode=3)
 
 def lint(args, prefs):
-    characters = _parse(prefs.get('paths.characters'))
+    characters = _parse(prefs.get('paths.characters'), include_bare = args.bare)
+
+    openable = []
     for c in characters:
+        problems = []
         if not c['description'].strip():
-            # TODO warn about missing description
-            pass
+            problems.append("Missing description")
 
         if not 'type' in c:
-            # TODO warn about missing @type
-            pass
+            problems.append("Missing @type tag")
         else:
-            if 'changeling' in c['type'].lower():
-                # if seeming and kith appear in sheet, they have the right notes
-                pass
+            if 'changeling' in c['type'][0].lower():
+                if not 'seeming' in c:
+                    problems.append("Missing @seeming tag")
+                if not 'kith' in c:
+                    problems.append("Missing @kith tag")
+                # seeming and kith are in the character sheet along with correct notes
+                #   fix automatically if args.fix
 
-        # show a warning for each infraction
-        # fix automatically if possible and args.fix
-        pass
+        if len(problems):
+            openable.append(c['path'])
+            if len(problems) > 1:
+                print("File '%s':" % c['path'])
+                for p in problems:
+                    print("    %s" % p)
+            else:
+                print("%s in '%s'" % (problems[0], c['path']))
 
-    return Result(False, errmsg="Not yet implemented", errcode=3)
+    return Result(True, openable)
 
 def init_dirs(args, prefs):
     """Create the basic directories for a campaign"""
@@ -339,14 +349,14 @@ def init_dirs(args, prefs):
 
     return Result(True)
 
-def _parse(search_root, ignore_paths = []):
+def _parse(search_root, ignore_paths = [], include_bare = False):
     characters = []
     for dirpath, dirnames, files in walk(search_root):
         if dirpath in ignore_paths:
             continue
         for name in files:
             base, ext = path.splitext(name)
-            if ext in valid_exts or not ext:
+            if ext == '.nwod' or (include_bare and not ext):
                 target_path = path.join(dirpath, name)
                 data = _parse_character(target_path)
                 data['path'] = target_path
@@ -388,7 +398,8 @@ def _parse_character(char_file_path):
                     bits = value.split()
                     char_properties.setdefault('type', []).append('Changeling')
                     char_properties.setdefault('seeming', []).append(bits[0])
-                    char_properties.setdefault('kith', []).append(bits[1])
+                    if len(bits) > 1:
+                        char_properties.setdefault('kith', []).append(bits[1])
                     continue
 
                 if tag == 'realname':
