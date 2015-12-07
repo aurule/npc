@@ -13,7 +13,7 @@ from subprocess import call
 #   paths to ignore
 
 # Regexes for parsing important elements
-plot_regex = '^plot (\d+)$'
+plot_re = re.compile('^plot (\d+)$')
 session_regex = '^session (\d+)$'
 
 class Result:
@@ -325,14 +325,14 @@ def create_session(args, prefs):
     plot_files = [f for f in listdir(prefs.get('paths.plot')) if _is_plot_file(f, prefs)]
     latest_plot = max(plot_files, key=lambda plot_files:re.split(r"\s", plot_files)[1])
     (latest_plot_name, latest_plot_ext) = path.splitext(latest_plot)
-    plot_match = re.match(plot_regex, latest_plot_name)
+    plot_match = plot_re.match(latest_plot_name)
     plot_number = int(plot_match.group(1))
 
     # find latest session log and its number
     session_files = [f for f in listdir(prefs.get('paths.session')) if _is_session_file(f, prefs)]
     latest_session = max(session_files, key=lambda session_files:re.split(r"\s", session_files)[1])
     (latest_session_name, latest_session_ext) = path.splitext(latest_session)
-    session_match = re.match(session_regex, latest_session_name)
+    session_match = session_re.match(latest_session_name)
     session_number = int(session_match.group(1))
 
     if plot_number != session_number:
@@ -356,7 +356,7 @@ def _is_plot_file(f, prefs):
     """Get whether f is a plot file"""
     really_a_file = path.isfile(path.join(prefs.get('paths.plot'), f))
     basename = path.basename(f)
-    match = re.match(plot_regex, path.splitext(basename)[0])
+    match = plot_re.match(path.splitext(basename)[0])
 
     return really_a_file and match
 
@@ -364,7 +364,7 @@ def _is_session_file(f, prefs):
     """Get whether f is a session log"""
     really_a_file = path.isfile(path.join(prefs.get('paths.session'), f))
     basename = path.basename(f)
-    match = re.match(session_regex, path.splitext(basename)[0])
+    match = session_re.match(path.splitext(basename)[0])
 
     return really_a_file and match
 
