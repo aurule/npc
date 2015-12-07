@@ -117,7 +117,6 @@ def main():
 
     parser_webpage = subparsers.add_parser('build', aliases=['b'], help="Generate an NPC Listing")
     parser_webpage.add_argument('-o', '--outfile', nargs="?", help="file where the listing will be saved")
-    parser_webpage.add_argument('-a', '--bare', action="store_true", default=False, help="include NPC files without a recognized extension")
     parser_webpage.set_defaults(funct=make_webpage)
 
     parser_lint = subparsers.add_parser('lint', help="Check the character files for minimum completeness.")
@@ -310,7 +309,7 @@ def make_webpage(args, prefs):
     return Result(False, errmsg="Not yet implemented", errcode=3)
 
 def lint(args, prefs):
-    characters = _parse(prefs.get('paths.characters'), include_bare = args.bare)
+    characters = _parse(prefs.get('paths.characters'))
 
     openable = []
     for c in characters:
