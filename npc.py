@@ -141,7 +141,6 @@ def main():
 
     parser_lint = subparsers.add_parser('lint', help="Check the character files for minimum completeness.")
     parser_lint.add_argument('-f', '--fix', action='store_true', default=False, help="automatically fix certain problems")
-    parser_lint.add_argument('-a', '--bare', action="store_true", default=False, help="include NPC files without a recognized extension")
     parser_lint.set_defaults(func=lint)
     # TODO add more args
     #   search_root
