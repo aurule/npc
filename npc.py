@@ -455,7 +455,7 @@ def lint(args, prefs):
                         problems.append("Unrecognized @kith '%s'" % kith_tag.title())
 
                 # find (and fix) changeling-specific problems in the body of the sheet
-                problems.extend(_fix_changeling(c, sk, args.fix))
+                problems.extend(_lint_changeling(c, sk, args.fix))
 
         # Report problems on one line if possible, or as a block if there's more than one
         if len(problems):
@@ -469,7 +469,7 @@ def lint(args, prefs):
 
     return Result(True, openable)
 
-def _fix_changeling(c, sk, fix = False):
+def _lint_changeling(c, sk, fix = False):
     """Verify the more complex elements in a changeling sheet
 
     This method checks for changeling-specific problems within the rules blocks
