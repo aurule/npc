@@ -133,11 +133,11 @@ def main():
     parser_session.set_defaults(func=create_session)
 
     parser_update = subparsers.add_parser('update', aliases=['u'], help="Update various support files (motleys, etc.) using the content of the character files")
-    parser_update.set_defaults(funct=update_dependencies)
+    parser_update.set_defaults(func=update_dependencies)
 
     parser_webpage = subparsers.add_parser('list', aliases=['l'], help="Generate an NPC Listing")
     parser_webpage.add_argument('-o', '--outfile', nargs="?", help="file where the listing will be saved")
-    parser_webpage.set_defaults(funct=make_webpage)
+    parser_webpage.set_defaults(func=make_list)
 
     parser_lint = subparsers.add_parser('lint', help="Check the character files for minimum completeness.")
     parser_lint.add_argument('-f', '--fix', action='store_true', default=False, help="automatically fix certain problems")
@@ -384,7 +384,7 @@ def update_dependencies(args, prefs):
     #   ensure the character appears in the list of motley members
     return Result(False, errmsg="Not yet implemented", errcode=3)
 
-def make_webpage(args, prefs):
+def make_list(args, prefs):
     characters = _parse(prefs.get('paths.characters'))
     # sort them?
     # add html snippets for each character
