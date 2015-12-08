@@ -135,7 +135,7 @@ def main():
     parser_update = subparsers.add_parser('update', aliases=['u'], help="Update various support files (motleys, etc.) using the content of the character files")
     parser_update.set_defaults(funct=update_dependencies)
 
-    parser_webpage = subparsers.add_parser('build', aliases=['b'], help="Generate an NPC Listing")
+    parser_webpage = subparsers.add_parser('list', aliases=['l'], help="Generate an NPC Listing")
     parser_webpage.add_argument('-o', '--outfile', nargs="?", help="file where the listing will be saved")
     parser_webpage.set_defaults(funct=make_webpage)
 
