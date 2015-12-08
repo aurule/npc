@@ -521,6 +521,8 @@ def _fix_changeling(c, sk, fix = False):
                             )
                             problems[-1] += ' (FIXED)'
                             dirty = True
+                        else:
+                            problems[-1] += ' (can fix)'
                     else:
                         seeming_notes = "(%s; %s)" % (sk['blessing'][seeming_tag], sk['curse'][seeming_tag])
                         if loaded_seeming_notes != seeming_notes:
@@ -532,6 +534,8 @@ def _fix_changeling(c, sk, fix = False):
                                 )
                                 problems[-1] += ' (FIXED)'
                                 dirty = True
+                            else:
+                                problems[-1] += ' (can fix)'
 
         # Must list kith
         kith_match = kith_re.search(data)
@@ -558,6 +562,8 @@ def _fix_changeling(c, sk, fix = False):
                             )
                             problems[-1] += ' (FIXED)'
                             dirty = True
+                        else:
+                            problems[-1] += ' (can fix)'
                     else:
                         kith_notes = "(%s)" % sk['blessing'][c['kith'][0].lower()]
                         if loaded_kith_notes != kith_notes:
@@ -569,6 +575,8 @@ def _fix_changeling(c, sk, fix = False):
                                 )
                                 problems[-1] += ' (FIXED)'
                                 dirty = True
+                            else:
+                                problems[-1] += ' (can fix)'
     if dirty and data:
         with open(c['path'], 'w') as f:
             f.write(data)
