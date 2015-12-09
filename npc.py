@@ -3,6 +3,7 @@
 import re
 import argparse
 import json
+import sys
 from os import path, listdir, walk, makedirs
 from shutil import copy as shcopy
 from subprocess import call
@@ -101,10 +102,12 @@ class Settings:
 def main():
     """Run the interface"""
 
+    # This parser stores options shared by all character creation commands. It is never exposed directly.
     character_parser = argparse.ArgumentParser(add_help=False)
     character_parser.add_argument('name', help="character's name", metavar='name')
     character_parser.add_argument('-g', '--group', default=[], nargs="*", help='name of a group that counts the character as a member', metavar='group')
 
+    # This is the main parser which handles program-wide options. These should be kept sparse.
     parser = argparse.ArgumentParser(description = 'GM helper script to manage game files')
     parser.add_argument('-b', '--batch', action='store_true', default=False, help="Do not open any newly created files")
     subparsers = parser.add_subparsers(title='Subcommands', description="Commands that can be run on the current campaign", metavar="changeling, human, session, update, webpage, lint")
@@ -132,7 +135,7 @@ def main():
     parser_update.set_defaults(func=update_dependencies)
 
     parser_webpage = subparsers.add_parser('list', aliases=['l'], help="Generate an NPC Listing")
-    parser_webpage.add_argument('-o', '--outfile', nargs="?", help="file where the listing will be saved")
+    parser_webpage.add_argument('outfile', nargs="?", type=argparse.FileType('w'), default=sys.stdout, help="file where the listing will be saved")
     parser_webpage.set_defaults(func=make_list)
 
     parser_lint = subparsers.add_parser('lint', help="Check the character files for minimum completeness.")
