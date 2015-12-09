@@ -453,29 +453,15 @@ def lint(args, prefs):
         if not 'type' in c:
             problems.append("Missing @type tag")
         else:
-            # Do special processing based on reported type
-            if 'changeling' in c['type'][0].lower():
+            # Do additional processing based on reported type
+            types = [t.lower() for t in c['type']]
+            if 'changeling' in types:
+                # make sure our seeming and kith data is loaded
                 if not sk:
                     try:
                         sk = _load_json(changeling_bonuses)
                     except IOError as e:
                         return Result(False, errmsg=e.strerror + " (%s)" % changeling_bonuses, errcode=4)
-
-                # Check that seeming tag exists and is valid
-                if not 'seeming' in c:
-                    problems.append("Missing @seeming tag")
-                else:
-                    seeming_tag = c['seeming'][0].lower()
-                    if seeming_tag not in sk['blessing']:
-                        problems.append("Unrecognized @seeming '%s'" % seeming_tag.title())
-
-                # Check that kith tag exists and is valid
-                if not 'kith' in c:
-                    problems.append("Missing @kith tag")
-                else:
-                    kith_tag = c['kith'][0].lower()
-                    if kith_tag not in sk['blessing']:
-                        problems.append("Unrecognized @kith '%s'" % kith_tag.title())
 
                 # find (and fix) changeling-specific problems in the body of the sheet
                 problems.extend(_lint_changeling(c, sk, args.fix))
@@ -508,103 +494,137 @@ def _lint_changeling(c, sk, fix = False):
     """
     problems = []
     dirty = False
-    seeming_re = re.compile(
-        '^(?P<name>\s+seeming\s+)(?P<seeming>\w+)\s*(?P<notes>\(.*\))?$',
-        re.MULTILINE | re.IGNORECASE
-    )
-    kith_re = re.compile(
-        '^(?P<name>\s+kith\s+)(?P<kith>\w+)\s*(?P<notes>\(.*\))?$',
-        re.MULTILINE | re.IGNORECASE
-    )
+
+    seeming_regex = '^(?P<name>\s+seeming\s+)(?P<seeming>%s)\s*(?P<notes>\(.*\))?$'
+    kith_regex = '^(?P<name>\s+kith\s+)(?P<kith>%s)\s*(?P<notes>\(.*\))?$'
+
+    # Check that seeming tag exists and is valid
+    seeming_tags = None
+    if not 'seeming' in c:
+        problems.append("Missing @seeming tag")
+    else:
+        seeming_tags = [t.lower() for t in c['seeming']] # used later
+        for seeming_name in c['seeming']:
+            if seeming_name.lower() not in sk['blessing']:
+                problems.append("Unrecognized @seeming '%s'" % seeming_name)
+
+    # Check that kith tag exists and is valid
+    kith_tags = None
+    if not 'kith' in c:
+        problems.append("Missing @kith tag")
+    else:
+        kith_tags = [t.lower() for t in c['kith']] # used later
+        for kith_name in c['kith']:
+            if kith_name.lower() not in sk['blessing']:
+                problems.append("Unrecognized @kith '%s'" % kith_name)
+
+    # tags are ok. now compare against listed seeming and kith in stats
+
     with open(c['path'], 'r') as f:
         data = f.read()
 
-        # Must list seeming
-        seeming_match = seeming_re.search(data)
-        if not seeming_match:
-            problems.append("Missing Seeming in stats")
-            # TODO might be able to create the annotation
-        else:
-            if 'seeming' in c:
-                # Listed seeming must match @seeming tag
-                seeming_tag = c['seeming'][0].lower()
-                seeming_stat = seeming_match.group('seeming').lower()
-                if seeming_stat != seeming_tag:
-                    problems.append("Seeming stat '%s' does not match @seeming tag '%s'" % (seeming_stat.title(), seeming_tag.title()))
-                else:
-                    # Tag and annotation match. Now make sure the notes are present and correct.
-                    loaded_seeming_notes = seeming_match.group('notes')
+        if seeming_tags:
+            # ensure the listed seemings match our seeming tags
+            seeming_re = re.compile(
+                seeming_regex % '\w+',
+                re.MULTILINE | re.IGNORECASE
+            )
+            seeming_matches = list(seeming_re.finditer(data))
+            if set(seeming_tags) != set([m.group('seeming').lower() for m in seeming_matches]):
+                problems.append("Seeming stats do not match @seeming tags")
+            else:
+                # tags and stats match. iterate through each seeming and make sure the notes are right
+                for m in list(seeming_matches):
+                    seeming_tag = m.group('seeming').lower()
+                    if not seeming_tag in sk['blessing']:
+                        continue
+
+                    loaded_seeming_notes = m.group('notes')
+                    seeming_notes = "(%s; %s)" % (sk['blessing'][seeming_tag], sk['curse'][seeming_tag])
                     if not loaded_seeming_notes:
-                        problems.append("Missing Seeming notes")
+                        problems.append("Missing notes for Seeming '%s'" % m.group('seeming'))
                         if fix:
-                            seeming_notes = "(%s; %s)" % (sk['blessing'][seeming_tag], sk['curse'][seeming_tag])
-                            data = seeming_re.sub(
-                                '\g<1>\g<2> %s' % seeming_notes,
-                                data
-                            )
+                            data = _fix_seeming_notes(m.group('seeming'), seeming_notes, data)
                             problems[-1] += ' (FIXED)'
                             dirty = True
                         else:
                             problems[-1] += ' (can fix)'
                     else:
-                        seeming_notes = "(%s; %s)" % (sk['blessing'][seeming_tag], sk['curse'][seeming_tag])
                         if loaded_seeming_notes != seeming_notes:
-                            problems.append("Incorrect Seeming notes")
+                            problems.append("Incorrect notes for Seeming '%s'" % m.group('seeming'))
                             if fix:
-                                data = seeming_re.sub(
-                                    '\g<1>\g<2> %s' % seeming_notes,
-                                    data
-                                )
+                                data = _fix_seeming_notes(m.group('seeming'), seeming_notes, data)
                                 problems[-1] += ' (FIXED)'
                                 dirty = True
                             else:
                                 problems[-1] += ' (can fix)'
 
-        # Must list kith
-        kith_match = kith_re.search(data)
-        if not kith_match:
-            problems.append("Missing Kith in stats")
-            # TODO might be able to create the annotation
-        else:
-            if 'kith' in c:
-                # Listed kith must match @kith tag
-                kith_tag = c['kith'][0].lower()
-                kith_stat = kith_match.group('kith').lower()
-                if kith_stat != kith_tag:
-                    problems.append("Kith stat '%s' does not match @kith tag '%s'" % (kith_stat.title(), kith_tag.title()))
-                else:
-                    # Tag and annotation match. Now make sure the notes are present and correct.
-                    loaded_kith_notes = kith_match.group('notes')
+
+        if kith_tags:
+            # ensure the listed kiths match our kith tags
+            kith_re = re.compile(
+                kith_regex % '\w+',
+                re.MULTILINE | re.IGNORECASE
+            )
+            kith_matches = list(kith_re.finditer(data))
+            if set(kith_tags) != set([m.group('kith').lower() for m in kith_matches]):
+                problems.append("Kith stats do not match @kith tags")
+            else:
+                # tags and stats match. iterate through each kith and make sure the notes are right
+                for m in list(kith_matches):
+                    kith_tag = m.group('kith').lower()
+                    if not kith_tag in sk['blessing']:
+                        continue
+
+                    loaded_kith_notes = m.group('notes')
+                    kith_notes = "(%s)" % (sk['blessing'][kith_tag])
                     if not loaded_kith_notes:
-                        problems.append("Missing Kith notes")
+                        problems.append("Missing notes for Kith '%s'" % m.group('kith'))
                         if fix:
-                            kith_notes = "(%s)" % sk['blessing'][c['kith'][0].lower()]
-                            data = kith_re.sub(
-                                '\g<1>\g<2> %s' % kith_notes,
-                                data
-                            )
+                            data = _fix_kith_notes(m.group('kith'), kith_notes, data)
                             problems[-1] += ' (FIXED)'
                             dirty = True
                         else:
                             problems[-1] += ' (can fix)'
                     else:
-                        kith_notes = "(%s)" % sk['blessing'][c['kith'][0].lower()]
                         if loaded_kith_notes != kith_notes:
-                            problems.append("Incorrect Kith notes")
+                            problems.append("Incorrect notes for Kith '%s'" % m.group('kith'))
                             if fix:
-                                data = kith_re.sub(
-                                    '\g<1>\g<2> %s' % kith_notes,
-                                    data
-                                )
+                                data = _fix_kith_notes(m.group('kith'), kith_notes, data)
                                 problems[-1] += ' (FIXED)'
                                 dirty = True
                             else:
                                 problems[-1] += ' (can fix)'
+
     if dirty and data:
         with open(c['path'], 'w') as f:
             f.write(data)
 
     return problems
+
+def _fix_seeming_notes(seeming, notes, data):
+    """Insert correct notes for a seeming stat"""
+    seeming_regex = '^(?P<name>\s+seeming\s+)(?P<seeming>%s)\s*(?P<notes>\(.*\))?$'
+    seeming_fix_re = re.compile(
+        seeming_regex % seeming,
+        re.MULTILINE | re.IGNORECASE
+    )
+    return seeming_fix_re.sub(
+        '\g<1>\g<2> %s' % notes,
+        data
+    )
+
+def _fix_kith_notes(kith, notes, data):
+    """Insert correct notes for a kith stat"""
+    kith_regex = '^(?P<name>\s+kith\s+)(?P<kith>%s)\s*(?P<notes>\(.*\))?$'
+    kith_fix_re = re.compile(
+        kith_regex % kith,
+        re.MULTILINE | re.IGNORECASE
+    )
+    return kith_fix_re.sub(
+        '\g<1>\g<2> %s' % notes,
+        data
+    )
 
 def init_dirs(args, prefs):
     """Create the basic directories for a campaign
@@ -672,7 +692,8 @@ def _parse_character(char_file_path):
                 if tag == 'changeling':
                     bits = value.split()
                     char_properties.setdefault('type', []).append('Changeling')
-                    char_properties.setdefault('seeming', []).append(bits[0])
+                    if len(bits):
+                        char_properties.setdefault('seeming', []).append(bits[0])
                     if len(bits) > 1:
                         char_properties.setdefault('kith', []).append(bits[1])
                     continue
