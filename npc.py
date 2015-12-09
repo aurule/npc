@@ -34,6 +34,7 @@ class Result:
         # 2. Latest plot and session files have different numbers
         # 3. Feature is not yet implemented
         # 4. Filesystem error
+        # 5. Unrecognized format
         self.errmsg = errmsg
 
 def _load_json(filename):
@@ -135,7 +136,8 @@ def main():
     parser_update.set_defaults(func=update_dependencies)
 
     parser_webpage = subparsers.add_parser('list', aliases=['l'], help="Generate an NPC Listing")
-    parser_webpage.add_argument('outfile', nargs="?", type=argparse.FileType('w'), default=sys.stdout, help="file where the listing will be saved")
+    parser_webpage.add_argument('-r', '--format', choices=['mmd', 'md'], default='mmd', help="Format to use for the listing")
+    parser_webpage.add_argument('outfile', nargs="?", help="file where the listing will be saved")
     parser_webpage.set_defaults(func=make_list)
 
     parser_lint = subparsers.add_parser('lint', help="Check the character files for minimum completeness.")
@@ -384,12 +386,33 @@ def update_dependencies(args, prefs):
     return Result(False, errmsg="Not yet implemented", errcode=3)
 
 def make_list(args, prefs):
-    characters = _parse(prefs.get('paths.characters'))
+    characters = _sort_chars(_parse(prefs.get('paths.characters')))
 
-    # sort them?
-    # add html snippets for each character
-    # output a final html file
-    return Result(False, errmsg="Not yet implemented", errcode=3)
+    out_type = args.format
+    data = ''
+
+    if out_type == 'mmd':
+        # make some multimarkdown
+        data = 'Title: NPC Listing\n\n'
+        for c in characters:
+            # TODO
+            pass
+    elif out_type == 'md':
+        # make some markdown
+        for c in characters:
+            # TODO
+            pass
+        pass
+    else:
+        return Result(False, errmsg="Cannot create output of format '%s'", errcode=5)
+
+    openable = None
+    if args.outfile:
+        openable = [args.outfile]
+    return Result(True, openable)
+
+def _sort_chars(characters):
+    return sorted(characters, key=lambda c: c['name'][0].split(' ')[-1])
 
 def lint(args, prefs):
     """Check character files for completeness and correctness
