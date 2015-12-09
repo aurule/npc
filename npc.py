@@ -101,33 +101,29 @@ class Settings:
 def main():
     """Run the interface"""
 
+    character_parser = argparse.ArgumentParser(add_help=False)
+    character_parser.add_argument('name', help="character's name", metavar='name')
+    character_parser.add_argument('-g', '--group', default=[], nargs="*", help='name of a group that counts the character as a member', metavar='group')
+
     parser = argparse.ArgumentParser(description = 'GM helper script to manage game files')
     parser.add_argument('-b', '--batch', action='store_true', default=False, help="Do not open any newly created files")
     subparsers = parser.add_subparsers(title='Subcommands', description="Commands that can be run on the current campaign", metavar="changeling, human, session, update, webpage, lint")
 
-    parser_changeling = subparsers.add_parser('changeling', aliases=['c'], help="Create a new changeling character")
+    parser_changeling = subparsers.add_parser('changeling', aliases=['c'], parents=[character_parser], help="Create a new changeling character")
     parser_changeling.set_defaults(func=create_changeling)
-    parser_changeling.add_argument('name', help="character's name", metavar='name')
     parser_changeling.add_argument('seeming', help="character's Seeming", metavar='seeming')
     parser_changeling.add_argument('kith', help="character's Kith", metavar='kith')
     parser_changeling.add_argument('-c', '--court', help="the character's Court", metavar='court')
     parser_changeling.add_argument('-m', '--motley', help="the character's Motley", metavar='motley')
-    parser_changeling.add_argument('-g', '--group', default=[], nargs="*", help='name of a group that counts the character as a member', metavar='group')
 
-    parser_human = subparsers.add_parser('human', aliases=['h'], help="Create a new human character")
+    parser_human = subparsers.add_parser('human', aliases=['h'], parents=[character_parser], help="Create a new human character")
     parser_human.set_defaults(func=create_human)
-    parser_human.add_argument('name', help="character's name", metavar='name')
-    parser_human.add_argument('-g', '--group', default=[], nargs="*", help='name of a group that counts the character as a member', metavar='group')
 
-    parser_fetch = subparsers.add_parser('fetch', aliases=['f'], help="Create a new fetch character")
+    parser_fetch = subparsers.add_parser('fetch', aliases=['f'], parents=[character_parser], help="Create a new fetch character")
     parser_fetch.set_defaults(func=create_fetch)
-    parser_fetch.add_argument('name', help="character's name", metavar='name')
-    parser_fetch.add_argument('-g', '--group', default=[], nargs="*", help='name of a group that counts the character as a member', metavar='group')
 
-    parser_goblin = subparsers.add_parser('goblin', help="Create a new goblin character")
+    parser_goblin = subparsers.add_parser('goblin', parents=[character_parser], help="Create a new goblin character")
     parser_goblin.set_defaults(func=create_goblin)
-    parser_goblin.add_argument('name', help="character's name", metavar='name')
-    parser_goblin.add_argument('-g', '--group', default=[], nargs="*", help='name of a group that counts the character as a member', metavar='group')
 
     parser_session = subparsers.add_parser('session', aliases=['s'], help="Create files for a new game session")
     parser_session.set_defaults(func=create_session)
@@ -386,6 +382,7 @@ def update_dependencies(args, prefs):
 
 def make_list(args, prefs):
     characters = _parse(prefs.get('paths.characters'))
+
     # sort them?
     # add html snippets for each character
     # output a final html file
