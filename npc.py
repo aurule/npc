@@ -104,6 +104,7 @@ class Settings:
 
 def main():
     """Run the interface"""
+    prefs = Settings()
 
     # This parser stores options shared by all character creation commands. It is never exposed directly.
     character_parser = argparse.ArgumentParser(add_help=False)
@@ -138,7 +139,7 @@ def main():
     parser_update.set_defaults(func=update_dependencies)
 
     parser_webpage = subparsers.add_parser('list', aliases=['l'], help="Generate an NPC Listing")
-    parser_webpage.add_argument('-t', '--format', choices=['markdown', 'md', 'json'], default='md', help="Format to use for the listing")
+    parser_webpage.add_argument('-t', '--format', choices=['markdown', 'md', 'json'], default=prefs.get('list_format'), help="Format to use for the listing")
     parser_webpage.add_argument('-m', '--metadata', nargs="?", const='default', default=False, help="Add metadata to the output. When the output format supports more than one metadata scheme, you can specify that scheme as well.")
     parser_webpage.add_argument('outfile', nargs="?", default=None, help="file where the listing will be saved")
     parser_webpage.set_defaults(func=make_list)
@@ -155,7 +156,6 @@ def main():
     parser_init.set_defaults(func=init_dirs)
 
     args = parser.parse_args()
-    prefs = Settings()
 
     result = args.func(args, prefs)
 
@@ -389,7 +389,23 @@ def update_dependencies(args, prefs):
     return Result(False, errmsg="Not yet implemented", errcode=3)
 
 def make_list(args, prefs):
-    """Generate a list of NPCs"""
+    """Generate a list of NPCs
+
+    Arguments:
+    * args - object containing runtime data. Must contain the following:
+        + format    string      Format of the output. Supported types are
+                                markdown (md), and json.
+        + metadata  None|string Optional flag to include metadata in the output.
+                                Additionally, the metadata format can be
+                                specified for some output formats. The markdown
+                                format supports adding either mmd
+                                (MultiMarkdown) or yfm/yaml (Yaml Front Matter)
+                                metadata.
+        + outfile   string      Optional path to a file to hold the generated
+                                listing. If omitted, the data will be printed to
+                                stdout.
+    * prefs - Settings object
+    """
     characters = _sort_chars(_parse(prefs.get('paths.characters')))
 
     out_type = args.format.lower()

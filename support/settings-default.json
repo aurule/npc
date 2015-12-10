@@ -12,6 +12,7 @@
         "goblin": "templates/Goblin Character Sheet.nwod",
         "session": "templates/Session Log.md"
     },
+    "list_format": "md",
     "metadata_format": {
         "md": "mmd"
     }
