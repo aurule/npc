@@ -36,6 +36,7 @@ class Result:
         # 3. Feature is not yet implemented
         # 4. Filesystem error
         # 5. Unrecognized format
+        # 6. Invalid option
         self.errmsg = errmsg
 
 def _load_json(filename):
@@ -138,7 +139,7 @@ def main():
 
     parser_webpage = subparsers.add_parser('list', aliases=['l'], help="Generate an NPC Listing")
     parser_webpage.add_argument('-t', '--format', choices=['markdown', 'md', 'json'], default='md', help="Format to use for the listing")
-    parser_webpage.add_argument('-m', '--metadata', action="store_true", default=False, help="Add metadata to the output")
+    parser_webpage.add_argument('-m', '--metadata', nargs="?", const='default', default=False, help="Add metadata to the output. When the output format supports more than one metadata scheme, you can specify that scheme as well.")
     parser_webpage.add_argument('outfile', nargs="?", default=None, help="file where the listing will be saved")
     parser_webpage.set_defaults(func=make_list)
 
@@ -388,6 +389,7 @@ def update_dependencies(args, prefs):
     return Result(False, errmsg="Not yet implemented", errcode=3)
 
 def make_list(args, prefs):
+    """Generate a list of NPCs"""
     characters = _sort_chars(_parse(prefs.get('paths.characters')))
 
     out_type = args.format.lower()
@@ -396,10 +398,27 @@ def make_list(args, prefs):
     if out_type in ('md', 'markdown'):
         # make some markdown
         if args.metadata:
-            meta = [
-                'Title: NPC Listing',
-                'Created: %s' % datetime.now().isoformat()
-            ]
+            # normalize the format type
+            metadata_type = args.metadata.lower()
+            if metadata_type == 'default':
+                metadata_type = prefs.get('metadata_format.md')
+
+            if metadata_type in 'mmd':
+                meta = [
+                    'Title: NPC Listing  ',
+                    'Created: %s' % datetime.now().isoformat(),
+                    '\n'
+                ]
+            elif metadata_type in ('yaml', 'yfm'):
+                meta = [
+                    '---',
+                    'title: NPC Listing',
+                    'created: %s' % datetime.now().isoformat(),
+                    '---\n',
+                ]
+            else:
+                return Result(False, errmsg="Unrecognized option '-m %s'" % metadata_type, errcode=6)
+
             data = "\n".join(meta)
         for c in characters:
             # TODO

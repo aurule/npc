@@ -11,5 +11,8 @@
         "fetch": "templates/Fetch Character Sheet.nwod",
         "goblin": "templates/Goblin Character Sheet.nwod",
         "session": "templates/Session Log.md"
+    },
+    "metadata_format": {
+        "md": "mmd"
     }
 }
