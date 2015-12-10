@@ -469,6 +469,14 @@ def _sort_chars(characters):
 
 @contextmanager
 def _smart_open(filename=None):
+    """Open a named file or stdout as appropriate
+
+    When filename is None or the dash character ('-'), this method will yield
+    sys.stdout. When filename is a path, it will open the file for writing.
+    Either way, a file-like object is returned.
+
+    This method is designed to be used in a `with` block.
+    """
     if filename and filename != '-':
         fh = open(filename, 'w')
     else:
