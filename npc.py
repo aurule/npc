@@ -3,7 +3,7 @@
 import re
 import argparse
 import json
-from sys import stdout
+import sys
 from contextlib import contextmanager
 from datetime import datetime
 from os import path, listdir, walk, makedirs
@@ -103,7 +103,7 @@ class Settings:
         for k, v in paths.items():
             paths[k] = path.join(self.install_base, v)
 
-def main():
+def main(argv):
     """Run the interface"""
     prefs = Settings()
 
@@ -156,7 +156,7 @@ def main():
     parser_init = subparsers.add_parser('init', help="Set up the basic directory structure for campaign files")
     parser_init.set_defaults(func=do_init)
 
-    args = parser.parse_args()
+    args = parser.parse_args(argv)
 
     result = args.func(args, prefs)
 
@@ -472,12 +472,12 @@ def _smart_open(filename=None):
     if filename and filename != '-':
         fh = open(filename, 'w')
     else:
-        fh = stdout
+        fh = sys.stdout
 
     try:
         yield fh
     finally:
-        if fh is not stdout:
+        if fh is not sys.stdout:
             fh.close()
 
 def do_lint(args, prefs):
@@ -791,4 +791,4 @@ def _parse_character(char_file_path):
     return char_properties
 
 if __name__ == '__main__':
-    main()
+    main(sys.argv[1:])
