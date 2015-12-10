@@ -3,7 +3,8 @@
 import re
 import argparse
 import json
-import sys
+from sys import stdout
+from contextlib import contextmanager
 from datetime import datetime
 from os import path, listdir, walk, makedirs
 from shutil import copy as shcopy
@@ -141,7 +142,7 @@ def main():
     parser_webpage = subparsers.add_parser('list', aliases=['l'], help="Generate an NPC Listing")
     parser_webpage.add_argument('-t', '--format', choices=['markdown', 'md', 'json'], default=prefs.get('list_format'), help="Format to use for the listing")
     parser_webpage.add_argument('-m', '--metadata', nargs="?", const='default', default=False, help="Add metadata to the output. When the output format supports more than one metadata scheme, you can specify that scheme as well.")
-    parser_webpage.add_argument('outfile', nargs="?", default=None, help="file where the listing will be saved")
+    parser_webpage.add_argument('-o', '--outfile', nargs="?", const='-', default=None, help="file where the listing will be saved")
     parser_webpage.set_defaults(func=make_list)
 
     parser_lint = subparsers.add_parser('lint', help="Check the character files for minimum completeness.")
@@ -433,12 +434,15 @@ def make_list(args, prefs):
                     '---\n',
                 ]
             else:
-                return Result(False, errmsg="Unrecognized option '-m %s'" % metadata_type, errcode=6)
-
+                return Result(False, errmsg="Unrecognized metadata format option '%s'" % metadata_type, errcode=6)
             data = "\n".join(meta)
-        for c in characters:
-            # TODO
-            pass
+
+        with _smart_open(args.outfile) as f:
+            f.write(data)
+
+            for c in characters:
+                # TODO
+                pass
     elif out_type == 'json':
         # make some json
         if args.metadata:
@@ -447,22 +451,34 @@ def make_list(args, prefs):
                 'created': datetime.now().isoformat()
             }]
             characters = meta + characters
-        data = json.dumps(characters)
+
+        with _smart_open(args.outfile) as f:
+            json.dump(characters, f)
+
     else:
         return Result(False, errmsg="Cannot create output of format '%s'", errcode=5)
 
-    if args.outfile:
-        with open(args.outfile, 'w') as f:
-            f.write(data)
+    openable = None
+    if args.outfile and args.outfile != '-':
         openable = [args.outfile]
-    else:
-        sys.stdout.write(data)
-        openable = None
 
-    return Result(True, openable)
+    return Result(True, openable=openable)
 
 def _sort_chars(characters):
     return sorted(characters, key=lambda c: c['name'][0].split(' ')[-1])
+
+@contextmanager
+def _smart_open(filename=None):
+    if filename and filename != '-':
+        fh = open(filename, 'w')
+    else:
+        fh = stdout
+
+    try:
+        yield fh
+    finally:
+        if fh is not stdout:
+            fh.close()
 
 def lint(args, prefs):
     """Check character files for completeness and correctness
