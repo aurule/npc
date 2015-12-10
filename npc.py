@@ -4,6 +4,7 @@ import re
 import argparse
 import json
 import sys
+from datetime import datetime
 from os import path, listdir, walk, makedirs
 from shutil import copy as shcopy
 from subprocess import call
@@ -137,6 +138,7 @@ def main():
 
     parser_webpage = subparsers.add_parser('list', aliases=['l'], help="Generate an NPC Listing")
     parser_webpage.add_argument('-t', '--format', choices=['markdown', 'md', 'json'], default='md', help="Format to use for the listing")
+    parser_webpage.add_argument('-m', '--metadata', action="store_true", default=False, help="Add metadata to the output")
     parser_webpage.add_argument('outfile', nargs="?", default=None, help="file where the listing will be saved")
     parser_webpage.set_defaults(func=make_list)
 
@@ -393,11 +395,23 @@ def make_list(args, prefs):
     data = ''
     if out_type in ('md', 'markdown'):
         # make some markdown
+        if args.metadata:
+            meta = [
+                'Title: NPC Listing',
+                'Created: %s' % datetime.now().isoformat()
+            ]
+            data = "\n".join(meta)
         for c in characters:
             # TODO
             pass
     elif out_type == 'json':
         # make some json
+        if args.metadata:
+            meta = [{
+                'title': 'NPC Listing',
+                'created': datetime.now().isoformat()
+            }]
+            characters = meta + characters
         data = json.dumps(characters)
     else:
         return Result(False, errmsg="Cannot create output of format '%s'", errcode=5)
