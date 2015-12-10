@@ -137,24 +137,24 @@ def main():
     parser_session.set_defaults(func=create_session)
 
     parser_update = subparsers.add_parser('update', aliases=['u'], help="Update various support files (motleys, etc.) using the content of the character files")
-    parser_update.set_defaults(func=update_dependencies)
+    parser_update.set_defaults(func=do_update)
 
     parser_webpage = subparsers.add_parser('list', aliases=['l'], help="Generate an NPC Listing")
     parser_webpage.add_argument('-t', '--format', choices=['markdown', 'md', 'json'], default=prefs.get('list_format'), help="Format to use for the listing")
     parser_webpage.add_argument('-m', '--metadata', nargs="?", const='default', default=False, help="Add metadata to the output. When the output format supports more than one metadata scheme, you can specify that scheme as well.")
     parser_webpage.add_argument('-o', '--outfile', nargs="?", const='-', default=None, help="file where the listing will be saved")
-    parser_webpage.set_defaults(func=make_list)
+    parser_webpage.set_defaults(func=do_list)
 
     parser_lint = subparsers.add_parser('lint', help="Check the character files for minimum completeness.")
     parser_lint.add_argument('-f', '--fix', action='store_true', default=False, help="automatically fix certain problems")
-    parser_lint.set_defaults(func=lint)
+    parser_lint.set_defaults(func=do_lint)
     # TODO add more args
     #   search_root
     #   paths to ignore
     #   list of explicit paths to lint
 
     parser_init = subparsers.add_parser('init', help="Set up the basic directory structure for campaign files")
-    parser_init.set_defaults(func=init_dirs)
+    parser_init.set_defaults(func=do_init)
 
     args = parser.parse_args()
 
@@ -382,14 +382,14 @@ def _is_session_file(f, prefs):
 
     return really_a_file and match
 
-def update_dependencies(args, prefs):
+def do_update(args, prefs):
     characters = _parse(prefs.get('paths.characters'))
     # foreach motley tag in the characters
     #   ensure the corresponding motley file exists
     #   ensure the character appears in the list of motley members
     return Result(False, errmsg="Not yet implemented", errcode=3)
 
-def make_list(args, prefs):
+def do_list(args, prefs):
     """Generate a list of NPCs
 
     Arguments:
@@ -480,7 +480,7 @@ def _smart_open(filename=None):
         if fh is not stdout:
             fh.close()
 
-def lint(args, prefs):
+def do_lint(args, prefs):
     """Check character files for completeness and correctness
 
     Arguments:
@@ -692,7 +692,7 @@ def _fix_kith_notes(kith, notes, data):
         data
     )
 
-def init_dirs(args, prefs):
+def do_init(args, prefs):
     """Create the basic directories for a campaign
 
     This will create the directories this tool expects to find within a
