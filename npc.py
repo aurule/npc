@@ -136,8 +136,8 @@ def main():
     parser_update.set_defaults(func=update_dependencies)
 
     parser_webpage = subparsers.add_parser('list', aliases=['l'], help="Generate an NPC Listing")
-    parser_webpage.add_argument('-r', '--format', choices=['mmd', 'md'], default='mmd', help="Format to use for the listing")
-    parser_webpage.add_argument('outfile', nargs="?", help="file where the listing will be saved")
+    parser_webpage.add_argument('-t', '--format', choices=['markdown', 'md', 'json'], default='md', help="Format to use for the listing")
+    parser_webpage.add_argument('outfile', nargs="?", default=None, help="file where the listing will be saved")
     parser_webpage.set_defaults(func=make_list)
 
     parser_lint = subparsers.add_parser('lint', help="Check the character files for minimum completeness.")
@@ -388,27 +388,28 @@ def update_dependencies(args, prefs):
 def make_list(args, prefs):
     characters = _sort_chars(_parse(prefs.get('paths.characters')))
 
-    out_type = args.format
-    data = ''
+    out_type = args.format.lower()
 
-    if out_type == 'mmd':
-        # make some multimarkdown
-        data = 'Title: NPC Listing\n\n'
-        for c in characters:
-            # TODO
-            pass
-    elif out_type == 'md':
+    data = ''
+    if out_type in ('md', 'markdown'):
         # make some markdown
         for c in characters:
             # TODO
             pass
-        pass
+    elif out_type == 'json':
+        # make some json
+        data = json.dumps(characters)
     else:
         return Result(False, errmsg="Cannot create output of format '%s'", errcode=5)
 
-    openable = None
     if args.outfile:
+        with open(args.outfile, 'w') as f:
+            f.write(data)
         openable = [args.outfile]
+    else:
+        sys.stdout.write(data)
+        openable = None
+
     return Result(True, openable)
 
 def _sort_chars(characters):
