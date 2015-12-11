@@ -12,12 +12,12 @@
         "goblin": "templates/Goblin Character Sheet.nwod",
         "session": "templates/Session Log.md"
     },
-    "list_format": "md",
+    "list_format": "markdown",
     "metadata_format": {
-        "md": "mmd"
+        "markdown": "mmd"
     },
     "additional_metadata": {
-        "md": {},
+        "markdown": {},
         "json": {}
     }
 }

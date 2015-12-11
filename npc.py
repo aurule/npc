@@ -144,7 +144,7 @@ def main(argv):
 
     parser_reorg = subparsers.add_parser('reorg', help="Move character files to the most appropriate directories")
     parser_reorg.add_argument('-p', '--purge', action="store_true", default=False, help="After moving all files, remove any empty directories within the base characters path")
-    parser_reorg.set_defaults(func=do_reort)
+    parser_reorg.set_defaults(func=do_reorg)
 
     parser_webpage = subparsers.add_parser('list', aliases=['l'], help="Generate an NPC Listing")
     parser_webpage.add_argument('-t', '--format', choices=['markdown', 'md', 'json'], default=prefs.get('list_format'), help="Format to use for the listing. Defaults to 'md'")
@@ -427,10 +427,10 @@ def do_list(args, prefs):
     if out_type in ('md', 'markdown'):
         metadata_type = args.metadata
         if metadata_type == 'default':
-            metadata_type = prefs.get('metadata_format.md')
+            metadata_type = prefs.get('metadata_format.markdown')
 
         with _smart_open(args.outfile) as f:
-            formatters.markdown.dump(characters, f, metadata_type, prefs.get("additional_metadata.md"))
+            formatters.markdown.dump(characters, f, metadata_type, prefs.get("additional_metadata.markdown"))
     elif out_type == 'json':
         # make some json
         if args.metadata:
