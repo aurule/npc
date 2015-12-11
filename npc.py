@@ -238,16 +238,18 @@ def create_changeling(args, prefs):
         sk = _load_json(changeling_bonuses)
     except IOError as e:
         return Result(False, errmsg=e.strerror + " (%s)" % changeling_bonuses, errcode=4)
-    seeming_notes = "%s; %s" % (sk['blessing'][args.seeming.lower()], sk['curse'][args.seeming.lower()])
-    kith_notes = sk['blessing'][args.kith.lower()]
-    data = seeming_re.sub(
-        '\g<1>Seeming\g<2>%s (%s)' % (seeming_name, seeming_notes),
-        data
-    )
-    data = kith_re.sub(
-        '\g<1>Kith\g<2>%s (%s)' % (kith_name, kith_notes),
-        data
-    )
+    if args.seeming.lower() in sk['blessing']:
+        seeming_notes = "%s; %s" % (sk['blessing'][args.seeming.lower()], sk['curse'][args.seeming.lower()])
+        data = seeming_re.sub(
+            '\g<1>Seeming\g<2>%s (%s)' % (seeming_name, seeming_notes),
+            data
+        )
+    if args.kith.lower() in sk['blessing']:
+        kith_notes = sk['blessing'][args.kith.lower()]
+        data = kith_re.sub(
+            '\g<1>Kith\g<2>%s (%s)' % (kith_name, kith_notes),
+            data
+        )
 
     # Save the new character
     try:
