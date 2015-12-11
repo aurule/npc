@@ -139,8 +139,12 @@ def main(argv):
     parser_session = subparsers.add_parser('session', aliases=['s'], help="Create files for a new game session")
     parser_session.set_defaults(func=create_session)
 
-    parser_update = subparsers.add_parser('update', aliases=['u'], help="Update various support files (motleys, etc.) using the content of the character files")
+    parser_update = subparsers.add_parser('update', help="Update various support files (motleys, etc.) using the content of the character files")
     parser_update.set_defaults(func=do_update)
+
+    parser_reorg = subparsers.add_parser('reorg', help="Move character files to the most appropriate directories")
+    parser_reorg.add_argument('-p', '--purge', action="store_true", default=False, help="After moving all files, remove any empty directories within the base characters path")
+    parser_reorg.set_defaults(func=do_reort)
 
     parser_webpage = subparsers.add_parser('list', aliases=['l'], help="Generate an NPC Listing")
     parser_webpage.add_argument('-t', '--format', choices=['markdown', 'md', 'json'], default=prefs.get('list_format'), help="Format to use for the listing. Defaults to 'md'")
@@ -392,6 +396,9 @@ def do_update(args, prefs):
     # foreach motley tag in the characters
     #   ensure the corresponding motley file exists
     #   ensure the character appears in the list of motley members
+    return Result(False, errmsg="Not yet implemented", errcode=3)
+
+def do_reorg(args, prefs):
     return Result(False, errmsg="Not yet implemented", errcode=3)
 
 def do_list(args, prefs):
