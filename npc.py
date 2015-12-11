@@ -346,7 +346,7 @@ def create_session(args, prefs):
     session_files = [f for f in listdir(prefs.get('paths.session')) if _is_session_file(f, prefs)]
     latest_session = max(session_files, key=lambda session_files:re.split(r"\s", session_files)[1])
     (latest_session_name, latest_session_ext) = path.splitext(latest_session)
-    session_match = session_re.match(latest_session_name)
+    session_match = re.match(session_regex, latest_session_name)
     session_number = int(session_match.group(1))
 
     if plot_number != session_number:
@@ -378,7 +378,7 @@ def _is_session_file(f, prefs):
     """Get whether f is a session log"""
     really_a_file = path.isfile(path.join(prefs.get('paths.session'), f))
     basename = path.basename(f)
-    match = session_re.match(path.splitext(basename)[0])
+    match = re.match(session_regex, path.splitext(basename)[0])
 
     return really_a_file and match
 
