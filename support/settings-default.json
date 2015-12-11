@@ -4,6 +4,12 @@
         "session": "Session History",
         "plot": "Plot"
     },
+    "type_paths": {
+        "human": "Humans",
+        "changeling": "Changelings",
+        "fetch": "Fetches",
+        "goblin": "Goblins"
+    },
     "editor": "subl",
     "templates": {
         "human": "templates/Human Character Sheet.nwod",

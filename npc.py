@@ -4,10 +4,11 @@ import re
 import argparse
 import json
 import sys
+import errno
 from contextlib import contextmanager
 from datetime import datetime
-from os import path, listdir, walk, makedirs
-from shutil import copy as shcopy
+from os import path, listdir, walk, makedirs, rmdir
+from shutil import copy as shcopy, move as shmove
 from subprocess import call
 
 # local packages
@@ -144,6 +145,7 @@ def main(argv):
 
     parser_reorg = subparsers.add_parser('reorg', help="Move character files to the most appropriate directories")
     parser_reorg.add_argument('-p', '--purge', action="store_true", default=False, help="After moving all files, remove any empty directories within the base characters path")
+    parser_reorg.add_argument('-v', '--verbose', action="store_true", default=False, help="Show the changes that are made")
     parser_reorg.set_defaults(func=do_reorg)
 
     parser_webpage = subparsers.add_parser('list', aliases=['l'], help="Generate an NPC Listing")
@@ -399,7 +401,51 @@ def do_update(args, prefs):
     return Result(False, errmsg="Not yet implemented", errcode=3)
 
 def do_reorg(args, prefs):
-    return Result(False, errmsg="Not yet implemented", errcode=3)
+    base_path = prefs.get('paths.characters')
+    characters = _parse(base_path)
+    for c in characters:
+        new_path = _create_path(c, base_path, prefs)
+        if new_path != path.dirname(c['path']):
+            if args.verbose:
+                print("Moving {} to {}".format(c['path'], new_path))
+            shmove(c['path'], new_path)
+
+    if args.purge:
+        for dirpath, dirnames, files in walk(base_path):
+            try:
+                rmdir(dirpath)
+            except OSError as e:
+                if e.errno == errno.ENOTEMPTY:
+                    continue
+            else:
+                if args.verbose:
+                    print("Removing empty directory {}".format(dirpath))
+
+    return Result(True)
+
+def _create_path(c, target_path, prefs):
+    # add type-based directory if we can
+    if 'type' in c:
+        ctype = c['type'][0].lower()
+        target_path = _add_path_if_exists(target_path, prefs.get('type_paths.%s' % ctype))
+    else:
+        ctype = 'none'
+
+    # handle type-specific considerations
+    if ctype == 'changeling':
+        # changelings use court first, then groups
+        if 'court' in c is not None:
+            for court_name in c['court']:
+                target_path = _add_path_if_exists(target_path, court_name)
+        else:
+            target_path = _add_path_if_exists(target_path, 'Courtless')
+
+    # everyone uses groups in their path
+    if 'group' in c:
+        for group_name in c['group']:
+            target_path = _add_path_if_exists(target_path, group_name)
+
+    return target_path
 
 def do_list(args, prefs):
     """Generate a list of NPCs
