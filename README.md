@@ -104,7 +104,7 @@ Changeling character files are checked for these additional problems:
 * The notes for each seeming in the stats are present and correct. If `--fix` is passed, these notes will be updated.
 * The notes for each kith in the stats are present and correct. If `--fix` is passed, these notes will be updated.
 
-## Init Directories
+## Set Up Directories
 
 The `init` command creates the basic directories that NPC expects to find. Every directory under the `paths` key in the settings file is created.
 
