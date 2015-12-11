@@ -421,14 +421,16 @@ def do_list(args, prefs):
             metadata_type = prefs.get('metadata_format.md')
 
         with _smart_open(args.outfile) as f:
-            formatters.markdown.dump(characters, f, metadata_type)
+            formatters.markdown.dump(characters, f, metadata_type, prefs.get("additional_metadata.md"))
     elif out_type == 'json':
         # make some json
         if args.metadata:
-            meta = [{
+            base_meta = {
+                'meta': True,
                 'title': 'NPC Listing',
                 'created': datetime.now().isoformat()
-            }]
+            }
+            meta = [{k:v for d in (base_meta, prefs.get("additional_metadata.json")) for k, v in d.items()}]
             characters = meta + characters
 
         with _smart_open(args.outfile) as f:

@@ -1,26 +1,28 @@
 from datetime import datetime
 
-def dump(characters, f, metadata=None):
+def dump(characters, f, metadata_type=None, metadata_extra={}):
     # make some markdown
-    if metadata:
-        # normalize the format type
-        metadata_type = metadata.lower()
-
+    if metadata_type:
         if metadata_type in 'mmd':
+            metadata_extra = ['{}: {}  '.format(k, v) for k, v in metadata_extra.items()]
+
             meta = [
                 'Title: NPC Listing  ',
-                'Created: %s' % datetime.now().isoformat(),
-                '\n'
-            ]
+                'Created: %s  ' % datetime.now().isoformat()
+            ] + metadata_extra + ['\n']
         elif metadata_type in ('yaml', 'yfm'):
+            metadata_extra = ['{}: {}'.format(k, v) for k, v in metadata_extra.items()]
+
             meta = [
                 '---',
                 'title: NPC Listing',
-                'created: %s' % datetime.now().isoformat(),
-                '---\n',
-            ]
+                'created: %s' % datetime.now().isoformat()
+            ] + metadata_extra + ['---\n']
         else:
             return Result(False, errmsg="Unrecognized metadata format option '%s'" % metadata_type, errcode=6)
+
+        print(meta)
+        exit()
         data = "\n".join(meta)
 
         f.write(data)

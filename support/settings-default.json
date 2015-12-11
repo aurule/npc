@@ -15,5 +15,9 @@
     "list_format": "md",
     "metadata_format": {
         "md": "mmd"
+    },
+    "additional_metadata": {
+        "md": {},
+        "json": {}
     }
 }
