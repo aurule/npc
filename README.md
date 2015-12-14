@@ -10,6 +10,16 @@ The functionality of NPC is split among a few sub-commands. Each one encompasses
 
 By default, NPC will open whatever files are relevant to the subcommand. To prevent this from happening, supply `--batch` or `-b` before the subcommand name.
 
+## Set Up Directories
+
+The `init` command creates the basic directories that NPC expects to find. Every directory under the `paths` key in the settings file is created.
+
+## Create Session Files
+
+The `session` command creates the files that I need at the very start of a gaming session. It looks for the last session log and plot file, named `Session Log \d+` and `Plot \d+` respectively, and extracts their sequence number. It increments that to get the number for the new files, then copies the old plot file to its new location, and copies the session log template to its new location. It will open all four files.
+
+If anything goes wrong in this process (mismatched numbers is the most common, followed by malformatted file names) it will yell about it. Everything in a file name after "` - `" is ignored.
+
 ## Create a Character
 
 Most subcommands involve creating a specific type of character. Character files are put into the `Characters/` directory by default, with further options based on their type, groups, and sometimes other factors.
@@ -58,41 +68,14 @@ Options:
 * `--court`: Name of the changeling's court, if they have one. This is the first "group" checked when creating the path.
 * `--motley`: Name of the changeling's motley, if known. This does not affect the path, but is added to the file as a tag.
 
-## Create Session Files
-
-The `session` command creates the files that I need at the very start of a gaming session. It looks for the last session log and plot file, named `Session Log \d+` and `Plot \d+` respectively, and extracts their sequence number. It increments that to get the number for the new files, then copies the old plot file to its new location, and copies the session log template to its new location. It will open all four files.
-
-If anything goes wrong in this process (mismatched numbers is the most common, followed by malformatted file names) it will yell about it. Everything in a file name after "` - `" is ignored.
-
-## Update Dependent Files
-
-The `update` command isn't implemented yet. I plan to have it update motley membership based on the `@motley` tags in each character file.
-
-## Reorganize Character Files
-
-The `reorg` command builds default paths for all the characters and then moves them. It's inspired by that time when I realized I had 20 police officers in a sea of 130 human characters, and really wanted to put them in their own folder.
-
-Options:
-
-* `--purge`: After moving the files, remove any empty directories within the root characters path
-* `--verbose`: Show each change as it's made
-
-## Make NPC Listing
-
-The `list` command builds a list of parseable NPCs. It ignores everything except the tags and description.
-
-Options:
-
-* `--format`: Specify the format of the output. One of `markdown`, `md`, or `json`. Defaults to `markdown`.
-* `--metadata`: Include metadata in the output. Can optionally specify the format of this metadata, if the main format supports it. Recognized values when used with the `markdown` format are `mmd` for MultiMarkdown metadata, and `yfm` or `yaml` for YAML Front Matter metadata.
-* `--outfile`: Path where the output should go. If omitted (or you pass "`-`"), the output will go to stdout for chaining to another command.
-
 ## Lint Character Files
 
 The `lint` command checks character files for errors and inconsistencies. It's a good idea to run `npc lint` and fix all the problems it reports before you run `npc list`.
 
 Options:
 
+* `--search`: Only look in these files and directories. Defaults to the base characters path.
+* `--ignore`: Ignore these files and directories. By default, nothing is ignored.
 * `--fix`: Automatically fix a few problems. Most require manual fixing, though.
 
 Every character file is checked for these problems:
@@ -109,9 +92,37 @@ Changeling character files are checked for these additional problems:
 * The notes for each seeming in the stats are present and correct. If `--fix` is passed, these notes will be updated.
 * The notes for each kith in the stats are present and correct. If `--fix` is passed, these notes will be updated.
 
-## Set Up Directories
+## Make NPC Listing
 
-The `init` command creates the basic directories that NPC expects to find. Every directory under the `paths` key in the settings file is created.
+The `list` command builds a list of parseable NPCs. It ignores everything except the tags and description.
+
+Options:
+
+* `--search`: Only look in these files and directories. Defaults to the base characters path.
+* `--ignore`: Ignore these files and directories. By default, nothing is ignored.
+* `--format`: Specify the format of the output. One of `markdown`, `md`, or `json`. Defaults to `markdown`.
+* `--metadata`: Include metadata in the output. Can optionally specify the format of this metadata, if the main format supports it. Recognized values when used with the `markdown` format are `mmd` for MultiMarkdown metadata, and `yfm` or `yaml` for YAML Front Matter metadata.
+* `--outfile`: Path where the output should go. If omitted (or you pass "`-`"), the output will go to stdout for chaining to another command.
+
+## Update Dependent Files
+
+The `update` command isn't implemented yet. I plan to have it update motley membership based on the `@motley` tags in each character file.
+
+Options:
+
+* `--search`: Only look in these files and directories. Defaults to the base characters path.
+* `--ignore`: Ignore these files and directories. By default, nothing is ignored.
+
+## Reorganize Character Files
+
+The `reorg` command builds default paths for all the characters and then moves them. It's inspired by that time when I realized I had 20 police officers in a sea of 130 human characters, and really wanted to put them in their own folder.
+
+Options:
+
+* `--search`: Only look in these files and directories. Defaults to the base characters path.
+* `--ignore`: Ignore these files and directories. By default, nothing is ignored.
+* `--purge`: After moving the files, remove any empty directories within the root characters path
+* `--verbose`: Show each change as it's made
 
 # Configuration
 
