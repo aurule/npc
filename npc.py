@@ -119,7 +119,7 @@ def main(argv):
     # This is the main parser which handles program-wide options. These should be kept sparse.
     parser = argparse.ArgumentParser(description = 'GM helper script to manage game files')
     parser.add_argument('-b', '--batch', action='store_true', default=False, help="Do not open any newly created files")
-    subparsers = parser.add_subparsers(title='Subcommands', description="Commands that can be run on the current campaign", metavar="changeling, human, session, update, webpage, lint")
+    subparsers = parser.add_subparsers(title='Subcommands', description="Commands that can be run on the current campaign")
 
     # Subcommand to create the basic directories
     parser_init = subparsers.add_parser('init', help="Set up the basic directory structure for campaign files")
