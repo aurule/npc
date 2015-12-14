@@ -70,7 +70,12 @@ The `update` command isn't implemented yet. I plan to have it update motley memb
 
 ## Reorganize Character Files
 
-The `reorg` command isn't implemented yet. I plan to have it build default paths for all the characters and then move them, with an option to delete any empty directories that are left over. It's inspired by that time when I realized I had 20 police officers in a sea of 130 human characters, and really wanted to put them in a single subfolder.
+The `reorg` command builds default paths for all the characters and then moves them. It's inspired by that time when I realized I had 20 police officers in a sea of 130 human characters, and really wanted to put them in their own folder.
+
+Options:
+
+* `--purge`: After moving the files, remove any empty directories within the root characters path
+* `--verbose`: Show each change as it's made
 
 ## Make NPC Listing
 
