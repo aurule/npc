@@ -211,7 +211,7 @@ def create_changeling(args, prefs):
     )
 
     # Derive the path for the new file
-    target_path = _add_path_if_exists(prefs.get('paths.characters'), 'Changelings')
+    target_path = _add_path_if_exists(prefs.get('paths.characters'), prefs.get('type_paths.%s' % 'changeling'))
     if args.court is not None:
         target_path = _add_path_if_exists(target_path, args.court.title())
     else:
