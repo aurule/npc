@@ -121,6 +121,15 @@ def main(argv):
     parser.add_argument('-b', '--batch', action='store_true', default=False, help="Do not open any newly created files")
     subparsers = parser.add_subparsers(title='Subcommands', description="Commands that can be run on the current campaign", metavar="changeling, human, session, update, webpage, lint")
 
+    # Subcommand to create the basic directories
+    parser_init = subparsers.add_parser('init', help="Set up the basic directory structure for campaign files")
+    parser_init.set_defaults(func=do_init)
+
+    # Session subcommand
+    parser_session = subparsers.add_parser('session', aliases=['s'], help="Create files for a new game session")
+    parser_session.set_defaults(func=create_session)
+
+    # Subcommand for making changelings, with their unique options
     parser_changeling = subparsers.add_parser('changeling', aliases=['c'], parents=[character_parser], help="Create a new changeling character")
     parser_changeling.set_defaults(func=create_changeling)
     parser_changeling.add_argument('seeming', help="character's Seeming", metavar='seeming')
@@ -128,32 +137,15 @@ def main(argv):
     parser_changeling.add_argument('-c', '--court', help="the character's Court", metavar='court')
     parser_changeling.add_argument('-m', '--motley', help="the character's Motley", metavar='motley')
 
+    # These parsers are just named subcommand entry points to create simple characters
     parser_human = subparsers.add_parser('human', aliases=['h'], parents=[character_parser], help="Create a new human character")
     parser_human.set_defaults(func=create_simple, ctype="human")
-
     parser_fetch = subparsers.add_parser('fetch', aliases=['f'], parents=[character_parser], help="Create a new fetch character")
     parser_fetch.set_defaults(func=create_simple, ctype="fetch")
-
     parser_goblin = subparsers.add_parser('goblin', parents=[character_parser], help="Create a new goblin character")
     parser_goblin.set_defaults(func=create_simple, ctype="goblin")
 
-    parser_session = subparsers.add_parser('session', aliases=['s'], help="Create files for a new game session")
-    parser_session.set_defaults(func=create_session)
-
-    parser_update = subparsers.add_parser('update', help="Update various support files (motleys, etc.) using the content of the character files")
-    parser_update.set_defaults(func=do_update)
-
-    parser_reorg = subparsers.add_parser('reorg', help="Move character files to the most appropriate directories")
-    parser_reorg.add_argument('-p', '--purge', action="store_true", default=False, help="After moving all files, remove any empty directories within the base characters path")
-    parser_reorg.add_argument('-v', '--verbose', action="store_true", default=False, help="Show the changes that are made")
-    parser_reorg.set_defaults(func=do_reorg)
-
-    parser_webpage = subparsers.add_parser('list', aliases=['l'], help="Generate an NPC Listing")
-    parser_webpage.add_argument('-t', '--format', choices=['markdown', 'md', 'json'], default=prefs.get('list_format'), help="Format to use for the listing. Defaults to 'md'")
-    parser_webpage.add_argument('-m', '--metadata', nargs="?", const='default', default=False, help="Add metadata to the output. When the output format supports more than one metadata scheme, you can specify that scheme as well.")
-    parser_webpage.add_argument('-o', '--outfile', nargs="?", const='-', default=None, help="file where the listing will be saved")
-    parser_webpage.set_defaults(func=do_list)
-
+    # Subcommand for linting characer files
     parser_lint = subparsers.add_parser('lint', help="Check the character files for minimum completeness.")
     parser_lint.add_argument('-f', '--fix', action='store_true', default=False, help="automatically fix certain problems")
     parser_lint.set_defaults(func=do_lint)
@@ -162,8 +154,22 @@ def main(argv):
     #   paths to ignore
     #   list of explicit paths to lint
 
-    parser_init = subparsers.add_parser('init', help="Set up the basic directory structure for campaign files")
-    parser_init.set_defaults(func=do_init)
+    # Subcommand to list character data in multiple formats
+    parser_webpage = subparsers.add_parser('list', aliases=['l'], help="Generate an NPC Listing")
+    parser_webpage.add_argument('-t', '--format', choices=['markdown', 'md', 'json'], default=prefs.get('list_format'), help="Format to use for the listing. Defaults to 'md'")
+    parser_webpage.add_argument('-m', '--metadata', nargs="?", const='default', default=False, help="Add metadata to the output. When the output format supports more than one metadata scheme, you can specify that scheme as well.")
+    parser_webpage.add_argument('-o', '--outfile', nargs="?", const='-', default=None, help="file where the listing will be saved")
+    parser_webpage.set_defaults(func=do_list)
+
+    # Update files subcommand
+    parser_update = subparsers.add_parser('update', help="Update various support files (motleys, etc.) using the content of the character files")
+    parser_update.set_defaults(func=do_update)
+
+    # Reorganize character files subcommand
+    parser_reorg = subparsers.add_parser('reorg', help="Move character files to the most appropriate directories")
+    parser_reorg.add_argument('-p', '--purge', action="store_true", default=False, help="After moving all files, remove any empty directories within the base characters path")
+    parser_reorg.add_argument('-v', '--verbose', action="store_true", default=False, help="Show the changes that are made")
+    parser_reorg.set_defaults(func=do_reorg)
 
     args = parser.parse_args(argv)
 
