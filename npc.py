@@ -129,13 +129,13 @@ def main(argv):
     parser_changeling.add_argument('-m', '--motley', help="the character's Motley", metavar='motley')
 
     parser_human = subparsers.add_parser('human', aliases=['h'], parents=[character_parser], help="Create a new human character")
-    parser_human.set_defaults(func=create_human)
+    parser_human.set_defaults(func=create_simple, ctype="human")
 
     parser_fetch = subparsers.add_parser('fetch', aliases=['f'], parents=[character_parser], help="Create a new fetch character")
-    parser_fetch.set_defaults(func=create_fetch)
+    parser_fetch.set_defaults(func=create_simple, ctype="fetch")
 
     parser_goblin = subparsers.add_parser('goblin', parents=[character_parser], help="Create a new goblin character")
-    parser_goblin.set_defaults(func=create_goblin)
+    parser_goblin.set_defaults(func=create_simple, ctype="goblin")
 
     parser_session = subparsers.add_parser('session', aliases=['s'], help="Create files for a new game session")
     parser_session.set_defaults(func=create_session)
@@ -266,29 +266,11 @@ def create_changeling(args, prefs):
 
     return Result(True, openable = [target_path])
 
-def create_human(args, prefs):
-    """Create a new Human character"""
-    target_path = _add_path_if_exists(prefs.get('paths.characters'), 'Humans')
-    template = prefs.get('templates.human')
-    return _create_simple_character(args, target_path, template, 'Human')
-
-def create_fetch(args, prefs):
-    """Create a new Fetch character"""
-    target_path = _add_path_if_exists(prefs.get('paths.characters'), 'Fetches')
-    template = prefs.get('templates.fetch')
-    return _create_simple_character(args, target_path, template, 'Fetch')
-
-def create_goblin(args, prefs):
-    """Create a new Goblin character"""
-    target_path = _add_path_if_exists(prefs.get('paths.characters'), 'Goblins')
-    template = prefs.get('templates.goblin')
-    return _create_simple_character(args, target_path, template, 'Goblin')
-
-def _create_simple_character(args, target_path, template, typetag):
+def create_simple(args, prefs):
     """Create a character without extra processing
 
-    Simple characters don't have any unique tags or file annotations. This
-    method is used by create_human() and create_fetch().
+    Simple characters don't have any unique tags or file annotations. Everything
+    is based on their type.
 
     Arguments:
     * args          object  Object with runtime data. Must contain the following
@@ -296,12 +278,11 @@ def _create_simple_character(args, target_path, template, typetag):
         + name              string  Base file name
         + group (optional)  list    One or more names of groups the character
                                     belongs to. Used to derive path for the file.
-    * target_path   string  Base destination of the created file. This is
-                            modified to get the final destination folder.
-    * template      string  Path to the template file to copy
-    * typetag       string  Name of the character's type. Inserted as @type tag.
     """
+    ctype = args.ctype
+
     # Derive destination path
+    target_path = _add_path_if_exists(prefs.get('paths.characters'), prefs.get('type_paths.%s' % ctype))
     for group_raw in args.group:
         group_name = group_raw.title()
         target_path = _add_path_if_exists(target_path, group_name)
@@ -312,10 +293,12 @@ def _create_simple_character(args, target_path, template, typetag):
         return Result(False, errmsg="Character '%s' already exists!" % args.name, errcode = 1)
 
     # Add tags
+    typetag = ctype.title()
     tags = ['@type %s' % typetag] + ["@group %s" % g for g in args.group]
     header = "\n".join(tags) + '\n\n'
 
     # Copy template
+    template = prefs.get('templates.%s' % ctype)
     try:
         with open(template, 'r') as f:
             data = header + f.read()
