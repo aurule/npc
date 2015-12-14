@@ -116,6 +116,11 @@ def main(argv):
     character_parser.add_argument('name', help="character's name", metavar='name')
     character_parser.add_argument('-g', '--group', default=[], nargs="*", help='name of a group that counts the character as a member', metavar='group')
 
+    # Parent parser for shared pathing options
+    paths_parser = argparse.ArgumentParser(add_help=False)
+    paths_parser.add_argument('--search', nargs="*", default=[prefs.get('paths.characters')], help="Paths to search. Individual files are added verbatim and directories are searched recursively.", metavar="PATH")
+    paths_parser.add_argument('--ignore', nargs="*", default=[], help="Paths to skip when searching for character files", metavar="PATH")
+
     # This is the main parser which handles program-wide options. These should be kept sparse.
     parser = argparse.ArgumentParser(description = 'GM helper script to manage game files')
     parser.add_argument('-b', '--batch', action='store_true', default=False, help="Do not open any newly created files")
@@ -129,14 +134,6 @@ def main(argv):
     parser_session = subparsers.add_parser('session', aliases=['s'], help="Create files for a new game session")
     parser_session.set_defaults(func=create_session)
 
-    # Subcommand for making changelings, with their unique options
-    parser_changeling = subparsers.add_parser('changeling', aliases=['c'], parents=[character_parser], help="Create a new changeling character")
-    parser_changeling.set_defaults(func=create_changeling)
-    parser_changeling.add_argument('seeming', help="character's Seeming", metavar='seeming')
-    parser_changeling.add_argument('kith', help="character's Kith", metavar='kith')
-    parser_changeling.add_argument('-c', '--court', help="the character's Court", metavar='court')
-    parser_changeling.add_argument('-m', '--motley', help="the character's Motley", metavar='motley')
-
     # These parsers are just named subcommand entry points to create simple characters
     parser_human = subparsers.add_parser('human', aliases=['h'], parents=[character_parser], help="Create a new human character")
     parser_human.set_defaults(func=create_simple, ctype="human")
@@ -145,28 +142,32 @@ def main(argv):
     parser_goblin = subparsers.add_parser('goblin', parents=[character_parser], help="Create a new goblin character")
     parser_goblin.set_defaults(func=create_simple, ctype="goblin")
 
+    # Subcommand for making changelings, with their unique options
+    parser_changeling = subparsers.add_parser('changeling', aliases=['c'], parents=[character_parser], help="Create a new changeling character")
+    parser_changeling.set_defaults(func=create_changeling)
+    parser_changeling.add_argument('seeming', help="character's Seeming", metavar='seeming')
+    parser_changeling.add_argument('kith', help="character's Kith", metavar='kith')
+    parser_changeling.add_argument('-c', '--court', help="the character's Court", metavar='court')
+    parser_changeling.add_argument('-m', '--motley', help="the character's Motley", metavar='motley')
+
     # Subcommand for linting characer files
-    parser_lint = subparsers.add_parser('lint', help="Check the character files for minimum completeness.")
+    parser_lint = subparsers.add_parser('lint', parents=[paths_parser], help="Check the character files for minimum completeness.")
     parser_lint.add_argument('-f', '--fix', action='store_true', default=False, help="automatically fix certain problems")
     parser_lint.set_defaults(func=do_lint)
-    # TODO add more args
-    #   search_root
-    #   paths to ignore
-    #   list of explicit paths to lint
 
     # Subcommand to list character data in multiple formats
-    parser_webpage = subparsers.add_parser('list', aliases=['l'], help="Generate an NPC Listing")
+    parser_webpage = subparsers.add_parser('list', aliases=['l'], parents=[paths_parser], help="Generate an NPC Listing")
     parser_webpage.add_argument('-t', '--format', choices=['markdown', 'md', 'json'], default=prefs.get('list_format'), help="Format to use for the listing. Defaults to 'md'")
     parser_webpage.add_argument('-m', '--metadata', nargs="?", const='default', default=False, help="Add metadata to the output. When the output format supports more than one metadata scheme, you can specify that scheme as well.")
     parser_webpage.add_argument('-o', '--outfile', nargs="?", const='-', default=None, help="file where the listing will be saved")
     parser_webpage.set_defaults(func=do_list)
 
     # Update files subcommand
-    parser_update = subparsers.add_parser('update', help="Update various support files (motleys, etc.) using the content of the character files")
+    parser_update = subparsers.add_parser('update', parents=[paths_parser], help="Update various support files (motleys, etc.) using the content of the character files")
     parser_update.set_defaults(func=do_update)
 
     # Reorganize character files subcommand
-    parser_reorg = subparsers.add_parser('reorg', help="Move character files to the most appropriate directories")
+    parser_reorg = subparsers.add_parser('reorg', parents=[paths_parser], help="Move character files to the most appropriate directories")
     parser_reorg.add_argument('-p', '--purge', action="store_true", default=False, help="After moving all files, remove any empty directories within the base characters path")
     parser_reorg.add_argument('-v', '--verbose', action="store_true", default=False, help="Show the changes that are made")
     parser_reorg.set_defaults(func=do_reorg)
@@ -383,15 +384,18 @@ def _is_session_file(f, prefs):
     return really_a_file and match
 
 def do_update(args, prefs):
-    characters = _parse(prefs.get('paths.characters'))
+    characters = []
+    for search_path in args.search:
+        characters.extend(_parse(search_path, args.ignore))
     # foreach motley tag in the characters
     #   ensure the corresponding motley file exists
     #   ensure the character appears in the list of motley members
     return Result(False, errmsg="Not yet implemented", errcode=3)
 
 def do_reorg(args, prefs):
-    base_path = prefs.get('paths.characters')
-    characters = _parse(base_path)
+    characters = []
+    for search_path in args.search:
+        characters.extend(_parse(search_path, args.ignore))
     for c in characters:
         new_path = _create_path(c, base_path, prefs)
         if new_path != path.dirname(c['path']):
@@ -454,7 +458,10 @@ def do_list(args, prefs):
                                 stdout.
     * prefs - Settings object
     """
-    characters = _sort_chars(_parse(prefs.get('paths.characters')))
+    characters = []
+    for search_path in args.search:
+        characters.extend(_parse(search_path, args.ignore))
+    characters = _sort_chars(characters)
 
     out_type = args.format.lower()
 
@@ -533,7 +540,9 @@ def do_lint(args, prefs):
     * @seeming tag is present and valid
     * @kith tag is present and valid
     """
-    characters = _parse(prefs.get('paths.characters'))
+    characters = []
+    for search_path in args.search:
+        characters.extend(_parse(search_path, args.ignore))
 
     changeling_bonuses = path.join(prefs.install_base, 'support/seeming-kith.json')
     sk = None
@@ -743,11 +752,19 @@ def _parse(search_root, ignore_paths = [], include_bare = False):
     Set include_bare to True to scan files without an extension in addition to
     .nwod files.
     """
+    if isinstance(search_root, str):
+        data = _parse_character(search_root)
+        data['path'] = search_root
+        return [data]
+
     characters = []
     for dirpath, dirnames, files in walk(search_root):
         if dirpath in ignore_paths:
             continue
         for name in files:
+            target_path = path.join(dirpath, name)
+            if target_path in ignore_paths:
+                continue
             base, ext = path.splitext(name)
             if ext == '.nwod' or (include_bare and not ext):
                 target_path = path.join(dirpath, name)
