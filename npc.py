@@ -752,7 +752,7 @@ def _parse(search_root, ignore_paths = [], include_bare = False):
     Set include_bare to True to scan files without an extension in addition to
     .nwod files.
     """
-    if isinstance(search_root, str):
+    if path.isfile(search_root):
         data = _parse_character(search_root)
         data['path'] = search_root
         return [data]
@@ -767,7 +767,6 @@ def _parse(search_root, ignore_paths = [], include_bare = False):
                 continue
             base, ext = path.splitext(name)
             if ext == '.nwod' or (include_bare and not ext):
-                target_path = path.join(dirpath, name)
                 data = _parse_character(target_path)
                 data['path'] = target_path
                 characters.append(data)
