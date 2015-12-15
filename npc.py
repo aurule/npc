@@ -769,8 +769,7 @@ def do_init(args, prefs):
     campaign. Other directories are left to the user.
     """
     for k, p in prefs.get('paths').items():
-        if not path.exists(p):
-            makedirs(p)
+        makedirs(p, mode=0o775, exist_ok=True)
 
     return Result(True)
 
@@ -779,7 +778,7 @@ def do_settings(args, prefs):
     target_path = prefs.get_settings_path(args.location)
     if not path.exists(target_path):
         dirname = path.dirname(target_path)
-        makedirs(dirname, exist_ok=True)
+        makedirs(dirname, mode=0o775, exist_ok=True)
         open(target_path, 'a').close()
 
     if args.defaults:
