@@ -4,9 +4,15 @@ I created NPC to make my life easier when running New World of Darkness tabletop
 
 This project is very much a work in progress. It works well enough for me to use at my weekly game, but that's it.
 
-# Requirements
+## Requirements
 
 NPC requires at least Python 3.5.0.
+
+## Installation
+
+First, simply clone the NPC repo into the desired install directory. Then make a symlink to somewhere in your path:
+
+`ln -s ~/bin/npc npc.py`
 
 # Usage
 
@@ -141,6 +147,10 @@ The `--search` and `--ignore` options interact in the following ways:
 
 # Configuration
 
-NPC reads config values from a json file: `support/settings-default.json`. I plan to allow per-campaign and maybe per-user overrides in the future, but that doesn't work yet.
+NPC reads config values from three separate files. These settings files use the json syntax and allow comments.
 
-The json files used by NPC allow comments, and the default settings file has extensive documentation of the available options.
+Default values are loaded from `support/settings-default.json` within the install directory. This file has extensive documentation of the available settings.
+
+User settings are loaded from `~/.config/npc/settings-user.json`. Settings in this file will overwrite the default values.
+
+Finally, campaign settings are loaded from `.npc/settings-campaign.json` within the current directory at runtime. Settings here will overwrite the default and user values.
