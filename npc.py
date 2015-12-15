@@ -105,15 +105,17 @@ class Settings:
         except:
             return
 
-        self.data = self._merge_settings(loaded)
+        self.data = self._merge_settings(loaded, self.data)
 
-    def _merge_settings(self, new_data, dest = None):
-        if not dest:
-            dest = self.data
+    def _merge_settings(self, new_data, orig):
+        dest = dict(orig)
 
         for k, v in new_data.items():
-            if isinstance(dest[k], dict):
-                dest[k] = self._merge_settings(v, dest[k])
+            if k in dest:
+                if isinstance(dest[k], dict):
+                    dest[k] = self._merge_settings(v, dest[k])
+                else:
+                    dest[k] = v
             else:
                 dest[k] = v
 
