@@ -80,8 +80,11 @@ class Settings:
     path_default = path.join(install_base, 'support/settings-default.json')
 
     def __init__(self, settings_path = path_default):
-        self.settings_files = [_load_json(settings_path)]
-        self._localize_default_paths()
+        self.data = _load_json(settings_path)
+        for k, v in self.data['templates'].items():
+            self.data['templates'][k] = path.join(self.install_base, v)
+        for k, v in self.data['support'].items():
+            self.data['support'][k] = path.join(self.install_base, v)
 
     def get(self, key):
         """Get the value of a settings key
@@ -89,19 +92,13 @@ class Settings:
         Use the period character to indicate a nested key.
         """
         key_parts = key.split('.')
-        arr = self.settings_files[0]
+        d = self.data
         for k in key_parts:
             try:
-                arr = arr[k]
+                d = d[k]
             except KeyError:
                 return None
-        return arr
-
-    def _localize_default_paths(self):
-        """Expand some default paths so they point to script install directory"""
-        paths = self.settings_files[0]['templates']
-        for k, v in paths.items():
-            paths[k] = path.join(self.install_base, v)
+        return d
 
     def get_metadata(fmt):
         return {**self.get('additional_metadata.all'), **self.get('additional_metadata.%s' % fmt)}
@@ -200,7 +197,7 @@ def create_changeling(args, prefs):
                                     belongs to. Used to derive path.
     * prefs - Settings object
     """
-    changeling_bonuses = path.join(prefs.install_base, 'support/seeming-kith.json')
+    changeling_bonuses = prefs.get('support.changeling-sk')
     seeming_re = re.compile(
         '^(\s+)seeming(\s+)\w+$',
         re.MULTILINE | re.IGNORECASE

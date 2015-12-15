@@ -1,4 +1,8 @@
 {
+    // Command to invoke your text editor of choice. This command must accept a
+    // list of files as its command line arguments.
+    "editor": "subl",
+
     // These are the root paths which NPC will use when finding campaign files.
     // The command `npc init` creates all directories within this key. Other
     // commands use specific directories.
@@ -26,10 +30,6 @@
         "fetch": "Fetches",
         "goblin": "Goblins"
     },
-
-    // Command to invoke your text editor of choice. This command must accept a
-    // list of files as its command line arguments.
-    "editor": "subl",
 
     // List of templates indexed by character type. These templates are copied
     // into the base character path when creating a new character of their type.
@@ -65,5 +65,16 @@
         // named format.
         "markdown": {},
         "json": {}
+    },
+
+    // Type-specific support files. These files contain extra data that's used
+    // when manipulating character files.
+    "support": {
+
+        // Enumerates the recognized seemings and kiths along with their
+        // blessings and curses. The changeling creator uses this data to add
+        // notes to the seeming and kith. The linter uses this data to validate
+        // the seeming and kith tags and notes.
+        "changeling-sk": "support/seeming-kith.json"
     }
 }
