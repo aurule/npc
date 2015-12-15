@@ -7,7 +7,7 @@ import sys
 import errno
 from contextlib import contextmanager
 from datetime import datetime
-from os import path, listdir, walk, makedirs, rmdir, scandir
+from os import path, walk, makedirs, rmdir, scandir
 from shutil import copy as shcopy, move as shmove
 from subprocess import run
 
@@ -78,6 +78,10 @@ class Settings:
     """
     install_base = path.dirname(path.realpath(__file__))
     path_default = path.join(install_base, 'support/settings-default.json')
+    extra_paths = [
+        path.expanduser('~/.config/npc/settings-user.json'),
+        '.npc/settings-campaign.json'
+    ]
 
     def __init__(self, settings_path = path_default):
         self.data = _load_json(settings_path)
@@ -86,12 +90,33 @@ class Settings:
         for k, v in self.data['support'].items():
             self.data['support'][k] = path.join(self.install_base, v)
 
+        for p in self.extra_paths:
+            self.load_more(p)
+
     def load_more(self, settings_path):
         """Merge settings from a file
 
-        Settings values from this file will override the defaults.
+        Settings values from this file will override the defaults. Any errors
+        while opening the file are suppressed and the file will simply not be
+        loaded.
         """
-        self.data = {**self.data, **_load_json(settings_path)}
+        try:
+            loaded = _load_json(settings_path)
+        except:
+            return
+
+        self.data = {**self.data, **loaded}
+
+    def get_settings_path(self, settings_type):
+        """Get a settings file path"""
+        if settings_type == 'default':
+            return self.path_default
+
+        if settings_type == 'user':
+            return self.extra_paths[0]
+
+        if settings_type == 'campaign':
+            return self.extra_paths[1]
 
     def get(self, key):
         """Get the value of a settings key
@@ -115,7 +140,6 @@ def main(argv):
 
     # load settings data
     prefs = Settings()
-    # TODO load user- and campaign-specific settings
 
     # This parser stores options shared by all character creation commands. It is never exposed directly.
     character_parser = argparse.ArgumentParser(add_help=False)
@@ -177,6 +201,12 @@ def main(argv):
     parser_reorg.add_argument('-p', '--purge', action="store_true", default=False, help="After moving all files, remove any empty directories within the base characters path")
     parser_reorg.add_argument('-v', '--verbose', action="store_true", default=False, help="Show the changes that are made")
     parser_reorg.set_defaults(func=do_reorg)
+
+    # Open settings files
+    parser_settings = subparsers.add_parser('settings', help="Open (and create if needed) a settings file")
+    parser_settings.add_argument('location', choices=['user', 'campaign'], help="The settings file to load")
+    parser_settings.add_argument('-d', '--defaults', action="store_true", default=False, help="Open the default settings for reference")
+    parser_settings.set_defaults(func=do_settings)
 
     args = parser.parse_args(argv)
 
@@ -744,6 +774,20 @@ def do_init(args, prefs):
 
     return Result(True)
 
+def do_settings(args, prefs):
+    """Open the named settings file"""
+    target_path = prefs.get_settings_path(args.location)
+    if not path.exists(target_path):
+        dirname = path.dirname(target_path)
+        makedirs(dirname, exist_ok=True)
+        open(target_path, 'a').close()
+
+    if args.defaults:
+        openable = [prefs.get_settings_path('default'), target_path]
+    else:
+        openable = [target_path]
+    return Result(True, openable = openable)
+
 def _parse(search_root, ignore_paths = [], include_bare = False):
     """Parse all the character files in a directory
 
@@ -756,7 +800,7 @@ def _parse(search_root, ignore_paths = [], include_bare = False):
         return [data]
 
     characters = []
-    for dirpath, dirnames, files in walk(search_root):
+    for dirpath, dirnames, files in walk(search_root, followlinks=True):
         if dirpath in ignore_paths:
             continue
         for name in files:
