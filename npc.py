@@ -86,6 +86,13 @@ class Settings:
         for k, v in self.data['support'].items():
             self.data['support'][k] = path.join(self.install_base, v)
 
+    def load_more(self, settings_path):
+        """Merge settings from a file
+
+        Settings values from this file will override the defaults.
+        """
+        self.data = {**self.data, **_load_json(settings_path)}
+
     def get(self, key):
         """Get the value of a settings key
 
@@ -100,12 +107,15 @@ class Settings:
                 return None
         return d
 
-    def get_metadata(fmt):
+    def get_metadata(self, fmt):
         return {**self.get('additional_metadata.all'), **self.get('additional_metadata.%s' % fmt)}
 
 def main(argv):
     """Run the interface"""
+
+    # load settings data
     prefs = Settings()
+    # TODO load user- and campaign-specific settings
 
     # This parser stores options shared by all character creation commands. It is never exposed directly.
     character_parser = argparse.ArgumentParser(add_help=False)
@@ -153,7 +163,7 @@ def main(argv):
 
     # Subcommand to list character data in multiple formats
     parser_webpage = subparsers.add_parser('list', aliases=['l'], parents=[paths_parser], help="Generate an NPC Listing")
-    parser_webpage.add_argument('-t', '--format', choices=['markdown', 'md', 'json'], default=prefs.get('list_format'), help="Format to use for the listing. Defaults to 'md'")
+    parser_webpage.add_argument('-t', '--format', choices=['markdown', 'md', 'json'], default=prefs.get('default_list_format'), help="Format to use for the listing. Defaults to 'md'")
     parser_webpage.add_argument('-m', '--metadata', nargs="?", const='default', default=False, help="Add metadata to the output. When the output format supports more than one metadata scheme, you can specify that scheme as well.")
     parser_webpage.add_argument('-o', '--outfile', nargs="?", const='-', default=None, help="file where the listing will be saved")
     parser_webpage.set_defaults(func=do_list)

@@ -42,7 +42,7 @@
     },
 
     // Default format to use when creating a list of characters.
-    "list_format": "markdown",
+    "default_list_format": "markdown",
 
     // Default format to use when metadata is requested for the listed format.
     "metadata_format": {
@@ -61,7 +61,7 @@
         // output format.
         "all": {},
 
-        // Keys listsed under other keys will only be added to lists of the
+        // Metadata listed in these hashes will only be added to lists of the
         // named format.
         "markdown": {},
         "json": {}
