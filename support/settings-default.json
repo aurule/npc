@@ -1,16 +1,38 @@
 {
+    // These are the root paths which NPC will use when finding campaign files.
+    // The command `npc init` creates all directories within this key. Other
+    // commands use specific directories.
     "paths": {
+
+        // The base characters path determines which folder will be searched for
+        // character files.
         "characters": "Characters",
+
+        // The session path is searched for session log files, and is where new
+        // ones will be created.
         "session": "Session History",
+
+        // The plot path is searched for plot files, and is where new ones will
+        // be created.
         "plot": "Plot"
     },
+
+    // These additional paths are appended to the base character path when
+    // creating new character files of the specified type, but only if the named
+    // folder already exists.
     "type_paths": {
         "human": "Humans",
         "changeling": "Changelings",
         "fetch": "Fetches",
         "goblin": "Goblins"
     },
+
+    // Command to invoke your text editor of choice. This command must accept a
+    // list of files as its command line arguments.
     "editor": "subl",
+
+    // List of templates indexed by character type. These templates are copied
+    // into the base character path when creating a new character of their type.
     "templates": {
         "human": "templates/Human Character Sheet.nwod",
         "changeling": "templates/Changeling Character Sheet.nwod",
@@ -18,12 +40,29 @@
         "goblin": "templates/Goblin Character Sheet.nwod",
         "session": "templates/Session Log.md"
     },
+
+    // Default format to use when creating a list of characters.
     "list_format": "markdown",
+
+    // Default format to use when metadata is requested for the listed format.
     "metadata_format": {
+
+        // The markdown output formatter can add metadata using the
+        // MultiMarkdown and Yaml Front Matter formats. To use MultiMarkdown,
+        // use the key "mmd". To use Yaml Front Matter, use the keys "yfm" or
+        // "yaml".
         "markdown": "mmd"
     },
+
+    // Additional metadata keys to include in generated character lists.
     "additional_metadata": {
+
+        // Keys listed under "all" will be added to all lists, regardless of the
+        // output format.
         "all": {},
+
+        // Keys listsed under other keys will only be added to lists of the
+        // named format.
         "markdown": {},
         "json": {}
     }

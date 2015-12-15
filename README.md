@@ -4,6 +4,10 @@ I created NPC to make my life easier when running New World of Darkness tabletop
 
 This project is very much a work in progress. It works well enough for me to use at my weekly game, but that's it.
 
+# Requirements
+
+NPC requires at least Python 3.5.0.
+
 # Usage
 
 The functionality of NPC is split among a few sub-commands. Each one encompasses a single high-level task, and has its own options.
@@ -22,7 +26,7 @@ If anything goes wrong in this process (mismatched numbers is the most common, f
 
 ## Create a Character
 
-Most subcommands involve creating a specific type of character. Character files are put into the `Characters/` directory by default, with further options based on their type, groups, and sometimes other factors.
+Most subcommands involve creating a specific type of character. Character files are put into the base characters directory (`Characters/` by default), with further options based on their type, groups, and sometimes other factors.
 
 All characters support the following options:
 
@@ -124,6 +128,19 @@ Options:
 * `--purge`: After moving the files, remove any empty directories within the root characters path
 * `--verbose`: Show each change as it's made
 
+# Gotchas
+
+## Using both `search` and `ignore`
+
+The `--search` and `--ignore` options interact in the following ways:
+
+1. When the same directory is passed to `search` and `ignore`, `ignore` wins out and the directory is not scanned.
+2. When a directory is passed to `search` and one of its child directories is passed to `ignore`, the child directory is not scanned.
+3. When a directory is passed to `search` and a file within that directory is passed to `ignore`, the file is not scanned.
+4. When a file is passed to `search` and `ignore`, `search` wins and the file is *always scanned*.
+
 # Configuration
 
-NPC reads config values from a json file: `support/settings-default.json`. I plan to allow per-campaign overrides in the future, but that doesn't work yet.
+NPC reads config values from a json file: `support/settings-default.json`. I plan to allow per-campaign and maybe per-user overrides in the future, but that doesn't work yet.
+
+The json files used by NPC allow comments, and the default settings file has extensive documentation of the available options.
