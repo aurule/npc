@@ -7,16 +7,12 @@ import sys
 import errno
 from contextlib import contextmanager
 from datetime import datetime
-from os import path, listdir, walk, makedirs, rmdir
+from os import path, listdir, walk, makedirs, rmdir, scandir
 from shutil import copy as shcopy, move as shmove
-from subprocess import call
+from subprocess import run
 
 # local packages
 import formatters.markdown
-
-# Regexes for parsing important elements
-plot_regex = '^plot (\d+)$'
-session_regex = '^session (\d+)$'
 
 class Result:
     """Data about the result of a subcommand
@@ -107,6 +103,9 @@ class Settings:
         for k, v in paths.items():
             paths[k] = path.join(self.install_base, v)
 
+    def get_metadata(fmt):
+        return {**self.get('additional_metadata.all'), **self.get('additional_metadata.%s' % fmt)}
+
 def main(argv):
     """Run the interface"""
     prefs = Settings()
@@ -132,7 +131,7 @@ def main(argv):
 
     # Session subcommand
     parser_session = subparsers.add_parser('session', aliases=['s'], help="Create files for a new game session")
-    parser_session.set_defaults(func=create_session)
+    parser_session.set_defaults(func=do_session)
 
     # These parsers are just named subcommand entry points to create simple characters
     parser_human = subparsers.add_parser('human', aliases=['h'], parents=[character_parser], help="Create a new human character")
@@ -181,7 +180,7 @@ def main(argv):
         return result.errcode
 
     if result.openable and not args.batch:
-        call([prefs.get("editor")] + result.openable)
+        run([prefs.get("editor")] + result.openable)
 
 def create_changeling(args, prefs):
     """Create a Changeling character
@@ -328,26 +327,27 @@ def _add_path_if_exists(base, potential):
         return test_path
     return base
 
-def create_session(args, prefs):
+def do_session(args, prefs):
     """Creates the files for a new game session
 
     Finds the plot and session log files for the last session, copies the plot,
     and creates a new empty session log.
     """
-    session_template = path.expanduser("~/Templates/Session Log.md")
+    plot_re = re.compile('^plot (\d+)$')
+    session_re = re.compile('^session (\d+)$')
 
     # find latest plot file and its number
-    plot_files = [f for f in listdir(prefs.get('paths.plot')) if _is_plot_file(f, prefs)]
+    plot_files = [f.name for f in scandir(prefs.get('paths.plot')) if f.is_file() and plot_re.match(path.splitext(f.name)[0])]
     latest_plot = max(plot_files, key=lambda plot_files:re.split(r"\s", plot_files)[1])
     (latest_plot_name, latest_plot_ext) = path.splitext(latest_plot)
-    plot_match = re.match(plot_regex, latest_plot_name)
+    plot_match = plot_re.match(latest_plot_name)
     plot_number = int(plot_match.group(1))
 
     # find latest session log and its number
-    session_files = [f for f in listdir(prefs.get('paths.session')) if _is_session_file(f, prefs)]
+    session_files = [f.name for f in scandir(prefs.get('paths.session')) if f.is_file() and session_re.match(path.splitext(f.name)[0])]
     latest_session = max(session_files, key=lambda session_files:re.split(r"\s", session_files)[1])
     (latest_session_name, latest_session_ext) = path.splitext(latest_session)
-    session_match = re.match(session_regex, latest_session_name)
+    session_match = session_re.match(latest_session_name)
     session_number = int(session_match.group(1))
 
     if plot_number != session_number:
@@ -363,25 +363,9 @@ def create_session(args, prefs):
     # create new session log
     old_session_path = path.join(prefs.get('paths.session'), latest_session)
     new_session_path = path.join(prefs.get('paths.session'), ("session %i" % new_number) + latest_session_ext)
-    shcopy(session_template, new_session_path)
+    shcopy(prefs.get('templates.session'), new_session_path)
 
     return Result(True, openable=[new_session_path, new_plot_path, old_plot_path, old_session_path])
-
-def _is_plot_file(f, prefs):
-    """Get whether f is a plot file"""
-    really_a_file = path.isfile(path.join(prefs.get('paths.plot'), f))
-    basename = path.basename(f)
-    match = re.match(plot_regex, path.splitext(basename)[0])
-
-    return really_a_file and match
-
-def _is_session_file(f, prefs):
-    """Get whether f is a session log"""
-    really_a_file = path.isfile(path.join(prefs.get('paths.session'), f))
-    basename = path.basename(f)
-    match = re.match(session_regex, path.splitext(basename)[0])
-
-    return really_a_file and match
 
 def do_update(args, prefs):
     characters = []
@@ -474,7 +458,7 @@ def do_list(args, prefs):
 
         # call out to get the markdown
         with _smart_open(args.outfile) as f:
-            meta = {**prefs.get("additional_metadata.all"), **prefs.get("additional_metadata.markdown")}
+            meta = prefs.get_metadata('markdown')
             formatters.markdown.dump(characters, f, metadata_type, meta)
     elif out_type == 'json':
         # make some json
@@ -484,7 +468,7 @@ def do_list(args, prefs):
                 'title': 'NPC Listing',
                 'created': datetime.now().isoformat()
             }
-            meta = {**base_meta, **prefs.get("additional_metadata.all"), **prefs.get("additional_metadata.json")}
+            meta = {**base_meta, **prefs.get_metadata('json')}
             characters = [meta] + characters
 
         with _smart_open(args.outfile) as f:
