@@ -467,12 +467,15 @@ def do_list(args, prefs):
 
     data = ''
     if out_type in ('md', 'markdown'):
+        # ensure 'default' gets replaced with the right default metadata format
         metadata_type = args.metadata
         if metadata_type == 'default':
             metadata_type = prefs.get('metadata_format.markdown')
 
+        # call out to get the markdown
         with _smart_open(args.outfile) as f:
-            formatters.markdown.dump(characters, f, metadata_type, prefs.get("additional_metadata.markdown"))
+            meta = {**prefs.get("additional_metadata.all"), **prefs.get("additional_metadata.markdown")}
+            formatters.markdown.dump(characters, f, metadata_type, meta)
     elif out_type == 'json':
         # make some json
         if args.metadata:
@@ -481,8 +484,8 @@ def do_list(args, prefs):
                 'title': 'NPC Listing',
                 'created': datetime.now().isoformat()
             }
-            meta = [{k:v for d in (base_meta, prefs.get("additional_metadata.json")) for k, v in d.items()}]
-            characters = meta + characters
+            meta = {**base_meta, **prefs.get("additional_metadata.all"), **prefs.get("additional_metadata.json")}
+            characters = [meta] + characters
 
         with _smart_open(args.outfile) as f:
             json.dump(characters, f)
@@ -497,6 +500,10 @@ def do_list(args, prefs):
     return Result(True, openable=openable)
 
 def _sort_chars(characters):
+    """Sort a list of character dicts.
+
+    In the future, this is where different sort methods will be handled.
+    """
     return sorted(characters, key=lambda c: c['name'][0].split(' ')[-1])
 
 @contextmanager

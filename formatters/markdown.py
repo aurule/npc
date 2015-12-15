@@ -20,11 +20,7 @@ def dump(characters, f, metadata_type=None, metadata_extra={}):
             ] + metadata_extra + ['---\n']
         else:
             return Result(False, errmsg="Unrecognized metadata format option '%s'" % metadata_type, errcode=6)
-
-        print(meta)
-        exit()
         data = "\n".join(meta)
-
         f.write(data)
 
     for c in characters:
