@@ -105,7 +105,19 @@ class Settings:
         except:
             return
 
-        self.data = {**self.data, **loaded}
+        self.data = self._merge_settings(loaded)
+
+    def _merge_settings(self, new_data, dest = None):
+        if not dest:
+            dest = self.data
+
+        for k, v in new_data.items():
+            if isinstance(dest[k], dict):
+                dest[k] = self._merge_settings(v, dest[k])
+            else:
+                dest[k] = v
+
+        return dest
 
     def get_settings_path(self, settings_type):
         """Get a settings file path"""
