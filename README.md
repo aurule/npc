@@ -18,7 +18,10 @@ First, simply clone the NPC repo into the desired install directory. Then make a
 
 The functionality of NPC is split among a few sub-commands. Each one encompasses a single high-level task, and has its own options.
 
-By default, NPC will open whatever files are relevant to the subcommand. To prevent this from happening, supply `--batch` or `-b` before the subcommand name.
+These global options must be passed *before* the name of the subcommand. They affect the overall behavior of NPC:
+
+* `--batch`: By default, NPC will open whatever files are relevant to the subcommand. The `--batch` switch prevents that from happening.
+* `--campaign`: By default, NPC derives the campaign path from the current directory when it is run. It does this by walking backward until it finds the `.npc/` campaign config directory, or hits root. In the latter case, it just uses the current directory. The `--campaign` argument overrides this behavior and explicitly sets the campaign directory.
 
 ## Set Up Directories
 

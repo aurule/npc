@@ -7,7 +7,7 @@ import sys
 import errno
 from contextlib import contextmanager
 from datetime import datetime
-from os import path, walk, makedirs, rmdir, scandir
+from os import path, walk, makedirs, rmdir, scandir, chdir, getcwd
 from shutil import copy as shcopy, move as shmove
 from subprocess import run
 
@@ -168,7 +168,8 @@ def main(argv):
     # This is the main parser which handles program-wide options. These should be kept sparse.
     parser = argparse.ArgumentParser(description = 'GM helper script to manage game files')
     parser.add_argument('-b', '--batch', action='store_true', default=False, help="Do not open any newly created files")
-    subparsers = parser.add_subparsers(title='Subcommands', description="Commands that can be run on the current campaign")
+    parser.add_argument('--campaign', default='auto', help="Use the campaign files in a different directory", metavar='DIR')
+    subparsers = parser.add_subparsers(title='Subcommands', description="Commands that can be run on the current campaign. See `%(prog)s <command> -h` to get help with individual commands.")
 
     # Subcommand to create the basic directories
     parser_init = subparsers.add_parser('init', help="Set up the basic directory structure for campaign files")
@@ -218,16 +219,51 @@ def main(argv):
     parser_settings.add_argument('-d', '--defaults', action="store_true", default=False, help="Open the default settings for reference")
     parser_settings.set_defaults(func=do_settings)
 
+    # Parse args
     args = parser.parse_args(argv)
 
-    result = args.func(args, prefs)
+    # change to the proper campaign directory if needed
+    base = args.campaign
+    if base == 'auto':
+        base = _find_campaign_base()
 
+    try:
+        chdir(base)
+    except OSError as e:
+        print("{}: '{}'".format(e.strerror, base))
+        return 4 # internal code for a filesystem error
+
+    # run the command
+    try:
+        result = args.func(args, prefs)
+    except AttributeError:
+        parser.print_help()
+        return 6
+
+    # handle errors
     if not result.success:
         print(result.errmsg)
         return result.errcode
 
+    # open the resulting files, if allowed
     if result.openable and not args.batch:
         run([prefs.get("editor")] + result.openable)
+
+def _find_campaign_base():
+    """Figure out the base campaign directory
+
+    Walks up the directory tree until it finds the '.npc' campaign config
+    directory, or hits the filesystem root.
+    """
+    cd = getcwd()
+    base = getcwd()
+    old_base = ''
+    while not path.isdir(path.join(base, '.npc')):
+        old_base = base
+        base = path.abspath(path.join(base, path.pardir))
+        if old_base == base:
+            return cd
+    return base
 
 def create_changeling(args, prefs):
     """Create a Changeling character
