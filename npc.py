@@ -206,10 +206,6 @@ def main(argv):
     parser_webpage.add_argument('-o', '--outfile', nargs="?", const='-', default=None, help="file where the listing will be saved")
     parser_webpage.set_defaults(func=do_list)
 
-    # Update files subcommand
-    parser_update = subparsers.add_parser('update', parents=[paths_parser], help="Update various support files (motleys, etc.) using the content of the character files")
-    parser_update.set_defaults(func=do_update)
-
     # Reorganize character files subcommand
     parser_reorg = subparsers.add_parser('reorg', parents=[paths_parser], help="Move character files to the most appropriate directories")
     parser_reorg.add_argument('-p', '--purge', action="store_true", default=False, help="After moving all files, remove any empty directories within the base characters path")
@@ -417,15 +413,6 @@ def do_session(args, prefs):
     shcopy(prefs.get('templates.session'), new_session_path)
 
     return Result(True, openable=[new_session_path, new_plot_path, old_plot_path, old_session_path])
-
-def do_update(args, prefs):
-    characters = []
-    for search_path in args.search:
-        characters.extend(_parse(search_path, args.ignore))
-    # foreach motley tag in the characters
-    #   ensure the corresponding motley file exists
-    #   ensure the character appears in the list of motley members
-    return Result(False, errmsg="Not yet implemented", errcode=3)
 
 def do_reorg(args, prefs):
     characters = []

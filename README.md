@@ -114,15 +114,6 @@ Options:
 * `--metadata`: Include metadata in the output. Can optionally specify the format of this metadata, if the main format supports it. Recognized values when used with the `markdown` format are `mmd` for MultiMarkdown metadata, and `yfm` or `yaml` for YAML Front Matter metadata.
 * `--outfile`: Path where the output should go. If omitted (or you pass "`-`"), the output will go to stdout for chaining to another command.
 
-## Update Dependent Files
-
-The `update` command isn't implemented yet. I plan to have it update motley membership based on the `@motley` tags in each character file.
-
-Options:
-
-* `--search`: Only look in these files and directories. Defaults to the base characters path.
-* `--ignore`: Ignore these files and directories. By default, nothing is ignored.
-
 ## Reorganize Character Files
 
 The `reorg` command builds default paths for all the characters and then moves them. It's inspired by that time when I realized I had 20 police officers in a sea of 130 human characters, and really wanted to put them in their own folder.
