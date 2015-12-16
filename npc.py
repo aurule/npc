@@ -173,6 +173,8 @@ def main(argv):
 
     # Subcommand to create the basic directories
     parser_init = subparsers.add_parser('init', help="Set up the basic directory structure for campaign files")
+    parser_init.add_argument('-t', '--types', action="store_true", default=False, help="Create directories for character types")
+    parser_init.add_argument('-a', '--all', action="store_true", default=False, help="Create all optional directories")
     parser_init.set_defaults(func=do_init)
 
     # Session subcommand
@@ -256,7 +258,7 @@ def _find_campaign_base():
     directory, or hits the filesystem root.
     """
     cd = getcwd()
-    base = getcwd()
+    base = cd
     old_base = ''
     while not path.isdir(path.join(base, '.npc')):
         old_base = base
@@ -451,6 +453,7 @@ def do_session(args, prefs):
     return Result(True, openable=[new_session_path, new_plot_path, old_plot_path, old_session_path])
 
 def do_reorg(args, prefs):
+    base_path = prefs.get('paths.characters')
     characters = []
     for search_path in args.search:
         characters.extend(_parse(search_path, args.ignore))
@@ -808,6 +811,11 @@ def do_init(args, prefs):
     for k, p in prefs.get('paths').items():
         makedirs(p, mode=0o775, exist_ok=True)
     makedirs('.npc', mode=0o775, exist_ok=True)
+
+    if args.types or args.all:
+        cbase = prefs.get('paths.characters')
+        for k, p in prefs.get('type_paths').items():
+            makedirs(path.join(cbase, p), mode=0o775, exist_ok=True)
 
     return Result(True)
 

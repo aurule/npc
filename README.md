@@ -25,7 +25,12 @@ These global options must be passed *before* the name of the subcommand. They af
 
 ## Set Up Directories
 
-The `init` command creates the basic directories that NPC expects to find. Every directory under the `paths` key in the settings file is created.
+The `init` command creates the basic directories that NPC expects to find. Every directory under the `paths` key in the settings file is created, along with the special `.npc` directory.
+
+Options:
+
+* `--types`: Within `paths.characters`, create every directory in the `type_paths` key.
+* `--all`: Create all optional directories
 
 ## Create Session Files
 
