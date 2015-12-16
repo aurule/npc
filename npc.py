@@ -771,6 +771,7 @@ def do_init(args, prefs):
     """
     for k, p in prefs.get('paths').items():
         makedirs(p, mode=0o775, exist_ok=True)
+    makedirs('.npc', mode=0o775, exist_ok=True)
 
     return Result(True)
 
