@@ -39,6 +39,7 @@ class Result:
         # 4. Filesystem error
         # 5. Unrecognized format
         # 6. Invalid option
+        # 7. Unrecognized template
         self.errmsg = errmsg
 
 def _load_json(filename):
@@ -181,6 +182,10 @@ def main(argv):
     # Session subcommand
     parser_session = subparsers.add_parser('session', aliases=['s'], help="Create files for a new game session")
     parser_session.set_defaults(func=do_session)
+
+    parser_generic = subparsers.add_parser('generic', aliases=['g'], parents=[character_parser], help="Create a new character using the named template")
+    parser_generic.add_argument('ctype', metavar='template', help="Template to use. Must be configured in settings")
+    parser_generic.set_defaults(func=create_simple)
 
     # These parsers are just named subcommand entry points to create simple characters
     parser_human = subparsers.add_parser('human', aliases=['h'], parents=[character_parser], help="Create a new human character")
@@ -372,6 +377,8 @@ def create_simple(args, prefs):
                                     belongs to. Used to derive path for the file.
     """
     ctype = args.ctype
+    if ctype not in prefs.get('templates'):
+        return Result(False, errmsg="Unrecognized template '%s'" % ctype, errcode=7)
 
     # Derive destination path
     target_path = _add_path_if_exists(prefs.get('paths.characters'), prefs.get('type_paths.%s' % ctype))
