@@ -308,8 +308,7 @@ def create_changeling(args, prefs):
     else:
         target_path = _add_path_if_exists(target_path, 'Courtless')
 
-    for group_raw in args.group:
-        group_name = group_raw.title()
+    for group_name in args.group:
         target_path = _add_path_if_exists(target_path, group_name)
 
     filename = args.name + '.nwod'
@@ -382,8 +381,7 @@ def create_simple(args, prefs):
 
     # Derive destination path
     target_path = _add_path_if_exists(prefs.get('paths.characters'), prefs.get('type_paths.%s' % ctype))
-    for group_raw in args.group:
-        group_name = group_raw.title()
+    for group_name in args.group:
         target_path = _add_path_if_exists(target_path, group_name)
 
     filename = args.name + '.nwod'
@@ -391,6 +389,7 @@ def create_simple(args, prefs):
     if path.exists(target_path):
         return Result(False, errmsg="Character '%s' already exists!" % args.name, errcode = 1)
 
+    exit()
     # Add tags
     typetag = ctype.title()
     tags = ['@type %s' % typetag] + ["@group %s" % g for g in args.group]
@@ -416,6 +415,7 @@ def create_simple(args, prefs):
 def _add_path_if_exists(base, potential):
     """Add a directory to the base path if that directory exists"""
     test_path = path.join(base, potential)
+    print(test_path)
     if path.exists(test_path):
         return test_path
     return base
