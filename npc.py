@@ -752,7 +752,7 @@ def _parse_character(char_file_path):
                 value = match.group('value')
 
                 if tag == 'changeling':
-                    bits = value.split()
+                    bits = value.split(maxsplit=1)
                     char_properties.setdefault('type', []).append('Changeling')
                     if len(bits):
                         char_properties.setdefault('seeming', []).append(bits[0])
