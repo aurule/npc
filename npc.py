@@ -743,6 +743,7 @@ def _parse_character(char_file_path):
         previous_line_empty = False
 
         for line in char_file:
+            # stop processing once we see game stats
             if section_re.match(line):
                 break
 
