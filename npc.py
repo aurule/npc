@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python3.5
 
 import re
 import argparse
@@ -389,7 +389,6 @@ def create_simple(args, prefs):
     if path.exists(target_path):
         return Result(False, errmsg="Character '%s' already exists!" % args.name, errcode = 1)
 
-    exit()
     # Add tags
     typetag = ctype.title()
     tags = ['@type %s' % typetag] + ["@group %s" % g for g in args.group]
@@ -415,7 +414,6 @@ def create_simple(args, prefs):
 def _add_path_if_exists(base, potential):
     """Add a directory to the base path if that directory exists"""
     test_path = path.join(base, potential)
-    print(test_path)
     if path.exists(test_path):
         return test_path
     return base
