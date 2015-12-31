@@ -6,11 +6,15 @@ fileTypes: [nwod]
 uuid: 7aa94fe0-ea77-4175-a58b-d903dbe28309
 
 patterns:
-- comment: 'Tags like @appearance and @group'
-  name: 'keyword.other.nwod'
-  match: '^@(\w+)'
-  captures:
-    '1': {name: 'entity.name.tag.nwod'}
+- comment: 'Compound changeling tag'
+  begin: '^(@changeling)'
+  beginCaptures:
+    '1': {name: 'entity.name.tag.changeling.nwod'}
+  end: '$'
+  patterns:
+  - include: '#seemings'
+  - include: '#kiths'
+- include: '#tags'
 - comment: 'Special --Stats-- section'
   name: 'meta.section.stats.nwod'
   begin: '^--(Stats)--$'
@@ -289,17 +293,37 @@ repository:
       match: |-
         (?ix) \b(
           Broadback | Hunterheart | Runnerswift | Skitterskulk |
-          Steepscrambler | Swimmerskin | Venombite | Windwing |
+          Steepscrambler | Swimmerskin | Venombite | Windwing | Cleareyes |
+          Coldscale | Roteater | Truefriend | Chimera | Coyote | Nix |
+          Riddleseeker |
           Antiquarian | Gravewight | Leechfinger | Mirrorskin | Tunnelgrub |
-          Lurkglider |
+          Lurkglider | Moonborn | Nightsinger | Palewraith | Razorhand |
+          Whisperwisp | Illes | Pishacha | Skogsra | Lurkers |
           Airtouched | Earthbones | Fireheart | Manikin | Snowskin | Waterborn |
-          Woodblood |
-          Bright One | Dancer | Draconic | Flowering | Muse | Telluric |
-          Treasured |
+          Woodblood | Blightbent | Levinquick | Metalflesh | Sandharrowed |
+          Apsaras | Ask-wee-da-eed | Di-cang |
+          Bright One | Dancer | Draconic | Flowering | Muse | Flamesiren |
+          Polychromatic | Shadowsoul | Telluric | Treasured | Gandharva |
+          Succubus | Weisse Frau | Minstrel | Romancer | Larcenist | Playmate |
           Cyclopean | Farwalker | Gargantuan | Gristlegrinder | Stonebones |
-          Waterdweller |
+          Waterdweller | Bloodbrute | Corpsegrinder | Render | Witchtooth |
+          Daitya | Oni | Troll |
           Artist | Brewer | Chatelaine | Chirurgeon | Oracle | Smith | Soldier |
-          Woodwalker | Drudge
+          Woodwalker | Author | Drudge | Gameplayer | Miner | Gremlin |
+          Pamarindo | Thusser | Fatemaker | Inventors
         )\b
       name: 'support.constant.kith.nwod'
+  tags:
+    patterns:
+    - comment: 'Tag name'
+      begin: '^(?=@\w+)'
+      end: '$'
+      patterns:
+      - match: |-
+          @(?ix) \b(
+            type | faketype | name | realname | group | rank | appearance | dead |
+            foreign |
+            seeming | kith | changeling | court | motley | mask | mien
+          )\b
+        name: 'entity.name.tag.nwod'
 ...

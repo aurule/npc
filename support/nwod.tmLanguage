@@ -11,20 +11,35 @@
 	<key>patterns</key>
 	<array>
 		<dict>
-			<key>captures</key>
+			<key>begin</key>
+			<string>^(@changeling)</string>
+			<key>beginCaptures</key>
 			<dict>
 				<key>1</key>
 				<dict>
 					<key>name</key>
-					<string>entity.name.tag.nwod</string>
+					<string>entity.name.tag.changeling.nwod</string>
 				</dict>
 			</dict>
 			<key>comment</key>
-			<string>Tags like @appearance and @group</string>
-			<key>match</key>
-			<string>^@(\w+)</string>
-			<key>name</key>
-			<string>keyword.other.nwod</string>
+			<string>Compound changeling tag</string>
+			<key>end</key>
+			<string>$</string>
+			<key>patterns</key>
+			<array>
+				<dict>
+					<key>include</key>
+					<string>#seemings</string>
+				</dict>
+				<dict>
+					<key>include</key>
+					<string>#kiths</string>
+				</dict>
+			</array>
+		</dict>
+		<dict>
+			<key>include</key>
+			<string>#tags</string>
 		</dict>
 		<dict>
 			<key>begin</key>
@@ -392,17 +407,24 @@
 					<key>match</key>
 					<string>(?ix) \b(
   Broadback | Hunterheart | Runnerswift | Skitterskulk |
-  Steepscrambler | Swimmerskin | Venombite | Windwing |
+  Steepscrambler | Swimmerskin | Venombite | Windwing | Cleareyes |
+  Coldscale | Roteater | Truefriend | Chimera | Coyote | Nix |
+  Riddleseeker |
   Antiquarian | Gravewight | Leechfinger | Mirrorskin | Tunnelgrub |
-  Lurkglider |
+  Lurkglider | Moonborn | Nightsinger | Palewraith | Razorhand |
+  Whisperwisp | Illes | Pishacha | Skogsra | Lurkers |
   Airtouched | Earthbones | Fireheart | Manikin | Snowskin | Waterborn |
-  Woodblood |
-  Bright One | Dancer | Draconic | Flowering | Muse | Telluric |
-  Treasured |
+  Woodblood | Blightbent | Levinquick | Metalflesh | Sandharrowed |
+  Apsaras | Ask-wee-da-eed | Di-cang |
+  Bright One | Dancer | Draconic | Flowering | Muse | Flamesiren |
+  Polychromatic | Shadowsoul | Telluric | Treasured | Gandharva |
+  Succubus | Weisse Frau | Minstrel | Romancer | Larcenist | Playmate |
   Cyclopean | Farwalker | Gargantuan | Gristlegrinder | Stonebones |
-  Waterdweller |
+  Waterdweller | Bloodbrute | Corpsegrinder | Render | Witchtooth |
+  Daitya | Oni | Troll |
   Artist | Brewer | Chatelaine | Chirurgeon | Oracle | Smith | Soldier |
-  Woodwalker | Drudge
+  Woodwalker | Author | Drudge | Gameplayer | Miner | Gremlin |
+  Pamarindo | Thusser | Fatemaker | Inventors
 )\b</string>
 					<key>name</key>
 					<string>support.constant.kith.nwod</string>
@@ -681,6 +703,33 @@
 						<dict>
 							<key>include</key>
 							<string>#rollmod</string>
+						</dict>
+					</array>
+				</dict>
+			</array>
+		</dict>
+		<key>tags</key>
+		<dict>
+			<key>patterns</key>
+			<array>
+				<dict>
+					<key>begin</key>
+					<string>^(?=@\w+)</string>
+					<key>comment</key>
+					<string>Tag name</string>
+					<key>end</key>
+					<string>$</string>
+					<key>patterns</key>
+					<array>
+						<dict>
+							<key>match</key>
+							<string>@(?ix) \b(
+  type | faketype | name | realname | group | rank | appearance | dead |
+  foreign |
+  seeming | kith | changeling | court | motley | mask | mien
+)\b</string>
+							<key>name</key>
+							<string>entity.name.tag.nwod</string>
 						</dict>
 					</array>
 				</dict>
