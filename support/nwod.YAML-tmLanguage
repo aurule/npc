@@ -326,4 +326,6 @@ repository:
             seeming | kith | changeling | court | motley | mask | mien
           )\b
         name: 'entity.name.tag.nwod'
+      - match: '^@\w+\s'
+        name: 'string.other.nwod'
 ...
