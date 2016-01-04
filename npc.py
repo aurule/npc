@@ -5,11 +5,13 @@ import argparse
 import json
 import sys
 import errno
+import itertools
 from contextlib import contextmanager
 from datetime import datetime
 from os import path, walk, makedirs, rmdir, scandir, chdir, getcwd
 from shutil import copy as shcopy, move as shmove
 from subprocess import run
+from collections import defaultdict
 
 # local packages
 import formatters
@@ -263,14 +265,14 @@ def _find_campaign_base():
     Walks up the directory tree until it finds the '.npc' campaign config
     directory, or hits the filesystem root.
     """
-    cd = getcwd()
-    base = cd
+    current_dir = getcwd()
+    base = current_dir
     old_base = ''
     while not path.isdir(path.join(base, '.npc')):
         old_base = base
         base = path.abspath(path.join(base, path.pardir))
         if old_base == base:
-            return cd
+            return current_dir
     return base
 
 def create_changeling(args, prefs):
@@ -303,7 +305,7 @@ def create_changeling(args, prefs):
 
     # Derive the path for the new file
     target_path = _add_path_if_exists(prefs.get('paths.characters'), prefs.get('type_paths.%s' % 'changeling'))
-    if args.court is not None:
+    if args.court:
         target_path = _add_path_if_exists(target_path, args.court.title())
     else:
         target_path = _add_path_if_exists(target_path, 'Courtless')
@@ -320,9 +322,9 @@ def create_changeling(args, prefs):
     seeming_name = args.seeming.title()
     kith_name = args.kith.title()
     tags = ['@changeling %s %s' % (seeming_name, kith_name)]
-    if args.motley is not None:
+    if args.motley:
         tags.append('@motley %s' % args.motley)
-    if args.court is not None:
+    if args.court:
         tags.append('@court %s' % args.court.title())
     tags.extend(["@group %s" % g for g in args.group])
 
@@ -460,9 +462,7 @@ def do_session(args, prefs):
 
 def do_reorg(args, prefs):
     base_path = prefs.get('paths.characters')
-    characters = []
-    for search_path in args.search:
-        characters.extend(_parse(search_path, args.ignore))
+    characters = get_characters(args.search, args.ignore)
     for c in characters:
         new_path = _create_path(c, base_path, prefs)
         if new_path != path.dirname(c['path']):
@@ -474,12 +474,13 @@ def do_reorg(args, prefs):
         for dirpath, dirnames, files in walk(base_path):
             try:
                 rmdir(dirpath)
+                if args.verbose:
+                    print("Removing empty directory {}".format(dirpath))
             except OSError as e:
                 if e.errno == errno.ENOTEMPTY:
                     continue
-            else:
-                if args.verbose:
-                    print("Removing empty directory {}".format(dirpath))
+                else:
+                    raise
 
     return Result(True)
 
@@ -494,7 +495,7 @@ def _create_path(c, target_path, prefs):
     # handle type-specific considerations
     if ctype == 'changeling':
         # changelings use court first, then groups
-        if 'court' in c is not None:
+        if 'court' in c:
             for court_name in c['court']:
                 target_path = _add_path_if_exists(target_path, court_name)
         else:
@@ -525,10 +526,7 @@ def do_list(args, prefs):
                                 stdout.
     * prefs - Settings object
     """
-    characters = []
-    for search_path in args.search:
-        characters.extend(_parse(search_path, args.ignore))
-    characters = _sort_chars(characters)
+    characters = _sort_chars(get_characters(args.search, args.ignore))
 
     out_type = args.format.lower()
 
@@ -614,10 +612,7 @@ def do_lint(args, prefs):
     * @seeming tag is present and valid
     * @kith tag is present and valid
     """
-    characters = []
-    for search_path in args.search:
-        characters.extend(_parse(search_path, args.ignore))
-
+    characters = get_characters(args.search, args.ignore)
     changeling_bonuses = path.join(prefs.install_base, 'support/seeming-kith.json')
     sk = None
 
@@ -691,19 +686,20 @@ def do_settings(args, prefs):
         openable = [target_path]
     return Result(True, openable = openable)
 
-def _parse(search_root, ignore_paths = [], include_bare = False):
+def get_characters(search_paths, ignore_paths):
+    return itertools.chain.from_iterable((_parse_path(path, ignore_paths) for path in search_paths))
+
+def _parse_path(start_path, ignore_paths = [], include_bare = False):
     """Parse all the character files in a directory
 
     Set include_bare to True to scan files without an extension in addition to
     .nwod files.
     """
-    if path.isfile(search_root):
-        data = _parse_character(search_root)
-        data['path'] = search_root
-        return [data]
+    if path.isfile(start_path):
+        return [_parse_character(start_path)]
 
     characters = []
-    for dirpath, dirnames, files in walk(search_root, followlinks=True):
+    for dirpath, _, files in walk(start_path, followlinks=True):
         if dirpath in ignore_paths:
             continue
         for name in files:
@@ -713,9 +709,7 @@ def _parse(search_root, ignore_paths = [], include_bare = False):
             base, ext = path.splitext(name)
             if ext == '.nwod' or (include_bare and not ext):
                 data = _parse_character(target_path)
-                data['path'] = target_path
                 characters.append(data)
-
     return characters
 
 def _parse_character(char_file_path):
@@ -734,7 +728,8 @@ def _parse_character(char_file_path):
 
     # rank uses a dict keyed by group name instead of an array
     # description is always a plain string
-    char_properties = {'name': [name], 'description': '', 'rank': {}}
+    char_properties = defaultdict(list)
+    char_properties.update({'name': [name], 'description': '', 'rank': defaultdict(list)})
 
     with open(char_file_path, 'r') as char_file:
         last_group = ''
@@ -746,17 +741,17 @@ def _parse_character(char_file_path):
                 break
 
             match = tag_re.match(line)
-            if match is not None:
+            if match:
                 tag = match.group('tag')
                 value = match.group('value')
 
                 if tag == 'changeling':
                     bits = value.split(maxsplit=1)
-                    char_properties.setdefault('type', []).append('Changeling')
+                    char_properties['type'].append('Changeling')
                     if len(bits):
-                        char_properties.setdefault('seeming', []).append(bits[0])
+                        char_properties['seeming'].append(bits[0])
                     if len(bits) > 1:
-                        char_properties.setdefault('kith', []).append(bits[1])
+                        char_properties['kith'].append(bits[1])
                     continue
 
                 if tag == 'realname':
@@ -765,9 +760,8 @@ def _parse_character(char_file_path):
 
                 if tag in group_tags:
                     last_group = value
-
                 if tag == 'rank' and last_group:
-                    char_properties['rank'].setdefault(last_group, []).append(value)
+                    char_properties['rank'][last_group].append(value)
                     continue
             else:
                 if line == "\n":
@@ -781,9 +775,10 @@ def _parse_character(char_file_path):
                 char_properties['description'] += line
                 continue
 
-            char_properties.setdefault(tag, []).append(value)
+            char_properties[tag].append(value)
 
     char_properties['description'] = char_properties['description'].strip()
+    char_properties['path'] = char_file_path
     return char_properties
 
 if __name__ == '__main__':
