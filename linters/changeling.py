@@ -1,5 +1,9 @@
 import re
 
+replaceable = ('x', 'y')
+seeming_regex = '^(?P<name>\s+seeming\s+)(?P<seeming>%s)\s*(?P<notes>\(.*\))?$'
+kith_regex = '^(?P<name>\s+kith\s+)(?P<kith>%s)\s*(?P<notes>\(.*\))?$'
+
 def lint(c, fix = False, **kwargs):
     """Verify the more complex elements in a changeling sheet
 
@@ -19,9 +23,6 @@ def lint(c, fix = False, **kwargs):
     """
     problems = []
     dirty = False
-
-    seeming_regex = '^(?P<name>\s+seeming\s+)(?P<seeming>%s)\s*(?P<notes>\(.*\))?$'
-    kith_regex = '^(?P<name>\s+kith\s+)(?P<kith>%s)\s*(?P<notes>\(.*\))?$'
 
     sk = kwargs['sk']
 
@@ -57,8 +58,30 @@ def lint(c, fix = False, **kwargs):
                 re.MULTILINE | re.IGNORECASE
             )
             seeming_matches = list(seeming_re.finditer(data))
-            if set(seeming_tags) != set([m.group('seeming').lower() for m in seeming_matches]):
+            matched_seemings = [m.group('seeming').lower() for m in seeming_matches]
+            if set(seeming_tags) != set(matched_seemings):
                 problems.append("Seeming stats do not match @seeming tags")
+                if (len(matched_seemings) == 1
+                    and len(seeming_tags) == 1
+                    and matched_seemings[0] in replaceable):
+                    if fix:
+                        seeming_lines = []
+                        for seeming_tag in seeming_tags:
+                            try:
+                                seeming_lines.append("    Seeming %s (%s; %s)" % (seeming_tag.title(), sk['blessing'][seeming_tag], sk['curse'][seeming_tag]))
+                            except IndexError:
+                                seeming_lines.append("    Seeming %s" % seeming_tag.title())
+
+                        data = seeming_re.sub(
+                            "\n".join(seeming_lines),
+                            data
+                        )
+                        # print(data)
+                        # exit
+                        # problems[-1] += ' (FIXED)'
+                        # dirty   True
+                    else:
+                        problems[-1] += ' (placeholder; can fix)'
             else:
                 # tags and stats match. iterate through each seeming and make sure the notes are right
                 for m in list(seeming_matches):
@@ -131,7 +154,6 @@ def lint(c, fix = False, **kwargs):
 
 def _fix_seeming_notes(seeming, notes, data):
     """Insert correct notes for a seeming stat"""
-    seeming_regex = '^(?P<name>\s+seeming\s+)(?P<seeming>%s)\s*(?P<notes>\(.*\))?$'
     seeming_fix_re = re.compile(
         seeming_regex % seeming,
         re.MULTILINE | re.IGNORECASE
@@ -141,9 +163,20 @@ def _fix_seeming_notes(seeming, notes, data):
         data
     )
 
+def _fix_seeming_placeholder(seeming, notes, data):
+    """Replace the existing placeholder stat with a correct seeming stat"""
+    seeming_fix_re = re.compile(
+        seeming_regex % '\w+',
+        re.MULTILINE | re.IGNORECASE
+    )
+    seeming_with_notes = ' '.join([seeming, notes])
+    return seeming_fix_re.sub(
+        '\g<1>%s' % seeming_with_notes,
+        data
+    )
+
 def _fix_kith_notes(kith, notes, data):
     """Insert correct notes for a kith stat"""
-    kith_regex = '^(?P<name>\s+kith\s+)(?P<kith>%s)\s*(?P<notes>\(.*\))?$'
     kith_fix_re = re.compile(
         kith_regex % kith,
         re.MULTILINE | re.IGNORECASE

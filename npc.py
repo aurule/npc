@@ -464,7 +464,7 @@ def do_reorg(args, prefs):
     base_path = prefs.get('paths.characters')
     characters = get_characters(args.search, args.ignore)
     for c in characters:
-        new_path = _create_path(c, base_path, prefs)
+        new_path = create_path_from_character(c, base_path, prefs)
         if new_path != path.dirname(c['path']):
             if args.verbose:
                 print("Moving {} to {}".format(c['path'], new_path))
@@ -484,7 +484,7 @@ def do_reorg(args, prefs):
 
     return Result(True)
 
-def _create_path(c, target_path, prefs):
+def create_path_from_character(c, target_path, prefs):
     # add type-based directory if we can
     if 'type' in c:
         ctype = c['type'][0].lower()
