@@ -4,4 +4,4 @@ import npc
 import sys
 
 if __name__ == '__main__':
-    npc.run(sys.argv[1:])
+    npc.cli(sys.argv[1:])
