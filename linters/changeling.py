@@ -58,28 +58,25 @@ def lint(c, fix = False, **kwargs):
                 re.MULTILINE | re.IGNORECASE
             )
             seeming_matches = list(seeming_re.finditer(data))
-            matched_seemings = [m.group('seeming').lower() for m in seeming_matches]
-            if set(seeming_tags) != set(matched_seemings):
+            seeming_stat_names = [m.group('seeming').lower() for m in seeming_matches]
+            if set(seeming_tags) != set(seeming_stat_names):
                 problems.append("Seeming stats do not match @seeming tags")
-                if (len(matched_seemings) == 1
+                if (len(seeming_stat_names) == 1
                     and len(seeming_tags) == 1
-                    and matched_seemings[0] in replaceable):
+                    and seeming_stat_names[0] in replaceable):
                     if fix:
-                        seeming_lines = []
-                        for seeming_tag in seeming_tags:
-                            try:
-                                seeming_lines.append("    Seeming %s (%s; %s)" % (seeming_tag.title(), sk['blessing'][seeming_tag], sk['curse'][seeming_tag]))
-                            except IndexError:
-                                seeming_lines.append("    Seeming %s" % seeming_tag.title())
+                        seeming_tag = seeming_tags[0]
+                        try:
+                            seeming_line = "%s (%s; %s)" % (seeming_tag.title(), sk['blessing'][seeming_tag], sk['curse'][seeming_tag])
+                        except IndexError:
+                            seeming_line = "%s" % seeming_tag.title()
 
                         data = seeming_re.sub(
-                            "\n".join(seeming_lines),
+                            '\g<1>%s' % seeming_line,
                             data
                         )
-                        # print(data)
-                        # exit
-                        # problems[-1] += ' (FIXED)'
-                        # dirty   True
+                        problems[-1] += ' (placeholder; FIXED)'
+                        dirty = True
                     else:
                         problems[-1] += ' (placeholder; can fix)'
             else:
@@ -117,8 +114,27 @@ def lint(c, fix = False, **kwargs):
                 re.MULTILINE | re.IGNORECASE
             )
             kith_matches = list(kith_re.finditer(data))
+            kith_stat_names = [m.group('kith').lower() for m in kith_matches]
             if set(kith_tags) != set([m.group('kith').lower() for m in kith_matches]):
                 problems.append("Kith stats do not match @kith tags")
+                if (len(kith_stat_names) == 1
+                    and len(kith_tags) == 1
+                    and kith_stat_names[0] in replaceable):
+                    if fix:
+                        kith_tag = kith_tags[0]
+                        try:
+                            kith_line = "%s (%s)" % (kith_tag.title(), sk['blessing'][kith_tag])
+                        except IndexError:
+                            kith_line = "%s" % kith_tag.title()
+
+                        data = kith_re.sub(
+                            '\g<1>%s' % kith_line,
+                            data
+                        )
+                        problems[-1] += ' (placeholder; FIXED)'
+                        dirty = True
+                    else:
+                        problems[-1] += ' (placeholder; can fix)'
             else:
                 # tags and stats match. iterate through each kith and make sure the notes are right
                 for m in list(kith_matches):
@@ -160,18 +176,6 @@ def _fix_seeming_notes(seeming, notes, data):
     )
     return seeming_fix_re.sub(
         '\g<1>\g<2> %s' % notes,
-        data
-    )
-
-def _fix_seeming_placeholder(seeming, notes, data):
-    """Replace the existing placeholder stat with a correct seeming stat"""
-    seeming_fix_re = re.compile(
-        seeming_regex % '\w+',
-        re.MULTILINE | re.IGNORECASE
-    )
-    seeming_with_notes = ' '.join([seeming, notes])
-    return seeming_fix_re.sub(
-        '\g<1>%s' % seeming_with_notes,
         data
     )
 
