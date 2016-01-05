@@ -5,17 +5,14 @@ import argparse
 import json
 import sys
 import errno
-import itertools
 from contextlib import contextmanager
 from datetime import datetime
 from os import path, walk, makedirs, rmdir, scandir, chdir, getcwd
 from shutil import copy as shcopy, move as shmove
 from subprocess import run
-from collections import defaultdict
 
 # local packages
-from . import formatters
-from . import linters
+from . import formatters, linters, parser
 
 class Result:
     """Data about the result of a subcommand
@@ -462,7 +459,7 @@ def do_session(args, prefs):
 
 def do_reorg(args, prefs):
     base_path = prefs.get('paths.characters')
-    characters = get_characters(args.search, args.ignore)
+    characters = parser.get_characters(args.search, args.ignore)
     for c in characters:
         new_path = create_path_from_character(c, base_path, prefs)
         if new_path != path.dirname(c['path']):
@@ -526,7 +523,7 @@ def do_list(args, prefs):
                                 stdout.
     * prefs - Settings object
     """
-    characters = _sort_chars(get_characters(args.search, args.ignore))
+    characters = _sort_chars(parser.get_characters(args.search, args.ignore))
 
     out_type = args.format.lower()
 
@@ -612,7 +609,7 @@ def do_lint(args, prefs):
     * @seeming tag is present and valid
     * @kith tag is present and valid
     """
-    characters = get_characters(args.search, args.ignore)
+    characters = parser.get_characters(args.search, args.ignore)
     changeling_bonuses = path.join(prefs.install_base, 'support/seeming-kith.json')
     sk = None
 
@@ -685,98 +682,3 @@ def do_settings(args, prefs):
     else:
         openable = [target_path]
     return Result(True, openable = openable)
-
-def get_characters(search_paths, ignore_paths):
-    return itertools.chain.from_iterable((_parse_path(path, ignore_paths) for path in search_paths))
-
-def _parse_path(start_path, ignore_paths = [], include_bare = False):
-    """Parse all the character files in a directory
-
-    Set include_bare to True to scan files without an extension in addition to
-    .nwod files.
-    """
-    if path.isfile(start_path):
-        return [_parse_character(start_path)]
-
-    characters = []
-    for dirpath, _, files in walk(start_path, followlinks=True):
-        if dirpath in ignore_paths:
-            continue
-        for name in files:
-            target_path = path.join(dirpath, name)
-            if target_path in ignore_paths:
-                continue
-            base, ext = path.splitext(name)
-            if ext == '.nwod' or (include_bare and not ext):
-                data = _parse_character(target_path)
-                characters.append(data)
-    return characters
-
-def _parse_character(char_file_path):
-    """Parse a single character file"""
-    name_re = re.compile('([\w\s]+)(?: - )?.*')
-    section_re = re.compile('^--.+--\s*$')
-    tag_re = re.compile('^@(?P<tag>\w+)\s+(?P<value>.*)$')
-
-    # Group-like tags. These all accept an accompanying `rank` tag.
-    group_tags = ['group', 'court', 'motley']
-
-    # derive character name from basename
-    basename = path.basename(char_file_path)
-    match = name_re.match(path.splitext(basename)[0])
-    name = match.group(1)
-
-    # rank uses a dict keyed by group name instead of an array
-    # description is always a plain string
-    char_properties = defaultdict(list)
-    char_properties.update({'name': [name], 'description': '', 'rank': defaultdict(list)})
-
-    with open(char_file_path, 'r') as char_file:
-        last_group = ''
-        previous_line_empty = False
-
-        for line in char_file:
-            # stop processing once we see game stats
-            if section_re.match(line):
-                break
-
-            match = tag_re.match(line)
-            if match:
-                tag = match.group('tag')
-                value = match.group('value')
-
-                if tag == 'changeling':
-                    bits = value.split(maxsplit=1)
-                    char_properties['type'].append('Changeling')
-                    if len(bits):
-                        char_properties['seeming'].append(bits[0])
-                    if len(bits) > 1:
-                        char_properties['kith'].append(bits[1])
-                    continue
-
-                if tag == 'realname':
-                    char_properties['name'][0] = value
-                    continue
-
-                if tag in group_tags:
-                    last_group = value
-                if tag == 'rank' and last_group:
-                    char_properties['rank'][last_group].append(value)
-                    continue
-            else:
-                if line == "\n":
-                    if not previous_line_empty:
-                        previous_line_empty = True
-                    else:
-                        continue
-                else:
-                    previous_line_empty = False
-
-                char_properties['description'] += line
-                continue
-
-            char_properties[tag].append(value)
-
-    char_properties['description'] = char_properties['description'].strip()
-    char_properties['path'] = char_file_path
-    return char_properties
