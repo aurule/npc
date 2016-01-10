@@ -18,7 +18,7 @@ attributes
 
 advantages
     wyrd     1
-    Morality 7
+    morality 7
     health   6 (stam+size)
     will     2 (resolve+composure)
     size     5 (adult)
