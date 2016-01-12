@@ -6,15 +6,8 @@ fileTypes: [nwod]
 uuid: 7aa94fe0-ea77-4175-a58b-d903dbe28309
 
 patterns:
-- comment: 'Compound changeling tag'
-  begin: '^(@changeling)'
-  beginCaptures:
-    '1': {name: 'entity.name.tag.changeling.nwod'}
-  end: '$'
-  patterns:
-  - include: '#seemings'
-  - include: '#kiths'
-- include: '#tags'
+- include: '#changeling-tags'
+- include: '#general-tags'
 - comment: 'Special --Stats-- section'
   name: 'meta.section.stats.nwod'
   begin: '^--(Stats)--$'
@@ -332,7 +325,7 @@ repository:
           Pamarindo | Thusser | Fatemaker | Inventors
         )\b
       name: 'support.constant.kith.nwod'
-  tags:
+  general-tags:
     patterns:
     - comment: 'Tag name'
       begin: '^(?=@\w+)'
@@ -347,4 +340,28 @@ repository:
         name: 'entity.name.tag.nwod'
       - match: '^@\w+\s'
         name: 'string.other.nwod'
+  changeling-tags:
+    patterns:
+    - comment: 'Compound changeling tag'
+      begin: '^(@changeling)'
+      beginCaptures:
+        '1': {name: 'entity.name.tag.changeling.nwod'}
+      end: '$'
+      patterns:
+      - include: '#seemings'
+      - include: '#kiths'
+    - comment: 'Special seeming tag'
+      begin: '^(@seeming)'
+      beginCaptures:
+        '1': {name: 'entity.name.tag.seeming.nwod'}
+      end: '$'
+      patterns:
+      - include: '#seemings'
+    - comment: 'Special kith tag'
+      begin: '^(@kith)'
+      beginCaptures:
+        '1': {name: 'entity.name.tag.kith.nwod'}
+      end: '$'
+      patterns:
+      - include: '#kiths'
 ...
