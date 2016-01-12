@@ -202,7 +202,7 @@ repository:
         end: '(?=\-|\s*$)'
         patterns:
         - include: '#rollmod'
-        - include: '#rangeValues'
+        - include: '#rangeAtkPools'
         - comment: 'First round aim bonus'
           match: '(aim)\s+(\+)(\d+)'
           captures:
@@ -243,11 +243,30 @@ repository:
     patterns:
     - comment: 'Range listings like 20/40/80'
       name: 'meta.variable.rangevalues.nwod'
-      match: (-?\d+)/(-?\d+)/(-?\d+)
+      match: (\d+)/(\d+)/(\d+)
       captures:
         '1': {name: 'constant.numeric.shortrange.nwod'}
         '2': {name: 'constant.numeric.medrange.nwod'}
         '3': {name: 'constant.numeric.longrange.nwod'}
+    - comment: 'Range placeholder s/m/l'
+      name: 'meta.constant.rangevalues.nwod'
+      match: '(s)/(m)/(l)'
+      captures:
+        '1': {name: 'support.constant.numeric.shortrange.nwod'}
+        '2': {name: 'support.constant.numeric.medrange.nwod'}
+        '3': {name: 'support.constant.numeric.longrange.nwod'}
+  rangeAtkPools:
+    patterns:
+    - comment: 'Ranged attack listings like 20/40/80'
+      name: 'meta.variable.rangeatkpools.nwod'
+      match: (-?)(\d+)/(-?)(\d+)/(-?)(\d+)
+      captures:
+        '1': {name: 'keyword.operator.nwod'}
+        '2': {name: 'constant.numeric.shortrange.nwod'}
+        '3': {name: 'keyword.operator.nwod'}
+        '4': {name: 'constant.numeric.medrange.nwod'}
+        '5': {name: 'keyword.operator.nwod'}
+        '6': {name: 'constant.numeric.longrange.nwod'}
     - comment: 'Range placeholder s/m/l'
       name: 'meta.constant.rangevalues.nwod'
       match: '(s)/(m)/(l)'

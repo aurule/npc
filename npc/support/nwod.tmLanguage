@@ -454,6 +454,79 @@
 				</dict>
 			</array>
 		</dict>
+		<key>rangeAtkPools</key>
+		<dict>
+			<key>patterns</key>
+			<array>
+				<dict>
+					<key>captures</key>
+					<dict>
+						<key>1</key>
+						<dict>
+							<key>name</key>
+							<string>keyword.operator.nwod</string>
+						</dict>
+						<key>2</key>
+						<dict>
+							<key>name</key>
+							<string>constant.numeric.shortrange.nwod</string>
+						</dict>
+						<key>3</key>
+						<dict>
+							<key>name</key>
+							<string>keyword.operator.nwod</string>
+						</dict>
+						<key>4</key>
+						<dict>
+							<key>name</key>
+							<string>constant.numeric.medrange.nwod</string>
+						</dict>
+						<key>5</key>
+						<dict>
+							<key>name</key>
+							<string>keyword.operator.nwod</string>
+						</dict>
+						<key>6</key>
+						<dict>
+							<key>name</key>
+							<string>constant.numeric.longrange.nwod</string>
+						</dict>
+					</dict>
+					<key>comment</key>
+					<string>Ranged attack listings like 20/40/80</string>
+					<key>match</key>
+					<string>(-?)(\d+)/(-?)(\d+)/(-?)(\d+)</string>
+					<key>name</key>
+					<string>meta.variable.rangeatkpools.nwod</string>
+				</dict>
+				<dict>
+					<key>captures</key>
+					<dict>
+						<key>1</key>
+						<dict>
+							<key>name</key>
+							<string>support.constant.numeric.shortrange.nwod</string>
+						</dict>
+						<key>2</key>
+						<dict>
+							<key>name</key>
+							<string>support.constant.numeric.medrange.nwod</string>
+						</dict>
+						<key>3</key>
+						<dict>
+							<key>name</key>
+							<string>support.constant.numeric.longrange.nwod</string>
+						</dict>
+					</dict>
+					<key>comment</key>
+					<string>Range placeholder s/m/l</string>
+					<key>match</key>
+					<string>(s)/(m)/(l)</string>
+					<key>name</key>
+					<string>meta.constant.rangevalues.nwod</string>
+				</dict>
+			</array>
+		</dict>
 		<key>rangeValues</key>
 		<dict>
 			<key>patterns</key>
@@ -480,7 +553,7 @@
 					<key>comment</key>
 					<string>Range listings like 20/40/80</string>
 					<key>match</key>
-					<string>(-?\d+)/(-?\d+)/(-?\d+)</string>
+					<string>(\d+)/(\d+)/(\d+)</string>
 					<key>name</key>
 					<string>meta.variable.rangevalues.nwod</string>
 				</dict>
@@ -913,7 +986,7 @@
 								</dict>
 								<dict>
 									<key>include</key>
-									<string>#rangeValues</string>
+									<string>#rangeAtkPools</string>
 								</dict>
 								<dict>
 									<key>captures</key>
