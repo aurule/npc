@@ -149,11 +149,18 @@ def cli(argv):
     parser_lint.set_defaults(func=commands.lint)
 
     # Subcommand to list character data in multiple formats
-    parser_webpage = subparsers.add_parser('list', aliases=['l'], parents=[paths_parser], help="Generate an NPC Listing")
-    parser_webpage.add_argument('-t', '--format', choices=['markdown', 'md', 'json'], default=prefs.get('default_list_format'), help="Format to use for the listing. Defaults to 'md'")
-    parser_webpage.add_argument('-m', '--metadata', nargs="?", const='default', default=False, help="Add metadata to the output. When the output format supports more than one metadata scheme, you can specify that scheme as well.")
-    parser_webpage.add_argument('-o', '--outfile', nargs="?", const='-', default=None, help="file where the listing will be saved")
-    parser_webpage.set_defaults(func=commands.list)
+    parser_list = subparsers.add_parser('list', aliases=['l'], parents=[paths_parser], help="Generate an NPC Listing")
+    parser_list.add_argument('-t', '--format', choices=['markdown', 'md', 'json'], default=prefs.get('default_list_format'), help="Format to use for the listing. Defaults to 'md'")
+    parser_list.add_argument('-m', '--metadata', nargs="?", const='default', default=False, help="Add metadata to the output. When the output format supports more than one metadata scheme, you can specify that scheme as well.")
+    parser_list.add_argument('-o', '--outfile', nargs="?", const='-', default=None, help="File where the listing will be saved")
+    parser_list.set_defaults(func=commands.list)
+
+    # Dump raw character data
+    parser_dump = subparsers.add_parser('dump', parents=[paths_parser], help="Generate a json listing of raw data for all characters")
+    parser_dump.add_argument('-s', '--sort', action="store_true", default=False, help="Sort the characters")
+    parser_dump.add_argument('-m', '--metadata', action="store_true", default=False, help="Add metadata to the output.")
+    parser_dump.add_argument('-o', '--outfile', nargs="?", const='-', default=None, help="File where the listing will be saved")
+    parser_dump.set_defaults(func=commands.dump)
 
     # Reorganize character files subcommand
     parser_reorg = subparsers.add_parser('reorg', parents=[paths_parser], help="Move character files to the most appropriate directories")

@@ -267,7 +267,6 @@ def list(args, prefs):
 
     out_type = args.format.lower()
 
-    data = ''
     if out_type in ('md', 'markdown'):
         # ensure 'default' gets replaced with the right default metadata format
         metadata_type = args.metadata
@@ -346,6 +345,31 @@ def _smart_open(filename=None):
     finally:
         if fh is not sys.stdout:
             fh.close()
+
+def dump(args, prefs):
+    """Dump the raw character data, unaltered"""
+    characters = parser.get_characters(args.search, args.ignore)
+    if args.sort:
+        characters = _sort_chars(characters)
+
+    # make some json
+    if args.metadata:
+        base_meta = {
+            'meta': True,
+            'title': 'NPC Listing',
+            'created': datetime.now().isoformat()
+        }
+        meta = {**base_meta, **prefs.get_metadata('json')}
+        characters = [meta] + characters
+
+    with _smart_open(args.outfile) as f:
+        json.dump([c for c in characters], f)
+
+    openable = None
+    if args.outfile and args.outfile != '-':
+        openable = [args.outfile]
+
+    return Result(True, openable=openable)
 
 def lint(args, prefs):
     """Check character files for completeness and correctness
