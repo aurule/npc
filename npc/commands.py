@@ -79,14 +79,16 @@ def create_changeling(args, prefs):
         sk = util.load_json(changeling_bonuses)
     except IOError as e:
         return Result(False, errmsg=e.strerror + " (%s)" % changeling_bonuses, errcode=4)
-    if args.seeming.lower() in sk['blessing']:
-        seeming_notes = "%s; %s" % (sk['blessing'][args.seeming.lower()], sk['curse'][args.seeming.lower()])
+    seeming_key = args.seeming.lower()
+    if seeming_key in sk['blessing']:
+        seeming_notes = "%s; %s" % (sk['blessing'][seeming_key], sk['curse'][seeming_key])
         data = seeming_re.sub(
             '\g<1>Seeming\g<2>%s (%s)' % (seeming_name, seeming_notes),
             data
         )
-    if args.kith.lower() in sk['blessing']:
-        kith_notes = sk['blessing'][args.kith.lower()]
+    kith_key = args.kith.lower()
+    if kith_key in sk['blessing']:
+        kith_notes = sk['blessing'][kith_key]
         data = kith_re.sub(
             '\g<1>Kith\g<2>%s (%s)' % (kith_name, kith_notes),
             data
@@ -221,10 +223,10 @@ def reorg(args, prefs):
 
     return Result(True)
 
-def create_path_from_character(c, target_path, prefs):
+def create_path_from_character(character, target_path, prefs):
     # add type-based directory if we can
-    if 'type' in c:
-        ctype = c['type'][0].lower()
+    if 'type' in character:
+        ctype = character['type'][0].lower()
         target_path = _add_path_if_exists(target_path, prefs.get('type_paths.%s' % ctype))
     else:
         ctype = 'none'
@@ -232,15 +234,15 @@ def create_path_from_character(c, target_path, prefs):
     # handle type-specific considerations
     if ctype == 'changeling':
         # changelings use court first, then groups
-        if 'court' in c:
-            for court_name in c['court']:
+        if 'court' in character:
+            for court_name in character['court']:
                 target_path = _add_path_if_exists(target_path, court_name)
         else:
             target_path = _add_path_if_exists(target_path, 'Courtless')
 
     # everyone uses groups in their path
-    if 'group' in c:
-        for group_name in c['group']:
+    if 'group' in character:
+        for group_name in character['group']:
             target_path = _add_path_if_exists(target_path, group_name)
 
     return target_path

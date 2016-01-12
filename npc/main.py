@@ -20,19 +20,19 @@ class Settings:
     """
     install_base = path.dirname(path.realpath(__file__))
     path_default = path.join(install_base, 'support/settings-default.json')
-    extra_paths = [
+    path_extra = [
         path.expanduser('~/.config/npc/settings-user.json'),
         '.npc/settings-campaign.json'
     ]
 
-    def __init__(self, settings_path = path_default):
+    def __init__(self, settings_path=path_default, extra_paths=path_extra):
         self.data = util.load_json(settings_path)
         for k, v in self.data['templates'].items():
             self.data['templates'][k] = path.join(self.install_base, v)
         for k, v in self.data['support'].items():
             self.data['support'][k] = path.join(self.install_base, v)
 
-        for p in self.extra_paths:
+        for p in extra_paths:
             self.load_more(p)
 
     def load_more(self, settings_path):
@@ -137,11 +137,11 @@ def cli(argv):
 
     # Subcommand for making changelings, with their unique options
     parser_changeling = subparsers.add_parser('changeling', aliases=['c'], parents=[character_parser], help="Create a new changeling character")
-    parser_changeling.set_defaults(func=commands.create_changeling)
     parser_changeling.add_argument('seeming', help="character's Seeming", metavar='seeming')
     parser_changeling.add_argument('kith', help="character's Kith", metavar='kith')
     parser_changeling.add_argument('-c', '--court', help="the character's Court", metavar='court')
     parser_changeling.add_argument('-m', '--motley', help="the character's Motley", metavar='motley')
+    parser_changeling.set_defaults(func=commands.create_changeling)
 
     # Subcommand for linting characer files
     parser_lint = subparsers.add_parser('lint', parents=[paths_parser], help="Check the character files for minimum completeness.")
