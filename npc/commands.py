@@ -263,7 +263,7 @@ def list(args, prefs):
                                 stdout.
     * prefs - Settings object
     """
-    characters = _sort_chars(parser.get_characters(args.search, args.ignore))
+    characters = _sort_chars(_prune_chars(parser.get_characters(args.search, args.ignore)))
 
     out_type = args.format.lower()
 
@@ -280,6 +280,7 @@ def list(args, prefs):
             formatters.markdown.dump(characters, f, metadata_type, meta)
     elif out_type == 'json':
         # make some json
+        meta = None
         if args.metadata:
             base_meta = {
                 'meta': True,
@@ -287,10 +288,9 @@ def list(args, prefs):
                 'created': datetime.now().isoformat()
             }
             meta = {**base_meta, **prefs.get_metadata('json')}
-            characters = [meta] + characters
 
         with _smart_open(args.outfile) as f:
-            json.dump(characters, f)
+            formatters.json.dump(characters, f, meta)
 
     else:
         return Result(False, errmsg="Cannot create output of format '%s'", errcode=5)
@@ -307,6 +307,24 @@ def _sort_chars(characters):
     In the future, this is where different sort methods will be handled.
     """
     return sorted(characters, key=lambda c: c['name'][0].split(' ')[-1])
+
+def _prune_chars(characters):
+    """Alter character records for output."""
+
+    for c in characters:
+        # skip if asked
+        # if 'skip' in c:
+            # continue
+
+        # use fake types if present
+        if 'faketype' in c:
+            c['type'] = c['faketype']
+
+        # Use a placeholder for unknown type
+        if 'type' not in c:
+            c['type'] = 'Unknown'
+
+        yield c
 
 @contextmanager
 def _smart_open(filename=None):

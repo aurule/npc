@@ -24,10 +24,6 @@ def dump(characters, f, metadata_type=None, metadata_extra={}):
         f.write(data)
 
     for c in characters:
-        # use fake types if present
-        if 'faketype' in c:
-            c['type'] = c['faketype']
-
         # name
         realname = c['name'][0]
         f.write("# %s" % realname)
