@@ -470,7 +470,7 @@
 							<key>match</key>
 							<string>@(?ix) \b(
   type | faketype | name | realname | group | rank | appearance | dead |
-  foreign |
+  foreign | skip |
   seeming | kith | changeling | court | motley | mask | mien
 )\b</string>
 							<key>name</key>

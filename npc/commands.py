@@ -314,8 +314,8 @@ def _prune_chars(characters):
 
     for c in characters:
         # skip if asked
-        # if 'skip' in c:
-            # continue
+        if 'skip' in c:
+            continue
 
         # use fake types if present
         if 'faketype' in c:

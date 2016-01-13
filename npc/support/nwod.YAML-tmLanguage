@@ -334,7 +334,7 @@ repository:
       - match: |-
           @(?ix) \b(
             type | faketype | name | realname | group | rank | appearance | dead |
-            foreign |
+            foreign | skip |
             seeming | kith | changeling | court | motley | mask | mien
           )\b
         name: 'entity.name.tag.nwod'
