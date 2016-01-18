@@ -185,7 +185,7 @@ def _build_secondary_groups(c):
                 slug = _add_group_ranks('%s Motley' % motley, motley, c)
                 s.append(slug)
         if 'group' in c:
-            for group in c['group']:
+            for group in c['group'][1:0]:
                 slug = _add_group_ranks(group, group, c)
                 s.append(slug)
 
