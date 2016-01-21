@@ -94,9 +94,57 @@ class Settings:
 def cli(argv):
     """Run the interface"""
 
-    # load settings data
+    # load settings data and create parser
     prefs = Settings()
+    parser = _make_parser(prefs)
 
+    # Parse args
+    args = parser.parse_args(argv)
+
+    # change to the proper campaign directory if needed
+    base = args.campaign
+    if base == 'auto':
+        base = _find_campaign_base()
+
+    try:
+        chdir(base)
+    except OSError as e:
+        print("{}: '{}'".format(e.strerror, base))
+        return 4 # internal code for a filesystem error
+
+    # run the command
+    try:
+        result = args.func(args, prefs)
+    except AttributeError:
+        parser.print_help()
+        return 6
+
+    # handle errors
+    if not result.success:
+        print(result.errmsg)
+        return result.errcode
+
+    # open the resulting files, if allowed
+    if result.openable and not args.batch:
+        run([prefs.get("editor")] + result.openable)
+
+def _find_campaign_base():
+    """Figure out the base campaign directory
+
+    Walks up the directory tree until it finds the '.npc' campaign config
+    directory, or hits the filesystem root.
+    """
+    current_dir = getcwd()
+    base = current_dir
+    old_base = ''
+    while not path.isdir(path.join(base, '.npc')):
+        old_base = base
+        base = path.abspath(path.join(base, path.pardir))
+        if old_base == base:
+            return current_dir
+    return base
+
+def _make_parser(prefs):
     # This parser stores options shared by all character creation commands. It is never exposed directly.
     character_parser = argparse.ArgumentParser(add_help=False)
     character_parser.add_argument('name', help="character's name", metavar='name')
@@ -174,48 +222,4 @@ def cli(argv):
     parser_settings.add_argument('-d', '--defaults', action="store_true", default=False, help="Open the default settings for reference")
     parser_settings.set_defaults(func=commands.settings)
 
-    # Parse args
-    args = parser.parse_args(argv)
-
-    # change to the proper campaign directory if needed
-    base = args.campaign
-    if base == 'auto':
-        base = _find_campaign_base()
-
-    try:
-        chdir(base)
-    except OSError as e:
-        print("{}: '{}'".format(e.strerror, base))
-        return 4 # internal code for a filesystem error
-
-    # run the command
-    try:
-        result = args.func(args, prefs)
-    except AttributeError:
-        parser.print_help()
-        return 6
-
-    # handle errors
-    if not result.success:
-        print(result.errmsg)
-        return result.errcode
-
-    # open the resulting files, if allowed
-    if result.openable and not args.batch:
-        run([prefs.get("editor")] + result.openable)
-
-def _find_campaign_base():
-    """Figure out the base campaign directory
-
-    Walks up the directory tree until it finds the '.npc' campaign config
-    directory, or hits the filesystem root.
-    """
-    current_dir = getcwd()
-    base = current_dir
-    old_base = ''
-    while not path.isdir(path.join(base, '.npc')):
-        old_base = base
-        base = path.abspath(path.join(base, path.pardir))
-        if old_base == base:
-            return current_dir
-    return base
+    return parser
