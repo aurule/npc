@@ -165,3 +165,13 @@ Default values are loaded from `support/settings-default.json` within the instal
 User settings are loaded from `~/.config/npc/settings-user.json`. Settings in this file will overwrite the default values.
 
 Finally, campaign settings are loaded from `.npc/settings-campaign.json` within the current directory at runtime. Settings here will overwrite the default and user values.
+
+# Testing
+
+## Requirements
+
+* pytest 2.8.5
+
+## Running Tests
+
+Go to the root project directory and run `python -m pytest`.
