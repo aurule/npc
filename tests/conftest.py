@@ -4,7 +4,7 @@ import os
 
 @pytest.fixture(scope="module")
 def prefs():
-    return npc.main.Settings()
+    return npc.main.Settings(extra_paths=[])
 
 @pytest.fixture(scope="module")
 def parser(prefs):

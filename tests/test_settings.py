@@ -4,7 +4,7 @@ import os
 
 @pytest.fixture
 def settings():
-    return npc.main.Settings()
+    return npc.main.Settings(extra_paths=[])
 
 @pytest.fixture
 def override_path():
