@@ -5,7 +5,7 @@ import itertools
 from os import path, walk
 from collections import defaultdict
 
-def get_characters(search_paths, ignore_paths):
+def get_characters(search_paths = ['.'], ignore_paths = []):
     return itertools.chain.from_iterable((_parse_path(path, ignore_paths) for path in search_paths))
 
 def _parse_path(start_path, ignore_paths = [], include_bare = False):
