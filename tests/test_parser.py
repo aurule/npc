@@ -63,6 +63,14 @@ class TestTags:
     Basic tag inclusion is handled above.
     """
 
+    def test_basic_tags(self):
+        """Tags should be added by name"""
+        parseables = fixture_dir(['parsing', 'tags', 'Basic.nwod'])
+        characters = list(npc.parser.get_characters(search_paths=[parseables]))
+        c = characters[0]
+        assert 'appearance' in c
+        assert 'unrecognized' in c
+        assert 'skip' in c
 
     def test_changeling_shortcut(self):
         """@changeling should set type, seeming, and kith"""
