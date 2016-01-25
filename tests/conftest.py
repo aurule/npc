@@ -7,7 +7,7 @@ def prefs():
     return npc.main.Settings(extra_paths=[])
 
 @pytest.fixture(scope="module")
-def parser(prefs):
+def argparser(prefs):
     return npc.main._make_parser(prefs)
 
 @pytest.fixture
