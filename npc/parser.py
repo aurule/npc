@@ -18,9 +18,7 @@ def _parse_path(start_path, ignore_paths = [], include_bare = False):
         return [_parse_character(start_path)]
 
     characters = []
-    for dirpath, _, files in walk(start_path, followlinks=True):
-        if dirpath in ignore_paths:
-            continue
+    for dirpath, _, files in _walk_ignore(start_path, ignore_paths):
         for name in files:
             target_path = path.join(dirpath, name)
             if target_path in ignore_paths:
@@ -30,6 +28,14 @@ def _parse_path(start_path, ignore_paths = [], include_bare = False):
                 data = _parse_character(target_path)
                 characters.append(data)
     return characters
+
+def _walk_ignore(root, ignore):
+    def included(d):
+        return (path.join(dirpath, d) not in ignore) and (dirpath not in ignore)
+
+    for dirpath, dirnames, filenames in walk(root, followlinks=True):
+        dirnames[:] = [d for d in dirnames if included(d)]
+        yield dirpath, dirnames, filenames
 
 def _parse_character(char_file_path):
     """Parse a single character file"""
