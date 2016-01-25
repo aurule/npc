@@ -63,14 +63,23 @@ class TestTags:
     Basic tag inclusion is handled above.
     """
 
-    def test_basic_tags(self):
-        """Tags should be added by name"""
+    @pytest.fixture(scope='module')
+    def basic_character(self):
         parseables = fixture_dir(['parsing', 'tags', 'Basic.nwod'])
         characters = list(npc.parser.get_characters(search_paths=[parseables]))
-        c = characters[0]
-        assert 'appearance' in c
-        assert 'unrecognized' in c
-        assert 'skip' in c
+        return characters[0]
+
+    def test_simple_tag(self, basic_character):
+        """Tags should be added by name"""
+        assert 'appearance' in basic_character
+
+    def test_unknown_tag(self, basic_character):
+        """Unknown tags should be added"""
+        assert 'unrecognized' in basic_character
+
+    def test_bare_tag(self, basic_character):
+        """Tags with no data should be added"""
+        assert 'skip' in basic_character
 
     def test_changeling_shortcut(self):
         """@changeling should set type, seeming, and kith"""
