@@ -63,11 +63,17 @@ class TestTags:
     Basic tag inclusion is handled above.
     """
 
-    @pytest.fixture(scope='module')
-    def basic_character(self):
-        parseables = fixture_dir(['parsing', 'tags', 'Basic.nwod'])
-        characters = list(npc.parser.get_characters(search_paths=[parseables]))
-        return characters[0]
+    @pytest.fixture
+    def character(self):
+        def make_character(filename):
+            parseables = fixture_dir(['parsing', 'tags', filename])
+            characters = list(npc.parser.get_characters(search_paths=[parseables]))
+            return characters[0]
+        return make_character
+
+    @pytest.fixture
+    def basic_character(self, character):
+        return character('Basic.nwod')
 
     def test_simple_tag(self, basic_character):
         """Tags should be added by name"""
@@ -81,32 +87,24 @@ class TestTags:
         """Tags with no data should be added"""
         assert 'skip' in basic_character
 
-    def test_changeling_shortcut(self):
+    def test_changeling_shortcut(self, character):
         """@changeling should set type, seeming, and kith"""
-        parseables = fixture_dir(['parsing', 'tags', 'Changeling Tag.nwod'])
-        characters = list(npc.parser.get_characters(search_paths=[parseables]))
-        c = characters[0]
+        c = character('Changeling Tag.nwod')
         assert c['type'][0] == 'Changeling'
         assert c['seeming'][0] == 'Beast'
         assert c['kith'][0] == 'Hunterheart'
 
-    def test_realname(self):
+    def test_realname(self, character):
         """@realname should overwrite the first name entry"""
-        parseables = fixture_dir(['parsing', 'tags', 'File Name.nwod'])
-        characters = list(npc.parser.get_characters(search_paths=[parseables]))
-        c = characters[0]
+        c = character('File Name.nwod')
         assert c['name'][0] == 'Real Name'
 
-    def test_group_rank(self):
+    def test_group_rank(self, character):
         """@rank should scope its value to the most recent @group"""
-        parseables = fixture_dir(['parsing', 'tags', 'Group Rank.nwod'])
-        characters = list(npc.parser.get_characters(search_paths=[parseables]))
-        c = characters[0]
+        c = character('Group Rank.nwod')
         assert c['rank'] == {'Frat': ['Brother']}
 
-    def test_bare_rank(self):
+    def test_bare_rank(self, character):
         """@rank should not be added without a prior @group"""
-        parseables = fixture_dir(['parsing', 'tags', 'Bare Rank.nwod'])
-        characters = list(npc.parser.get_characters(search_paths=[parseables]))
-        c = characters[0]
+        c = character('Bare Rank.nwod')
         assert not c['rank']
