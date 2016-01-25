@@ -21,44 +21,48 @@ def test_completeness(master_list):
     characters = npc.parser.get_characters(search_paths=[parseables])
     assert list(characters) == list(master_list)
 
-def test_ignore_dir(master_list):
-    parseables = fixture_dir(['parsing', 'characters'])
-    ignore_me = fixture_dir(['parsing', 'characters', 'Fetches'])
-    characters = npc.parser.get_characters(search_paths=[parseables], ignore_paths=[ignore_me])
-    for c in characters:
-        assert c['type'][0] != 'Fetch'
-
-def test_ignore_file(master_list):
-    parseables = fixture_dir(['parsing', 'characters'])
-    ignore_me = fixture_dir(['parsing', 'characters', 'Changelings', 'Kabana Matansa.nwod'])
-    characters = npc.parser.get_characters(search_paths=[parseables], ignore_paths=[ignore_me])
-    for c in characters:
-        assert 'Kabana Matansa' not in c['name']
-
-def test_conflict_dir(master_list):
-    """Ignore a directory when it is in both the search and ignore lists"""
-    parseables = fixture_dir(['parsing', 'characters'])
-    ignore_me = fixture_dir(['parsing', 'characters'])
-    characters = npc.parser.get_characters(search_paths=[parseables], ignore_paths=[ignore_me])
-    assert not len(list(characters))
-
-def test_conflict_file():
-    """Always parse a file when it is in the search and ignore lists"""
-    parseables = fixture_dir(['parsing', 'characters', 'Changelings', 'Kabana Matansa.nwod'])
-    ignore_me = fixture_dir(['parsing', 'characters', 'Changelings', 'Kabana Matansa.nwod'])
-    characters = npc.parser.get_characters(search_paths=[parseables], ignore_paths=[ignore_me])
-    assert len(list(characters)) == 1
-
 def test_remove_filename_comments():
     parseables = fixture_dir(['parsing', 'characters', 'Fetches'])
     characters = list(npc.parser.get_characters(search_paths=[parseables]))
     assert characters[0]['name'][0] == 'macho mannersson'
+
+class TestInclusion:
+    """Tests which files are included in the parsed data"""
+
+    def test_ignore_dir(self, master_list):
+        parseables = fixture_dir(['parsing', 'characters'])
+        ignore_me = fixture_dir(['parsing', 'characters', 'Fetches'])
+        characters = npc.parser.get_characters(search_paths=[parseables], ignore_paths=[ignore_me])
+        for c in characters:
+            assert c['type'][0] != 'Fetch'
+
+    def test_ignore_file(self, master_list):
+        parseables = fixture_dir(['parsing', 'characters'])
+        ignore_me = fixture_dir(['parsing', 'characters', 'Changelings', 'Kabana Matansa.nwod'])
+        characters = npc.parser.get_characters(search_paths=[parseables], ignore_paths=[ignore_me])
+        for c in characters:
+            assert 'Kabana Matansa' not in c['name']
+
+    def test_conflict_dir(self, master_list):
+        """Ignore a directory when it is in both the search and ignore lists"""
+        parseables = fixture_dir(['parsing', 'characters'])
+        ignore_me = fixture_dir(['parsing', 'characters'])
+        characters = npc.parser.get_characters(search_paths=[parseables], ignore_paths=[ignore_me])
+        assert not len(list(characters))
+
+    def test_conflict_file(self, ):
+        """Always parse a file when it is in the search and ignore lists"""
+        parseables = fixture_dir(['parsing', 'characters', 'Changelings', 'Kabana Matansa.nwod'])
+        ignore_me = fixture_dir(['parsing', 'characters', 'Changelings', 'Kabana Matansa.nwod'])
+        characters = npc.parser.get_characters(search_paths=[parseables], ignore_paths=[ignore_me])
+        assert len(list(characters)) == 1
 
 class TestTags:
     """Tests the behavior of specific tags.
 
     Basic tag inclusion is handled above.
     """
+
 
     def test_changeling_shortcut(self):
         """@changeling should set type, seeming, and kith"""
