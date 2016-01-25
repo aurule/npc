@@ -85,8 +85,9 @@ def _parse_character(char_file_path):
 
                 if tag in group_tags:
                     last_group = value
-                if tag == 'rank' and last_group:
-                    char_properties['rank'][last_group].append(value)
+                if tag == 'rank':
+                    if last_group:
+                        char_properties['rank'][last_group].append(value)
                     continue
             else:
                 if line == "\n":
