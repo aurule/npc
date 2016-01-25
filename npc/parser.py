@@ -39,7 +39,7 @@ def _walk_ignore(root, ignore):
 
 def _parse_character(char_file_path):
     """Parse a single character file"""
-    name_re = re.compile('([\w\s]+)(?: - )?.*')
+    name_re = re.compile('(?P<name>\w+(\s\w+)*)(?: - )?.*')
     section_re = re.compile('^--.+--\s*$')
     tag_re = re.compile('^@(?P<tag>\w+)\s+(?P<value>.*)$')
 
@@ -49,7 +49,7 @@ def _parse_character(char_file_path):
     # derive character name from basename
     basename = path.basename(char_file_path)
     match = name_re.match(path.splitext(basename)[0])
-    name = match.group(1)
+    name = match.group('name')
 
     # rank uses a dict keyed by group name instead of an array
     # description is always a plain string
