@@ -470,11 +470,19 @@
 							<key>match</key>
 							<string>@(?ix) \b(
   type | faketype | name | realname | group | rank | appearance | dead |
-  foreign | skip |
+  foreign |
   seeming | kith | changeling | court | motley | mask | mien
 )\b</string>
 							<key>name</key>
 							<string>entity.name.tag.nwod</string>
+						</dict>
+						<dict>
+							<key>match</key>
+							<string>@(?ix) \b(
+  skip
+)\b</string>
+							<key>name</key>
+							<string>support.function.skip.nwod</string>
 						</dict>
 						<dict>
 							<key>match</key>

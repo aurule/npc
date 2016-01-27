@@ -334,10 +334,15 @@ repository:
       - match: |-
           @(?ix) \b(
             type | faketype | name | realname | group | rank | appearance | dead |
-            foreign | skip |
+            foreign |
             seeming | kith | changeling | court | motley | mask | mien
           )\b
         name: 'entity.name.tag.nwod'
+      - match: |-
+          @(?ix) \b(
+            skip
+          )\b
+        name: 'support.function.skip.nwod'
       - match: '^@\w+\s'
         name: 'string.other.nwod'
   changeling-tags:
