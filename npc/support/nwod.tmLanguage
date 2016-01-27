@@ -488,7 +488,7 @@
 							<key>match</key>
 							<string>^@\w+\s</string>
 							<key>name</key>
-							<string>string.other.nwod</string>
+							<string>string.unquoted.nwod</string>
 						</dict>
 					</array>
 				</dict>
@@ -916,7 +916,15 @@
 			<array>
 				<dict>
 					<key>begin</key>
-					<string>^(\s+)[\w.]+</string>
+					<string>^(\s+)(\w.+?)(?= - )</string>
+					<key>beginCaptures</key>
+					<dict>
+						<key>2</key>
+						<dict>
+							<key>name</key>
+							<string>string.unquoted.weapon.nwod</string>
+						</dict>
+					</dict>
 					<key>comment</key>
 					<string>Items like `pistol - stats - pools`</string>
 					<key>end</key>

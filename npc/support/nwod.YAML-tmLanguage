@@ -153,9 +153,11 @@ repository:
   weapons:
     patterns:
     - comment: 'Items like `pistol - stats - pools`'
-      begin: '^(\s+)[\w.]+'
+      begin: '^(\s+)(\w.+?)(?= - )'
       end: '^(?!(\1\s+|\s*$))'
       name: 'meta.weapon.nwod'
+      beginCaptures:
+        '2': {name: 'string.unquoted.weapon.nwod'}
       patterns:
       - comment: 'Attachments, mods, and notes'
         name: 'meta.weapon.notes.nwod'
@@ -344,7 +346,7 @@ repository:
           )\b
         name: 'support.function.skip.nwod'
       - match: '^@\w+\s'
-        name: 'string.other.nwod'
+        name: 'string.unquoted.nwod'
   changeling-tags:
     patterns:
     - comment: 'Compound changeling tag'
