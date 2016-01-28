@@ -1,4 +1,5 @@
 from datetime import datetime
+from .. import commands
 
 def dump(characters, f, metadata_type=None, metadata_extra={}):
     # make some markdown
@@ -19,7 +20,7 @@ def dump(characters, f, metadata_type=None, metadata_extra={}):
                 'created: %s' % datetime.now().isoformat()
             ] + metadata_extra + ['---\n']
         else:
-            return Result(False, errmsg="Unrecognized metadata format option '%s'" % metadata_type, errcode=6)
+            return commands.Result(False, errmsg="Unrecognized metadata format option '%s'" % metadata_type, errcode=6)
         data = "\n".join(meta)
         f.write(data)
 
@@ -73,6 +74,7 @@ def dump(characters, f, metadata_type=None, metadata_extra={}):
             f.write("\n")
 
         f.write("\n")
+    return commands.Result(True)
 
 def _build_character_type(c):
     """Build the character type line

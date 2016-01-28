@@ -278,7 +278,7 @@ def list(args, prefs):
         # call out to get the markdown
         with _smart_open(args.outfile) as f:
             meta = prefs.get_metadata('markdown')
-            formatters.markdown.dump(characters, f, metadata_type, meta)
+            response = formatters.markdown.dump(characters, f, metadata_type, meta)
     elif out_type == 'json':
         # make some json
         meta = None
@@ -291,10 +291,13 @@ def list(args, prefs):
             meta = {**base_meta, **prefs.get_metadata('json')}
 
         with _smart_open(args.outfile) as f:
-            formatters.json.dump(characters, f, meta)
+            response = formatters.json.dump(characters, f, meta)
 
     else:
         return Result(False, errmsg="Cannot create output of format '%s'", errcode=5)
+
+    if not response.success:
+        return response
 
     openable = None
     if args.outfile and args.outfile != '-':
