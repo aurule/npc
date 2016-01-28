@@ -1,0 +1,4 @@
+@type Human
+@skip
+
+I shouldn't show up in the output.

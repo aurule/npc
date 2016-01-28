@@ -1,0 +1,13 @@
+{
+    "additional_metadata": {
+        "all": {
+            "test": "yes"
+            },
+        "markdown": {
+            "test-type": "markdown"
+            },
+        "json": {
+            "test-type": "json"
+        }
+    }
+}
