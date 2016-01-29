@@ -12,6 +12,7 @@ def argparser(prefs):
 
 class Campaign:
     def __init__(self, tmpdir, chardir):
+        self.basedir = tmpdir
         self.chardir = tmpdir.mkdir(chardir)
 
     def get_character(self, filename):
@@ -20,6 +21,9 @@ class Campaign:
     def get_character_data(self, filename):
         parseables = str(self.chardir.join(filename))
         return next(c for c in npc.parser.get_characters(search_paths=[parseables]))
+
+    def get_absolute(self, filename):
+        return str(self.basedir.join(filename))
 
 @pytest.fixture
 def campaign(tmpdir, request, prefs):

@@ -15,9 +15,10 @@ def arglist():
 def test_creates_character(argparser, prefs, campaign, arglist):
     args = argparser.parse_args(arglist)
     result = npc.commands.create_changeling(args, prefs)
-    assert result.success
     character = campaign.get_character('changeling mann.nwod')
+    assert result.success
     assert character.check()
+    assert campaign.get_absolute(result.openable[0]) == str(character)
 
 def test_adds_group_tags(argparser, prefs, campaign, arglist):
     args = argparser.parse_args(arglist + ['-g', 'fork', 'spoon'])

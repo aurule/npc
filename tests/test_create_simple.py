@@ -15,9 +15,10 @@ def test_missing_template(argparser, prefs, campaign):
 def test_creates_character(argparser, prefs, campaign, commandline):
     args = argparser.parse_args(commandline)
     result = npc.commands.create_simple(args, prefs)
-    assert result.success
     character = campaign.get_character('testmann.nwod')
+    assert result.success
     assert character.check()
+    assert campaign.get_absolute(result.openable[0]) == str(character)
 
 def test_duplicate_character(argparser, prefs, campaign, commandline):
     args = argparser.parse_args(commandline)
