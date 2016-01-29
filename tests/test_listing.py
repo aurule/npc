@@ -20,6 +20,28 @@ def list_json_output(tmpdir, argparser, prefs):
         return json.load(outfile)
     return make_list
 
+@pytest.mark.parametrize('outopt', [None, '-'])
+def test_output_no_file(argparser, prefs, capsys, outopt):
+    search = fixture_dir(['listing', 'valid-json'])
+    args = argparser.parse_args([
+        'list',
+        '--search', search,
+        '-o', outopt
+    ])
+    npc.commands.list(args, prefs)
+    assert capsys
+
+def test_output_to_file(argparser, prefs, tmpdir):
+    outfile = tmpdir.join("output.json")
+    search = fixture_dir(['listing', 'valid-json'])
+    args = argparser.parse_args([
+        'list',
+        '--search', search,
+        '-o', str(outfile)
+    ])
+    npc.commands.list(args, prefs)
+    assert outfile.read()
+
 def test_list_valid_json(list_json_output):
     """Ensure the 'json' output format yields valid JSON"""
 
