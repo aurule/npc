@@ -171,6 +171,7 @@ def _make_parser(prefs):
     parser_session = subparsers.add_parser('session', aliases=['s'], help="Create files for a new game session")
     parser_session.set_defaults(func=commands.session)
 
+    # Create generic character
     parser_generic = subparsers.add_parser('generic', aliases=['g'], parents=[character_parser], help="Create a new character using the named template")
     parser_generic.add_argument('ctype', metavar='template', help="Template to use. Must be configured in settings")
     parser_generic.set_defaults(func=commands.create_simple)
