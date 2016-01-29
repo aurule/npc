@@ -2,11 +2,6 @@ import npc
 import pytest
 import os
 
-@pytest.fixture
-def characters(campaign, prefs):
-    os.mkdir(prefs.get('paths.characters'))
-    return campaign
-
 @pytest.fixture(params=['human', 'fetch', 'goblin'])
 def commandline(request):
     return ['g', 'testmann', request.param, '-g', 'fork', 'spoon']
@@ -17,23 +12,22 @@ def test_missing_template(argparser, prefs, campaign):
     assert not result.success
     assert result.errcode == 7
 
-def test_creates_character(argparser, prefs, characters, commandline):
+def test_creates_character(argparser, prefs, campaign, commandline):
     args = argparser.parse_args(commandline)
     result = npc.commands.create_simple(args, prefs)
     assert result.success
-    character = characters.join(prefs.get('paths.characters'), 'testmann.nwod')
+    character = campaign.get_character('testmann.nwod')
     assert character.check()
 
-def test_duplicate_character(argparser, prefs, characters, commandline):
+def test_duplicate_character(argparser, prefs, campaign, commandline):
     args = argparser.parse_args(commandline)
     npc.commands.create_simple(args, prefs)
     result = npc.commands.create_simple(args, prefs)
     assert not result.success
     assert result.errcode == 1
 
-def test_adds_group_tags(argparser, prefs, characters, commandline):
+def test_adds_group_tags(argparser, prefs, campaign, commandline):
     args = argparser.parse_args(commandline)
     npc.commands.create_simple(args, prefs)
-    character = characters.join(prefs.get('paths.characters'), 'testmann.nwod')
-    data = next(c for c in npc.parser.get_characters([str(character)], []))
+    data = campaign.get_character_data('testmann.nwod')
     assert data['group'] == ['fork', 'spoon']
