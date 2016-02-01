@@ -29,7 +29,8 @@ def test_output_no_file(argparser, prefs, capsys, outopt):
         '-o', outopt
     ])
     npc.commands.list(args, prefs)
-    assert capsys
+    output, _ = capsys.readouterr()
+    assert output
 
 def test_output_to_file(argparser, prefs, tmpdir):
     outfile = tmpdir.join("output.json")
