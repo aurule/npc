@@ -8,6 +8,7 @@ from contextlib import contextmanager
 from datetime import datetime
 from os import path, walk, makedirs, rmdir, scandir
 from shutil import copy as shcopy, move as shmove
+import itertools
 
 # local packages
 from . import formatters, linters, parser, util
@@ -365,7 +366,7 @@ def dump(args, prefs):
             'created': datetime.now().isoformat()
         }
         meta = {**base_meta, **prefs.get_metadata('json')}
-        characters = [meta] + characters
+        characters = itertools.chain([meta], characters)
 
     with _smart_open(args.outfile) as f:
         json.dump([c for c in characters], f)
