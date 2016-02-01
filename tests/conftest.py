@@ -26,8 +26,11 @@ class Campaign:
         parseables = str(self.chardir.join(filename))
         return next(c for c in npc.parser.get_characters(search_paths=[parseables]))
 
+    def get_file(self, *fileparts):
+        return self.basedir.join(*fileparts)
+
     def get_absolute(self, filename):
-        """Get the fully qualified path to the given character filename"""
+        """Get the fully qualified path to the given filename"""
         return str(self.basedir.join(filename))
 
     def populate_from_fixture_dir(self, fixture_path):
