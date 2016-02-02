@@ -166,8 +166,8 @@ def session(args, prefs):
     Finds the plot and session log files for the last session, copies the plot,
     and creates a new empty session log.
     """
-    plot_re = re.compile('^plot (\d+)$')
-    session_re = re.compile('^session (\d+)$')
+    plot_re = re.compile('(?i)^plot (\d+)$')
+    session_re = re.compile('(?i)^session (\d+)$')
 
     # find latest plot file and its number
     plot_files = [f.name for f in scandir(prefs.get('paths.plot')) if f.is_file() and plot_re.match(path.splitext(f.name)[0])]
