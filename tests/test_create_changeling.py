@@ -46,7 +46,7 @@ def test_adds_seeming_notes(argparser, prefs, campaign, arglist):
     args = argparser.parse_args(arglist)
     npc.commands.create_changeling(args, prefs)
     character = campaign.get_character('changeling mann.nwod')
-    assert '    Seeming Beast (' in character.read()
+    assert '    Seeming Beast (8-again animal ken and free specialty; glamour adds to presence and composure; -4 untrained mental; no 10-again on Int)' in character.read()
 
 def test_adds_kith(argparser, prefs, campaign, arglist):
     args = argparser.parse_args(arglist)
@@ -62,7 +62,7 @@ def test_adds_kith_notes(argparser, prefs, campaign, arglist):
     args = argparser.parse_args(arglist)
     npc.commands.create_changeling(args, prefs)
     character = campaign.get_character('changeling mann.nwod')
-    assert '    Kith    Hunterheart (' in character.read()
+    assert '    Kith    Hunterheart (Unarmed attacks deal lethal damage)' in character.read()
 
 def test_adds_court(argparser, prefs, campaign, arglist):
     args = argparser.parse_args(arglist + ['--court', 'Summer'])
