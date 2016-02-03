@@ -225,18 +225,17 @@ def reorg(args, prefs):
             shmove(c['path'], new_path)
 
     if args.purge:
-        for dirpath, dirnames, files in walk(base_path):
-            try:
-                rmdir(dirpath)
-                if args.verbose:
-                    print("Removing empty directory {}".format(dirpath))
-            except OSError as e:
-                if e.errno == errno.ENOTEMPTY:
-                    continue
-                else:
-                    raise
+        for empty_path in find_empty_dirs(base_path):
+            rmdir(empty_path)
+            if args.verbose:
+                print("Removing empty directory {}".format(empty_path))
 
     return Result(True)
+
+def find_empty_dirs(root):
+    for dirpath, dirs, files in walk(root):
+        if not dirs and not files:
+            yield dirpath
 
 def create_path_from_character(character, target_path, prefs):
     # add type-based directory if we can
