@@ -171,22 +171,36 @@ def session(args, prefs):
 
     # find latest plot file and its number
     plot_files = [f.name for f in scandir(prefs.get('paths.plot')) if f.is_file() and plot_re.match(path.splitext(f.name)[0])]
-    latest_plot = max(plot_files, key=lambda plot_files:re.split(r"\s", plot_files)[1])
-    (latest_plot_name, latest_plot_ext) = path.splitext(latest_plot)
-    plot_match = plot_re.match(latest_plot_name)
-    plot_number = int(plot_match.group(1))
+    try:
+        latest_plot = max(plot_files, key=lambda plot_files:re.split(r"\s", plot_files)[1])
+        (latest_plot_name, latest_plot_ext) = path.splitext(latest_plot)
+        plot_match = plot_re.match(latest_plot_name)
+        plot_number = int(plot_match.group(1))
+    except ValueError:
+        plot_number = 0
 
     # find latest session log and its number
     session_files = [f.name for f in scandir(prefs.get('paths.session')) if f.is_file() and session_re.match(path.splitext(f.name)[0])]
-    latest_session = max(session_files, key=lambda session_files:re.split(r"\s", session_files)[1])
-    (latest_session_name, latest_session_ext) = path.splitext(latest_session)
-    session_match = session_re.match(latest_session_name)
-    session_number = int(session_match.group(1))
+    try:
+        latest_session = max(session_files, key=lambda session_files:re.split(r"\s", session_files)[1])
+        (latest_session_name, latest_session_ext) = path.splitext(latest_session)
+        session_match = session_re.match(latest_session_name)
+        session_number = int(session_match.group(1))
+    except ValueError:
+        session_number = 0
 
     if plot_number != session_number:
         return Result(False, errmsg="Cannot create new plot and session files: latest files have different numbers (plot %i, session %i)" % (plot_number, session_number), errcode=2)
 
     new_number = plot_number + 1
+
+    if not plot_number:
+        new_plot_path = path.join(prefs.get('paths.plot'), ("plot %i.md" % new_number))
+        new_session_path = path.join(prefs.get('paths.session'), ("session %i.md" % new_number))
+        shcopy(prefs.get('templates.session'), new_session_path)
+        with open(new_plot_path, 'w') as f:
+            f.write(' ')
+        return Result(True, openable=[new_session_path, new_plot_path])
 
     # copy old plot
     old_plot_path = path.join(prefs.get('paths.plot'), latest_plot)
@@ -496,4 +510,5 @@ class Result:
         # 5. Unrecognized format
         # 6. Invalid option
         # 7. Unrecognized template
+        # 8. Missing required file
         self.errmsg = errmsg
