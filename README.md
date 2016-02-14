@@ -110,9 +110,9 @@ Changeling character files are checked for these additional problems:
 * The notes for each seeming in the stats are present and correct. If `--fix` is passed, these notes will be updated.
 * The notes for each kith in the stats are present and correct. If `--fix` is passed, these notes will be updated.
 
-## Make NPC Listing
+## Make an NPC Listing
 
-The `list` command builds a list of parseable NPCs. It ignores everything except the tags and description.
+The `list` command creates a page of character information. It ignores everything except the tags and description in each character file.
 
 Options:
 
@@ -122,7 +122,7 @@ Options:
 * `--metadata`: Include metadata in the output. Can optionally specify the format of this metadata, if the main format supports it. Recognized values when used with the `markdown` format are `mmd` for MultiMarkdown metadata, and `yfm` or `yaml` for YAML Front Matter metadata.
 * `--outfile`: Path where the output should go. If omitted (or you pass "`-`"), the output will go to stdout for chaining to another command.
 
-## Dump raw NPC data
+## Dump Raw NPC Data
 
 The `dump` command builds a list of parseable NPCs in json format. It ignores everything except the tags and description.
 
