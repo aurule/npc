@@ -49,13 +49,12 @@ class TestPurge:
     def test_removes_directories(self, campaign, argparser, prefs):
         """Removes empty directories with purge option"""
 
-        campaign.populate_from_fixture_dir(['reorg', 'no_purge_preserves'])
+        campaign.populate_from_fixture_dir(['reorg', 'purge_removes'])
         args = argparser.parse_args(['reorg', '--purge'])
         result = npc.commands.reorg(args, prefs)
         assert result.success
-        humans_folder = campaign.get_character(os.path.join('Humans'))
         fetches_folder = campaign.get_character(os.path.join('Fetches'))
-        assert not humans_folder.check()
+        assert not fetches_folder.check()
 
     def test_preserves_directories(self, campaign, argparser, prefs):
         """Does not remove empty directories without purge option"""
