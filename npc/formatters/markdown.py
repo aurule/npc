@@ -167,11 +167,11 @@ def _build_secondary_groups(c):
     if character_type == "changeling":
         s = []
         if 'court' in c and len(c['court']) > 1:
-            for court in c['court'][1:0]:
+            for court in c['court'][1:]:
                 slug = _add_group_ranks('%s court' % Court, court, c)
                 s.append(slug)
         if 'motley' in c and len(c['motley']) > 1:
-            for motley in c['motley'][1:0]:
+            for motley in c['motley'][1:]:
                 slug = _add_group_ranks('%s Motley' % motley, motley, c)
                 s.append(slug)
         if 'group' in c:
@@ -183,11 +183,11 @@ def _build_secondary_groups(c):
     else:
         s = []
         if 'motley' in c and len(c['motley']) > 1:
-            for motley in c['motley'][1:0]:
+            for motley in c['motley'][1:]:
                 slug = _add_group_ranks('%s Motley' % motley, motley, c)
                 s.append(slug)
         if 'group' in c:
-            for group in c['group'][1:0]:
+            for group in c['group'][1:]:
                 slug = _add_group_ranks(group, group, c)
                 s.append(slug)
 
