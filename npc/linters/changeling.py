@@ -1,8 +1,8 @@
 import re
 
 replaceable = ('x', 'y')
-seeming_regex = '^(?P<name>\s+seeming\s+)(?P<seeming>%s)\s*(?P<notes>\(.*\))?$'
-kith_regex = '^(?P<name>\s+kith\s+)(?P<kith>%s)\s*(?P<notes>\(.*\))?$'
+seeming_regex = '^(?P<name>\s+seeming\s+)(?P<seeming>%s)[ \t]*(?P<notes>\(.*\))?$'
+kith_regex = '^(?P<name>\s+kith\s+)(?P<kith>%s)[ \t]*(?P<notes>\(.*\))?$'
 
 def lint(c, fix = False, **kwargs):
     """Verify the more complex elements in a changeling sheet
