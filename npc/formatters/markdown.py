@@ -25,35 +25,35 @@ def dump(characters, f, metadata_type=None, metadata_extra={}):
         f.write(data)
 
     for c in characters:
-        # name
+        # name (header)
         realname = c['name'][0]
         f.write("# %s" % realname)
         if 'dead' in c:
             f.write(" (Deceased)")
         f.write("\n\n")
 
-        # AKA line
+        # info block
+        info_block = []
+
+        # AKA line (info block)
         if len(c['name']) > 1:
-            f.write("*AKA ")
-            f.write(", ".join(c['name'][1:]))
-            f.write("*\n")
+            info_block.append('*AKA %s*' % "; ".join(c['name'][1:]))
 
-        # character type and dependent values
-        f.write(_build_character_type(c))
-        f.write("\n")
+        # character type and dependent values (info block)
+        info_block.append(_build_character_type(c))
 
-        # subtype information
+        # subtype information (info block)
         subtype = _build_character_subtype(c)
         if subtype:
-            f.write(subtype)
-            f.write("\n")
+            info_block.append(subtype)
 
-        # list all groups
+        # list all groups (info block)
         secondary_groups = _build_secondary_groups(c)
         if secondary_groups:
-            f.write("Member of ")
-            f.write(secondary_groups)
-            f.write("\n")
+            info_block.append('Member of %s' % secondary_groups)
+
+        f.write('  \n'.join(info_block))
+        f.write('\n')
 
         # show appearance descriptions
         appearance = _build_appearance(c)
@@ -214,7 +214,7 @@ def _build_appearance(c):
         if 'mask' in c:
             s.append('*Mask:* ' + ' '.join(c['mask']))
 
-        return "\n".join(s)
+        return "  \n".join(s)
     else:
         if 'appearance' in c:
             return '*Appearance:* ' + ' '.join(c['appearance'])
