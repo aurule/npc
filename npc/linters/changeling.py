@@ -110,7 +110,7 @@ def lint(c, fix = False, **kwargs):
         if kith_tags:
             # ensure the listed kiths match our kith tags
             kith_re = re.compile(
-                kith_regex % '\w+',
+                kith_regex % '\w+( \w+)?',
                 re.MULTILINE | re.IGNORECASE
             )
             kith_matches = list(kith_re.finditer(data))
