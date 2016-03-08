@@ -24,15 +24,14 @@
         "leechfinger": "Spend glamour and touch attack to deal one Lethal and heal one Lethal, or downgrade Agg 1/scene/wyrd",
         "mirrorskin": "Change features at will: +3 to Wits+Subterfuge disguises in mein and mask",
         "tunnelgrub": "Spend glamour to fit through small spaces with Dex+Athletics",
-        "lurkglider": "+3 to Athletics involving balance; spend glamour to fall 100yd w/o damage",
 
         // elementals
         "airtouched": "1 glamour to add Wyrd to Speed or Init for scene",
         "earthbones": "Spend glamour for non-combat Strength pools",
         "fireheart": "Spend glamour for Wits pools",
-        "manikin": "9-again and free specialty in Craft",
+        "manikin": "-1 untrained craft; artifice at 5xp/dot",
         "snowskin": "9-again on intimidate and subterfuge; 1 glamour to re-roll intimidate",
-        "waterborn": "Spend glamour to breathe underwater in place of air and swim at 2x speed for scene; spend glamour to cancel; Reduce up to -3 in penalties to movement from slippery surfaces: water, ice, etc.",
+        "waterborn": "Spend glamour to breathe underwater in place of air and swim at 2x speed for scene; spend glamour to cancel",
         "woodblood": "9-again on Stealth, Survival; spend glamour to hide in any foliage",
 
         // fairest
@@ -41,8 +40,6 @@
         "draconic": "+1 brawl; spend glamour to re-roll brawl 1/scene",
         "flowering": "9-again on persuasion, socialize, subterfuge from fragrance",
         "muse": "Spend glamour to give human +2 expression, persuasion, socialize, subterfuge",
-        "telluric": "+3 to timing tasks; free astrology and astronomy specialties",
-        "treasured": "9-again Politics; spend glamour on Empathy and free Emotions specialty",
 
         // ogres
         "cyclopean": "8-again perception; some strange sense",
@@ -50,16 +47,15 @@
         "gargantuan": "Spend glamour to add Wyrd to Size for scene 1/day (incl temp health; returning deals 1L)",
         "gristlegrinder": "2L Bite attack as grappling overpower maneuver",
         "stonebones": "Spend glamour to make Wyrd armor for scene",
-        "waterdweller": "Hold breath for 30min; see clearly underwater; Ignore penalties to perception up to Wyrd/2 from mundane weather",
+        "waterdweller": "Hold breath for 30min; see clearly underwater",
 
         // wizened
         "artist": "8-again Craft; Spend glamour to re-roll failed Craft dice",
         "brewer": "1/scene touch container 1pt roll wits+crafts. On success spend glamour get potency of Wyrd+successes",
         "chatelaine": "9-again on Social skills for manners, etiquette, social practice even using Presence; Spend glamour +2 Manip, Presence for scene",
         "chirurgeon": "9-again on Medicine; no penalties from equipment; provides Hospital ICU care",
-        "drudge": "9-again on Stealth; reduce mundane extended test interval by factor of Wyrd+1",
-        "oracle": "1/Chapter ask a question about events. Answer is as a prophesy",
-        "smith": "9-again to work metal; spend glamour for +1 to tool for 1 scene, only one at a time",
+        "oracle": "Common Sense merit 1/chapter",
+        "smith": "Spend glamour for extended Dex+Craft: 4 successes give +1 to item for day; max three uses per item",
         "soldier": "Always has weaponry specialty for every edged weapon",
         "woodwalker": "8-again Survival; can eat any plant"
     },
