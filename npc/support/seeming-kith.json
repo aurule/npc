@@ -108,7 +108,7 @@
         "gremlin": "1/day spend glamour and touch object to remove equipment bonus/damage rating (WM 110)",
         "pamarindo": "Spend glamour and touch raw meat to feed one person/wyrd; free Iron Stomach merit (WM 110)",
         "thusser": "Spend glamour and sing/play instrument to hypnotize target (WM 110)",
-        "fatemaker": "",
+        "fatemaker": "Spend 2 glamour on talecrafting to avoid cruel twist of fate (SaD 66)",
     },
     "curse": {
         "beast": "-4 untrained mental; no 10-again on Int",
