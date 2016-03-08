@@ -24,7 +24,7 @@
         "chimera": "Spend glamour for +3 to all Social rolls vs Hobgoblins (WM 107)",
         "coyote": "Willpower gives +5 on Persuasion and Subterfuge; buy Manip at reduced rate with vice gluttony, greed, lust (WM 107)",
         "nix": "1/day spend glamour to penalize listerners' Social rolls by Wyrd/2 (WM 107)",
-        "riddleseeker": "",
+        "riddleseeker": "Spend glamour for +2 to non-perception Wits rolls; free Investigation in Riddles (NH:GF 102)",
 
         // darklings
         "antiquarian": "9-again on academics, investigation; spend glamour for Encyclopedic Knowledge",
@@ -72,10 +72,10 @@
         "gandharva": "Spend glamour for exceptional success on 3 with Expression and Persuasion (WM 109)",
         "succubus": "+1 on Social rolls vs targets that share your vice (+2 if Lust); free Sriking Looks 2 (WM 109)",
         "weisse frau": "1/chapter spend glamour and kiss to grant 2 armor or 3 for child, does not stack (WM 109)",
-        "minstrel": "",
-        "romancer": "",
-        "larcenist": "",
-        "playmate": "",
+        "minstrel": "Spend glamour to reroll failed Expression dice; 8-again to get glamour from emotions of audience (NH:GF 43)",
+        "romancer": "Others take -3 to describe appearance or identify from footage (NH:GF 46)",
+        "larcenist": "9-again on Larceny and Socialize using agility; +1 Dodge (NH:GF 63)",
+        "playmate": "+2 when leading teamwork roll; when not leading, can forego roll to give 9-again or improve existing 9-again to 8-again (NH:GF 122)",
 
         // ogres
         "cyclopean": "8-again perception; some strange sense",
