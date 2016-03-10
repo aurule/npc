@@ -2,6 +2,7 @@
 
 import re
 import json
+from sys import stderr
 
 def load_json(filename):
     """ Parse a JSON file
@@ -29,4 +30,8 @@ def load_json(filename):
             match = comment_re.search(content)
 
         # Return parsed json
-        return json.loads(content)
+        try:
+            return json.loads(content)
+        except json.decoder.JSONDecodeError as e:
+            stderr.write("Bad syntax in '{0}' line {2} column {3}: {1}".format(filename, e.msg, e.lineno, e.colno))
+            return {}

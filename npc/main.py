@@ -42,10 +42,7 @@ class Settings:
         while opening the file are suppressed and the file will simply not be
         loaded.
         """
-        try:
-            loaded = util.load_json(settings_path)
-        except:
-            return
+        loaded = util.load_json(settings_path)
 
         def evaluate_paths(base, loaded, key):
             if key in loaded:
