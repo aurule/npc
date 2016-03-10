@@ -1,0 +1,8 @@
+{
+    "templates": {
+        "testfile": "changeling.nwod"
+    },
+    "support": {
+        "testpath": "nothing.json"
+    }
+}

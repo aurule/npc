@@ -47,6 +47,15 @@ class Settings:
         except:
             return
 
+        def evaluate_paths(base, loaded, key):
+            if key in loaded:
+                loaded[key] = {k: path.join(absolute_path_base, path.expanduser(v)) for k, v in loaded[key].items()}
+
+        # paths should be evaluated relative to the settings file in settings_path
+        absolute_path_base = path.dirname(path.realpath(settings_path))
+        evaluate_paths(absolute_path_base, loaded, 'support')
+        evaluate_paths(absolute_path_base, loaded, 'templates')
+
         self.data = self._merge_settings(loaded, self.data)
 
     def _merge_settings(self, new_data, orig):
