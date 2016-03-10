@@ -2,7 +2,6 @@
 
 import re
 import json
-from sys import stderr
 
 def load_json(filename):
     """ Parse a JSON file
@@ -33,5 +32,8 @@ def load_json(filename):
         try:
             return json.loads(content)
         except json.decoder.JSONDecodeError as e:
-            stderr.write("Bad syntax in '{0}' line {2} column {3}: {1}".format(filename, e.msg, e.lineno, e.colno))
-            return {}
+            e.nicemsg = "Bad syntax in '{0}' line {2} column {3}: {1}".format(filename, e.msg, e.lineno, e.colno)
+            raise e
+        except Exception as e:
+            e.nicemsg = "Could not load '{0}': {1}".format(filename, e.msg)
+            raise e

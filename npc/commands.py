@@ -77,7 +77,7 @@ def create_changeling(args, prefs):
 
     # insert seeming and kith in the advantages block
     try:
-        sk = util.load_json(changeling_bonuses)
+        sk = _load_changeling_bonuses(prefs)
     except IOError as e:
         return Result(False, errmsg=e.strerror + " (%s)" % changeling_bonuses, errcode=4)
     seeming_key = args.seeming.lower()
@@ -103,6 +103,15 @@ def create_changeling(args, prefs):
         return Result(False, errmsg=e.strerror + " (%s)" % target_path, errcode=4)
 
     return Result(True, openable = [target_path])
+
+def _load_changeling_bonuses(prefs):
+    try:
+        return util.load_json(prefs.get('support.changeling-sk'))
+    except IOError:
+        raise
+    except Exception as e:
+        sys.stderr.write(e.nicemsg)
+        return {'blessing': {}, 'curse': {}}
 
 def create_simple(args, prefs):
     """Create a character without extra processing
@@ -434,7 +443,7 @@ def lint(args, prefs):
                 # lazily load and cache our seeming and kith data
                 if not sk:
                     try:
-                        sk = util.load_json(changeling_bonuses)
+                        sk = _load_changeling_bonuses(prefs)
                     except IOError as e:
                         return Result(False, errmsg=e.strerror + " (%s)" % changeling_bonuses, errcode=4)
 
