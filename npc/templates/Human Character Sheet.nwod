@@ -69,7 +69,7 @@ attacks
     fists - 0B - atk a
     melee name - damage, size - atk
     ranged name - damage, range s/m/l, mag, size - atk (s/m/l, aim +1)
-        attachment/mod - effects
+        + attachment/mod - effects
 
 gear
     type - effects
