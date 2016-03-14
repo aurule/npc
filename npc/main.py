@@ -44,8 +44,9 @@ class Settings:
         """
         try:
             loaded = util.load_json(settings_path)
-        except e:
-            sys.stderr.write(e.nicemsg)
+        except Exception as e:
+            if hasattr(e, 'nicemsg'):
+                sys.stderr.write(e.nicemsg)
             return
 
         def evaluate_paths(base, loaded, key):
