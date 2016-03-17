@@ -32,3 +32,29 @@ def test_adds_group_tags(argparser, prefs, campaign, commandline):
     npc.commands.create_simple(args, prefs)
     data = campaign.get_character_data('testmann.nwod')
     assert data['group'] == ['fork', 'spoon']
+
+class TestDead:
+    """Test permutations of the --dead arg"""
+
+    def test_no_dead_tag(self, argparser, prefs, campaign, commandline):
+        """Characters shouldn't be dead without the command"""
+        args = argparser.parse_args(commandline)
+        npc.commands.create_simple(args, prefs)
+        data = campaign.get_character_data('testmann.nwod')
+        assert 'dead' not in data
+
+    def test_bare_dead_tag(self, argparser, prefs, campaign, commandline):
+        """With just --dead, add the tag and no notes"""
+        commandline.extend(['--dead'])
+        args = argparser.parse_args(commandline)
+        npc.commands.create_simple(args, prefs)
+        data = campaign.get_character_data('testmann.nwod')
+        assert data['dead'] == []
+
+    def test_dead_tag_with_notes(self, argparser, prefs, campaign, commandline):
+        """With just --dead, add the tag and no notes"""
+        commandline.extend(['--dead', 'Died in a tragic toast accident'])
+        args = argparser.parse_args(commandline)
+        npc.commands.create_simple(args, prefs)
+        data = campaign.get_character_data('testmann.nwod')
+        assert data['dead'] == ['Died in a tragic toast accident']

@@ -143,6 +143,8 @@ def create_simple(args, prefs):
     # Add tags
     typetag = ctype.title()
     tags = ['@type %s' % typetag] + ["@group %s" % g for g in args.group]
+    if args.dead:
+        tags.append("@dead %s" % args.dead)
     header = "\n".join(tags) + '\n\n'
 
     # Copy template
