@@ -58,3 +58,29 @@ class TestDead:
         npc.commands.create_simple(args, prefs)
         data = campaign.get_character_data('testmann.nwod')
         assert data['dead'] == ['Died in a tragic toast accident']
+
+class TestForeign:
+    """Test permutations of the --foreign arg"""
+
+    def test_no_foreign_tag(self, argparser, prefs, campaign, commandline):
+        """Characters shouldn't be foreign without the command"""
+        args = argparser.parse_args(commandline)
+        npc.commands.create_simple(args, prefs)
+        data = campaign.get_character_data('testmann.nwod')
+        assert 'foreign' not in data
+
+    def test_bare_dead_tag(self, argparser, prefs, campaign, commandline):
+        """With just --foreign, add the tag and no notes"""
+        commandline.extend(['--foreign'])
+        args = argparser.parse_args(commandline)
+        npc.commands.create_simple(args, prefs)
+        data = campaign.get_character_data('testmann.nwod')
+        assert data['foreign'] == []
+
+    def test_dead_tag_with_notes(self, argparser, prefs, campaign, commandline):
+        """With just --foreign, add the tag and no notes"""
+        commandline.extend(['--foreign', 'Lives on the moon, with Steve'])
+        args = argparser.parse_args(commandline)
+        npc.commands.create_simple(args, prefs)
+        data = campaign.get_character_data('testmann.nwod')
+        assert data['foreign'] == ['Lives on the moon, with Steve']

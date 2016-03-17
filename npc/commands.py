@@ -64,7 +64,7 @@ def create_changeling(args, prefs):
         tags.append('@motley %s' % args.motley)
     if args.court:
         tags.append('@court %s' % args.court.title())
-    tags.extend(["@group %s" % g for g in args.group])
+    tags.extend(_make_std_tags(args))
 
     header = "\n".join(tags) + '\n\n'
 
@@ -113,6 +113,14 @@ def _load_changeling_bonuses(prefs):
         sys.stderr.write(e.nicemsg)
         return {'blessing': {}, 'curse': {}}
 
+def _make_std_tags(args):
+    tags = ["@group %s" % g for g in args.group]
+    if args.dead:
+        tags.append("@dead %s" % args.dead)
+    if args.foreign:
+        tags.append("@foreign %s" % args.foreign)
+    return tags
+
 def create_simple(args, prefs):
     """Create a character without extra processing
 
@@ -142,9 +150,7 @@ def create_simple(args, prefs):
 
     # Add tags
     typetag = ctype.title()
-    tags = ['@type %s' % typetag] + ["@group %s" % g for g in args.group]
-    if args.dead:
-        tags.append("@dead %s" % args.dead)
+    tags = ['@type %s' % typetag] + _make_std_tags(args)
     header = "\n".join(tags) + '\n\n'
 
     # Copy template
