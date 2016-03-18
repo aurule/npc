@@ -160,8 +160,8 @@ def _make_parser(prefs):
     character_parser = argparse.ArgumentParser(add_help=False)
     character_parser.add_argument('name', help="character's name", metavar='name')
     character_parser.add_argument('-g', '--group', default=[], nargs="*", help='Name of a group that counts the character as a member', metavar='group')
-    character_parser.add_argument('--dead', default=False, const='', nargs='?', help='Mark that the character has died, with optional notes', metavar='dead')
-    character_parser.add_argument('--foreign', default=False, const='', nargs='?', help="Mark that the character is foreign to the main campaign setting, with optional notes on where they're from", metavar='foreign')
+    character_parser.add_argument('--dead', default=False, const='', nargs='?', help='Mark that the character has died, with optional notes', metavar='notes')
+    character_parser.add_argument('--foreign', default=False, help="Mark that the character is foreign to the main campaign setting, with optional notes on where they're from", metavar='location')
 
     # Parent parser for shared pathing options
     paths_parser = argparse.ArgumentParser(add_help=False)

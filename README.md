@@ -47,7 +47,7 @@ All characters support the following options:
 * `name`: The first positional argument is always the character/file name. The expected format is `character name - brief note`. During parsing, everything after "` - `" is ignored.
 * `-g`, `--group`: Name of one or more groups that the character belongs to.
 * `--dead`: Indicates that the character is dead, with optional notes about it.
-* `--foreign`: Indicates that the character is foreign to the main campaign setting, with optional notes about it.
+* `--foreign`: Indicates that the character is foreign to the main campaign setting, with notes about where they are.
 
 ### Simple Characters
 
