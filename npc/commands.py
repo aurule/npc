@@ -115,8 +115,9 @@ def _load_changeling_bonuses(prefs):
 
 def _make_std_tags(args):
     tags = ["@group %s" % g for g in args.group]
-    if args.dead:
-        tags.append("@dead %s" % args.dead)
+    if args.dead != False:
+        dead_details = " %s" % args.dead if len(args.dead) else ""
+        tags.append("@dead%s" % dead_details)
     if args.foreign:
         tags.append("@foreign %s" % args.foreign)
     return tags

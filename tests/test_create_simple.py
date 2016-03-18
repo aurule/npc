@@ -57,7 +57,7 @@ class TestDead:
         args = argparser.parse_args(commandline)
         npc.commands.create_simple(args, prefs)
         data = campaign.get_character_data('testmann.nwod')
-        assert data['dead'] == []
+        assert data['dead'] == ['']
 
     def test_dead_tag_with_notes(self, argparser, prefs, campaign, commandline):
         """With just --dead, add the tag and no notes"""
