@@ -67,9 +67,10 @@ pledges
         description
 
 attacks
-    fists - 0B - atk a
-    melee name - damage, size - atk
-    ranged name - damage, range s/m/l, mag, size - atk (s/m/l, aim +1)
+    fists - 0B - atk 0
+    melee name - damage, size - atk 0
+    ranged name - damage, range s/m/l, mag, size - atk 0 (s/m/l, aim +1)
+        notes
         + attachment/mod - effects
 
 gear
