@@ -19,14 +19,16 @@ class Settings:
     Do not access settings values directly. Use the get() method.
     """
     install_base = path.dirname(path.realpath(__file__))
-    path_default = path.join(install_base, 'support/settings-default.json')
-    path_extra = [
-        path.expanduser('~/.config/npc/settings-user.json'),
-        '.npc/settings-campaign.json'
-    ]
 
-    def __init__(self, settings_path=path_default, extra_paths=path_extra):
+    default_settings_path = path.join(install_base, 'support/settings-default.json')
+    user_settings_path = path.expanduser('~/.config/npc/settings-user.json')
+    campaign_settings_path = '.npc/settings-campaign.json'
+
+    default_extra_paths = [user_settings_path, campaign_settings_path]
+
+    def __init__(self, settings_path=default_settings_path, extra_paths=default_extra_paths):
         self.data = util.load_json(settings_path)
+
         for k, v in self.data['templates'].items():
             self.data['templates'][k] = path.join(self.install_base, v)
         for k, v in self.data['support'].items():
@@ -77,13 +79,13 @@ class Settings:
     def get_settings_path(self, settings_type):
         """Get a settings file path"""
         if settings_type == 'default':
-            return self.path_default
+            return self.default_settings_path
 
         if settings_type == 'user':
-            return self.extra_paths[0]
+            return self.user_settings_path
 
         if settings_type == 'campaign':
-            return self.extra_paths[1]
+            return self.campaign_settings_path
 
     def get(self, key):
         """Get the value of a settings key
@@ -233,7 +235,7 @@ def _make_parser(prefs):
     # Open settings files
     parser_settings = subparsers.add_parser('settings', help="Open (and create if needed) a settings file")
     parser_settings.add_argument('location', choices=['user', 'campaign'], help="The settings file to load")
-    parser_settings.add_argument('-d', '--defaults', action="store_true", default=False, help="Open the default settings for reference")
+    parser_settings.add_argument('-d', '--defaults', action="store_true", default=False, help="Open the default settings file for easy reference")
     parser_settings.set_defaults(func=commands.settings)
 
     return parser
