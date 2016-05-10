@@ -40,7 +40,7 @@ class Settings:
 
         Settings values from this file will override the defaults. Any errors
         while opening the file are suppressed and the file will simply not be
-        loaded.
+        loaded. In that case, existing values are left alone.
         """
         try:
             loaded = util.load_json(settings_path)
@@ -158,7 +158,7 @@ def _find_campaign_base():
 def _make_parser(prefs):
     # This parser stores options shared by all character creation commands. It is never exposed directly.
     character_parser = argparse.ArgumentParser(add_help=False)
-    character_parser.add_argument('name', help="character's name", metavar='name')
+    character_parser.add_argument('name', help="Character name", metavar='name')
     character_parser.add_argument('-g', '--group', default=[], nargs="*", help='Name of a group that counts the character as a member', metavar='group')
     character_parser.add_argument('--dead', default=False, const='', nargs='?', help='Mark that the character has died, with optional notes', metavar='notes')
     character_parser.add_argument('--foreign', default=False, help="Mark that the character is foreign to the main campaign setting, with optional notes on where they're from", metavar='location')
@@ -175,13 +175,13 @@ def _make_parser(prefs):
     subparsers = parser.add_subparsers(title='Subcommands', description="Commands that can be run on the current campaign. See `%(prog)s <command> -h` to get help with individual commands.")
 
     # Subcommand to create the basic directories
-    parser_init = subparsers.add_parser('init', help="Set up the basic directory structure for campaign files")
+    parser_init = subparsers.add_parser('init', help="Create the basic directory structure for campaign files")
     parser_init.add_argument('-t', '--types', action="store_true", default=False, help="Create directories for character types")
     parser_init.add_argument('-a', '--all', action="store_true", default=False, help="Create all optional directories")
     parser_init.set_defaults(func=commands.init)
 
     # Session subcommand
-    parser_session = subparsers.add_parser('session', aliases=['s'], help="Create files for a new game session")
+    parser_session = subparsers.add_parser('session', help="Create files for a new game session")
     parser_session.set_defaults(func=commands.session)
 
     # Create generic character
@@ -190,11 +190,11 @@ def _make_parser(prefs):
     parser_generic.set_defaults(func=commands.create_simple)
 
     # These parsers are just named subcommand entry points to create simple characters
-    parser_human = subparsers.add_parser('human', aliases=['h'], parents=[character_parser], help="Create a new human character")
+    parser_human = subparsers.add_parser('human', aliases=['h'], parents=[character_parser], help="Create a new human character. Alias for `npc generic human`")
     parser_human.set_defaults(func=commands.create_simple, ctype="human")
-    parser_fetch = subparsers.add_parser('fetch', aliases=['f'], parents=[character_parser], help="Create a new fetch character")
+    parser_fetch = subparsers.add_parser('fetch', parents=[character_parser], help="Create a new fetch character. Alias for `npc generic fetch`")
     parser_fetch.set_defaults(func=commands.create_simple, ctype="fetch")
-    parser_goblin = subparsers.add_parser('goblin', parents=[character_parser], help="Create a new goblin character")
+    parser_goblin = subparsers.add_parser('goblin', parents=[character_parser], help="Create a new goblin character. Alias for `npc generic goblin`")
     parser_goblin.set_defaults(func=commands.create_simple, ctype="goblin")
 
     # Subcommand for making changelings, with their unique options
@@ -206,19 +206,19 @@ def _make_parser(prefs):
     parser_changeling.set_defaults(func=commands.create_changeling)
 
     # Subcommand for linting characer files
-    parser_lint = subparsers.add_parser('lint', parents=[paths_parser], help="Check the character files for minimum completeness.")
+    parser_lint = subparsers.add_parser('lint', parents=[paths_parser], help="Check the character files for minimum completeness")
     parser_lint.add_argument('-f', '--fix', action='store_true', default=False, help="automatically fix certain problems")
     parser_lint.set_defaults(func=commands.lint)
 
     # Subcommand to list character data in multiple formats
-    parser_list = subparsers.add_parser('list', aliases=['l'], parents=[paths_parser], help="Generate an NPC Listing")
+    parser_list = subparsers.add_parser('list', parents=[paths_parser], help="Generate an NPC Listing")
     parser_list.add_argument('-t', '--format', choices=['markdown', 'md', 'json'], default=prefs.get('default_list_format'), help="Format to use for the listing. Defaults to 'md'")
     parser_list.add_argument('-m', '--metadata', nargs="?", const='default', default=False, help="Add metadata to the output. When the output format supports more than one metadata scheme, you can specify that scheme as well.")
     parser_list.add_argument('-o', '--outfile', nargs="?", const='-', default=None, help="File where the listing will be saved")
     parser_list.set_defaults(func=commands.list)
 
     # Dump raw character data
-    parser_dump = subparsers.add_parser('dump', parents=[paths_parser], help="Generate a json listing of raw data for all characters")
+    parser_dump = subparsers.add_parser('dump', parents=[paths_parser], help="Export raw json data of all characters")
     parser_dump.add_argument('-s', '--sort', action="store_true", default=False, help="Sort the characters")
     parser_dump.add_argument('-m', '--metadata', action="store_true", default=False, help="Add metadata to the output.")
     parser_dump.add_argument('-o', '--outfile', nargs="?", const='-', default=None, help="File where the listing will be saved")
