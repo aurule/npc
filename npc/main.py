@@ -145,7 +145,9 @@ def _find_campaign_base():
     """Figure out the base campaign directory
 
     Walks up the directory tree until it finds the '.npc' campaign config
-    directory, or hits the filesystem root.
+    directory, or hits the filesystem root. If the `.npc` directory is found, its
+    parent is assumed to be the campaign's root directory. Otherwise, the
+    current directory of the command invocation is used.
     """
     current_dir = getcwd()
     base = current_dir
