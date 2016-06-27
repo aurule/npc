@@ -18,24 +18,28 @@ class Settings:
 
     Do not access settings values directly. Use the get() method.
     """
+
     install_base = path.dirname(path.realpath(__file__))
 
-    default_settings_path = path.join(install_base, 'support/settings-default.json')
-    user_settings_path = path.expanduser('~/.config/npc/settings-user.json')
-    campaign_settings_path = '.npc/settings-campaign.json'
+    default_settings_path = path.join(install_base, 'support/')
+    user_settings_path = path.expanduser('~/.config/npc/')
+    campaign_settings_path = '.npc/'
 
-    default_extra_paths = [user_settings_path, campaign_settings_path]
+    settings_files = ['settings.json', 'settings-changeling.json']
+    settings_paths = [default_settings_path, user_settings_path, campaign_settings_path]
 
-    def __init__(self, settings_path=default_settings_path, extra_paths=default_extra_paths):
-        self.data = util.load_json(settings_path)
+    def __init__(self):
+        self.data = util.load_json(path.join(self.default_settings_path, 'settings-default.json'))
 
         for k, v in self.data['templates'].items():
             self.data['templates'][k] = path.join(self.install_base, v)
-        for k, v in self.data['support'].items():
-            self.data['support'][k] = path.join(self.install_base, v)
 
-        for p in extra_paths:
-            self.load_more(p)
+        for settings_path in self.settings_paths:
+            for file in self.settings_files:
+                try:
+                    self.load_more(path.join(settings_path, file))
+                except IOError as e:
+                    pass
 
     def load_more(self, settings_path):
         """Merge settings from a file
@@ -79,13 +83,13 @@ class Settings:
     def get_settings_path(self, settings_type):
         """Get a settings file path"""
         if settings_type == 'default':
-            return self.default_settings_path
+            return path.join(self.default_settings_path, 'settings-default.json')
 
         if settings_type == 'user':
-            return self.user_settings_path
+            return path.join(self.user_settings_path, 'settings.json')
 
         if settings_type == 'campaign':
-            return self.campaign_settings_path
+            return path.join(self.campaign_settings_path, 'settings.json')
 
     def get(self, key):
         """Get the value of a settings key
@@ -107,8 +111,14 @@ class Settings:
 def cli(argv):
     """Run the interface"""
 
-    # load settings data and create parser
-    prefs = Settings()
+    # load settings data
+    try:
+        prefs = Settings()
+    except IOError as e:
+        print(e.strerror + " (%s)" % path.join(settings_path, 'settings-default.json'))
+        return 4
+
+    # create parser
     parser = _make_parser(prefs)
 
     # Parse args
