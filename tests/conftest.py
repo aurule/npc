@@ -6,7 +6,7 @@ from distutils import dir_util
 
 @pytest.fixture(scope="module")
 def prefs():
-    return npc.main.Settings(extra_paths=[])
+    return npc.main.Settings()
 
 @pytest.fixture(scope="module")
 def argparser(prefs):
