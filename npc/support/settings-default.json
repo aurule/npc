@@ -65,16 +65,5 @@
         // named format.
         "markdown": {},
         "json": {}
-    },
-
-    // Type-specific support files. These files contain extra data that's used
-    // when manipulating character files.
-    "support": {
-
-        // Enumerates the recognized seemings and kiths along with their
-        // blessings and curses. The changeling creator uses this data to add
-        // notes to the seeming and kith. The linter uses this data to validate
-        // the seeming and kith tags and notes.
-        "changeling-sk": "support/seeming-kith.json"
     }
 }
