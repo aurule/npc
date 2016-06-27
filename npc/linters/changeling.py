@@ -33,7 +33,7 @@ def lint(c, fix = False, **kwargs):
     else:
         seeming_tags = [t.lower() for t in c['seeming']] # used later
         for seeming_name in c['seeming']:
-            if seeming_name.lower() not in sk['blessing']:
+            if seeming_name.lower() not in sk['seemings']:
                 problems.append("Unrecognized @seeming '%s'" % seeming_name)
 
     # Check that kith tag exists and is valid
@@ -43,7 +43,7 @@ def lint(c, fix = False, **kwargs):
     else:
         kith_tags = [t.lower() for t in c['kith']] # used later
         for kith_name in c['kith']:
-            if kith_name.lower() not in sk['blessing']:
+            if kith_name.lower() not in sk['kiths']:
                 problems.append("Unrecognized @kith '%s'" % kith_name)
 
     # tags are ok. now compare against listed seeming and kith in stats
@@ -67,7 +67,7 @@ def lint(c, fix = False, **kwargs):
                     if fix:
                         seeming_tag = seeming_tags[0]
                         try:
-                            seeming_line = "%s (%s; %s)" % (seeming_tag.title(), sk['blessing'][seeming_tag], sk['curse'][seeming_tag])
+                            seeming_line = "%s (%s; %s)" % (seeming_tag.title(), sk['blessings'][seeming_tag], sk['curses'][seeming_tag])
                         except IndexError:
                             seeming_line = "%s" % seeming_tag.title()
 
@@ -83,11 +83,11 @@ def lint(c, fix = False, **kwargs):
                 # tags and stats match. iterate through each seeming and make sure the notes are right
                 for m in list(seeming_matches):
                     seeming_tag = m.group('seeming').lower()
-                    if not seeming_tag in sk['blessing']:
+                    if not seeming_tag in sk['seemings']:
                         continue
 
                     loaded_seeming_notes = m.group('notes')
-                    seeming_notes = "(%s; %s)" % (sk['blessing'][seeming_tag], sk['curse'][seeming_tag])
+                    seeming_notes = "(%s; %s)" % (sk['blessings'][seeming_tag], sk['curses'][seeming_tag])
                     if not loaded_seeming_notes:
                         problems.append("Missing notes for Seeming '%s'" % m.group('seeming'))
                         if fix:
@@ -123,7 +123,7 @@ def lint(c, fix = False, **kwargs):
                     if fix:
                         kith_tag = kith_tags[0]
                         try:
-                            kith_line = "%s (%s)" % (kith_tag.title(), sk['blessing'][kith_tag])
+                            kith_line = "%s (%s)" % (kith_tag.title(), sk['blessings'][kith_tag])
                         except IndexError:
                             kith_line = "%s" % kith_tag.title()
 
@@ -139,11 +139,11 @@ def lint(c, fix = False, **kwargs):
                 # tags and stats match. iterate through each kith and make sure the notes are right
                 for m in list(kith_matches):
                     kith_tag = m.group('kith').lower()
-                    if not kith_tag in sk['blessing']:
+                    if not kith_tag in sk['kiths']:
                         continue
 
                     loaded_kith_notes = m.group('notes')
-                    kith_notes = "(%s)" % (sk['blessing'][kith_tag])
+                    kith_notes = "(%s)" % (sk['blessings'][kith_tag])
                     if not loaded_kith_notes:
                         problems.append("Missing notes for Kith '%s'" % m.group('kith'))
                         if fix:
