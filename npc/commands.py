@@ -31,7 +31,6 @@ def create_changeling(args, prefs):
                                     belongs to. Used to derive path.
     * prefs - Settings object
     """
-    changeling_bonuses = prefs.get('support.changeling-sk')
     seeming_re = re.compile(
         '^(\s+)seeming(\s+)\w+$',
         re.MULTILINE | re.IGNORECASE
@@ -76,20 +75,17 @@ def create_changeling(args, prefs):
         return Result(False, errmsg=e.strerror + " (%s)" % prefs.get('templates.changeling'), errcode=4)
 
     # insert seeming and kith in the advantages block
-    try:
-        sk = _load_changeling_bonuses(prefs)
-    except IOError as e:
-        return Result(False, errmsg=e.strerror + " (%s)" % changeling_bonuses, errcode=4)
+    sk = prefs.get('changeling')
     seeming_key = args.seeming.lower()
-    if seeming_key in sk['blessing']:
-        seeming_notes = "%s; %s" % (sk['blessing'][seeming_key], sk['curse'][seeming_key])
+    if seeming_key in sk['seemings']:
+        seeming_notes = "%s; %s" % (sk['blessings'][seeming_key], sk['curses'][seeming_key])
         data = seeming_re.sub(
             '\g<1>Seeming\g<2>%s (%s)' % (seeming_name, seeming_notes),
             data
         )
     kith_key = args.kith.lower()
-    if kith_key in sk['blessing']:
-        kith_notes = sk['blessing'][kith_key]
+    if kith_key in sk['kiths']:
+        kith_notes = sk['blessings'][kith_key]
         data = kith_re.sub(
             '\g<1>Kith\g<2>%s (%s)' % (kith_name, kith_notes),
             data
@@ -103,15 +99,6 @@ def create_changeling(args, prefs):
         return Result(False, errmsg=e.strerror + " (%s)" % target_path, errcode=4)
 
     return Result(True, openable = [target_path])
-
-def _load_changeling_bonuses(prefs):
-    try:
-        return util.load_json(prefs.get('support.changeling-sk'))
-    except IOError:
-        raise
-    except Exception as e:
-        sys.stderr.write(e.nicemsg)
-        return {'blessing': {}, 'curse': {}}
 
 def _make_std_tags(args):
     tags = ["@group %s" % g for g in args.group]
@@ -429,8 +416,6 @@ def lint(args, prefs):
     * @kith tag is present and valid
     """
     characters = parser.get_characters(args.search, args.ignore)
-    changeling_bonuses = path.join(prefs.install_base, 'support/seeming-kith.json')
-    sk = None
 
     openable = []
     for c in characters:
@@ -449,15 +434,8 @@ def lint(args, prefs):
             # Do additional processing based on reported type
             types = [t.lower() for t in c['type']]
             if 'changeling' in types:
-                # lazily load and cache our seeming and kith data
-                if not sk:
-                    try:
-                        sk = _load_changeling_bonuses(prefs)
-                    except IOError as e:
-                        return Result(False, errmsg=e.strerror + " (%s)" % changeling_bonuses, errcode=4)
-
                 # find (and fix) changeling-specific problems in the body of the sheet
-                problems.extend(linters.changeling.lint(c, args.fix, sk=sk))
+                problems.extend(linters.changeling.lint(c, args.fix, sk=prefs.get('changeling')))
 
         # Report problems on one line if possible, or as a block if there's more than one
         if len(problems):
