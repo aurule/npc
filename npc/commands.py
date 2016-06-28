@@ -14,7 +14,7 @@ import itertools
 from . import formatters, linters, parser, util
 
 def create_changeling(args, prefs):
-    """Create a Changeling character
+    """Create a Changeling character.
 
     Arguments:
     * args - object containing runtime data. Must contain the following
@@ -101,6 +101,7 @@ def create_changeling(args, prefs):
     return Result(True, openable = [target_path])
 
 def _make_std_tags(args):
+    """Create standard tags that apply to all character types."""
     tags = ["@group %s" % g for g in args.group]
     if args.dead != False:
         dead_details = " %s" % args.dead if len(args.dead) else ""
@@ -110,7 +111,7 @@ def _make_std_tags(args):
     return tags
 
 def create_simple(args, prefs):
-    """Create a character without extra processing
+    """Create a character without extra processing.
 
     Simple characters don't have any unique tags or file annotations. Everything
     is based on their type.
@@ -159,14 +160,14 @@ def create_simple(args, prefs):
     return Result(True, openable = [target_path])
 
 def _add_path_if_exists(base, potential):
-    """Add a directory to the base path if that directory exists"""
+    """Add a directory to the base path if that directory exists."""
     test_path = path.join(base, potential)
     if path.exists(test_path):
         return test_path
     return base
 
 def session(args, prefs):
-    """Creates the files for a new game session
+    """Creates the files for a new game session.
 
     Finds the plot and session log files for the last session, copies the plot,
     and creates a new empty session log.
@@ -236,6 +237,18 @@ def session(args, prefs):
     return Result(True, openable=openable)
 
 def reorg(args, prefs):
+    """Move character files into the correct paths.
+
+    Character files are moved so that their path matches the ideal path as
+    closely as possible. No new directories are created.
+
+    Arguments:
+    * args - object containing runtime data. Must contain the following:
+        + purge     bool    Flag indicating that empty directories should be
+                            deleted after all files have been moved.
+        + verbose   bool    Whether to print changes as they are made
+    * prefs - settings object
+    """
     base_path = prefs.get('paths.characters')
     characters = parser.get_characters(args.search, args.ignore)
     for c in characters:
@@ -254,11 +267,22 @@ def reorg(args, prefs):
     return Result(True)
 
 def find_empty_dirs(root):
+    """Find empty directories under root"""
     for dirpath, dirs, files in walk(root):
         if not dirs and not files:
             yield dirpath
 
 def create_path_from_character(character, target_path, prefs):
+    """Determine the best file path for a character.
+
+    The path is created underneath target_path. It only includes directories
+    which already exist.
+
+    Arguments:
+    * character -- dict containing parsed character data
+    * target_path -- base path
+    * prefs -- settings object
+    """
     # add type-based directory if we can
     if 'type' in character:
         ctype = character['type'][0].lower()
@@ -283,7 +307,7 @@ def create_path_from_character(character, target_path, prefs):
     return target_path
 
 def list(args, prefs):
-    """Generate a list of NPCs
+    """Generate a list of NPCs.
 
     Arguments:
     * args - object containing runtime data. Must contain the following:
@@ -343,12 +367,18 @@ def list(args, prefs):
 def _sort_chars(characters):
     """Sort a list of character dicts.
 
-    In the future, this is where different sort methods will be handled.
+    In the future, this is where different sort methods will be handled. Right
+    now, it just sorts them by their final name (space-delimeted).
     """
     return sorted(characters, key=lambda c: c['name'][0].split(' ')[-1])
 
 def _prune_chars(characters):
-    """Alter character records for output."""
+    """Alter character records for output.
+
+    This applies behavior from directives and certain tags. Specifically, it
+    handles skip, it overrides type with faketype, and it inserts a placeholder
+    type if one was not specified.
+    """
 
     for c in characters:
         # skip if asked
@@ -387,7 +417,14 @@ def _smart_open(filename=None):
             fh.close()
 
 def dump(args, prefs):
-    """Dump the raw character data, unaltered"""
+    """Dump the raw character data, unaltered.
+
+    Arguments:
+    * args -- Object with runtime data. Must contain the following attributes:
+        - sort      bool        Whether to sort the characters before dumping
+        - metadata  bool        Whether to prepend metadata to the output
+        - outfile   None|string Filename to put the dumped data
+    """
     characters = parser.get_characters(args.search, args.ignore)
     if args.sort:
         characters = _sort_chars(characters)
@@ -482,7 +519,18 @@ def init(args, prefs):
     return Result(True)
 
 def settings(args, prefs):
-    """Open the named settings file"""
+    """Open the named settings file
+
+    If the desired settings file does not exist, an empty file is created and
+    then opened.
+
+    Attributes:
+    * args -- Object containing runtime data. Must contain the following:
+        - location  string  Which settings file to open. One of 'user' or
+                            'campaign'.
+        - defaults  bool    Whether the default settings file should be opened
+                            for reference alongside the specified settings file.
+    """
     target_path = prefs.get_settings_path(args.location)
     if not path.exists(target_path):
         dirname = path.dirname(target_path)
