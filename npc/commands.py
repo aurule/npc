@@ -415,14 +415,13 @@ def lint(args, prefs):
     * @seeming tag is present and valid
     * @kith tag is present and valid
     """
-    characters = parser.get_characters(args.search, args.ignore)
 
     openable = []
-    for c in characters:
-        problems = []
-        fixes = []
-        data = None
+    problems = []
 
+    # check each character
+    characters = parser.get_characters(args.search, args.ignore)
+    for c in characters:
         # Check description
         if not c['description'].strip():
             problems.append("Missing description")
