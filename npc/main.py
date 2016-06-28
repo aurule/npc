@@ -108,6 +108,34 @@ class Settings:
     def get_metadata(self, fmt):
         return {**self.get('additional_metadata.all'), **self.get('additional_metadata.%s' % fmt)}
 
+def _lint_changeling_settings(prefs):
+    blessing_keys = set(prefs.get('changeling.blessings').keys())
+    curse_keys = set(prefs.get('changeling.curses').keys())
+    seemings = set(prefs.get('changeling.seemings'))
+    kiths = set(prefs.get('changeling.kiths'))
+
+    ok = (blessing_keys.issuperset(seemings) and
+            curse_keys.issuperset(seemings) and
+            blessing_keys.issuperset(kiths))
+
+    if not ok:
+        print("Mismatch in changeling settings")
+
+        if not blessing_keys.issuperset(seemings):
+            print("    Seemings without blessings:")
+            for s in seemings.difference(blessing_keys):
+                print("        %s" % s)
+        if not curse_keys.issuperset(seemings):
+            print("    Seemings without curses:")
+            for s in seemings.difference(curse_keys):
+                print("        %s" % s)
+        if not blessing_keys.issuperset(kiths):
+            print("    Kiths without blessings:")
+            for k in kiths.difference(blessing_keys):
+                print("        %s" % k)
+
+    return ok
+
 def cli(argv):
     """Run the interface"""
 
@@ -117,6 +145,9 @@ def cli(argv):
     except IOError as e:
         print(e.strerror + " (%s)" % path.join(settings_path, 'settings-default.json'))
         return 4
+
+    if not _lint_changeling_settings(prefs):
+        return 5
 
     # create parser
     parser = _make_parser(prefs)
