@@ -33,7 +33,7 @@ NPC requires at least Python 3.5.0.
 
 ## Installation
 
-First, simply clone the NPC repo into the desired install directory. Then make a symlink to somewhere in your path:
+First, simply clone the NPC repo into the desired install directory. Then make symlink npc.py to somewhere in your path:
 
 `ln -s ~/bin/npc npc.py`
 
@@ -207,7 +207,7 @@ Changing the blessing and curse text is less arduous. To add a new blessing or c
 
 Every seeming *must* have a corresponding entry in both the `blessings` and `curses` dicts. Every kith *must* have a corresponding entry in the `blessings` dict. Kith curses are not supported by NPC and will be ignored.
 
-Since both seemings and kiths share the same blessings and curses dictionaries, all seeming and kith names *should* be unique. If a seeming and kith have the same name, then both will have the same blessing and that's probably not what you want.
+Since both seemings and kiths share the same blessings and curses dictionaries, all seeming and kith names *should* be unique. If a seeming and kith have the same name, then both will have the same blessing. That's probably not what you want.
 
 # Testing
 
