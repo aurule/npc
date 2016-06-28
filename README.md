@@ -164,9 +164,27 @@ NPC reads config values from three separate files. These settings files use the 
 
 Default values are loaded from `support/settings-default.json` within the install directory. This file has extensive documentation of the available settings.
 
-User settings are loaded from `~/.config/npc/settings-user.json`. Settings in this file will overwrite the default values.
+User settings are loaded from `~/.config/npc/settings.json`. Settings in this file will overwrite the default values.
 
-Finally, campaign settings are loaded from `.npc/settings-campaign.json` within the current directory at runtime. Settings here will overwrite the default and user values.
+Finally, campaign settings are loaded from `.npc/settings.json` within the current directory at runtime. Settings here will overwrite the default and user values.
+
+## Type-Specific Settings
+
+Additional settings files are loaded for each special character type. Their files are loaded from the same directories as above, but are named `settings-[type].json`. So, the Changeling settings for a campaign would be found in `.npc/settings-changeling.json`.
+
+Each type-specific settings file starts with a single key that matches the name of the character type. This means that if you really want to, you can override type-specific settings within the normal `settings.json` file by putting the new values under the appropriate key. It's much better to keep the type-specific stuff separate, though.
+
+### Changeling Settings
+
+The keys inside `settings-changeling.json` specify what seemings and kiths are allowed, and what their blessings and curses are. The default list includes all seemings and kiths published by White Wolf for *Changeling: the Lost* as part of *New World of Darkness* first edition. To use a different list, you have to specify the entire new list of seemings or kiths that you want to use, even if only a few entries change.
+
+Changing the blessing and curse text is less arduous. To add a new blessing or curse, just add a new entry to the appropriate dict. Its key must be the name of the seeming or kith to which it applies. To change an existing blessing or curse, just add a new entry using the same key. The old entry will be overwritten.
+
+#### Validity
+
+Every seeming *must* have a corresponding entry in both the `blessings` and `curses` dicts. Every kith *must* have a corresponding entry in the `blessings` dict. Kith curses are not supported by NPC and will be ignored.
+
+Since both seemings and kiths share the same blessings and curses dictionaries, all seeming and kith names *should* be unique. If a seeming and kith have the same name, then both will have the same blessing and that's probably not what you want.
 
 # Testing
 
