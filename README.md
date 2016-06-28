@@ -1,3 +1,26 @@
+<!-- MarkdownTOC autolink="true" bracket="round" depth=2 -->
+
+- [About](#about)
+    - [Requirements](#requirements)
+    - [Installation](#installation)
+- [Usage](#usage)
+    - [Set Up Directories](#set-up-directories)
+    - [Create Session Files](#create-session-files)
+    - [Create a Character](#create-a-character)
+    - [Lint Character Files](#lint-character-files)
+    - [Make an NPC Listing](#make-an-npc-listing)
+    - [Dump Raw NPC Data](#dump-raw-npc-data)
+    - [Reorganize Character Files](#reorganize-character-files)
+- [Gotchas](#gotchas)
+    - [Using both `search` and `ignore`](#using-both-search-and-ignore)
+- [Configuration](#configuration)
+    - [Type-Specific Settings](#type-specific-settings)
+- [Testing](#testing)
+    - [Requirements](#requirements-1)
+    - [Running Tests](#running-tests)
+
+<!-- /MarkdownTOC -->
+
 # About
 
 I created NPC to make my life easier when running New World of Darkness tabletop RPGs. It automates and streamlines a few tedious tasks like creating new session logs and character sheets.
