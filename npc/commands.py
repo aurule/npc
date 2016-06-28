@@ -194,30 +194,46 @@ def session(args, prefs):
     except ValueError:
         session_number = 0
 
-    if plot_number != session_number:
-        return Result(False, errmsg="Cannot create new plot and session files: latest files have different numbers (plot %i, session %i)" % (plot_number, session_number), errcode=2)
+    new_number = min(plot_number, session_number) + 1
 
-    new_number = plot_number + 1
-
-    if not plot_number:
-        new_plot_path = path.join(prefs.get('paths.plot'), ("plot %i.md" % new_number))
+    openable = []
+    if session_number:
+        if session_number < new_number:
+            # create new session log
+            old_session_path = path.join(prefs.get('paths.session'), latest_session)
+            new_session_path = path.join(prefs.get('paths.session'), ("session %i" % new_number) + latest_session_ext)
+            shcopy(prefs.get('templates.session'), new_session_path)
+        else:
+            # present existing plot files, since we don't have to create one
+            old_session_path = path.join(prefs.get('paths.session'), ("session %i" % (session_number - 1)) + latest_session_ext)
+            new_session_path = path.join(prefs.get('paths.session'), latest_session)
+        openable.extend( (new_session_path, old_session_path) )
+    else:
+        # no old session
         new_session_path = path.join(prefs.get('paths.session'), ("session %i.md" % new_number))
         shcopy(prefs.get('templates.session'), new_session_path)
+        openable.append(new_session_path)
+
+    if plot_number:
+        if plot_number < new_number:
+            # copy old plot
+            old_plot_path = path.join(prefs.get('paths.plot'), latest_plot)
+            new_plot_path = path.join(prefs.get('paths.plot'), ("plot %i" % new_number) + latest_plot_ext)
+            shcopy(old_plot_path, new_plot_path)
+        else:
+            # present existing sessions files, since we don't have to create one
+            old_plot_path = path.join(prefs.get('paths.plot'), ("plot %i" % (plot_number - 1)) + latest_plot_ext)
+            new_plot_path = path.join(prefs.get('paths.plot'), latest_plot)
+        openable.extend( (new_plot_path, old_plot_path) )
+    else:
+        # no old plot to copy, so use a blank
+        new_plot_path = path.join(prefs.get('paths.plot'), ("plot %i.md" % new_number))
         with open(new_plot_path, 'w') as f:
             f.write(' ')
-        return Result(True, openable=[new_session_path, new_plot_path])
+        openable.append(new_plot_path)
 
-    # copy old plot
-    old_plot_path = path.join(prefs.get('paths.plot'), latest_plot)
-    new_plot_path = path.join(prefs.get('paths.plot'), ("plot %i" % new_number) + latest_plot_ext)
-    shcopy(old_plot_path, new_plot_path)
-
-    # create new session log
-    old_session_path = path.join(prefs.get('paths.session'), latest_session)
-    new_session_path = path.join(prefs.get('paths.session'), ("session %i" % new_number) + latest_session_ext)
-    shcopy(prefs.get('templates.session'), new_session_path)
-
-    return Result(True, openable=[new_session_path, new_plot_path, old_plot_path, old_session_path])
+    print(openable)
+    return Result(True, openable=openable)
 
 def reorg(args, prefs):
     base_path = prefs.get('paths.characters')

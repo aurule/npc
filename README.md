@@ -59,7 +59,7 @@ Options:
 
 The `session` command creates the files that I need at the very start of a gaming session. It looks for the last session log and plot file, named `Session Log \d+` and `Plot \d+` respectively, and extracts their sequence number. It increments that to get the number for the new files, then copies the old plot file to its new location, and copies the session log template to its new location. It will open all four files.
 
-If anything goes wrong in this process (mismatched numbers is the most common, followed by malformatted file names) it will yell about it. Everything in a file name after "` - `" is ignored.
+If anything goes wrong in this process (like malformatted file names) it will yell about it. Everything in a file name after "` - `" is ignored.
 
 ## Create a Character
 

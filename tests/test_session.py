@@ -12,8 +12,8 @@ def test_imbalanced_files(campaign, argparser, prefs):
     campaign.populate_from_fixture_dir(['session', 'imbalanced'])
     args = argparser.parse_args(['session'])
     result = npc.commands.session(args, prefs)
-    assert not result.success
-    assert not campaign.get_file('Plot', 'plot 2.md').check()
+    assert result.success # works
+    assert campaign.get_file('Plot', 'plot 2.md').check() #creates the file
 
 def test_no_files(campaign, argparser, prefs):
     """When the directories exist, but there are no plot or session files, the
