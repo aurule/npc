@@ -52,7 +52,7 @@ class Settings:
             loaded = util.load_json(settings_path)
         except Exception as e:
             if hasattr(e, 'nicemsg'):
-                sys.stderr.write(e.nicemsg)
+                sys.stderr.write(e.nicemsg + "\n")
             return
 
         def evaluate_paths(base, loaded, key):
