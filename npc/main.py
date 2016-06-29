@@ -39,6 +39,7 @@ class Settings:
                 try:
                     self.load_more(path.join(settings_path, file))
                 except IOError as e:
+                    # all of these files are optional, so we silently ignore these errors
                     pass
 
     def load_more(self, settings_path):
