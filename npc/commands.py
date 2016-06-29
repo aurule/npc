@@ -233,7 +233,6 @@ def session(args, prefs):
             f.write(' ')
         openable.append(new_plot_path)
 
-    print(openable)
     return Result(True, openable=openable)
 
 def reorg(args, prefs):
