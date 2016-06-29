@@ -2,6 +2,7 @@
 
 import re
 import json
+import sys
 
 def load_json(filename):
     """ Parse a JSON file
@@ -37,3 +38,6 @@ def load_json(filename):
         except Exception as e:
             e.nicemsg = "Could not load '{0}': {1}".format(filename, e.msg)
             raise e
+
+def error(*args, **kwargs):
+    print(*args, file=sysstderr, **kwargs)
