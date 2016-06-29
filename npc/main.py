@@ -120,20 +120,20 @@ def _lint_changeling_settings(prefs):
             blessing_keys.issuperset(kiths))
 
     if not ok:
-        print("Mismatch in changeling settings")
+        util.error("Mismatch in changeling settings")
 
         if not blessing_keys.issuperset(seemings):
-            print("    Seemings without blessings:")
+            util.error("    Seemings without blessings:")
             for s in seemings.difference(blessing_keys):
-                print("        %s" % s)
+                util.error("        %s" % s)
         if not curse_keys.issuperset(seemings):
-            print("    Seemings without curses:")
+            util.error("    Seemings without curses:")
             for s in seemings.difference(curse_keys):
-                print("        %s" % s)
+                util.error("        %s" % s)
         if not blessing_keys.issuperset(kiths):
-            print("    Kiths without blessings:")
+            util.error("    Kiths without blessings:")
             for k in kiths.difference(blessing_keys):
-                print("        %s" % k)
+                util.error("        %s" % k)
 
     return ok
 
@@ -144,7 +144,7 @@ def cli(argv):
     try:
         prefs = Settings()
     except IOError as e:
-        print(e.strerror + " (%s)" % path.join(settings_path, 'settings-default.json'))
+        util.error(e.strerror + " (%s)" % path.join(settings_path, 'settings-default.json'))
         return 4
 
     if not _lint_changeling_settings(prefs):
@@ -164,7 +164,7 @@ def cli(argv):
     try:
         chdir(base)
     except OSError as e:
-        print("{}: '{}'".format(e.strerror, base))
+        util.error("{}: '{}'".format(e.strerror, base))
         return 4 # internal code for a filesystem error
 
     # run the command
@@ -176,7 +176,7 @@ def cli(argv):
 
     # handle errors
     if not result.success:
-        print(result.errmsg)
+        util.error(result.errmsg)
         return result.errcode
 
     # open the resulting files, if allowed
