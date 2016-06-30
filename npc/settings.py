@@ -103,6 +103,10 @@ class Settings:
     def get_metadata(self, fmt):
         return {**self.get('additional_metadata.all'), **self.get('additional_metadata.%s' % fmt)}
 
+class InternalSettings(Settings, metaclass=util.Singleton):
+    """Singleton settings class."""
+    pass
+
 def lint_changeling_settings(prefs):
     """Check correctness of changeling-specific settings.
 
