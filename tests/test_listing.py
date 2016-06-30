@@ -21,18 +21,18 @@ def list_json_output(tmpdir, argparser, prefs):
     return make_list
 
 @pytest.mark.parametrize('outopt', [None, '-'])
-def test_output_no_file(argparser, prefs, capsys, outopt):
+def test_output_no_file(argparser, capsys, outopt):
     search = fixture_dir(['listing', 'valid-json'])
     args = argparser.parse_args([
         'list',
         '--search', search,
         '-o', outopt
     ])
-    npc.commands.list(args, prefs)
+    npc.commands.list(args)
     output, _ = capsys.readouterr()
     assert output
 
-def test_output_to_file(argparser, prefs, tmpdir):
+def test_output_to_file(argparser, tmpdir):
     outfile = tmpdir.join("output.json")
     search = fixture_dir(['listing', 'valid-json'])
     args = argparser.parse_args([
@@ -40,7 +40,7 @@ def test_output_to_file(argparser, prefs, tmpdir):
         '--search', search,
         '-o', str(outfile)
     ])
-    npc.commands.list(args, prefs)
+    npc.commands.list(args)
     assert outfile.read()
 
 def test_list_valid_json(list_json_output):
@@ -81,7 +81,7 @@ class TestMetadata:
                 assert c['title'] == 'NPC Listing'
                 assert 'created' in c
 
-    def test_md_mmd_metadata(self, argparser, prefs, tmpdir):
+    def test_md_mmd_metadata(self, argparser, tmpdir):
         """The 'mmd' metadata arg should prepend multi-markdown metadata tags to
         the markdown output."""
 
@@ -94,11 +94,11 @@ class TestMetadata:
             '--metadata', 'mmd',
             '-o', str(outfile)
         ])
-        npc.commands.list(args, prefs)
+        npc.commands.list(args)
         assert 'Title: NPC Listing' in outfile.read()
 
     @pytest.mark.parametrize('metaformat', ['yfm', 'yaml'])
-    def test_md_yfm_metadata(self, metaformat, argparser, prefs, tmpdir):
+    def test_md_yfm_metadata(self, metaformat, argparser, tmpdir):
         """The 'yfm' and 'yaml' metadata args should both result in YAML front
         matter being prepended to markdown output."""
 
@@ -111,7 +111,7 @@ class TestMetadata:
             '--metadata', metaformat,
             '-o', str(outfile)
         ])
-        npc.commands.list(args, prefs)
+        npc.commands.list(args)
         match = re.match('(?sm)\s*---(.*)---\s*', outfile.read())
         assert match is not None
         assert 'title: NPC Listing' in match.group(1)
@@ -143,7 +143,7 @@ class TestMetadata:
         npc.commands.list(args, prefs)
         assert 'test-type: markdown' in outfile.read()
 
-    def test_invalid_metadata_arg(self, argparser, prefs):
+    def test_invalid_metadata_arg(self, argparser):
         """Using metadata formats other than yfm and mmd is not supported for
         the markdown output type.
 
@@ -155,10 +155,10 @@ class TestMetadata:
             '--format', 'md',
             '--metadata', 'json'
         ])
-        result = npc.commands.list(args, prefs)
+        result = npc.commands.list(args)
         assert not result.success
 
-    def test_unknown_metadata_arg(self, argparser, prefs):
+    def test_unknown_metadata_arg(self, argparser):
         """Unrecognized metadata options should result in an error"""
 
         args = argparser.parse_args([
@@ -166,5 +166,5 @@ class TestMetadata:
             '--format', 'md',
             '--metadata', 'asdf'
         ])
-        result = npc.commands.list(args, prefs)
+        result = npc.commands.list(args)
         assert not result.success

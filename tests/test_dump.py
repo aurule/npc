@@ -4,8 +4,8 @@ import pytest
 from tests.util import fixture_dir
 
 @pytest.fixture
-def list_json_output(tmpdir, argparser, prefs):
-    def make_list(search_parts=[], metadata=False, sorted=False, prefs=prefs):
+def list_json_output(tmpdir, argparser):
+    def make_list(search_parts=[], metadata=False, sorted=False):
         outfile = tmpdir.join("output.json")
         search = fixture_dir(['dump'] + search_parts)
         arglist = [
@@ -19,7 +19,7 @@ def list_json_output(tmpdir, argparser, prefs):
             arglist.append('--sort')
 
         args = argparser.parse_args(arglist)
-        npc.commands.dump(args, prefs)
+        npc.commands.dump(args)
         return json.load(outfile)
     return make_list
 
@@ -55,18 +55,18 @@ def test_metadata(list_json_output):
             assert 'created' in c
 
 @pytest.mark.parametrize('outopt', [None, '-'])
-def test_output_no_file(argparser, prefs, capsys, outopt):
+def test_output_no_file(argparser, capsys, outopt):
     search = fixture_dir(['dump'])
     args = argparser.parse_args([
         'dump',
         '--search', search,
         '-o', outopt
     ])
-    npc.commands.dump(args, prefs)
+    npc.commands.dump(args)
     output, _ = capsys.readouterr()
     assert output
 
-def test_output_to_file(argparser, prefs, tmpdir):
+def test_output_to_file(argparser, tmpdir):
     outfile = tmpdir.join("output.json")
     search = fixture_dir(['dump'])
     args = argparser.parse_args([
@@ -74,7 +74,7 @@ def test_output_to_file(argparser, prefs, tmpdir):
         '--search', search,
         '-o', str(outfile)
     ])
-    npc.commands.dump(args, prefs)
+    npc.commands.dump(args)
     assert outfile.read()
 
 def test_directive(list_json_output):
