@@ -377,6 +377,9 @@ def _sort_chars(characters):
 
     In the future, this is where different sort methods will be handled. Right
     now, it just sorts them by their "last" name (space-delimeted).
+
+    Arguments:
+    characters -- list of character dicts
     """
     return sorted(characters, key=lambda c: c['name'][0].split(' ')[-1])
 
@@ -386,6 +389,9 @@ def _prune_chars(characters):
     This applies behavior from directives and certain tags. Specifically, it
     handles skip, it overrides type with faketype, and it inserts a placeholder
     type if one was not specified.
+
+    Arguments:
+    characters -- list of character dicts
     """
 
     for c in characters:
