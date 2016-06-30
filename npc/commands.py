@@ -376,7 +376,7 @@ def _sort_chars(characters):
     """Sort a list of character dicts.
 
     In the future, this is where different sort methods will be handled. Right
-    now, it just sorts them by their final name (space-delimeted).
+    now, it just sorts them by their "last" name (space-delimeted).
     """
     return sorted(characters, key=lambda c: c['name'][0].split(' ')[-1])
 
