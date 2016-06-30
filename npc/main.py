@@ -42,6 +42,7 @@ def cli(argv):
         result = args.func(args)
     except AttributeError:
         parser.print_help()
+        util.error(e)
         return 6
 
     # handle errors

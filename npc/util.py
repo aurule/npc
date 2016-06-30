@@ -41,7 +41,7 @@ def load_json(filename):
 
 def error(*args, **kwargs):
     """Print an error message to stderr."""
-    print(*args, file=sysstderr, **kwargs)
+    print(*args, file=sys.stderr, **kwargs)
 
 class Singleton(type):
     """Metaclass for creating singleton classes."""
