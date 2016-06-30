@@ -244,34 +244,33 @@ def session(prefs=settings.InternalSettings(), **kwargs):
 
     return Result(True, openable=openable)
 
-def reorg(args, prefs=settings.InternalSettings(), **kwargs):
+def reorg(search, ignore=[], purge=False, verbose=False, prefs=settings.InternalSettings(), **kwargs):
     """Move character files into the correct paths.
 
     Character files are moved so that their path matches the ideal path as
     closely as possible. No new directories are created.
 
     Arguments:
-    * args - object containing runtime data. Must contain the following:
-        + search    array   Array of paths to search for character files
-        + ignore    array   Array of paths to ignore
-        + purge     bool    Flag indicating that empty directories should be
-                            deleted after all files have been moved.
-        + verbose   bool    Whether to print changes as they are made
+    * search    array   Array of paths to search for character files
+    * ignore    array   Array of paths to ignore
+    * purge     bool    Flag indicating that empty directories should be
+                        deleted after all files have been moved.
+    * verbose   bool    Whether to print changes as they are made
     * prefs - settings object
     """
     base_path = prefs.get('paths.characters')
-    characters = parser.get_characters(args.search, args.ignore)
+    characters = parser.get_characters(search, ignore)
     for c in characters:
         new_path = create_path_from_character(c, base_path, prefs)
         if new_path != path.dirname(c['path']):
-            if args.verbose:
+            if verbose:
                 print("Moving {} to {}".format(c['path'], new_path))
             shmove(c['path'], new_path)
 
-    if args.purge:
+    if purge:
         for empty_path in find_empty_dirs(base_path):
             rmdir(empty_path)
-            if args.verbose:
+            if verbose:
                 print("Removing empty directory {}".format(empty_path))
 
     return Result(True)

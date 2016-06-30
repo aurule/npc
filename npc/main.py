@@ -158,6 +158,7 @@ def _make_parser(prefs):
     parser_reorg.add_argument('-p', '--purge', action="store_true", default=False, help="After moving all files, remove any empty directories within the base characters path")
     parser_reorg.add_argument('-v', '--verbose', action="store_true", default=False, help="Show the changes that are made")
     parser_reorg.set_defaults(func=commands.reorg)
+    parser_reorg.set_defaults(serialize=['search'])
 
     # Open settings files
     parser_settings = subparsers.add_parser('settings', help="Open (and create if needed) a settings file")
