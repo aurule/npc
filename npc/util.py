@@ -40,4 +40,5 @@ def load_json(filename):
             raise e
 
 def error(*args, **kwargs):
+    """Print an error message to stderr."""
     print(*args, file=sysstderr, **kwargs)
