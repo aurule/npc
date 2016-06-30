@@ -87,7 +87,7 @@ def _make_parser(prefs):
     # This parser stores options shared by all character creation commands. It is never exposed directly.
     character_parser = argparse.ArgumentParser(add_help=False)
     character_parser.add_argument('name', help="Character name", metavar='name')
-    character_parser.add_argument('-g', '--group', default=[], nargs="*", help='Name of a group that counts the character as a member', metavar='group')
+    character_parser.add_argument('-g', '--groups', default=[], nargs="*", help='Name of a group that counts the character as a member', metavar='group')
     character_parser.add_argument('--dead', default=False, const='', nargs='?', help='Mark that the character has died, with optional notes', metavar='notes')
     character_parser.add_argument('--foreign', default=False, help="Mark that the character is foreign to the main campaign setting, with optional notes on where they're from", metavar='location')
 
@@ -115,15 +115,15 @@ def _make_parser(prefs):
     # Create generic character
     parser_generic = subparsers.add_parser('generic', aliases=['g'], parents=[character_parser], help="Create a new character using the named template")
     parser_generic.add_argument('ctype', metavar='template', help="Template to use. Must be configured in settings")
-    parser_generic.set_defaults(func=commands.create_simple)
+    parser_generic.set_defaults(func=commands.create_simple, serialize=['name', 'ctype'])
 
     # These parsers are just named subcommand entry points to create simple characters
     parser_human = subparsers.add_parser('human', aliases=['h'], parents=[character_parser], help="Create a new human character. Alias for `npc generic human`")
-    parser_human.set_defaults(func=commands.create_simple, ctype="human")
+    parser_human.set_defaults(func=commands.create_simple, ctype="human", serialize=['name', 'ctype'])
     parser_fetch = subparsers.add_parser('fetch', parents=[character_parser], help="Create a new fetch character. Alias for `npc generic fetch`")
-    parser_fetch.set_defaults(func=commands.create_simple, ctype="fetch")
+    parser_fetch.set_defaults(func=commands.create_simple, ctype="fetch", serialize=['name', 'ctype'])
     parser_goblin = subparsers.add_parser('goblin', parents=[character_parser], help="Create a new goblin character. Alias for `npc generic goblin`")
-    parser_goblin.set_defaults(func=commands.create_simple, ctype="goblin")
+    parser_goblin.set_defaults(func=commands.create_simple, ctype="goblin", serialize=['name', 'ctype'])
 
     # Subcommand for making changelings, with their unique options
     parser_changeling = subparsers.add_parser('changeling', aliases=['c'], parents=[character_parser], help="Create a new changeling character")

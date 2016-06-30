@@ -46,7 +46,7 @@ def create_changeling(args, prefs=settings.InternalSettings(), **kwargs):
     else:
         target_path = _add_path_if_exists(target_path, 'Courtless')
 
-    for group_name in args.group:
+    for group_name in args.groups:
         target_path = _add_path_if_exists(target_path, group_name)
 
     filename = args.name + '.nwod'
@@ -62,7 +62,7 @@ def create_changeling(args, prefs=settings.InternalSettings(), **kwargs):
         tags.append('@motley %s' % args.motley)
     if args.court:
         tags.append('@court %s' % args.court.title())
-    tags.extend(_make_std_tags(groups = args.group, dead = args.dead, foreign = args.foreign))
+    tags.extend(_make_std_tags(groups = args.groups, dead = args.dead, foreign = args.foreign))
 
     header = "\n".join(tags) + '\n\n'
 
@@ -119,36 +119,40 @@ def _make_std_tags(groups = [], dead = False, foreign = ""):
         tags.append("@foreign %s" % foreign)
     return tags
 
-def create_simple(args, prefs=settings.InternalSettings(), **kwargs):
+def create_simple(name, ctype, groups=[], dead=False, foreign=False, prefs=settings.InternalSettings(), **kwargs):
     """Create a character without extra processing.
 
     Simple characters don't have any unique tags or file annotations. Everything
     is based on their type.
 
     Arguments:
-    * args          object  Object with runtime data. Must contain the following
-                            attributes:
-        + name              string  Base file name
-        + group (optional)  list    One or more names of groups the character
-                                    belongs to. Used to derive path for the file.
+    + name              string  Base file name
+    * ctype string  Character type
+    + group (optional)  list    One or more names of groups the character
+                                belongs to. Used to derive path for the file.
+    dead -- Whether to add the @dead tag. Pass False to exclude it
+            (the default), an empty string to inlcude it with no details given,
+            and a non-empty string to include the tag along with the contents of
+            the argument.
+    foreign -- Details of non-standard residence. Leave empty to exclude the
+            @foreign tag.
     """
-    ctype = args.ctype
     if ctype not in prefs.get('templates'):
         return Result(False, errmsg="Unrecognized template '%s'" % ctype, errcode=7)
 
     # Derive destination path
     target_path = _add_path_if_exists(prefs.get('paths.characters'), prefs.get('type_paths.%s' % ctype))
-    for group_name in args.group:
+    for group_name in groups:
         target_path = _add_path_if_exists(target_path, group_name)
 
-    filename = args.name + '.nwod'
+    filename = name + '.nwod'
     target_path = path.join(target_path, filename)
     if path.exists(target_path):
-        return Result(False, errmsg="Character '%s' already exists!" % args.name, errcode = 1)
+        return Result(False, errmsg="Character '%s' already exists!" % name, errcode = 1)
 
     # Add tags
     typetag = ctype.title()
-    tags = ['@type %s' % typetag] + _make_std_tags(groups = args.group, dead = args.dead, foreign = args.foreign)
+    tags = ['@type %s' % typetag] + _make_std_tags(groups = groups, dead = dead, foreign = foreign)
     header = "\n".join(tags) + '\n\n'
 
     # Copy template
