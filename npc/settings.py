@@ -104,6 +104,15 @@ class Settings:
         return {**self.get('additional_metadata.all'), **self.get('additional_metadata.%s' % fmt)}
 
 def lint_changeling_settings(prefs):
+    """Check correctness of changeling-specific settings.
+
+    To be correct, the changeling settings must have a blessing and curse for
+    every seeming, and a blessing for every kith. Duplicate names between
+    seemings and kiths *are not* reported.
+
+    Arguments:
+    prefs -- Settings object
+    """
     blessing_keys = set(prefs.get('changeling.blessings').keys())
     curse_keys = set(prefs.get('changeling.curses').keys())
     seemings = set(prefs.get('changeling.seemings'))
