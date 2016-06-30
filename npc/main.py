@@ -39,7 +39,15 @@ def cli(argv):
 
     # run the command
     try:
-        result = args.func(**vars(args))
+        full_args = vars(args)
+        if 'serialize' in full_args:
+            serial_args = [full_args[k] for k in full_args['serialize']]
+            for k in full_args['serialize']:
+                full_args.pop(k)
+        else:
+            serial_args = []
+
+        result = args.func(*serial_args, **full_args)
     except AttributeError as e:
         parser.print_help()
         util.error(e)
@@ -155,5 +163,6 @@ def _make_parser(prefs):
     parser_settings.add_argument('location', choices=['user', 'campaign'], help="The settings file to load")
     parser_settings.add_argument('-d', '--defaults', action="store_true", default=False, help="Open the default settings file for easy reference")
     parser_settings.set_defaults(func=commands.settings)
+    parser_settings.set_defaults(serialize=['location'])
 
     return parser
