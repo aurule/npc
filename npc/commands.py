@@ -544,26 +544,24 @@ def init(create_types = False, create_all = False, prefs=settings.InternalSettin
 
     return Result(True)
 
-def settings(args, prefs=settings.InternalSettings(), **kwargs):
+def settings(location, show_defaults = False, prefs=settings.InternalSettings(), **kwargs):
     """Open the named settings file
 
     If the desired settings file does not exist, an empty file is created and
     then opened.
 
-    Attributes:
-    * args -- Object containing runtime data. Must contain the following:
-        - location  string  Which settings file to open. One of 'user' or
-                            'campaign'.
-        - defaults  bool    Whether the default settings file should be opened
-                            for reference alongside the specified settings file.
+    Arguments:
+    location -- Which settings file to open. One of 'user' or 'campaign'.
+    show_defaults -- Whether the default settings file should be opened for
+        reference alongside the specified settings file.
     """
-    target_path = prefs.get_settings_path(args.location)
+    target_path = prefs.get_settings_path(location)
     if not path.exists(target_path):
         dirname = path.dirname(target_path)
         makedirs(dirname, mode=0o775, exist_ok=True)
         open(target_path, 'a').close()
 
-    if args.defaults:
+    if show_defaults:
         openable = [prefs.get_settings_path('default'), target_path]
     else:
         openable = [target_path]
