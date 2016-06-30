@@ -39,11 +39,14 @@ def cli(argv):
 
     # run the command
     try:
-        result = args.func(args)
-    except AttributeError:
+        result = args.func(**vars(args))
+    except AttributeError as e:
         parser.print_help()
         util.error(e)
         return 6
+    except TypeError:
+        # TODO remove this ugly hack as soon as all commands expect keyword args
+        result = args.func(args)
 
     # handle errors
     if not result.success:
