@@ -4,14 +4,10 @@ import os
 from tests.util import fixture_dir
 
 @pytest.fixture
-def lint_output(argparser, capsys):
+def lint_output(capsys):
     def do_lint(charname):
         search = fixture_dir(['linter', 'characters', 'Humans', charname])
-        args = argparser.parse_args([
-            'lint',
-            '--search', search
-        ])
-        npc.commands.lint(args)
+        npc.commands.lint([search])
         output, _ = capsys.readouterr()
         return output
     return do_lint
@@ -27,14 +23,10 @@ class TestChangeling:
     """Tests the linting of changeling-specific tags"""
 
     @pytest.fixture
-    def lint_output(self, argparser, capsys):
+    def lint_output(self, capsys):
         def do_lint(charname):
             search = fixture_dir(['linter', 'characters', 'Changelings', charname])
-            args = argparser.parse_args([
-                'lint',
-                '--search', search
-            ])
-            npc.commands.lint(args)
+            npc.commands.lint([search])
             output, _ = capsys.readouterr()
             return output
         return do_lint

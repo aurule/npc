@@ -468,15 +468,13 @@ def dump(args, prefs=settings.InternalSettings(), **kwargs):
 
     return Result(True, openable=openable)
 
-def lint(args, prefs=settings.InternalSettings(), **kwargs):
+def lint(search, ignore=[], fix=False, prefs=settings.InternalSettings(), **kwargs):
     """Check character files for completeness and correctness
 
     Arguments:
-    * args  object  Object with runtime data. Must contain the following
-                    attributes:
-        + search    array   Array of paths to search for character files
-        + ignore    array   Array of paths to ignore
-        + fix       boolean Whether to automatically fix errors when possible
+    + search    array   Array of paths to search for character files
+    + ignore    array   Array of paths to ignore
+    + fix       boolean Whether to automatically fix errors when possible
     * prefs object  Settings object
 
     This method checks that every character file has a few required tags, and
@@ -495,7 +493,7 @@ def lint(args, prefs=settings.InternalSettings(), **kwargs):
     problems = []
 
     # check each character
-    characters = parser.get_characters(args.search, args.ignore)
+    characters = parser.get_characters(search, ignore)
     for c in characters:
         # Check description
         if not c['description'].strip():
@@ -509,7 +507,7 @@ def lint(args, prefs=settings.InternalSettings(), **kwargs):
             types = [t.lower() for t in c['type']]
             if 'changeling' in types:
                 # find (and fix) changeling-specific problems in the body of the sheet
-                problems.extend(linters.changeling.lint(c, args.fix, sk=prefs.get('changeling')))
+                problems.extend(linters.changeling.lint(c, fix, sk=prefs.get('changeling')))
 
         # Report problems on one line if possible, or as a block if there's more than one
         if len(problems):

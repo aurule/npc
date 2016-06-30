@@ -137,6 +137,7 @@ def _make_parser(prefs):
     parser_lint = subparsers.add_parser('lint', parents=[paths_parser], help="Check the character files for minimum completeness")
     parser_lint.add_argument('-f', '--fix', action='store_true', default=False, help="automatically fix certain problems")
     parser_lint.set_defaults(func=commands.lint)
+    parser_lint.set_defaults(serialize=['search'])
 
     # Subcommand to list character data in multiple formats
     parser_list = subparsers.add_parser('list', parents=[paths_parser], help="Generate an NPC Listing")
