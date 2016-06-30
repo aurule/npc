@@ -252,6 +252,8 @@ def reorg(args, prefs=settings.InternalSettings(), **kwargs):
 
     Arguments:
     * args - object containing runtime data. Must contain the following:
+        + search    array   Array of paths to search for character files
+        + ignore    array   Array of paths to ignore
         + purge     bool    Flag indicating that empty directories should be
                             deleted after all files have been moved.
         + verbose   bool    Whether to print changes as they are made
@@ -319,6 +321,8 @@ def list(args, prefs=settings.InternalSettings(), **kwargs):
 
     Arguments:
     * args - object containing runtime data. Must contain the following:
+        + search    array       Array of paths to search for character files
+        + ignore    array       Array of paths to ignore
         + format    string      Format of the output. Supported types are
                                 markdown (md), and json.
         + metadata  None|string Optional flag to include metadata in the output.
@@ -435,6 +439,8 @@ def dump(args, prefs=settings.InternalSettings(), **kwargs):
 
     Arguments:
     * args -- Object with runtime data. Must contain the following attributes:
+        + search    array       Array of paths to search for character files
+        + ignore    array       Array of paths to ignore
         - sort      bool        Whether to sort the characters before dumping
         - metadata  bool        Whether to prepend metadata to the output
         - outfile   None|string Filename to put the dumped data
@@ -468,7 +474,9 @@ def lint(args, prefs=settings.InternalSettings(), **kwargs):
     Arguments:
     * args  object  Object with runtime data. Must contain the following
                     attributes:
-        + fix   boolean     Whether to automatically fix errors when possible
+        + search    array   Array of paths to search for character files
+        + ignore    array   Array of paths to ignore
+        + fix       boolean Whether to automatically fix errors when possible
     * prefs object  Settings object
 
     This method checks that every character file has a few required tags, and
