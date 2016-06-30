@@ -5,7 +5,7 @@ from tests.util import fixture_dir
 
 @pytest.fixture
 def settings():
-    return npc.main.Settings()
+    return npc.settings.Settings()
 
 def test_creation(settings):
     assert settings is not None
