@@ -99,8 +99,18 @@ def create_changeling(args, prefs=settings.InternalSettings(), **kwargs):
 
     return Result(True, openable = [target_path])
 
-def _make_std_tags(groups = [], dead = False, foreign = False):
-    """Create standard tags that apply to all character types."""
+def _make_std_tags(groups = [], dead = False, foreign = ""):
+    """Create standard tags that apply to all character types.
+
+    Arguments:
+    groups -- Array of group names
+    dead -- Whether to add the @dead tag. Pass False to exclude it
+            (the default), an empty string to inlcude it with no details given,
+            and a non-empty string to include the tag along with the contents of
+            the argument.
+    foreign -- Details of non-standard residence. Leave empty to exclude the
+            @foreign tag.
+    """
     tags = ["@group %s" % g for g in groups]
     if dead != False:
         dead_details = " %s" % dead if len(dead) else ""
