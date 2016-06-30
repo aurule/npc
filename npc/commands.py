@@ -433,23 +433,25 @@ def _smart_open(filename=None):
         if fh is not sys.stdout:
             fh.close()
 
-def dump(args, prefs=settings.InternalSettings(), **kwargs):
+def dump(search, ignore=[], sort=False, metadata=False, outfile=None, prefs=settings.InternalSettings(), **kwargs):
     """Dump the raw character data, unaltered.
 
+    Always formats the data as json.
+
     Arguments:
-    * args -- Object with runtime data. Must contain the following attributes:
-        + search    array       Array of paths to search for character files
-        + ignore    array       Array of paths to ignore
-        - sort      bool        Whether to sort the characters before dumping
-        - metadata  bool        Whether to prepend metadata to the output
-        - outfile   None|string Filename to put the dumped data
+    * search    array       Array of paths to search for character files
+    * ignore    array       Array of paths to ignore
+    * sort      bool        Whether to sort the characters before dumping
+    * metadata  bool        Whether to prepend metadata to the output
+    * outfile   None|string Filename to put the dumped data. None and "-" print
+    *     to stdout.
     """
-    characters = parser.get_characters(args.search, args.ignore)
-    if args.sort:
+    characters = parser.get_characters(search, ignore)
+    if sort:
         characters = _sort_chars(characters)
 
     # make some json
-    if args.metadata:
+    if metadata:
         base_meta = {
             'meta': True,
             'title': 'NPC Listing',
@@ -458,12 +460,12 @@ def dump(args, prefs=settings.InternalSettings(), **kwargs):
         meta = {**base_meta, **prefs.get_metadata('json')}
         characters = itertools.chain([meta], characters)
 
-    with _smart_open(args.outfile) as f:
+    with _smart_open(outfile) as f:
         json.dump([c for c in characters], f)
 
     openable = None
-    if args.outfile and args.outfile != '-':
-        openable = [args.outfile]
+    if outfile and outfile != '-':
+        openable = [outfile]
 
     return Result(True, openable=openable)
 

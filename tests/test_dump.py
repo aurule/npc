@@ -4,22 +4,12 @@ import pytest
 from tests.util import fixture_dir
 
 @pytest.fixture
-def list_json_output(tmpdir, argparser):
-    def make_list(search_parts=[], metadata=False, sorted=False):
+def list_json_output(tmpdir):
+    def make_list(search_parts=[], metadata=False, sort=False):
         outfile = tmpdir.join("output.json")
         search = fixture_dir(['dump'] + search_parts)
-        arglist = [
-            'dump',
-            '--search', search,
-            '-o', str(outfile)
-        ]
-        if metadata:
-            arglist.append('--metadata')
-        if sorted:
-            arglist.append('--sort')
 
-        args = argparser.parse_args(arglist)
-        npc.commands.dump(args)
+        npc.commands.dump([search], outfile=str(outfile), metadata=metadata, sort=sort)
         return json.load(outfile)
     return make_list
 
@@ -35,7 +25,7 @@ def test_sort(list_json_output):
     """Tests that the dumped, sorted output identical to the internal sorted data"""
     raw_data = npc.parser.get_characters(search_paths=[fixture_dir(['dump'])])
     sorted_data = npc.commands._sort_chars(raw_data)
-    dump_data = list_json_output(sorted=True)
+    dump_data = list_json_output(sort=True)
     it = iter(sorted_data)
     with pytest.raises(StopIteration) as e:
         i = next(it)
@@ -55,26 +45,16 @@ def test_metadata(list_json_output):
             assert 'created' in c
 
 @pytest.mark.parametrize('outopt', [None, '-'])
-def test_output_no_file(argparser, capsys, outopt):
+def test_output_no_file(capsys, outopt):
     search = fixture_dir(['dump'])
-    args = argparser.parse_args([
-        'dump',
-        '--search', search,
-        '-o', outopt
-    ])
-    npc.commands.dump(args)
+    npc.commands.dump([search], outfile=outopt)
     output, _ = capsys.readouterr()
     assert output
 
 def test_output_to_file(argparser, tmpdir):
     outfile = tmpdir.join("output.json")
     search = fixture_dir(['dump'])
-    args = argparser.parse_args([
-        'dump',
-        '--search', search,
-        '-o', str(outfile)
-    ])
-    npc.commands.dump(args)
+    npc.commands.dump([search], outfile=str(outfile))
     assert outfile.read()
 
 def test_directive(list_json_output):

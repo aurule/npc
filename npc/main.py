@@ -152,6 +152,7 @@ def _make_parser(prefs):
     parser_dump.add_argument('-m', '--metadata', action="store_true", default=False, help="Add metadata to the output.")
     parser_dump.add_argument('-o', '--outfile', nargs="?", const='-', default=None, help="File where the listing will be saved")
     parser_dump.set_defaults(func=commands.dump)
+    parser_dump.set_defaults(serialize=['search'])
 
     # Reorganize character files subcommand
     parser_reorg = subparsers.add_parser('reorg', parents=[paths_parser], help="Move character files to the most appropriate directories")
