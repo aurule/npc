@@ -62,7 +62,7 @@ def create_changeling(args, prefs=settings.InternalSettings(), **kwargs):
         tags.append('@motley %s' % args.motley)
     if args.court:
         tags.append('@court %s' % args.court.title())
-    tags.extend(_make_std_tags(args))
+    tags.extend(_make_std_tags(groups = args.group, dead = args.dead, foreign = args.foreign))
 
     header = "\n".join(tags) + '\n\n'
 
@@ -99,14 +99,14 @@ def create_changeling(args, prefs=settings.InternalSettings(), **kwargs):
 
     return Result(True, openable = [target_path])
 
-def _make_std_tags(args):
+def _make_std_tags(groups = [], dead = False, foreign = False):
     """Create standard tags that apply to all character types."""
-    tags = ["@group %s" % g for g in args.group]
-    if args.dead != False:
-        dead_details = " %s" % args.dead if len(args.dead) else ""
+    tags = ["@group %s" % g for g in groups]
+    if dead != False:
+        dead_details = " %s" % dead if len(dead) else ""
         tags.append("@dead%s" % dead_details)
-    if args.foreign:
-        tags.append("@foreign %s" % args.foreign)
+    if foreign:
+        tags.append("@foreign %s" % foreign)
     return tags
 
 def create_simple(args, prefs=settings.InternalSettings(), **kwargs):
@@ -138,7 +138,7 @@ def create_simple(args, prefs=settings.InternalSettings(), **kwargs):
 
     # Add tags
     typetag = ctype.title()
-    tags = ['@type %s' % typetag] + _make_std_tags(args)
+    tags = ['@type %s' % typetag] + _make_std_tags(groups = args.group, dead = args.dead, foreign = args.foreign)
     header = "\n".join(tags) + '\n\n'
 
     # Copy template
