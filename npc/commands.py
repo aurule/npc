@@ -12,7 +12,7 @@ import itertools
 # local packages
 from . import formatters, linters, parser, util, settings
 
-def create_changeling(args, prefs=settings.InternalSettings()):
+def create_changeling(args, prefs=settings.InternalSettings(), **kwargs):
     """Create a Changeling character.
 
     Arguments:
@@ -109,7 +109,7 @@ def _make_std_tags(args):
         tags.append("@foreign %s" % args.foreign)
     return tags
 
-def create_simple(args, prefs=settings.InternalSettings()):
+def create_simple(args, prefs=settings.InternalSettings(), **kwargs):
     """Create a character without extra processing.
 
     Simple characters don't have any unique tags or file annotations. Everything
@@ -165,7 +165,7 @@ def _add_path_if_exists(base, potential):
         return test_path
     return base
 
-def session(args, prefs=settings.InternalSettings()):
+def session(args, prefs=settings.InternalSettings(), **kwargs):
     """Creates the files for a new game session.
 
     Finds the plot and session log files for the last session, copies the plot,
@@ -234,7 +234,7 @@ def session(args, prefs=settings.InternalSettings()):
 
     return Result(True, openable=openable)
 
-def reorg(args, prefs=settings.InternalSettings()):
+def reorg(args, prefs=settings.InternalSettings(), **kwargs):
     """Move character files into the correct paths.
 
     Character files are moved so that their path matches the ideal path as
@@ -304,7 +304,7 @@ def create_path_from_character(character, target_path, prefs=settings.InternalSe
 
     return target_path
 
-def list(args, prefs=settings.InternalSettings()):
+def list(args, prefs=settings.InternalSettings(), **kwargs):
     """Generate a list of NPCs.
 
     Arguments:
@@ -414,7 +414,7 @@ def _smart_open(filename=None):
         if fh is not sys.stdout:
             fh.close()
 
-def dump(args, prefs=settings.InternalSettings()):
+def dump(args, prefs=settings.InternalSettings(), **kwargs):
     """Dump the raw character data, unaltered.
 
     Arguments:
@@ -446,7 +446,7 @@ def dump(args, prefs=settings.InternalSettings()):
 
     return Result(True, openable=openable)
 
-def lint(args, prefs=settings.InternalSettings()):
+def lint(args, prefs=settings.InternalSettings(), **kwargs):
     """Check character files for completeness and correctness
 
     Arguments:
@@ -499,7 +499,7 @@ def lint(args, prefs=settings.InternalSettings()):
 
     return Result(True, openable)
 
-def init(args, prefs=settings.InternalSettings()):
+def init(args, prefs=settings.InternalSettings(), **kwargs):
     """Create the basic directories for a campaign
 
     This will create the directories this tool expects to find within a
@@ -516,7 +516,7 @@ def init(args, prefs=settings.InternalSettings()):
 
     return Result(True)
 
-def settings(args, prefs=settings.InternalSettings()):
+def settings(args, prefs=settings.InternalSettings(), **kwargs):
     """Open the named settings file
 
     If the desired settings file does not exist, an empty file is created and
