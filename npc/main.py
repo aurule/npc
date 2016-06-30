@@ -39,7 +39,7 @@ def cli(argv):
 
     # run the command
     try:
-        result = args.func(args, prefs)
+        result = args.func(args)
     except AttributeError:
         parser.print_help()
         return 6

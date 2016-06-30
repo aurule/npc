@@ -10,9 +10,9 @@ from shutil import copy as shcopy, move as shmove
 import itertools
 
 # local packages
-from . import formatters, linters, parser, util
+from . import formatters, linters, parser, util, settings
 
-def create_changeling(args, prefs):
+def create_changeling(args, prefs=settings.InternalSettings()):
     """Create a Changeling character.
 
     Arguments:
@@ -109,7 +109,7 @@ def _make_std_tags(args):
         tags.append("@foreign %s" % args.foreign)
     return tags
 
-def create_simple(args, prefs):
+def create_simple(args, prefs=settings.InternalSettings()):
     """Create a character without extra processing.
 
     Simple characters don't have any unique tags or file annotations. Everything
@@ -165,7 +165,7 @@ def _add_path_if_exists(base, potential):
         return test_path
     return base
 
-def session(args, prefs):
+def session(args, prefs=settings.InternalSettings()):
     """Creates the files for a new game session.
 
     Finds the plot and session log files for the last session, copies the plot,
@@ -234,7 +234,7 @@ def session(args, prefs):
 
     return Result(True, openable=openable)
 
-def reorg(args, prefs):
+def reorg(args, prefs=settings.InternalSettings()):
     """Move character files into the correct paths.
 
     Character files are moved so that their path matches the ideal path as
@@ -270,7 +270,7 @@ def find_empty_dirs(root):
         if not dirs and not files:
             yield dirpath
 
-def create_path_from_character(character, target_path, prefs):
+def create_path_from_character(character, target_path, prefs=settings.InternalSettings()):
     """Determine the best file path for a character.
 
     The path is created underneath target_path. It only includes directories
@@ -304,7 +304,7 @@ def create_path_from_character(character, target_path, prefs):
 
     return target_path
 
-def list(args, prefs):
+def list(args, prefs=settings.InternalSettings()):
     """Generate a list of NPCs.
 
     Arguments:
@@ -414,7 +414,7 @@ def _smart_open(filename=None):
         if fh is not sys.stdout:
             fh.close()
 
-def dump(args, prefs):
+def dump(args, prefs=settings.InternalSettings()):
     """Dump the raw character data, unaltered.
 
     Arguments:
@@ -446,7 +446,7 @@ def dump(args, prefs):
 
     return Result(True, openable=openable)
 
-def lint(args, prefs):
+def lint(args, prefs=settings.InternalSettings()):
     """Check character files for completeness and correctness
 
     Arguments:
@@ -499,7 +499,7 @@ def lint(args, prefs):
 
     return Result(True, openable)
 
-def init(args, prefs):
+def init(args, prefs=settings.InternalSettings()):
     """Create the basic directories for a campaign
 
     This will create the directories this tool expects to find within a
@@ -516,7 +516,7 @@ def init(args, prefs):
 
     return Result(True)
 
-def settings(args, prefs):
+def settings(args, prefs=settings.InternalSettings()):
     """Open the named settings file
 
     If the desired settings file does not exist, an empty file is created and
