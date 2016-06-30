@@ -95,6 +95,7 @@ def _make_parser(prefs):
     paths_parser = argparse.ArgumentParser(add_help=False)
     paths_parser.add_argument('--search', nargs="*", default=[prefs.get('paths.characters')], help="Paths to search. Individual files are added verbatim and directories are searched recursively.", metavar="PATH")
     paths_parser.add_argument('--ignore', nargs="*", default=[], help="Paths to skip when searching for character files", metavar="PATH")
+    paths_parser.set_defaults(serialize=['search'])
 
     # This is the main parser which handles program-wide options. These should be kept sparse.
     parser = argparse.ArgumentParser(description = 'GM helper script to manage game files')
@@ -137,7 +138,6 @@ def _make_parser(prefs):
     parser_lint = subparsers.add_parser('lint', parents=[paths_parser], help="Check the character files for minimum completeness")
     parser_lint.add_argument('-f', '--fix', action='store_true', default=False, help="automatically fix certain problems")
     parser_lint.set_defaults(func=commands.lint)
-    parser_lint.set_defaults(serialize=['search'])
 
     # Subcommand to list character data in multiple formats
     parser_list = subparsers.add_parser('list', parents=[paths_parser], help="Generate an NPC Listing")
@@ -152,14 +152,12 @@ def _make_parser(prefs):
     parser_dump.add_argument('-m', '--metadata', action="store_true", default=False, help="Add metadata to the output.")
     parser_dump.add_argument('-o', '--outfile', nargs="?", const='-', default=None, help="File where the listing will be saved")
     parser_dump.set_defaults(func=commands.dump)
-    parser_dump.set_defaults(serialize=['search'])
 
     # Reorganize character files subcommand
     parser_reorg = subparsers.add_parser('reorg', parents=[paths_parser], help="Move character files to the most appropriate directories")
     parser_reorg.add_argument('-p', '--purge', action="store_true", default=False, help="After moving all files, remove any empty directories within the base characters path")
     parser_reorg.add_argument('-v', '--verbose', action="store_true", default=False, help="Show the changes that are made")
     parser_reorg.set_defaults(func=commands.reorg)
-    parser_reorg.set_defaults(serialize=['search'])
 
     # Open settings files
     parser_settings = subparsers.add_parser('settings', help="Open (and create if needed) a settings file")

@@ -319,7 +319,7 @@ def create_path_from_character(character, target_path, prefs=settings.InternalSe
 
     return target_path
 
-def list(args, prefs=settings.InternalSettings(), **kwargs):
+def list(search, ignore=[], format='markdown', metadata=None, outfile=None, prefs=settings.InternalSettings(), **kwargs):
     """Generate a list of NPCs.
 
     Arguments:
@@ -339,24 +339,24 @@ def list(args, prefs=settings.InternalSettings(), **kwargs):
                                 stdout.
     * prefs - Settings object
     """
-    characters = _sort_chars(_prune_chars(parser.get_characters(args.search, args.ignore)))
+    characters = _sort_chars(_prune_chars(parser.get_characters(search, ignore)))
 
-    out_type = args.format.lower()
+    out_type = format.lower()
 
     if out_type in ('md', 'markdown'):
         # ensure 'default' gets replaced with the right default metadata format
-        metadata_type = args.metadata
+        metadata_type = metadata
         if metadata_type == 'default':
             metadata_type = prefs.get('metadata_format.markdown')
 
         # call out to get the markdown
-        with _smart_open(args.outfile) as f:
+        with _smart_open(outfile) as f:
             meta = prefs.get_metadata('markdown')
             response = formatters.markdown.dump(characters, f, metadata_type, meta)
     elif out_type == 'json':
         # make some json
         meta = None
-        if args.metadata:
+        if metadata:
             base_meta = {
                 'meta': True,
                 'title': 'NPC Listing',
@@ -364,7 +364,7 @@ def list(args, prefs=settings.InternalSettings(), **kwargs):
             }
             meta = {**base_meta, **prefs.get_metadata('json')}
 
-        with _smart_open(args.outfile) as f:
+        with _smart_open(outfile) as f:
             response = formatters.json.dump(characters, f, meta)
 
     else:
@@ -374,8 +374,8 @@ def list(args, prefs=settings.InternalSettings(), **kwargs):
         return response
 
     openable = None
-    if args.outfile and args.outfile != '-':
-        openable = [args.outfile]
+    if outfile and outfile != '-':
+        openable = [outfile]
 
     return Result(True, openable=openable)
 

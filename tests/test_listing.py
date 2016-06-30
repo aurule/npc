@@ -5,42 +5,25 @@ from tests.util import fixture_dir
 import re
 
 @pytest.fixture
-def list_json_output(tmpdir, argparser, prefs):
+def list_json_output(tmpdir, prefs):
     def make_list(search_parts, outformat='json', metadata=None, prefs=prefs):
         outfile = tmpdir.join("output.json")
         search = fixture_dir(['listing'] + search_parts)
-        args = argparser.parse_args([
-            'list',
-            '--search', search,
-            '--format', outformat,
-            '--metadata', metadata,
-            '-o', str(outfile)
-        ])
-        npc.commands.list(args, prefs)
+        npc.commands.list([search], format=outformat, metadata=metadata, outfile=str(outfile), prefs=prefs)
         return json.load(outfile)
     return make_list
 
 @pytest.mark.parametrize('outopt', [None, '-'])
-def test_output_no_file(argparser, capsys, outopt):
+def test_output_no_file(capsys, outopt):
     search = fixture_dir(['listing', 'valid-json'])
-    args = argparser.parse_args([
-        'list',
-        '--search', search,
-        '-o', outopt
-    ])
-    npc.commands.list(args)
+    npc.commands.list([search], outfile=outopt)
     output, _ = capsys.readouterr()
     assert output
 
-def test_output_to_file(argparser, tmpdir):
+def test_output_to_file(tmpdir):
     outfile = tmpdir.join("output.json")
     search = fixture_dir(['listing', 'valid-json'])
-    args = argparser.parse_args([
-        'list',
-        '--search', search,
-        '-o', str(outfile)
-    ])
-    npc.commands.list(args)
+    npc.commands.list([search], outfile=str(outfile))
     assert outfile.read()
 
 def test_list_valid_json(list_json_output):
@@ -81,37 +64,23 @@ class TestMetadata:
                 assert c['title'] == 'NPC Listing'
                 assert 'created' in c
 
-    def test_md_mmd_metadata(self, argparser, tmpdir):
+    def test_md_mmd_metadata(self, tmpdir):
         """The 'mmd' metadata arg should prepend multi-markdown metadata tags to
         the markdown output."""
 
         outfile = tmpdir.join("output.md")
         search = fixture_dir(['listing', 'valid-json'])
-        args = argparser.parse_args([
-            'list',
-            '--search', search,
-            '--format', 'markdown',
-            '--metadata', 'mmd',
-            '-o', str(outfile)
-        ])
-        npc.commands.list(args)
+        npc.commands.list([search], format='markdown', metadata='mmd', outfile=str(outfile))
         assert 'Title: NPC Listing' in outfile.read()
 
     @pytest.mark.parametrize('metaformat', ['yfm', 'yaml'])
-    def test_md_yfm_metadata(self, metaformat, argparser, tmpdir):
+    def test_md_yfm_metadata(self, metaformat, tmpdir):
         """The 'yfm' and 'yaml' metadata args should both result in YAML front
         matter being prepended to markdown output."""
 
         outfile = tmpdir.join("output.md")
         search = fixture_dir(['listing', 'valid-json'])
-        args = argparser.parse_args([
-            'list',
-            '--search', search,
-            '--format', 'markdown',
-            '--metadata', metaformat,
-            '-o', str(outfile)
-        ])
-        npc.commands.list(args)
+        npc.commands.list([search], format='markdown', metadata=metaformat, outfile=str(outfile))
         match = re.match('(?sm)\s*---(.*)---\s*', outfile.read())
         assert match is not None
         assert 'title: NPC Listing' in match.group(1)
@@ -126,21 +95,14 @@ class TestMetadata:
                 assert c['test-type'] == 'json'
 
     @pytest.mark.parametrize('metaformat', ['mmd', 'yfm', 'yaml'])
-    def test_extra_md_metadata(self, argparser, prefs, metaformat, tmpdir):
+    def test_extra_md_metadata(self, prefs, metaformat, tmpdir):
         """All metadata formats for the markdown type should show the extra
         metadata for the markdown type from the imported settings."""
 
         outfile = tmpdir.join("output.md")
         prefs.load_more(fixture_dir(['listing', 'settings-metadata.json']))
         search = fixture_dir(['listing', 'valid-json'])
-        args = argparser.parse_args([
-            'list',
-            '--search', search,
-            '--format', 'markdown',
-            '--metadata', metaformat,
-            '-o', str(outfile)
-        ])
-        npc.commands.list(args, prefs)
+        npc.commands.list([search], format='markdown', metadata=metaformat, outfile=str(outfile), prefs=prefs)
         assert 'test-type: markdown' in outfile.read()
 
     def test_invalid_metadata_arg(self, argparser):
@@ -150,21 +112,12 @@ class TestMetadata:
         The json output type ignores the format argument entirely, which is not
         tested.
         """
-        args = argparser.parse_args([
-            'list',
-            '--format', 'md',
-            '--metadata', 'json'
-        ])
-        result = npc.commands.list(args)
+        search = fixture_dir(['listing', 'valid-json'])
+        result = npc.commands.list([search], format='md', metadata='json')
         assert not result.success
 
     def test_unknown_metadata_arg(self, argparser):
         """Unrecognized metadata options should result in an error"""
-
-        args = argparser.parse_args([
-            'list',
-            '--format', 'md',
-            '--metadata', 'asdf'
-        ])
-        result = npc.commands.list(args)
+        search = fixture_dir(['listing', 'valid-json'])
+        result = npc.commands.list([search], format='md', metadata='asdf')
         assert not result.success
