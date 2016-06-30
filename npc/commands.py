@@ -175,7 +175,7 @@ def _add_path_if_exists(base, potential):
         return test_path
     return base
 
-def session(args, prefs=settings.InternalSettings(), **kwargs):
+def session(prefs=settings.InternalSettings(), **kwargs):
     """Creates the files for a new game session.
 
     Finds the plot and session log files for the last session, copies the plot,
