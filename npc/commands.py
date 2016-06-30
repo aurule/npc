@@ -3,7 +3,6 @@
 import re
 import json
 import sys
-import errno
 from contextlib import contextmanager
 from datetime import datetime
 from os import path, walk, makedirs, rmdir, scandir
