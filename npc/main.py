@@ -12,7 +12,7 @@ def cli(argv):
 
     # load settings data
     try:
-        prefs = settings.Settings()
+        prefs = settings.InternalSettings()
     except IOError as e:
         util.error(e.strerror + " (%s)" % path.join(settings_path, 'settings-default.json'))
         return 4
