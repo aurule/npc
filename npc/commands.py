@@ -523,17 +523,21 @@ def lint(args, prefs=settings.InternalSettings(), **kwargs):
 
     return Result(True, openable)
 
-def init(args, prefs=settings.InternalSettings(), **kwargs):
+def init(create_types = False, create_all = False, prefs=settings.InternalSettings(), **kwargs):
     """Create the basic directories for a campaign
 
     This will create the directories this tool expects to find within a
     campaign. Other directories are left to the user.
+
+    Arguments:
+    create_types -- Whether to create directories for each character type
+    create_all -- Whether to create all optional directories. Overrides `types`.
     """
     for k, p in prefs.get('paths').items():
         makedirs(p, mode=0o775, exist_ok=True)
     makedirs('.npc', mode=0o775, exist_ok=True)
 
-    if args.types or args.all:
+    if create_types or create_all:
         cbase = prefs.get('paths.characters')
         for k, p in prefs.get('type_paths').items():
             makedirs(path.join(cbase, p), mode=0o775, exist_ok=True)
