@@ -16,26 +16,28 @@ def create_changeling(name, seeming, kith,
                       court=None, motley=None, groups=[],
                       dead=False, foreign=False,
                       prefs=settings.InternalSettings(), **kwargs):
-    """Create a Changeling character.
+    """
+    Create a Changeling character.
 
-    Arguments:
-    + name              string  Base file name
-    + seeming           string  Name of the character's Seeming. Added to
-                                the file with notes.
-    + kith              string  Name of the character's Kith. Added to the
-                                file with notes.
-    + court (optional)  string  Name of the character's Court. Used to
-                                derive path.
-    + motley (optional) string  Name of the character's Motley.
-    + groups (optional)  list   One or more names of groups the character
-                                belongs to. Used to derive path.
-    dead -- Whether to add the @dead tag. Pass False to exclude it
+    Args:
+        name (str): Base file name
+        seeming (str): Name of the character's Seeming. Added to the file with
+            notes.
+        kith (str): Name of the character's Kith. Added to the file with notes.
+        court (str|none): Name of the character's Court. Used to derive path.
+        motley (str|none): Name of the character's Motley.
+        groups (list): One or more names of groups the character belongs to.
+            Used to derive path.
+        dead (bool|str): Whether to add the @dead tag. Pass False to exclude it
             (the default), an empty string to inlcude it with no details given,
             and a non-empty string to include the tag along with the contents of
             the argument.
-    foreign -- Details of non-standard residence. Leave empty to exclude the
-            @foreign tag.
-    * prefs - Settings object
+        foreign (bool): Details of non-standard residence. Leave empty to
+            exclude the @foreign tag.
+        prefs (Settings): Settings object to use.
+
+    Returns:
+        Result object
     """
     seeming_re = re.compile(
         '^(\s+)seeming(\s+)\w+$',
@@ -398,14 +400,18 @@ def _sort_chars(characters):
     return sorted(characters, key=lambda c: c['name'][0].split(' ')[-1])
 
 def _prune_chars(characters):
-    """Alter character records for output.
+    """
+    Alter character records for output.
 
     This applies behavior from directives and certain tags. Specifically, it
     handles skip, it overrides type with faketype, and it inserts a placeholder
     type if one was not specified.
 
-    Arguments:
-    characters -- list of character dicts
+    Args:
+        characters (list): List of dicts containing character information
+
+    Yields:
+        Dictionary of character of modified information.
     """
 
     for c in characters:
@@ -425,13 +431,22 @@ def _prune_chars(characters):
 
 @contextmanager
 def _smart_open(filename=None):
-    """Open a named file or stdout as appropriate
-
-    When filename is None or the dash character ('-'), this method will yield
-    sys.stdout. When filename is a path, it will open the file for writing.
-    Either way, a file-like object is returned.
+    """
+    Open a named file or stdout as appropriate.
 
     This method is designed to be used in a `with` block.
+
+    Args:
+        filename (str|None): Name of the file path to open. None and '-' mean
+            stdout.
+
+    Yields:
+        File-like object.
+
+        When filename is None or the dash character ('-'), this method will
+        yield sys.stdout. When filename is a path, it will yield the open file
+        for writing.
+
     """
     if filename and filename != '-':
         fh = open(filename, 'w')
@@ -445,17 +460,22 @@ def _smart_open(filename=None):
             fh.close()
 
 def dump(search, ignore=[], sort=False, metadata=False, outfile=None, prefs=settings.InternalSettings(), **kwargs):
-    """Dump the raw character data, unaltered.
+    """
+    Dump the raw character data, unaltered.
 
     Always formats the data as json.
 
-    Arguments:
-    * search    array       Array of paths to search for character files
-    * ignore    array       Array of paths to ignore
-    * sort      bool        Whether to sort the characters before dumping
-    * metadata  bool        Whether to prepend metadata to the output
-    * outfile   None|string Filename to put the dumped data. None and "-" print
-    *     to stdout.
+    Args:
+        search (List): Paths to search for character files
+        ignore (List): Paths to ignore
+        sort (bool): Whether to sort the characters before dumping
+        metadata (bool): Whether to prepend metadata to the output
+        outfile (string|None): Filename to put the dumped data. None and "-"
+            print to stdout.
+
+    Returns:
+        Result object. If outfile pointed to a real file, the openable attribute
+        will contain that filename.
     """
     characters = parser.get_characters(search, ignore)
     if sort:
@@ -481,13 +501,8 @@ def dump(search, ignore=[], sort=False, metadata=False, outfile=None, prefs=sett
     return Result(True, openable=openable)
 
 def lint(search, ignore=[], fix=False, prefs=settings.InternalSettings(), **kwargs):
-    """Check character files for completeness and correctness
-
-    Arguments:
-    + search    array   Array of paths to search for character files
-    + ignore    array   Array of paths to ignore
-    + fix       boolean Whether to automatically fix errors when possible
-    * prefs object  Settings object
+    """
+    Check character files for completeness and correctness.
 
     This method checks that every character file has a few required tags, and
     applies extra checking for some character types.
@@ -499,6 +514,16 @@ def lint(search, ignore=[], fix=False, prefs=settings.InternalSettings(), **kwar
     Extra checks for Changelings:
     * @seeming tag is present and valid
     * @kith tag is present and valid
+
+    Args:
+        search (list): Paths to search for character files
+        ignore (list): Paths to ignore
+        fix (bool): Whether to automatically fix errors when possible
+        prefs (Settings): Settings object to use
+
+    Returns:
+        Result object. On success, openable attribute will contain a list of all
+        files that had errors.
     """
 
     openable = []
@@ -534,14 +559,20 @@ def lint(search, ignore=[], fix=False, prefs=settings.InternalSettings(), **kwar
     return Result(True, openable)
 
 def init(create_types = False, create_all = False, prefs=settings.InternalSettings(), **kwargs):
-    """Create the basic directories for a campaign
+    """
+    Create the basic directories for a campaign.
 
     This will create the directories this tool expects to find within a
     campaign. Other directories are left to the user.
 
-    Arguments:
-    create_types -- Whether to create directories for each character type
-    create_all -- Whether to create all optional directories. Overrides `types`.
+    Args:
+        create_types (bool): Whether to create directories for each character
+            type
+        create_all (bool): Whether to create all optional directories. Overrides
+            `types`.
+
+    Returns:
+        Result object. Openable will be empty.
     """
     for k, p in prefs.get('paths').items():
         makedirs(p, mode=0o775, exist_ok=True)
@@ -555,15 +586,21 @@ def init(create_types = False, create_all = False, prefs=settings.InternalSettin
     return Result(True)
 
 def settings(location, show_defaults = False, prefs=settings.InternalSettings(), **kwargs):
-    """Open the named settings file
+    """
+    Open the named settings file.
 
     If the desired settings file does not exist, an empty file is created and
     then opened.
 
-    Arguments:
-    location -- Which settings file to open. One of 'user' or 'campaign'.
-    show_defaults -- Whether the default settings file should be opened for
-        reference alongside the specified settings file.
+    Args:
+        location (str): Which settings file to open. One of 'user' or 'campaign'.
+        show_defaults (bool): Whether the default settings file should be opened
+            for reference alongside the specified settings file.
+
+    Returns:
+        Result object. Openable will contain the desired settings file. If true
+        was passed in show_defaults, it will also contain the reference settings
+        file.
     """
     target_path = prefs.get_settings_path(location)
     if not path.exists(target_path):
@@ -578,29 +615,31 @@ def settings(location, show_defaults = False, prefs=settings.InternalSettings(),
     return Result(True, openable = openable)
 
 class Result:
-    """Data about the result of a subcommand
+    """
+    Data about the result of a subcommand
 
     Attributes:
-    * success   boolean Whether the subcommand ran correctly
-    * openable  list    Paths to files which were changed by or are relevant to
-                        the subcommand
-    * errcode   integer Error code indicating the type of error encountered
-    * errmsg    string  Human-readable error message. Will be displayed to the
-                        user
+        success (bool): Whether the subcommand ran correctly
+        openable (list): Paths to files which were changed by or are relevant to
+            the subcommand
+        errcode (int): Error code indicating the type of error encountered.
+
+            Error codes:
+            0 -- Everything's fine
+            1 -- Tried to create a file that already exists
+            2 -- Latest plot and session files have different numbers
+            3 -- Feature is not yet implemented
+            4 -- Filesystem error
+            5 -- Unrecognized format
+            6 -- Invalid option
+            7 -- Unrecognized template
+            8 -- Missing required file
+        errmsg (str): Human-readable error message. Will be displayed to the
+            user.
     """
     def __init__(self, success, openable = None, errcode = 0, errmsg = ''):
         super(Result, self).__init__()
         self.success = success
         self.openable = openable
         self.errcode = errcode
-        # Error codes:
-        # 0. Everything's fine
-        # 1. Tried to create a file that already exists
-        # 2. Latest plot and session files have different numbers
-        # 3. Feature is not yet implemented
-        # 4. Filesystem error
-        # 5. Unrecognized format
-        # 6. Invalid option
-        # 7. Unrecognized template
-        # 8. Missing required file
         self.errmsg = errmsg
