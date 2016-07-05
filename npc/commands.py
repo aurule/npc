@@ -37,7 +37,7 @@ def create_changeling(name, seeming, kith,
         prefs (Settings): Settings object to use.
 
     Returns:
-        Result object
+        Result object. Openable will contain the new character file.
     """
     seeming_re = re.compile(
         '^(\s+)seeming(\s+)\w+$',
@@ -109,16 +109,18 @@ def create_changeling(name, seeming, kith,
     return Result(True, openable = [target_path])
 
 def _make_std_tags(groups = [], dead = False, foreign = ""):
-    """Create standard tags that apply to all character types.
+    """
+    Create standard tags that apply to all character types.
 
-    Arguments:
-    groups -- Array of group names
-    dead -- Whether to add the @dead tag. Pass False to exclude it
+    Args:
+        groups (list): One or more names of groups the character belongs to.
+            Used to derive path.
+        dead (bool|str): Whether to add the @dead tag. Pass False to exclude it
             (the default), an empty string to inlcude it with no details given,
             and a non-empty string to include the tag along with the contents of
             the argument.
-    foreign -- Details of non-standard residence. Leave empty to exclude the
-            @foreign tag.
+        foreign (bool): Details of non-standard residence. Leave empty to
+            exclude the @foreign tag.
     """
     tags = ["@group %s" % g for g in groups]
     if dead != False:
@@ -129,22 +131,26 @@ def _make_std_tags(groups = [], dead = False, foreign = ""):
     return tags
 
 def create_simple(name, ctype, groups=[], dead=False, foreign=False, prefs=settings.InternalSettings(), **kwargs):
-    """Create a character without extra processing.
+    """
+    Create a character without extra processing.
 
     Simple characters don't have any unique tags or file annotations. Everything
     is based on their type.
 
-    Arguments:
-    + name              string  Base file name
-    * ctype string  Character type
-    + group (optional)  list    One or more names of groups the character
-                                belongs to. Used to derive path for the file.
-    dead -- Whether to add the @dead tag. Pass False to exclude it
+    Args:
+        name (str): Base file name. Format is "<character name> - <brief note>".
+        ctype (str): Character type. Must have a template configured in prefs.
+        groups (list): One or more names of groups the character belongs to.
+            Used to derive path.
+        dead (bool|str): Whether to add the @dead tag. Pass False to exclude it
             (the default), an empty string to inlcude it with no details given,
             and a non-empty string to include the tag along with the contents of
             the argument.
-    foreign -- Details of non-standard residence. Leave empty to exclude the
-            @foreign tag.
+        foreign (bool): Details of non-standard residence. Leave empty to
+            exclude the @foreign tag.
+
+    Returns:
+        Result object. Openable will contain the new character file.
     """
     if ctype not in prefs.get('templates'):
         return Result(False, errmsg="Unrecognized template '%s'" % ctype, errcode=7)
@@ -189,10 +195,18 @@ def _add_path_if_exists(base, potential):
     return base
 
 def session(prefs=settings.InternalSettings(), **kwargs):
-    """Creates the files for a new game session.
+    """
+    Create the files for a new game session.
 
     Finds the plot and session log files for the last session, copies the plot,
     and creates a new empty session log.
+
+    Args:
+        prefs (Settings): Settings object
+
+    Returns:
+        Result object. Openable will contain the current and previous session
+        log and plot planning files.
     """
     plot_re = re.compile('(?i)^plot (\d+)$')
     session_re = re.compile('(?i)^session (\d+)$')
@@ -258,18 +272,22 @@ def session(prefs=settings.InternalSettings(), **kwargs):
     return Result(True, openable=openable)
 
 def reorg(search, ignore=[], purge=False, verbose=False, prefs=settings.InternalSettings(), **kwargs):
-    """Move character files into the correct paths.
+    """
+    Move character files into the correct paths.
 
     Character files are moved so that their path matches the ideal path as
     closely as possible. No new directories are created.
 
-    Arguments:
-    * search    array   Array of paths to search for character files
-    * ignore    array   Array of paths to ignore
-    * purge     bool    Flag indicating that empty directories should be
-                        deleted after all files have been moved.
-    * verbose   bool    Whether to print changes as they are made
-    * prefs - settings object
+    Args:
+        search (list): Paths to search for character files
+        ignore (list): Paths to ignore
+        purge (bool): Whether empty directories should be deleted after all
+            files have been moved.
+        verbose (bool): Whether to print changes as they are made
+        prefs (Settings): Settings object
+
+    Returns:
+        Result object. Openable will be empty.
     """
     base_path = prefs.get('paths.characters')
     characters = parser.get_characters(search, ignore)
@@ -289,21 +307,33 @@ def reorg(search, ignore=[], purge=False, verbose=False, prefs=settings.Internal
     return Result(True)
 
 def find_empty_dirs(root):
-    """Find empty directories under root"""
+    """
+    Find empty directories under root
+
+    Args:
+        root (str): Starting path to search
+
+    Yields:
+        Path of empty directories under `root`
+    """
     for dirpath, dirs, files in walk(root):
         if not dirs and not files:
             yield dirpath
 
 def create_path_from_character(character, target_path, prefs=settings.InternalSettings()):
-    """Determine the best file path for a character.
+    """
+    Determine the best file path for a character.
 
     The path is created underneath target_path. It only includes directories
     which already exist.
 
-    Arguments:
-    * character -- dict containing parsed character data
-    * target_path -- base path
-    * prefs -- settings object
+    Args:
+        character (dict): Parsed character data
+        target_path (str): Base path for character files
+        prefs (Settings): Settings object
+
+    Returns:
+        Constructed file path based on the character data.
     """
     # add type-based directory if we can
     if 'type' in character:
@@ -329,24 +359,29 @@ def create_path_from_character(character, target_path, prefs=settings.InternalSe
     return target_path
 
 def list(search, ignore=[], format='markdown', metadata=None, outfile=None, prefs=settings.InternalSettings(), **kwargs):
-    """Generate a list of NPCs.
+    """
+    Generate a listing of NPCs.
 
-    Arguments:
-    * args - object containing runtime data. Must contain the following:
-        + search    array       Array of paths to search for character files
-        + ignore    array       Array of paths to ignore
-        + format    string      Format of the output. Supported types are
-                                markdown (md), and json.
-        + metadata  None|string Optional flag to include metadata in the output.
-                                Additionally, the metadata format can be
-                                specified for some output formats. The markdown
-                                format supports adding either mmd
-                                (MultiMarkdown) or yfm/yaml (Yaml Front Matter)
-                                metadata.
-        + outfile   string      Optional path to a file to hold the generated
-                                listing. If omitted, the data will be printed to
-                                stdout.
-    * prefs - Settings object
+    Args:
+        search (list): Paths to search for character files
+        ignore (list): Paths to ignore
+        format (str): Format of the output. Supported types are 'markdown'
+            ('md'), and 'json'.
+        metadata (str|None): Whether to include metadata in the output and what
+            kind of metadata to use. Pass 'default' to use the format configured
+            in Settings.
+
+            The markdown format supports adding either 'mmd' (MultiMarkdown) or
+            'yfm'/'yaml' (Yaml Front Matter) metadata.
+
+            The json format has no format options, so the value of `metadata` is
+            ignored.
+        outfile (string|None): Filename to put the listed data. None and "-"
+            print to stdout.
+        prefs (Settings): Settings object
+
+    Returns:
+        Result object. Openable will contain the output file if given.
     """
     characters = _sort_chars(_prune_chars(parser.get_characters(search, ignore)))
 
@@ -389,13 +424,17 @@ def list(search, ignore=[], format='markdown', metadata=None, outfile=None, pref
     return Result(True, openable=openable)
 
 def _sort_chars(characters):
-    """Sort a list of character dicts.
+    """
+    Sort a list of character dicts.
 
     In the future, this is where different sort methods will be handled. Right
-    now, it just sorts them by their "last" name (space-delimeted).
+    now, it just sorts them by the last element of their name (space-delimeted).
 
-    Arguments:
-    characters -- list of character dicts
+    Args:
+        characters -- list of character dicts
+
+    Returns:
+        List of characters ordered by last name.
     """
     return sorted(characters, key=lambda c: c['name'][0].split(' ')[-1])
 
@@ -411,7 +450,7 @@ def _prune_chars(characters):
         characters (list): List of dicts containing character information
 
     Yields:
-        Dictionary of character of modified information.
+        Dictionary of characters with modified information.
     """
 
     for c in characters:
