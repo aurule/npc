@@ -5,15 +5,23 @@ import json
 import sys
 
 def load_json(filename):
-    """ Parse a JSON file
-        First remove all comments, then use the standard json package
+    """
+    Parse a JSON file
 
-        Comments look like :
-            // ...
-        or
-            /*
-            ...
-            */
+    First remove all comments, then use the standard json package
+
+    Comments look like :
+        // ...
+    or
+        /*
+        ...
+        */
+
+    Args:
+        filename (str): Path of the file to load
+
+    Returns:
+        List or dict from `json.loads()`
     """
     comment_re = re.compile(
         '(^)?[^\S\n]*/(?:\*(.*?)\*/[^\S\n]*|/[^\n]*)($)?',
@@ -40,11 +48,18 @@ def load_json(filename):
             raise e
 
 def error(*args, **kwargs):
-    """Print an error message to stderr."""
+    """
+    Print an error message to stderr.
+
+    Args:
+        Same as print()
+    """
     print(*args, file=sys.stderr, **kwargs)
 
 class Singleton(type):
-    """Metaclass for creating singleton classes."""
+    """
+    Metaclass for creating singleton classes.
+    """
     _instances = {}
     def __call__(cls, *args, **kwargs):
         if cls not in cls._instances:
