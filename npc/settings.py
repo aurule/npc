@@ -5,12 +5,25 @@ from os import path
 from . import util
 
 class Settings:
-    """Load and store settings
+    """
+    Load and store settings
 
     Default settings are loaded from support/settings-default.json in the
-    install path.
+    install path. Additional settings are loaded from the paths in
+    `settings_paths`.
 
     Do not access settings values directly. Use the get() method.
+
+    Attributes:
+        install_base (str): Directory path containing this file
+        default_settings_path (str): Path to the default settings file
+        user_settings_path (str): Path to the user settings directory for the
+            current user. Only correct on *nix systems.
+        campaign_settings_path (str): Path to the campaign settings directory.
+        settings_files (list): List of allowed settings file names.
+        settings_paths (list): List of allowed settings paths.
+        data (dict): Dictionary of settings data. Should not be referenced
+            directly. Instead, use the get() method.
     """
 
     install_base = path.dirname(path.realpath(__file__))
@@ -23,6 +36,16 @@ class Settings:
     settings_paths = [default_settings_path, user_settings_path, campaign_settings_path]
 
     def __init__(self):
+        """
+        Loads all settings files.
+
+        The default settings are loaded first, followed by user settings and
+        finally campaign settings. Keys from later files overwrite those from
+        earlier files.
+
+        Only the default settings need to exist. If a different file cannot be
+        found or opened, it will be silently ignored without crashing.
+        """
         self.data = util.load_json(path.join(self.default_settings_path, 'settings-default.json'))
 
         for k, v in self.data['templates'].items():
@@ -37,11 +60,15 @@ class Settings:
                     pass
 
     def load_more(self, settings_path):
-        """Merge settings from a file
+        """
+        Load additional settings from a file
 
         Settings values from this file will override the defaults. Any errors
         while opening the file are suppressed and the file will simply not be
         loaded. In that case, existing values are left alone.
+
+        Args:
+            settings_path (str): Path to the new json file to load
         """
         try:
             loaded = util.load_json(settings_path)
@@ -62,6 +89,24 @@ class Settings:
         self.data = self._merge_settings(loaded, self.data)
 
     def _merge_settings(self, new_data, orig):
+        """
+        Merge data from one dict into another.
+
+        Keys in new_data that are not present in orig are added. Keys in orig
+        and not in new_data remain untouched.
+
+        Keys in both new_data and orig are compared. If orig[key] is a dict,
+        then new_data[key] is assumed to also be a dict. Those two dicts are
+        then merged and that result inserted in place of orig[key]. If orig[key]
+        is not a dict, then the value of new_data[key] replaces it.
+
+        Args:
+            new_data (dict): Dict to merge
+            orig (dict): Dict to receive the merge
+
+        Returns:
+            Dict containing elements from both dicts.
+        """
         dest = dict(orig)
 
         for k, v in new_data.items():
@@ -76,7 +121,15 @@ class Settings:
         return dest
 
     def get_settings_path(self, settings_type):
-        """Get a settings file path"""
+        """
+        Get a settings file path
+
+        Args:
+            settings_type (str): Settings path to get. One of 'default', 'user', or 'campaign'.
+
+        Returns
+            Path of the named settings file.
+        """
         if settings_type == 'default':
             return path.join(self.default_settings_path, 'settings-default.json')
 
@@ -87,9 +140,18 @@ class Settings:
             return path.join(self.campaign_settings_path, 'settings.json')
 
     def get(self, key):
-        """Get the value of a settings key
+        """
+        Get the value of a settings key
 
-        Use the period character to indicate a nested key.
+        Use the period character to indicate a nested key. So, the key
+        "alpha.beta.charlie" is looked up like
+        `data['alpha']['beta']['charlie']`.
+
+        Args:
+            key (str): Key to get from settings.
+
+        Returns:
+            The value in that key, or None if the key could not be resolved.
         """
         key_parts = key.split('.')
         d = self.data
@@ -104,7 +166,8 @@ class Settings:
         return {**self.get('additional_metadata.all'), **self.get('additional_metadata.%s' % fmt)}
 
 class InternalSettings(Settings, metaclass=util.Singleton):
-    """Singleton settings class.
+    """
+    Singleton settings class.
 
     Used as the default settings for all exposed functions in the commands
     module. Allows default settings to be used seamlessly.
@@ -112,14 +175,19 @@ class InternalSettings(Settings, metaclass=util.Singleton):
     pass
 
 def lint_changeling_settings(prefs):
-    """Check correctness of changeling-specific settings.
+    """
+    Check correctness of changeling-specific settings.
 
     To be correct, the changeling settings must have a blessing and curse for
     every seeming, and a blessing for every kith. Duplicate names between
     seemings and kiths *are not* reported.
 
-    Arguments:
-    prefs -- Settings object
+    Args:
+        prefs (Settings): Settings object to check
+
+    Returns:
+        True if the changeling settings are OK, False if there were errors.
+        Errors are printed to stderr.
     """
     blessing_keys = set(prefs.get('changeling.blessings').keys())
     curse_keys = set(prefs.get('changeling.curses').keys())
