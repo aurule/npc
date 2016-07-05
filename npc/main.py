@@ -52,9 +52,6 @@ def cli(argv):
         parser.print_help()
         util.error(e)
         return 6
-    except TypeError:
-        # TODO remove this ugly hack as soon as all commands expect keyword args
-        result = args.func(args)
 
     # handle errors
     if not result.success:
