@@ -121,6 +121,9 @@ def _make_std_tags(groups = [], dead = False, foreign = ""):
             the argument.
         foreign (bool): Details of non-standard residence. Leave empty to
             exclude the @foreign tag.
+
+    Returns:
+        List of strings containing group, dead, and foreign tags.
     """
     tags = ["@group %s" % g for g in groups]
     if dead != False:
