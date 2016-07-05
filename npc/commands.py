@@ -12,22 +12,29 @@ import itertools
 # local packages
 from . import formatters, linters, parser, util, settings
 
-def create_changeling(args, prefs=settings.InternalSettings(), **kwargs):
+def create_changeling(name, seeming, kith,
+                      court=None, motley=None, groups=[],
+                      dead=False, foreign=False,
+                      prefs=settings.InternalSettings(), **kwargs):
     """Create a Changeling character.
 
     Arguments:
-    * args - object containing runtime data. Must contain the following
-             attributes:
-        + name              string  Base file name
-        + seeming           string  Name of the character's Seeming. Added to
-                                    the file with notes.
-        + kith              string  Name of the character's Kith. Added to the
-                                    file with notes.
-        + court (optional)  string  Name of the character's Court. Used to
-                                    derive path.
-        + motley (optional) string  Name of the character's Motley.
-        + group (optional)  list    One or more names of groups the character
-                                    belongs to. Used to derive path.
+    + name              string  Base file name
+    + seeming           string  Name of the character's Seeming. Added to
+                                the file with notes.
+    + kith              string  Name of the character's Kith. Added to the
+                                file with notes.
+    + court (optional)  string  Name of the character's Court. Used to
+                                derive path.
+    + motley (optional) string  Name of the character's Motley.
+    + groups (optional)  list   One or more names of groups the character
+                                belongs to. Used to derive path.
+    dead -- Whether to add the @dead tag. Pass False to exclude it
+            (the default), an empty string to inlcude it with no details given,
+            and a non-empty string to include the tag along with the contents of
+            the argument.
+    foreign -- Details of non-standard residence. Leave empty to exclude the
+            @foreign tag.
     * prefs - Settings object
     """
     seeming_re = re.compile(
@@ -41,28 +48,28 @@ def create_changeling(args, prefs=settings.InternalSettings(), **kwargs):
 
     # Derive the path for the new file
     target_path = _add_path_if_exists(prefs.get('paths.characters'), prefs.get('type_paths.%s' % 'changeling'))
-    if args.court:
-        target_path = _add_path_if_exists(target_path, args.court.title())
+    if court:
+        target_path = _add_path_if_exists(target_path, court.title())
     else:
         target_path = _add_path_if_exists(target_path, 'Courtless')
 
-    for group_name in args.groups:
+    for group_name in groups:
         target_path = _add_path_if_exists(target_path, group_name)
 
-    filename = args.name + '.nwod'
+    filename = name + '.nwod'
     target_path = path.join(target_path, filename)
     if path.exists(target_path):
-        return Result(False, errmsg="Character '%s' already exists!" % args.name, errcode = 1)
+        return Result(False, errmsg="Character '%s' already exists!" % name, errcode = 1)
 
     # Create tags
-    seeming_name = args.seeming.title()
-    kith_name = args.kith.title()
+    seeming_name = seeming.title()
+    kith_name = kith.title()
     tags = ['@changeling %s %s' % (seeming_name, kith_name)]
-    if args.motley:
-        tags.append('@motley %s' % args.motley)
-    if args.court:
-        tags.append('@court %s' % args.court.title())
-    tags.extend(_make_std_tags(groups = args.groups, dead = args.dead, foreign = args.foreign))
+    if motley:
+        tags.append('@motley %s' % motley)
+    if court:
+        tags.append('@court %s' % court.title())
+    tags.extend(_make_std_tags(groups = groups, dead = dead, foreign = foreign))
 
     header = "\n".join(tags) + '\n\n'
 
@@ -75,14 +82,14 @@ def create_changeling(args, prefs=settings.InternalSettings(), **kwargs):
 
     # insert seeming and kith in the advantages block
     sk = prefs.get('changeling')
-    seeming_key = args.seeming.lower()
+    seeming_key = seeming.lower()
     if seeming_key in sk['seemings']:
         seeming_notes = "%s; %s" % (sk['blessings'][seeming_key], sk['curses'][seeming_key])
         data = seeming_re.sub(
             '\g<1>Seeming\g<2>%s (%s)' % (seeming_name, seeming_notes),
             data
         )
-    kith_key = args.kith.lower()
+    kith_key = kith.lower()
     if kith_key in sk['kiths']:
         kith_notes = sk['blessings'][kith_key]
         data = kith_re.sub(

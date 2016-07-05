@@ -132,7 +132,7 @@ def _make_parser(prefs):
     parser_changeling.add_argument('kith', help="character's Kith", metavar='kith')
     parser_changeling.add_argument('-c', '--court', help="the character's Court", metavar='court')
     parser_changeling.add_argument('-m', '--motley', help="the character's Motley", metavar='motley')
-    parser_changeling.set_defaults(func=commands.create_changeling)
+    parser_changeling.set_defaults(func=commands.create_changeling, serialize=['name', 'seeming', 'kith'])
 
     # Subcommand for linting characer files
     parser_lint = subparsers.add_parser('lint', parents=[paths_parser], help="Check the character files for minimum completeness")
