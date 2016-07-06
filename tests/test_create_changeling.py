@@ -3,15 +3,6 @@ import pytest
 import os
 import re
 
-@pytest.fixture(scope="module")
-def arglist():
-    return [
-        'changeling',
-        'changeling mann',
-        'Beast',
-        'Hunterheart'
-    ]
-
 def test_creates_character(campaign):
     result = npc.commands.create_changeling('changeling mann', 'Beast', 'Hunterheart')
     character = campaign.get_character('changeling mann.nwod')

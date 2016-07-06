@@ -2,10 +2,6 @@ import npc
 import pytest
 import os
 
-@pytest.fixture(params=['human', 'fetch', 'goblin'])
-def commandline(request):
-    return ['g', 'testmann', request.param, '-g', 'fork', 'spoon']
-
 def test_missing_template(campaign):
     result = npc.commands.create_simple('noname', 'notfound')
     assert not result.success
