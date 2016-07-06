@@ -19,21 +19,14 @@ def cli(argv):
         for a list of return codes.
     """
 
-    # load settings data
-    try:
-        prefs = settings.InternalSettings()
-    except OSError as e:
-        util.error(e.strerror + " (%s)" % path.join(settings_path, 'settings-default.json'))
-        return 4
-
-    if not settings.lint_changeling_settings(prefs):
-        return 5
-
-    # create parser
-    parser = _make_parser(prefs)
-
-    # Parse args
+    # create parser and parse args
+    parser = _make_parser()
     args = parser.parse_args(argv)
+
+    # show help immediately when no input was given
+    if not hasattr(args, 'func'):
+        parser.print_help()
+        return 0
 
     # change to the proper campaign directory if needed
     base = args.campaign
@@ -46,12 +39,26 @@ def cli(argv):
         util.error("{}: '{}'".format(e.strerror, base))
         return 4 # internal code for a filesystem error
 
-    # run the command
-    full_args = vars(args)
-    if 'func' not in full_args:
-        parser.print_help()
-        return 0
+    # load settings data
+    try:
+        prefs = settings.InternalSettings()
+    except OSError as e:
+        util.error(e.strerror + " (%s)" % path.join(settings_path, 'settings-default.json'))
+        return 4
 
+    if not settings.lint_changeling_settings(prefs):
+        return 5
+
+    # get args as a dict
+    full_args = vars(args)
+    try:
+        # load default character path if search field is at its default
+        if full_args['search'] is None:
+            full_args['search'] = [prefs.get('paths.characters')]
+    except AttributeError:
+        pass
+
+    # run the command
     try:
         if 'serialize' in full_args:
             serial_args = [full_args[k] for k in full_args['serialize']]
@@ -99,12 +106,9 @@ def _find_campaign_base():
             return current_dir
     return base
 
-def _make_parser(prefs):
+def _make_parser():
     """
     Construct the arguments parser
-
-    Args:
-        prefs (Settings): Settings object. Used to determine the default values for some
 
     Returns:
         Complete argparser object
@@ -119,7 +123,7 @@ def _make_parser(prefs):
 
     # Parent parser for shared pathing options
     paths_parser = argparse.ArgumentParser(add_help=False)
-    paths_parser.add_argument('--search', nargs="*", default=[prefs.get('paths.characters')], help="Paths to search. Individual files are added verbatim and directories are searched recursively.", metavar="PATH")
+    paths_parser.add_argument('--search', nargs="*", default=None, help="Paths to search. Individual files are added verbatim and directories are searched recursively.", metavar="PATH")
     paths_parser.add_argument('--ignore', nargs="*", default=[], help="Paths to skip when searching for character files", metavar="PATH")
     paths_parser.set_defaults(serialize=['search'])
 

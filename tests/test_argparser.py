@@ -2,5 +2,5 @@ import npc
 import argparse
 import pytest
 
-def test_creation(prefs):
-    assert type(npc.main._make_parser(prefs)) is argparse.ArgumentParser
+def test_creation():
+    assert type(npc.main._make_parser()) is argparse.ArgumentParser

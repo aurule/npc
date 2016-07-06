@@ -10,8 +10,8 @@ def prefs():
     return npc.settings.Settings()
 
 @pytest.fixture(scope="module")
-def argparser(prefs):
-    return npc.main._make_parser(prefs)
+def argparser():
+    return npc.main._make_parser()
 
 class Campaign:
     def __init__(self, tmpdir, chardir):
