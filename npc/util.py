@@ -43,7 +43,7 @@ def load_json(filename):
         except json.decoder.JSONDecodeError as e:
             e.nicemsg = "Bad syntax in '{0}' line {2} column {3}: {1}".format(filename, e.msg, e.lineno, e.colno)
             raise e
-        except Exception as e:
+        except OSError as e:
             e.nicemsg = "Could not load '{0}': {1}".format(filename, e.msg)
             raise e
 
