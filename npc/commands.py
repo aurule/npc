@@ -345,7 +345,7 @@ def find_empty_dirs(root):
         if not dirs and not files:
             yield dirpath
 
-def create_path_from_character(character, target_path, prefs=None):
+def create_path_from_character(character, target_path=None, prefs=None):
     """
     Determine the best file path for a character.
 
@@ -363,6 +363,9 @@ def create_path_from_character(character, target_path, prefs=None):
     """
     if not prefs:
         prefs = settings.InternalSettings()
+
+    if not target_path:
+        target_path = prefs.get('paths.characters')
 
     # add type-based directory if we can
     if 'type' in character:
