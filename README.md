@@ -147,6 +147,8 @@ Every character file is checked for these problems:
 
 Changeling character files are checked for these additional problems:
 
+* The `@court` tag is either not present, or appears only once
+* The `@motley` tag is either not present, or appears only once
 * The `@seeming` tag is present and has a recognized value. This tag is added automatically if you use the `@changeling <seeming> <kith>` tag.
 * The `@kith` tag is present and has a recognized value
 * The stats specify the same seeming(s) as the `@seeming` tag(s)

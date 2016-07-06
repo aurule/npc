@@ -49,3 +49,9 @@ class TestChangeling:
 
     def test_kith_info_correct(self, lint_output):
         assert "Incorrect notes for Kith" in lint_output('Bad Info.nwod')
+
+    def test_multiple_courts(self, lint_output):
+        assert "Multiple courts" in lint_output('Many Courts.nwod')
+
+    def test_multiple_motleys(self, lint_output):
+        assert "Multiple motleys" in lint_output('Many Motleys.nwod')

@@ -8,14 +8,15 @@ def lint(character, fix = False, sk = None, **kwargs):
     """
     Verify the more complex elements in a changeling sheet.
 
-    This method checks for changeling-specific problems within the rules blocks
-    of the character sheet. The problems it checks for relate to the seeming and
-    kith notes.
+    Checks for changeling-specific problems within the rules blocks of the
+    character sheet. The problems it checks for are as follows:
 
-    1. Both elements must appear in the sheet's body -- not just the tags.
-    2. Both elements must match the value of the corresponding tag.
-    3. Both elements must have correct notes about its blessing (and curse for
-        Seeming)
+    1. Court and motley must either not be present, or appear only once.
+    2. Both seeming and kith must appear in the sheet's body -- not just the
+        tags.
+    3. Both seeming and kith must match the value of the corresponding tag.
+    4. Both seeming and kith must have correct notes about its blessing (and
+        curse for Seeming)
 
     Missing or incorrect notes can be fixed automatically if desired.
 
@@ -29,6 +30,14 @@ def lint(character, fix = False, sk = None, **kwargs):
     """
     problems = []
     dirty = False
+
+    # Check that only one court is present
+    if 'court' in character and len(character['court']) > 1:
+        problems.append("Multiple courts: %s" % ', '.join(character['court']))
+
+    # Check that only one motley is present
+    if 'motley' in character and len(character['motley']) > 1:
+        problems.append("Multiple motleys: %s" % ', '.join(character['motley']))
 
     # Check that seeming tag exists and is valid
     seeming_tags = None
