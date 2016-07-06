@@ -47,8 +47,12 @@ def cli(argv):
         return 4 # internal code for a filesystem error
 
     # run the command
+    full_args = vars(args)
+    if 'func' not in full_args:
+        parser.print_help()
+        return 0
+
     try:
-        full_args = vars(args)
         if 'serialize' in full_args:
             serial_args = [full_args[k] for k in full_args['serialize']]
             for k in full_args['serialize']:
@@ -58,8 +62,8 @@ def cli(argv):
 
         result = args.func(*serial_args, **full_args)
     except AttributeError as e:
-        parser.print_help()
         util.error(e)
+        parser.print_help()
         return 6
 
     # handle errors
