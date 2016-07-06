@@ -13,31 +13,26 @@ def dump(characters, f, include_metadata=None, metadata_extra={}, **kwargs):
             values of 'mmd', 'yaml', or 'yfm'. Metadata will always include a
             title and creation date.
         metadata_extra (dict): Additional metadata to insert. Ignored unless
-            include_metadata is set. Keys are simply appended and will not
-            overwrite the generated ones (Title and Created).
+            include_metadata is set. The keys 'title', and 'created' will
+            overwrite the generated values for those keys.
 
     Returns:
         A commands.Result object. Openable will not be set.
     """
     if include_metadata:
+        default_metadata = {
+            'title': 'NPC Listing',
+            'created': datetime.now().isoformat()
+        }
+        metadata_raw = {**default_metadata, **metadata_extra}
         if include_metadata in 'mmd':
-            metadata_extra = ['{}: {}  '.format(k, v) for k, v in metadata_extra.items()]
-
-            meta = [
-                'Title: NPC Listing  ',
-                'Created: %s  ' % datetime.now().isoformat()
-            ] + metadata_extra + ['\n']
+            metadata_lines = ['{}: {}'.format(k.title(), v) for k, v in metadata_raw.items()]
+            data = "  \n".join(metadata_lines)
         elif include_metadata in ('yaml', 'yfm'):
-            metadata_extra = ['{}: {}'.format(k, v) for k, v in metadata_extra.items()]
-
-            meta = [
-                '---',
-                'title: NPC Listing',
-                'created: %s' % datetime.now().isoformat()
-            ] + metadata_extra + ['---\n']
+            metadata_lines = ['{}: {}'.format(k, v) for k, v in metadata_raw.items()]
+            data = "---\n" + "\n".join(metadata_lines) + "\n---\n"
         else:
             return commands.Result(False, errmsg="Unrecognized metadata format option '%s'" % include_metadata, errcode=6)
-        data = "\n".join(meta)
         f.write(data)
 
     for c in characters:

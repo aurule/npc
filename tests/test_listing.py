@@ -103,7 +103,7 @@ class TestMetadata:
         prefs.load_more(fixture_dir(['listing', 'settings-metadata.json']))
         search = fixture_dir(['listing', 'valid-json'])
         npc.commands.list([search], format='markdown', metadata=metaformat, outfile=str(outfile), prefs=prefs)
-        assert 'test-type: markdown' in outfile.read()
+        assert 'test-type: markdown' in outfile.read().lower()
 
     def test_invalid_metadata_arg(self, argparser):
         """Using metadata formats other than yfm and mmd is not supported for
