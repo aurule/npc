@@ -6,13 +6,30 @@ from os import path, walk
 from collections import defaultdict
 
 def get_characters(search_paths = ['.'], ignore_paths = []):
+    """
+    Get data from character files
+
+    Args:
+        search_paths (list): Paths to search for character files
+        ignore_paths (list): Paths to exclude from the search
+
+    Returns:
+        List of dictionaries containing parsed character information
+    """
     return itertools.chain.from_iterable((_parse_path(path, ignore_paths) for path in search_paths))
 
 def _parse_path(start_path, ignore_paths = [], include_bare = False):
-    """Parse all the character files in a directory
+    """
+    Parse all the character files under a directory
 
-    Set include_bare to True to scan files without an extension in addition to
-    .nwod files.
+    Args:
+        start_path (str): Path to search
+        ignore_paths (list): Pathsh to exclude
+        include_bare (bool): Whether to attempt to parse files without an
+            extension in addition to .nwod files.
+
+    Returns:
+        List of dictionaries containing parsed character data
     """
     if path.isfile(start_path):
         return [_parse_character(start_path)]
@@ -30,7 +47,29 @@ def _parse_path(start_path, ignore_paths = [], include_bare = False):
     return characters
 
 def _walk_ignore(root, ignore):
+    """
+    Recursively traverse a directory tree while ignoring certain paths.
+
+    Args:
+        root (str): Directory to start at
+        ignore (list): Paths to skip over
+
+    Yields:
+        A tuple (path, [dirs], [files]) as from `os.walk`.
+    """
     def included(d):
+        """
+        Determine whether a path should be searched
+
+        Only skips this path if it, or its parent, is explicitly in the `ignore`
+        list.
+
+        Args:
+            d (str): The path to check
+
+        Returns:
+            True if d should be searched, false if it should be ignored
+        """
         return (path.join(dirpath, d) not in ignore) and (dirpath not in ignore)
 
     for dirpath, dirnames, filenames in walk(root, followlinks=True):
@@ -38,7 +77,15 @@ def _walk_ignore(root, ignore):
         yield dirpath, dirnames, filenames
 
 def _parse_character(char_file_path):
-    """Parse a single character file"""
+    """
+    Parse a single character file
+
+    Args:
+        char_file_path (str): Path to the character file to parse
+
+    Returns:
+        Dictionary of character data
+    """
     name_re = re.compile('(?P<name>\w+(\s\w+)*)(?: - )?.*')
     section_re = re.compile('^--.+--\s*$')
     tag_re = re.compile('^@(?P<tag>\w+)\s+(?P<value>.*)$')
