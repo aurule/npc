@@ -2,7 +2,21 @@ from datetime import datetime
 from .. import commands
 
 def dump(characters, f, metadata_type=None, metadata_extra={}):
-    # make some markdown
+    """
+    Create a markdown character listing
+
+    Args:
+        characters (list): Character info dicts to show
+        f (stream): Output stream
+        metadata_type (string|None): What kind of metadata to include, if any.
+            Accepts values of 'mmd', 'yaml', or 'yfm'. Metadata will always
+            include a title and creation date.
+        metadata_extra (dict): Additional metadata keys to insert. Ignored
+            unless metadata_type is set.
+
+    Returns:
+        A commands.Result object. Openable will not be set.
+    """
     if metadata_type:
         if metadata_type in 'mmd':
             metadata_extra = ['{}: {}  '.format(k, v) for k, v in metadata_extra.items()]
@@ -77,7 +91,8 @@ def dump(characters, f, metadata_type=None, metadata_extra={}):
     return commands.Result(True)
 
 def _build_character_type(c):
-    """Build the character type line
+    """
+    Build the character type line
 
     The values in this line vary by character type.
 
@@ -88,6 +103,12 @@ def _build_character_type(c):
     * all others:
         1. character type name
         2. first @group if present
+
+    Args:
+        c (dict): Character data
+
+    Returns:
+        String of character type info
     """
     character_type = c['type'][0].lower()
     if character_type == 'changeling':
@@ -121,13 +142,24 @@ def _build_character_type(c):
         return ', '.join(s)
 
 def _add_group_ranks(slug, name, c):
-    """Add ranks to a group"""
+    """
+    Add ranks to a group
+
+    Args:
+        slug (str): Base group tag
+        name (str): Raw group name
+        c (dict): Character data
+
+    Returns:
+        Complete group string with ranks
+    """
     if name in c['rank']:
         slug += " (%s)" % ', '.join(c['rank'][name])
     return slug
 
 def _build_character_subtype(c):
-    """Build the subtype string for a character
+    """
+    Build the subtype string for a character
 
     The subtype may or may not exist based on the character's type. It also
     takes different forms based on type.
@@ -136,6 +168,12 @@ def _build_character_subtype(c):
         1. Seemings, separated by a slash ('/')
         2. Kiths, separated by a slash ('/')
     * all others: no subtype (returns None)
+
+    Args:
+        c (dict): Character info
+
+    Returns:
+        String of character subtype information, or None if no subtype info is present/matters
     """
     character_type = c['type'][0].lower()
     if character_type == 'changeling' and (
@@ -151,7 +189,8 @@ def _build_character_subtype(c):
         return None
 
 def _build_secondary_groups(c):
-    """Build the list of other groups the character belongs to
+    """
+    Build the list of other groups the character belongs to
 
     The first group listed usually ends up in the character type line. This
     method builds the list of other groups. Its contents are somewhat dependent
@@ -164,6 +203,12 @@ def _build_secondary_groups(c):
     * all others:
         1. All @motley entries
         2. All @group entries
+
+    Args:
+        c (dict): Character info
+
+    Returns:
+        Description of the groups the character belongs to
     """
     character_type = c['type'][0].lower()
     if character_type == "changeling":
@@ -196,7 +241,8 @@ def _build_secondary_groups(c):
         return ', '.join(s)
 
 def _build_appearance(c):
-    """Build the appearance description for the character
+    """
+    Build the appearance description for the character
 
     The appearance is usually just the values of all @appearance tags. Some
     character types use their own special tags to extend or replace @appearance.
@@ -205,6 +251,12 @@ def _build_appearance(c):
         1. @appearance
         2. @mien
         3. @mask
+
+    Args:
+        c (dict): Character info
+
+    Returns:
+        Appearance description string
     """
     character_type = c['type'][0].lower()
     if character_type == 'changeling':
