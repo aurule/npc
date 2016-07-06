@@ -11,8 +11,11 @@ def dump(characters, f, include_metadata=False, metadata_extra={}, **kwargs):
     Args:
         characters (list): Character dicts to dump
         f (stream): Output stream to receive the json output
-        include_metadata (bool): Whether to insert metadata keys
-        metadata_extra (dict): Additional metadata keys. Ignored unless include_metadata is True.
+            include_metadata (bool): Whether to insert a metadata object. The
+            metadata object will always include a title and creation date, along
+            with the key `"meta": true` to distinguish it from character data.
+        metadata_extra (dict): Additional metadata keys. Ignored unless
+            include_metadata is True.
 
     Returns:
         A commands.Result object. Openable will not be set.
