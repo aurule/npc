@@ -139,7 +139,7 @@ class Settings:
         if settings_type == 'campaign':
             return path.join(self.campaign_settings_path, 'settings.json')
 
-    def get(self, key):
+    def get(self, key, default = None):
         """
         Get the value of a settings key
 
@@ -149,6 +149,7 @@ class Settings:
 
         Args:
             key (str): Key to get from settings.
+            default (any): Value to return when key isn't found.
 
         Returns:
             The value in that key, or None if the key could not be resolved.
@@ -159,7 +160,7 @@ class Settings:
             try:
                 d = d[k]
             except KeyError:
-                return None
+                return default
         return d
 
     def get_metadata(self, fmt):
@@ -189,10 +190,10 @@ def lint_changeling_settings(prefs):
         True if the changeling settings are OK, False if there were errors.
         Errors are printed to stderr.
     """
-    blessing_keys = set(prefs.get('changeling.blessings').keys())
-    curse_keys = set(prefs.get('changeling.curses').keys())
-    seemings = set(prefs.get('changeling.seemings'))
-    kiths = set(prefs.get('changeling.kiths'))
+    blessing_keys = set(prefs.get('changeling.blessings', {}).keys())
+    curse_keys = set(prefs.get('changeling.curses', {}).keys())
+    seemings = set(prefs.get('changeling.seemings', []))
+    kiths = set(prefs.get('changeling.kiths', []))
 
     ok = (blessing_keys.issuperset(seemings) and
             curse_keys.issuperset(seemings) and
