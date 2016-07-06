@@ -35,7 +35,7 @@ class Settings:
     settings_files = ['settings.json', 'settings-changeling.json']
     settings_paths = [default_settings_path, user_settings_path, campaign_settings_path]
 
-    def __init__(self):
+    def __init__(self, verbose = False):
         """
         Loads all settings files.
 
@@ -45,7 +45,15 @@ class Settings:
 
         Only the default settings need to exist. If a different file cannot be
         found or opened, it will be silently ignored without crashing.
+
+        Args:
+            verbose (bool): Whether to show additional error messages that are
+                usually ignored. These involve unloadable optional settings
+                files and keys that cannot be found. The file
+                `support/settings.json` should never be found, but will still
+                be reported.
         """
+        self.verbose = verbose
         self.data = util.load_json(path.join(self.default_settings_path, 'settings-default.json'))
 
         for k, v in self.data['templates'].items():
@@ -55,9 +63,11 @@ class Settings:
             for file in self.settings_files:
                 try:
                     self.load_more(path.join(settings_path, file))
-                except IOError as e:
-                    # all of these files are optional, so we silently ignore these errors
-                    pass
+                except OSError as e:
+                    # All of these files are optional, so normally we silently
+                    # ignore these errors
+                    if self.verbose:
+                        util.error(e.strerror, e.filename)
 
     def load_more(self, settings_path):
         """
@@ -72,9 +82,8 @@ class Settings:
         """
         try:
             loaded = util.load_json(settings_path)
-        except Exception as e:
-            if hasattr(e, 'nicemsg'):
-                sys.stderr.write(e.nicemsg + "\n")
+        except json.decoder.JSONDecodeError as e:
+            util.error(e.nicemsg)
             return
 
         def evaluate_paths(base, loaded, key):
@@ -160,6 +169,8 @@ class Settings:
             try:
                 d = d[k]
             except KeyError:
+                if self.verbose:
+                    util.error("Key not found: %s" % key)
                 return default
         return d
 
