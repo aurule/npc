@@ -167,7 +167,7 @@ def _make_parser(prefs):
 
     # Subcommand to list character data in multiple formats
     parser_list = subparsers.add_parser('list', parents=[paths_parser], help="Generate an NPC Listing")
-    parser_list.add_argument('-t', '--format', choices=['markdown', 'md', 'json'], default=prefs.get('default_list_format'), help="Format to use for the listing. Defaults to 'md'")
+    parser_list.add_argument('-t', '--format', choices=['markdown', 'md', 'json'], default='default', help="Format to use for the listing. Defaults to 'md'")
     parser_list.add_argument('-m', '--metadata', nargs="?", const='default', default=False, help="Add metadata to the output. If the output format supports more than one metadata scheme, you can specify that scheme as well.")
     parser_list.add_argument('-o', '--outfile', nargs="?", const='-', default=None, help="File where the listing will be saved")
     parser_list.set_defaults(func=commands.list)

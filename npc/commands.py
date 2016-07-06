@@ -414,6 +414,8 @@ def list(search, ignore=[], format='markdown', metadata=None, outfile=None, pref
     characters = _sort_chars(_prune_chars(parser.get_characters(search, ignore)))
 
     out_type = format.lower()
+    if out_type == "default":
+        out_type = prefs.get('default_list_format')
 
     if out_type in ('md', 'markdown'):
         # ensure 'default' gets replaced with the right default metadata format
