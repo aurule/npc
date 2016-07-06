@@ -23,11 +23,6 @@ def cli(argv):
     parser = _make_parser()
     args = parser.parse_args(argv)
 
-    # show help immediately when no input was given
-    if not hasattr(args, 'func'):
-        parser.print_help()
-        return 0
-
     # change to the proper campaign directory if needed
     base = args.campaign
     if base == 'auto':
@@ -41,13 +36,18 @@ def cli(argv):
 
     # load settings data
     try:
-        prefs = settings.InternalSettings()
+        prefs = settings.InternalSettings(args.debug)
     except OSError as e:
         util.error(e.strerror + " (%s)" % path.join(settings_path, 'settings-default.json'))
         return 4
 
     if not settings.lint_changeling_settings(prefs):
         return 5
+
+    # show help when no input was given
+    if not hasattr(args, 'func'):
+        parser.print_help()
+        return 0
 
     # get args as a dict
     full_args = vars(args)
@@ -130,6 +130,7 @@ def _make_parser():
     # This is the main parser which handles program-wide options. These should be kept sparse.
     parser = argparse.ArgumentParser(description = 'GM helper script to manage game files')
     parser.add_argument('-b', '--batch', action='store_true', default=False, help="Do not open any newly created files")
+    parser.add_argument('--debug', action='store_true', default=False, help="Show all error messages, not just important ones")
     parser.add_argument('--campaign', default='auto', help="Use the campaign files in a different directory", metavar='DIR')
     subparsers = parser.add_subparsers(title='Subcommands', description="Commands that can be run on the current campaign. See `%(prog)s <command> -h` to get help with individual commands.")
 
