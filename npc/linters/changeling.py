@@ -4,8 +4,9 @@ replaceable = ('x', 'y')
 seeming_regex = '^(?P<name>\s+seeming\s+)(?P<seeming>%s)[ \t]*(?P<notes>\(.*\))?$'
 kith_regex = '^(?P<name>\s+kith\s+)(?P<kith>%s)[ \t]*(?P<notes>\(.*\))?$'
 
-def lint(c, fix = False, **kwargs):
-    """Verify the more complex elements in a changeling sheet
+def lint(c, fix = False, sk = None, **kwargs):
+    """
+    Verify the more complex elements in a changeling sheet.
 
     This method checks for changeling-specific problems within the rules blocks
     of the character sheet. The problems it checks for relate to the seeming and
@@ -18,13 +19,12 @@ def lint(c, fix = False, **kwargs):
 
     Missing or incorrect notes can be fixed automatically if desired.
 
+    Args:
     The kwargs must contain:
     * sk: a parsed dict of blessings and curses, as from `support/seeming-kith.json`
     """
     problems = []
     dirty = False
-
-    sk = kwargs['sk']
 
     # Check that seeming tag exists and is valid
     seeming_tags = None
