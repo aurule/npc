@@ -1,31 +1,32 @@
 from datetime import datetime
 from .. import commands
 
-def dump(characters, f, metadata_type=None, metadata_extra={}, **kwargs):
+def dump(characters, f, include_metadata=None, metadata_extra={}, **kwargs):
     """
     Create a markdown character listing
 
     Args:
         characters (list): Character info dicts to show
         f (stream): Output stream
-        metadata_type (string|None): What kind of metadata to include, if any.
-            Accepts values of 'mmd', 'yaml', or 'yfm'. Metadata will always
-            include a title and creation date.
+        include_metadata (string|None): Whether to include metadata, and what
+            format to use.What kind of metadata to include, if any. Accepts
+            values of 'mmd', 'yaml', or 'yfm'. Metadata will always include a
+            title and creation date.
         metadata_extra (dict): Additional metadata keys to insert. Ignored
-            unless metadata_type is set.
+            unless include_metadata is set.
 
     Returns:
         A commands.Result object. Openable will not be set.
     """
-    if metadata_type:
-        if metadata_type in 'mmd':
+    if include_metadata:
+        if include_metadata in 'mmd':
             metadata_extra = ['{}: {}  '.format(k, v) for k, v in metadata_extra.items()]
 
             meta = [
                 'Title: NPC Listing  ',
                 'Created: %s  ' % datetime.now().isoformat()
             ] + metadata_extra + ['\n']
-        elif metadata_type in ('yaml', 'yfm'):
+        elif include_metadata in ('yaml', 'yfm'):
             metadata_extra = ['{}: {}'.format(k, v) for k, v in metadata_extra.items()]
 
             meta = [
@@ -34,7 +35,7 @@ def dump(characters, f, metadata_type=None, metadata_extra={}, **kwargs):
                 'created: %s' % datetime.now().isoformat()
             ] + metadata_extra + ['---\n']
         else:
-            return commands.Result(False, errmsg="Unrecognized metadata format option '%s'" % metadata_type, errcode=6)
+            return commands.Result(False, errmsg="Unrecognized metadata format option '%s'" % include_metadata, errcode=6)
         data = "\n".join(meta)
         f.write(data)
 
