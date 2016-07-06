@@ -20,8 +20,12 @@ def lint(c, fix = False, sk = None, **kwargs):
     Missing or incorrect notes can be fixed automatically if desired.
 
     Args:
-    The kwargs must contain:
-    * sk: a parsed dict of blessings and curses, as from `support/seeming-kith.json`
+        c (dict): Character data to lint
+        fix (bool): Whether to automatically correct certain problems
+        sk (dict): Seeming and kith data, as from the support/settings-changeling.json file.
+
+    Returns:
+        List of problem descriptions. If no problems were found, the list will be empty.
     """
     problems = []
     dirty = False
@@ -169,7 +173,17 @@ def lint(c, fix = False, sk = None, **kwargs):
     return problems
 
 def _fix_seeming_notes(seeming, notes, data):
-    """Insert correct notes for a seeming stat"""
+    """
+    Insert correct notes for a seeming stat
+
+    Args:
+        seeming (str): Seeming name
+        notes (str): New seeming notes
+        data (str): Existing raw caracter data
+
+    Returns
+        Altered string character data with the new notes inserted
+    """
     seeming_fix_re = re.compile(
         seeming_regex % seeming,
         re.MULTILINE | re.IGNORECASE
@@ -180,7 +194,17 @@ def _fix_seeming_notes(seeming, notes, data):
     )
 
 def _fix_kith_notes(kith, notes, data):
-    """Insert correct notes for a kith stat"""
+    """
+    Insert correct notes for a kith stat
+
+    Args:
+        kith (str): Kith name
+        notes (str): New kith notes
+        data (str): Existing raw caracter data
+
+    Returns
+        Altered string character data with the new notes inserted
+    """
     kith_fix_re = re.compile(
         kith_regex % kith,
         re.MULTILINE | re.IGNORECASE
