@@ -130,8 +130,8 @@ def _make_parser():
     # This is the main parser which handles program-wide options. These should be kept sparse.
     parser = argparse.ArgumentParser(description = 'GM helper script to manage game files')
     parser.add_argument('-b', '--batch', action='store_true', default=False, help="Do not open any newly created files")
-    parser.add_argument('--debug', action='store_true', default=False, help="Show all error messages, not just important ones")
     parser.add_argument('--campaign', default='auto', help="Use the campaign files in a different directory", metavar='DIR')
+    parser.add_argument('--debug', action='store_true', default=False, help="Show all error messages, not just important ones")
     subparsers = parser.add_subparsers(title='Subcommands', description="Commands that can be run on the current campaign. See `%(prog)s <command> -h` to get help with individual commands.")
 
     # Subcommand to create the basic directories
