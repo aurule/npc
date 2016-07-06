@@ -62,7 +62,7 @@ def test_adds_court(campaign):
     data = campaign.get_character_data('changeling mann.nwod')
     assert 'Summer' in data['court']
 
-def test_adds_court(campaign):
+def test_adds_motley(campaign):
     npc.commands.create_changeling('changeling mann', 'Beast', 'Hunterheart', motley='Funny Bones Men')
     data = campaign.get_character_data('changeling mann.nwod')
     assert 'Funny Bones Men' in data['motley']
