@@ -11,6 +11,7 @@
     - [Make an NPC Listing](#make-an-npc-listing)
     - [Dump Raw NPC Data](#dump-raw-npc-data)
     - [Reorganize Character Files](#reorganize-character-files)
+    - [Edit Settings](#edit-settings)
 - [Gotchas](#gotchas)
     - [Using both `search` and `ignore`](#using-both-search-and-ignore)
 - [Configuration](#configuration)
@@ -171,6 +172,14 @@ Options:
 * `--purge`: After moving the files, remove any empty directories within the root characters path
 * `--verbose`: Show each change as it's made
 
+## Edit Settings
+
+While you can edit settings files manually (see [Configuration](#configuration) below), you can also use the `settings` command to easily open the desired settings file.
+
+Options:
+
+* `location`: The settings file to open. Use `user` to open your user settings, or `campaign` to open the current campaign's settings.
+
 # Gotchas
 
 ## Using both `search` and `ignore`
@@ -191,6 +200,8 @@ Default values are loaded from `support/settings-default.json` within the instal
 User settings are loaded from `~/.config/npc/settings.json`. Settings in this file will overwrite the default values.
 
 Finally, campaign settings are loaded from `.npc/settings.json` within the current directory at runtime. Settings here will overwrite the default and user values.
+
+To open these settings files easily, you can use the `settings` command.
 
 ## Type-Specific Settings
 
