@@ -22,7 +22,7 @@ def cli(argv):
     # load settings data
     try:
         prefs = settings.InternalSettings()
-    except IOError as e:
+    except OSError as e:
         util.error(e.strerror + " (%s)" % path.join(settings_path, 'settings-default.json'))
         return 4
 
