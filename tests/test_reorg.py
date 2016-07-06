@@ -33,6 +33,19 @@ def test_move_by_group(campaign, new_path):
     character = campaign.get_character(new_path)
     assert character.check()
 
+@pytest.mark.parametrize('new_path', [
+    os.path.join('Humans', 'Mafia', 'Foreign', 'Manny Mafioso.nwod'),
+    os.path.join('Humans', 'Mafia', 'Mafia Mann.nwod'),
+    os.path.join('Humans', 'Police', 'Popo Panckett.nwod'),
+])
+def test_move_by_foreign(campaign, new_path):
+    """Reorg should move foreigners to Foreign under their type or group."""
+
+    campaign.populate_from_fixture_dir(['reorg', 'by_foreign'])
+    npc.commands.reorg(['Characters'])
+    character = campaign.get_character(new_path)
+    assert character.check()
+
 def test_partial_tree(campaign):
     """Should not choke when ideal dirs don't exist"""
 

@@ -62,6 +62,9 @@ def create_changeling(name, seeming, kith,
     for group_name in groups:
         target_path = _add_path_if_exists(target_path, group_name)
 
+    if foreign:
+        target_path = _add_path_if_exists(target_path, 'Foreign')
+
     filename = name + '.nwod'
     target_path = path.join(target_path, filename)
     if path.exists(target_path):
@@ -171,6 +174,8 @@ def create_simple(name, ctype, groups=[], dead=False, foreign=False, prefs=None,
     target_path = _add_path_if_exists(prefs.get('paths.characters'), prefs.get('type_paths.%s' % ctype))
     for group_name in groups:
         target_path = _add_path_if_exists(target_path, group_name)
+    if foreign:
+        target_path = _add_path_if_exists(target_path, 'Foreign')
 
     filename = name + '.nwod'
     target_path = path.join(target_path, filename)
@@ -379,6 +384,10 @@ def create_path_from_character(character, target_path, prefs=None):
     if 'group' in character:
         for group_name in character['group']:
             target_path = _add_path_if_exists(target_path, group_name)
+
+    # foreigners get a special folder
+    if 'foreign' in character:
+        target_path = _add_path_if_exists(target_path, 'Foreign')
 
     return target_path
 

@@ -93,14 +93,31 @@ These are the directories that are appended, in order:
 1. Type path, like `Humans/`
 2. First listed group name, if given (like `Police/`)
     * Other group names are also tried, in order.
+3. If the @foreign tag is present, `Foreign/`
 
 Here are some examples:
 
-> The path `Characters/Humans/Police` exists. Running `npc human "Prakash Dupene" -g Police` will start in `Characters/`, and try to find `Humans/`. Since it can, it will then look in `Characters/Humans/` for `Police/`. Finding that directory, and having no more groups to check, it will create the file `Characters/Humans/Police/Prakash Dupene.nwod` and open it.
+> The path `Characters/Humans/Police` exists. Running `npc human "Prakash Dupene" -g Police` will start in
+> `Characters/`, and try to find `Humans/`. Since it can, it will then look in `Characters/Humans/` for
+> `Police/`. Finding that directory, and having no more groups to check, it will create the file
+> `Characters/Humans/Police/Prakash Dupene.nwod` and open it.
 
-> With the same path, running `npc human "John Doe" -g "Bulldog Barons"` will also start in `Characters/` and try to find `Humans/`. Since it can, it will then look in `Characters/Humans/` for `Bulldog Barons/`. That directory does not exist, and there are no more groups to try, so it will create `Characters/Humans/John Doe.nwod` and open it.
+> With the same path, running `npc human "John Doe" -g "Bulldog Barons"` will also start in `Characters/` and
+> try to find `Humans/`. Since it can, it will then look in `Characters/Humans/` for `Bulldog Barons/`. That
+> directory does not exist, and there are no more groups to try, so it will create `Characters/Humans/John
+> Doe.nwod` and open it.
 
-> With the same path, running `npc human "Hans Fritz" -g "Funkadelic" "Police"` will quickly find `Characters/Humans/`. It will look there for `Funkadelic/`, but that directory does not exist. It will then look in `Characters/Humans/` for `Police/`, and find it. There are no more groups to try, so it will create `Characters/Humans/Police/Hans Fritz.nwod`.
+> With the same path, running `npc human "Hans Fritz" -g "Funkadelic" "Police"` will quickly find
+> `Characters/Humans/`. It will look there for `Funkadelic/`, but that directory does not exist. It will then
+> look in `Characters/Humans/` for `Police/`, and find it. There are no more groups to try, so it will create
+> `Characters/Humans/Police/Hans Fritz.nwod`.
+
+> The path `Characters/Humans/Police/Foreign` exists. Running `npc human "Frank Bullman" -g Police --foreign
+> Minneapolis` will quickly find `Characters/Humans/Police/`. It will then look for `Foreign/`, and find it.
+
+> With the same path, running `npc human "Norman Dirk" --foreign Seattle` will find `Characters/Humans/` and
+> since there are no groups to try, it will look for `Foreign/`. Since that directory does not exist, it will
+> create `Characters/Humans/NormanDirk.nwod`.
 
 ### Changelings
 
@@ -164,6 +181,10 @@ Options:
 ## Reorganize Character Files
 
 The `reorg` command builds default paths for all the characters and then moves them. It's inspired by that time when I realized I had 20 police officers in a sea of 130 human characters, and really wanted to put them in their own folder.
+
+For an explanation of the default paths, see [Create a Character](#create-a-character).
+
+Characters are always placed into the default characters path, regardless of the `search` argument.
 
 Options:
 
