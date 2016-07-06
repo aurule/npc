@@ -685,7 +685,8 @@ def open_settings(location, show_defaults = False, prefs=None, **kwargs):
     if not path.exists(target_path):
         dirname = path.dirname(target_path)
         makedirs(dirname, mode=0o775, exist_ok=True)
-        open(target_path, 'a').close()
+        with open(target_path, 'a') as f:
+            f.write('{}')
 
     if show_defaults:
         openable = [prefs.get_settings_path('default'), target_path]
