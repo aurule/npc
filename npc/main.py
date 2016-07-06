@@ -8,7 +8,16 @@ from subprocess import run
 from . import commands, util, settings
 
 def cli(argv):
-    """Run the interface"""
+    """
+    Run the interface
+
+    Args:
+        argv (list): Arguments from the command invocation
+
+    Returns:
+        Return code indicating success or failure type. See `commands.Result`
+        for a list of return codes.
+    """
 
     # load settings data
     try:
@@ -62,13 +71,19 @@ def cli(argv):
     if result.openable and not args.batch:
         run([prefs.get("editor")] + result.openable)
 
+    return 0
+
 def _find_campaign_base():
-    """Figure out the base campaign directory
+    """
+    Determine the base campaign directory
 
     Walks up the directory tree until it finds the '.npc' campaign config
-    directory, or hits the filesystem root. If the `.npc` directory is found, its
-    parent is assumed to be the campaign's root directory. Otherwise, the
+    directory, or hits the filesystem root. If the `.npc` directory is found,
+    its parent is assumed to be the campaign's root directory. Otherwise, the
     current directory of the command invocation is used.
+
+    Returns:
+        Directory path to the campaign.
     """
     current_dir = getcwd()
     base = current_dir
@@ -81,6 +96,15 @@ def _find_campaign_base():
     return base
 
 def _make_parser(prefs):
+    """
+    Construct the arguments parser
+
+    Args:
+        prefs (Settings): Settings object. Used to determine the default values for some
+
+    Returns:
+        Complete argparser object
+    """
     # This parser stores options shared by all character creation commands. It is never exposed directly.
     character_parser = argparse.ArgumentParser(add_help=False)
     character_parser.add_argument('name', help="Character name", metavar='name')
