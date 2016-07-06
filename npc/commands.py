@@ -52,18 +52,25 @@ def create_changeling(name, seeming, kith,
         re.MULTILINE | re.IGNORECASE
     )
 
-    # Derive the path for the new file
-    target_path = _add_path_if_exists(prefs.get('paths.characters'), prefs.get('type_paths.%s' % 'changeling'))
+    # build minimal character dict
+    character = {
+        'type': ['changeling'],
+        'seeming': seeming,
+        'kith': kith
+    }
     if court:
-        target_path = _add_path_if_exists(target_path, court.title())
-    else:
-        target_path = _add_path_if_exists(target_path, 'Courtless')
-
-    for group_name in groups:
-        target_path = _add_path_if_exists(target_path, group_name)
-
+        character['court'] = court
+    if motley:
+        character['motley'] = motley
+    if groups:
+        character['group'] = groups
+    if dead:
+        character['dead'] = dead
     if foreign:
-        target_path = _add_path_if_exists(target_path, 'Foreign')
+        character['foreign'] = foreign
+
+    # get path for the new file
+    target_path = create_path_from_character(character, prefs = prefs)
 
     filename = name + '.nwod'
     target_path = path.join(target_path, filename)
@@ -170,12 +177,19 @@ def create_simple(name, ctype, groups=[], dead=False, foreign=False, prefs=None,
     if ctype not in prefs.get('templates'):
         return Result(False, errmsg="Unrecognized template '%s'" % ctype, errcode=7)
 
-    # Derive destination path
-    target_path = _add_path_if_exists(prefs.get('paths.characters'), prefs.get('type_paths.%s' % ctype))
-    for group_name in groups:
-        target_path = _add_path_if_exists(target_path, group_name)
+    # build minimal character dict
+    character = {
+        'type': [ctype],
+    }
+    if groups:
+        character['group'] = groups
+    if dead:
+        character['dead'] = dead
     if foreign:
-        target_path = _add_path_if_exists(target_path, 'Foreign')
+        character['foreign'] = foreign
+
+    # get path for the new file
+    target_path = create_path_from_character(character, prefs = prefs)
 
     filename = name + '.nwod'
     target_path = path.join(target_path, filename)
