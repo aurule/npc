@@ -4,7 +4,7 @@ replaceable = ('x', 'y')
 seeming_regex = '^(?P<name>\s+seeming\s+)(?P<seeming>%s)[ \t]*(?P<notes>\(.*\))?$'
 kith_regex = '^(?P<name>\s+kith\s+)(?P<kith>%s)[ \t]*(?P<notes>\(.*\))?$'
 
-def lint(c, fix = False, sk = None, **kwargs):
+def lint(character, fix = False, sk = None, **kwargs):
     """
     Verify the more complex elements in a changeling sheet.
 
@@ -20,7 +20,7 @@ def lint(c, fix = False, sk = None, **kwargs):
     Missing or incorrect notes can be fixed automatically if desired.
 
     Args:
-        c (dict): Character data to lint
+        character (dict): Character data to lint
         fix (bool): Whether to automatically correct certain problems
         sk (dict): Seeming and kith data, as from the support/settings-changeling.json file.
 
@@ -32,27 +32,27 @@ def lint(c, fix = False, sk = None, **kwargs):
 
     # Check that seeming tag exists and is valid
     seeming_tags = None
-    if not 'seeming' in c:
+    if not 'seeming' in character:
         problems.append("Missing @seeming tag")
     else:
-        seeming_tags = [t.lower() for t in c['seeming']] # used later
-        for seeming_name in c['seeming']:
+        seeming_tags = [t.lower() for t in character['seeming']] # used later
+        for seeming_name in character['seeming']:
             if seeming_name.lower() not in sk['seemings']:
                 problems.append("Unrecognized @seeming '%s'" % seeming_name)
 
     # Check that kith tag exists and is valid
     kith_tags = None
-    if not 'kith' in c:
+    if not 'kith' in character:
         problems.append("Missing @kith tag")
     else:
-        kith_tags = [t.lower() for t in c['kith']] # used later
-        for kith_name in c['kith']:
+        kith_tags = [t.lower() for t in character['kith']] # used later
+        for kith_name in character['kith']:
             if kith_name.lower() not in sk['kiths']:
                 problems.append("Unrecognized @kith '%s'" % kith_name)
 
     # tags are ok. now compare against listed seeming and kith in stats
 
-    with open(c['path'], 'r') as f:
+    with open(character['path'], 'r') as f:
         data = f.read()
 
         if seeming_tags:
@@ -167,7 +167,7 @@ def lint(c, fix = False, sk = None, **kwargs):
                                 problems[-1] += ' (can fix)'
 
     if dirty and data:
-        with open(c['path'], 'w') as f:
+        with open(character['path'], 'w') as f:
             f.write(data)
 
     return problems
