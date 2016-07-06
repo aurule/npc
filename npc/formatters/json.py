@@ -1,7 +1,8 @@
 import json
+from datetime import datetime
 from .. import commands
 
-def dump(characters, out, meta=None, **kwargs):
+def dump(characters, f, include_metadata=False, metadata_extra={}, **kwargs):
     """
     Dump a json representation of all character data
 
@@ -9,17 +10,24 @@ def dump(characters, out, meta=None, **kwargs):
 
     Args:
         characters (list): Character dicts to dump
-        out (stream): Output stream to receive the json output
-        meta (dict): Metadata keys to add to the character data
+        f (stream): Output stream to receive the json output
+        include_metadata (bool): Whether to insert metadata keys
+        metadata_extra (dict): Additional metadata keys. Ignored unless include_metadata is True.
 
     Returns:
         A commands.Result object. Openable will not be set.
     """
-    if meta:
+    if include_metadata:
+        base_meta = {
+            'meta': True,
+            'title': 'NPC Listing',
+            'created': datetime.now().isoformat()
+        }
+        meta = {**base_meta, **metadata_extra}
         characters = [meta] + characters
 
     try:
-        json.dump(characters, out)
+        json.dump(characters, f)
     except Exception as e:
         return commands.Result(False, errmsg=e, errcode=9)
     return commands.Result(True)

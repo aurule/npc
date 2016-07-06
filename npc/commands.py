@@ -402,17 +402,9 @@ def list(search, ignore=[], format='markdown', metadata=None, outfile=None, pref
             response = formatters.markdown.dump(characters, f, metadata_type, meta)
     elif out_type == 'json':
         # make some json
-        meta = None
-        if metadata:
-            base_meta = {
-                'meta': True,
-                'title': 'NPC Listing',
-                'created': datetime.now().isoformat()
-            }
-            meta = {**base_meta, **prefs.get_metadata('json')}
-
         with _smart_open(outfile) as f:
-            response = formatters.json.dump(characters, f, meta)
+            meta = prefs.get_metadata('json')
+            response = formatters.json.dump(characters, f, metadata, meta)
 
     else:
         return Result(False, errmsg="Cannot create output of format '%s'", errcode=5)
