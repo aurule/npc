@@ -1,7 +1,7 @@
 import json
 from .. import commands
 
-def dump(characters, out, meta=None):
+def dump(characters, out, meta=None, **kwargs):
     """
     Dump a json representation of all character data
 

@@ -1,7 +1,7 @@
 from datetime import datetime
 from .. import commands
 
-def dump(characters, f, metadata_type=None, metadata_extra={}):
+def dump(characters, f, metadata_type=None, metadata_extra={}, **kwargs):
     """
     Create a markdown character listing
 
