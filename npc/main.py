@@ -185,7 +185,7 @@ def _make_parser(prefs):
     parser_settings = subparsers.add_parser('settings', help="Open (and create if needed) a settings file")
     parser_settings.add_argument('location', choices=['user', 'campaign'], help="The settings file to load")
     parser_settings.add_argument('-d', '--defaults', action="store_true", default=False, help="Open the default settings file for easy reference")
-    parser_settings.set_defaults(func=commands.settings)
+    parser_settings.set_defaults(func=commands.open_settings)
     parser_settings.set_defaults(serialize=['location'])
 
     return parser

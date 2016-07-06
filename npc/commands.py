@@ -15,7 +15,7 @@ from . import formatters, linters, parser, util, settings
 def create_changeling(name, seeming, kith,
                       court=None, motley=None, groups=[],
                       dead=False, foreign=False,
-                      prefs=settings.InternalSettings(), **kwargs):
+                      prefs=None, **kwargs):
     """
     Create a Changeling character.
 
@@ -34,11 +34,15 @@ def create_changeling(name, seeming, kith,
             the argument.
         foreign (bool): Details of non-standard residence. Leave empty to
             exclude the @foreign tag.
-        prefs (Settings): Settings object to use.
+        prefs (Settings): Settings object to use. Uses internal settings by
+            default.
 
     Returns:
         Result object. Openable will contain the new character file.
     """
+    if not prefs:
+        prefs = settings.InternalSettings()
+
     seeming_re = re.compile(
         '^(\s+)seeming(\s+)\w+$',
         re.MULTILINE | re.IGNORECASE
@@ -133,7 +137,7 @@ def _make_std_tags(groups = [], dead = False, foreign = ""):
         tags.append("@foreign %s" % foreign)
     return tags
 
-def create_simple(name, ctype, groups=[], dead=False, foreign=False, prefs=settings.InternalSettings(), **kwargs):
+def create_simple(name, ctype, groups=[], dead=False, foreign=False, prefs=None, **kwargs):
     """
     Create a character without extra processing.
 
@@ -151,10 +155,15 @@ def create_simple(name, ctype, groups=[], dead=False, foreign=False, prefs=setti
             the argument.
         foreign (bool): Details of non-standard residence. Leave empty to
             exclude the @foreign tag.
+        prefs (Settings): Settings object to use. Uses internal settings by
+            default.
 
     Returns:
         Result object. Openable will contain the new character file.
     """
+    if not prefs:
+        prefs = settings.InternalSettings()
+
     if ctype not in prefs.get('templates'):
         return Result(False, errmsg="Unrecognized template '%s'" % ctype, errcode=7)
 
@@ -197,7 +206,7 @@ def _add_path_if_exists(base, potential):
         return test_path
     return base
 
-def session(prefs=settings.InternalSettings(), **kwargs):
+def session(prefs=None, **kwargs):
     """
     Create the files for a new game session.
 
@@ -205,12 +214,16 @@ def session(prefs=settings.InternalSettings(), **kwargs):
     and creates a new empty session log.
 
     Args:
-        prefs (Settings): Settings object
+        prefs (Settings): Settings object to use. Uses internal settings by
+            default.
 
     Returns:
         Result object. Openable will contain the current and previous session
         log and plot planning files.
     """
+    if not prefs:
+        prefs = settings.InternalSettings()
+
     plot_re = re.compile('(?i)^plot (\d+)$')
     session_re = re.compile('(?i)^session (\d+)$')
 
@@ -274,7 +287,7 @@ def session(prefs=settings.InternalSettings(), **kwargs):
 
     return Result(True, openable=openable)
 
-def reorg(search, ignore=[], purge=False, verbose=False, prefs=settings.InternalSettings(), **kwargs):
+def reorg(search, ignore=[], purge=False, verbose=False, prefs=None, **kwargs):
     """
     Move character files into the correct paths.
 
@@ -287,11 +300,15 @@ def reorg(search, ignore=[], purge=False, verbose=False, prefs=settings.Internal
         purge (bool): Whether empty directories should be deleted after all
             files have been moved.
         verbose (bool): Whether to print changes as they are made
-        prefs (Settings): Settings object
+        prefs (Settings): Settings object to use. Uses internal settings by
+            default.
 
     Returns:
         Result object. Openable will be empty.
     """
+    if not prefs:
+        prefs = settings.InternalSettings()
+
     base_path = prefs.get('paths.characters')
     characters = parser.get_characters(search, ignore)
     for c in characters:
@@ -323,7 +340,7 @@ def find_empty_dirs(root):
         if not dirs and not files:
             yield dirpath
 
-def create_path_from_character(character, target_path, prefs=settings.InternalSettings()):
+def create_path_from_character(character, target_path, prefs=None):
     """
     Determine the best file path for a character.
 
@@ -333,11 +350,15 @@ def create_path_from_character(character, target_path, prefs=settings.InternalSe
     Args:
         character (dict): Parsed character data
         target_path (str): Base path for character files
-        prefs (Settings): Settings object
+        prefs (Settings): Settings object to use. Uses internal settings by
+            default.
 
     Returns:
         Constructed file path based on the character data.
     """
+    if not prefs:
+        prefs = settings.InternalSettings()
+
     # add type-based directory if we can
     if 'type' in character:
         ctype = character['type'][0].lower()
@@ -361,7 +382,7 @@ def create_path_from_character(character, target_path, prefs=settings.InternalSe
 
     return target_path
 
-def list(search, ignore=[], format='markdown', metadata=None, outfile=None, prefs=settings.InternalSettings(), **kwargs):
+def list(search, ignore=[], format='markdown', metadata=None, outfile=None, prefs=None, **kwargs):
     """
     Generate a listing of NPCs.
 
@@ -381,11 +402,15 @@ def list(search, ignore=[], format='markdown', metadata=None, outfile=None, pref
             ignored.
         outfile (string|None): Filename to put the listed data. None and "-"
             print to stdout.
-        prefs (Settings): Settings object
+        prefs (Settings): Settings object to use. Uses internal settings by
+            default.
 
     Returns:
         Result object. Openable will contain the output file if given.
     """
+    if not prefs:
+        prefs = settings.InternalSettings()
+
     characters = _sort_chars(_prune_chars(parser.get_characters(search, ignore)))
 
     out_type = format.lower()
@@ -493,7 +518,7 @@ def _smart_open(filename=None):
         if fh is not sys.stdout:
             fh.close()
 
-def dump(search, ignore=[], sort=False, metadata=False, outfile=None, prefs=settings.InternalSettings(), **kwargs):
+def dump(search, ignore=[], sort=False, metadata=False, outfile=None, prefs=None, **kwargs):
     """
     Dump the raw character data, unaltered.
 
@@ -506,11 +531,16 @@ def dump(search, ignore=[], sort=False, metadata=False, outfile=None, prefs=sett
         metadata (bool): Whether to prepend metadata to the output
         outfile (string|None): Filename to put the dumped data. None and "-"
             print to stdout.
+        prefs (Settings): Settings object to use. Uses internal settings by
+            default.
 
     Returns:
         Result object. If outfile pointed to a real file, the openable attribute
         will contain that filename.
     """
+    if not prefs:
+        prefs = settings.InternalSettings()
+
     characters = parser.get_characters(search, ignore)
     if sort:
         characters = _sort_chars(characters)
@@ -534,7 +564,7 @@ def dump(search, ignore=[], sort=False, metadata=False, outfile=None, prefs=sett
 
     return Result(True, openable=openable)
 
-def lint(search, ignore=[], fix=False, prefs=settings.InternalSettings(), **kwargs):
+def lint(search, ignore=[], fix=False, prefs=None, **kwargs):
     """
     Check character files for completeness and correctness.
 
@@ -553,12 +583,15 @@ def lint(search, ignore=[], fix=False, prefs=settings.InternalSettings(), **kwar
         search (list): Paths to search for character files
         ignore (list): Paths to ignore
         fix (bool): Whether to automatically fix errors when possible
-        prefs (Settings): Settings object to use
+        prefs (Settings): Settings object to use. Uses internal settings by
+            default.
 
     Returns:
         Result object. On success, openable attribute will contain a list of all
         files that had errors.
     """
+    if not prefs:
+        prefs = settings.InternalSettings()
 
     openable = []
     problems = []
@@ -592,7 +625,7 @@ def lint(search, ignore=[], fix=False, prefs=settings.InternalSettings(), **kwar
 
     return Result(True, openable)
 
-def init(create_types = False, create_all = False, prefs=settings.InternalSettings(), **kwargs):
+def init(create_types = False, create_all = False, prefs=None, **kwargs):
     """
     Create the basic directories for a campaign.
 
@@ -604,10 +637,15 @@ def init(create_types = False, create_all = False, prefs=settings.InternalSettin
             type
         create_all (bool): Whether to create all optional directories. Overrides
             `types`.
+        prefs (Settings): Settings object to use. Uses internal settings by
+            default.
 
     Returns:
         Result object. Openable will be empty.
     """
+    if not prefs:
+        prefs = settings.InternalSettings()
+
     for k, p in prefs.get('paths').items():
         makedirs(p, mode=0o775, exist_ok=True)
     makedirs('.npc', mode=0o775, exist_ok=True)
@@ -619,7 +657,7 @@ def init(create_types = False, create_all = False, prefs=settings.InternalSettin
 
     return Result(True)
 
-def settings(location, show_defaults = False, prefs=settings.InternalSettings(), **kwargs):
+def open_settings(location, show_defaults = False, prefs=None, **kwargs):
     """
     Open the named settings file.
 
@@ -630,12 +668,17 @@ def settings(location, show_defaults = False, prefs=settings.InternalSettings(),
         location (str): Which settings file to open. One of 'user' or 'campaign'.
         show_defaults (bool): Whether the default settings file should be opened
             for reference alongside the specified settings file.
+        prefs (Settings): Settings object to use. Uses internal settings by
+            default.
 
     Returns:
         Result object. Openable will contain the desired settings file. If true
         was passed in show_defaults, it will also contain the reference settings
         file.
     """
+    if not prefs:
+        prefs = settings.InternalSettings()
+
     target_path = prefs.get_settings_path(location)
     if not path.exists(target_path):
         dirname = path.dirname(target_path)
