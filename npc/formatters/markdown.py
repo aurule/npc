@@ -138,7 +138,9 @@ def _build_character_subtype(c):
     * all others: no subtype (returns None)
     """
     character_type = c['type'][0].lower()
-    if character_type == 'changeling':
+    if character_type == 'changeling' and (
+        'seeming' in c or
+        'kith' in c):
         s = []
         if 'seeming' in c:
             s.append('/'.join(c['seeming']))
