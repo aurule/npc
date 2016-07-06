@@ -12,8 +12,9 @@ def dump(characters, f, include_metadata=None, metadata_extra={}, **kwargs):
             format to use.What kind of metadata to include, if any. Accepts
             values of 'mmd', 'yaml', or 'yfm'. Metadata will always include a
             title and creation date.
-        metadata_extra (dict): Additional metadata keys to insert. Ignored
-            unless include_metadata is set.
+        metadata_extra (dict): Additional metadata to insert. Ignored unless
+            include_metadata is set. Keys are simply appended and will not
+            overwrite the generated ones (Title and Created).
 
     Returns:
         A commands.Result object. Openable will not be set.
