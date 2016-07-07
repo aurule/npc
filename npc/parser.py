@@ -84,7 +84,10 @@ def _parse_character(char_file_path):
         char_file_path (str): Path to the character file to parse
 
     Returns:
-        Dictionary of character data
+        Dictionary of character data. Most keys store a list of values from the
+        character. The `description` key stores a simple string, and the `rank`
+        key stores a dict of list entries. Those keys are individual group
+        names.
     """
     name_re = re.compile('(?P<name>\w+(\s\w+)*)(?: - )?.*')
     section_re = re.compile('^--.+--\s*$')
