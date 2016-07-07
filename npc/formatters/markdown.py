@@ -48,7 +48,11 @@ def dump(characters, f, include_metadata=None, metadata_extra={}, **kwargs):
 
         # AKA line (info block)
         if len(c['name']) > 1:
-            info_block.append('*AKA %s*' % "; ".join(c['name'][1:]))
+            info_block.append('*AKA %s*' % ", ".join(c['name'][1:]))
+
+        #  Titles line (info block)
+        if 'title' in c:
+            info_block.append(', '.join(c['title']))
 
         # character type and dependent values (info block)
         info_block.append(_build_character_type(c))
