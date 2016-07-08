@@ -412,7 +412,7 @@ def create_path_from_character(character, target_path=None, prefs=None):
 
     return target_path
 
-def list(search, ignore=[], format='markdown', metadata=None, outfile=None, prefs=None, **kwargs):
+def listing(search, ignore=[], format='markdown', metadata=None, outfile=None, prefs=None, **kwargs):
     """
     Generate a listing of NPCs.
 

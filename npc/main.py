@@ -179,7 +179,7 @@ def _make_parser():
     parser_list.add_argument('-t', '--format', choices=['markdown', 'md', 'json'], default='default', help="Format to use for the listing. Defaults to 'md'")
     parser_list.add_argument('-m', '--metadata', nargs="?", const='default', default=False, help="Add metadata to the output. If the output format supports more than one metadata format, you can specify that format as well.")
     parser_list.add_argument('-o', '--outfile', nargs="?", const='-', default=None, help="File where the listing will be saved")
-    parser_list.set_defaults(func=commands.list)
+    parser_list.set_defaults(func=commands.listing)
 
     # Dump raw character data
     parser_dump = subparsers.add_parser('dump', parents=[paths_parser], help="Export raw json data of all characters")

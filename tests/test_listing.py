@@ -9,21 +9,21 @@ def list_json_output(tmpdir, prefs):
     def make_list(search_parts, outformat='json', metadata=None, prefs=prefs):
         outfile = tmpdir.join("output.json")
         search = fixture_dir(['listing'] + search_parts)
-        npc.commands.list([search], format=outformat, metadata=metadata, outfile=str(outfile), prefs=prefs)
+        npc.commands.listing([search], format=outformat, metadata=metadata, outfile=str(outfile), prefs=prefs)
         return json.load(outfile)
     return make_list
 
 @pytest.mark.parametrize('outopt', [None, '-'])
 def test_output_no_file(capsys, outopt):
     search = fixture_dir(['listing', 'valid-json'])
-    npc.commands.list([search], outfile=outopt)
+    npc.commands.listing([search], outfile=outopt)
     output, _ = capsys.readouterr()
     assert output
 
 def test_output_to_file(tmpdir):
     outfile = tmpdir.join("output.json")
     search = fixture_dir(['listing', 'valid-json'])
-    npc.commands.list([search], outfile=str(outfile))
+    npc.commands.listing([search], outfile=str(outfile))
     assert outfile.read()
 
 def test_list_valid_json(list_json_output):
@@ -70,7 +70,7 @@ class TestMetadata:
 
         outfile = tmpdir.join("output.md")
         search = fixture_dir(['listing', 'valid-json'])
-        npc.commands.list([search], format='markdown', metadata='mmd', outfile=str(outfile))
+        npc.commands.listing([search], format='markdown', metadata='mmd', outfile=str(outfile))
         assert 'Title: NPC Listing' in outfile.read()
 
     @pytest.mark.parametrize('metaformat', ['yfm', 'yaml'])
@@ -80,7 +80,7 @@ class TestMetadata:
 
         outfile = tmpdir.join("output.md")
         search = fixture_dir(['listing', 'valid-json'])
-        npc.commands.list([search], format='markdown', metadata=metaformat, outfile=str(outfile))
+        npc.commands.listing([search], format='markdown', metadata=metaformat, outfile=str(outfile))
         match = re.match('(?sm)\s*---(.*)---\s*', outfile.read())
         assert match is not None
         assert 'title: NPC Listing' in match.group(1)
@@ -102,7 +102,7 @@ class TestMetadata:
         outfile = tmpdir.join("output.md")
         prefs.load_more(fixture_dir(['listing', 'settings-metadata.json']))
         search = fixture_dir(['listing', 'valid-json'])
-        npc.commands.list([search], format='markdown', metadata=metaformat, outfile=str(outfile), prefs=prefs)
+        npc.commands.listing([search], format='markdown', metadata=metaformat, outfile=str(outfile), prefs=prefs)
         assert 'test-type: markdown' in outfile.read().lower()
 
     def test_invalid_metadata_arg(self, argparser):
@@ -113,11 +113,11 @@ class TestMetadata:
         tested.
         """
         search = fixture_dir(['listing', 'valid-json'])
-        result = npc.commands.list([search], format='md', metadata='json')
+        result = npc.commands.listing([search], format='md', metadata='json')
         assert not result.success
 
     def test_unknown_metadata_arg(self, argparser):
         """Unrecognized metadata options should result in an error"""
         search = fixture_dir(['listing', 'valid-json'])
-        result = npc.commands.list([search], format='md', metadata='asdf')
+        result = npc.commands.listing([search], format='md', metadata='asdf')
         assert not result.success
