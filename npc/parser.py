@@ -1,11 +1,13 @@
-#!/usr/bin/env python3.5
+"""
+Parse character files into dictionaries
+"""
 
 import re
 import itertools
 from os import path, walk
 from collections import defaultdict
 
-def get_characters(search_paths = ['.'], ignore_paths = []):
+def get_characters(search_paths=None, ignore_paths=None):
     """
     Get data from character files
 
@@ -16,9 +18,12 @@ def get_characters(search_paths = ['.'], ignore_paths = []):
     Returns:
         List of dictionaries containing parsed character information
     """
+    if search_paths is None:
+        search_paths = ['.']
+
     return itertools.chain.from_iterable((_parse_path(path, ignore_paths) for path in search_paths))
 
-def _parse_path(start_path, ignore_paths = [], include_bare = False):
+def _parse_path(start_path, ignore_paths=None, include_bare=False):
     """
     Parse all the character files under a directory
 
@@ -33,14 +38,17 @@ def _parse_path(start_path, ignore_paths = [], include_bare = False):
     """
     if path.isfile(start_path):
         return [_parse_character(start_path)]
+    if ignore_paths is None:
+        ignore_paths = []
 
     characters = []
     for dirpath, _, files in _walk_ignore(start_path, ignore_paths):
         for name in files:
             target_path = path.join(dirpath, name)
             if target_path in ignore_paths:
+                # skip ignored files
                 continue
-            base, ext = path.splitext(name)
+            _, ext = path.splitext(name)
             if ext == '.nwod' or (include_bare and not ext):
                 data = _parse_character(target_path)
                 characters.append(data)
@@ -57,7 +65,7 @@ def _walk_ignore(root, ignore):
     Yields:
         A tuple (path, [dirs], [files]) as from `os.walk`.
     """
-    def included(d):
+    def included(base, check):
         """
         Determine whether a path should be searched
 
@@ -65,15 +73,16 @@ def _walk_ignore(root, ignore):
         list.
 
         Args:
-            d (str): The path to check
+            base (str): Parent path
+            check (str): The path to check
 
         Returns:
             True if d should be searched, false if it should be ignored
         """
-        return (path.join(dirpath, d) not in ignore) and (dirpath not in ignore)
+        return (path.join(base, check) not in ignore) and (base not in ignore)
 
     for dirpath, dirnames, filenames in walk(root, followlinks=True):
-        dirnames[:] = [d for d in dirnames if included(d)]
+        dirnames[:] = [d for d in dirnames if included(dirpath, d)]
         yield dirpath, dirnames, filenames
 
 def _parse_character(char_file_path):
@@ -89,9 +98,9 @@ def _parse_character(char_file_path):
         key stores a dict of list entries. Those keys are individual group
         names.
     """
-    name_re = re.compile('(?P<name>\w+(\s\w+)*)(?: - )?.*')
-    section_re = re.compile('^--.+--\s*$')
-    tag_re = re.compile('^@(?P<tag>\w+)\s+(?P<value>.*)$')
+    name_re = re.compile(r'(?P<name>\w+(\s\w+)*)(?: - )?.*')
+    section_re = re.compile(r'^--.+--\s*$')
+    tag_re = re.compile(r'^@(?P<tag>\w+)\s+(?P<value>.*)$')
 
     # Group-like tags. These all accept an accompanying `rank` tag.
     group_tags = ['group', 'court', 'motley']
