@@ -306,7 +306,7 @@ def session(prefs=None, **kwargs):
 
     return Result(True, openable=openable)
 
-def reorg(search, ignore=[], purge=False, verbose=False, prefs=None, **kwargs):
+def reorg(search, ignore=[], purge=False, verbose=False, dry=False, prefs=None, **kwargs):
     """
     Move character files into the correct paths.
 
@@ -319,6 +319,8 @@ def reorg(search, ignore=[], purge=False, verbose=False, prefs=None, **kwargs):
         purge (bool): Whether empty directories should be deleted after all
             files have been moved.
         verbose (bool): Whether to print changes as they are made
+        dry (bool): Whether to show the changes that would be made, but not
+            enact them.
         prefs (Settings): Settings object to use. Uses internal settings by
             default.
 
@@ -333,15 +335,17 @@ def reorg(search, ignore=[], purge=False, verbose=False, prefs=None, **kwargs):
     for c in characters:
         new_path = create_path_from_character(c, base_path, prefs)
         if new_path != path.dirname(c['path']):
-            if verbose:
+            if verbose or dry:
                 print("Moving {} to {}".format(c['path'], new_path))
-            shmove(c['path'], new_path)
+            if not dry:
+                shmove(c['path'], new_path)
 
     if purge:
         for empty_path in find_empty_dirs(base_path):
-            rmdir(empty_path)
-            if verbose:
+            if verbose or dry:
                 print("Removing empty directory {}".format(empty_path))
+            if not dry:
+                rmdir(empty_path)
 
     return Result(True)
 

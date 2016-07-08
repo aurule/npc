@@ -55,6 +55,12 @@ def test_partial_tree(campaign):
     character = campaign.get_character(os.path.join('Humans', 'JJ.nwod'))
     assert character.check()
 
+def test_dry_run(campaign):
+    campaign.populate_from_fixture_dir(['reorg', 'by_type'])
+    npc.commands.reorg(['Characters'], dry=True)
+    character = campaign.get_character('Alpha Mann.nwod')
+    assert character.check()
+
 class TestPurge:
     def test_removes_directories(self, campaign):
         """Removes empty directories with purge option"""
