@@ -59,7 +59,7 @@ def create_changeling(name, seeming, kith,
         'kith': kith
     }
     if court:
-        character['court'] = court
+        character['court'] = court.title()
     if motley:
         character['motley'] = motley
     if groups:
