@@ -1,4 +1,7 @@
-#!/usr/bin/env python3.5
+"""
+Helper functions shared between the other modules
+"""
+
 
 import re
 import json
@@ -24,11 +27,11 @@ def load_json(filename):
         List or dict from `json.loads()`
     """
     comment_re = re.compile(
-        '(^)?[^\S\n]*/(?:\*(.*?)\*/[^\S\n]*|/[^\n]*)($)?',
+        r'(^)?[^\S\n]*/(?:\*(.*?)\*/[^\S\n]*|/[^\n]*)($)?',
         re.DOTALL | re.MULTILINE
     )
-    with open(filename) as f:
-        content = ''.join(f.readlines())
+    with open(filename) as json_file:
+        content = ''.join(json_file.readlines())
 
         ## Looking for comments
         match = comment_re.search(content)
@@ -40,12 +43,13 @@ def load_json(filename):
         # Return parsed json
         try:
             return json.loads(content)
-        except json.decoder.JSONDecodeError as e:
-            e.nicemsg = "Bad syntax in '{0}' line {2} column {3}: {1}".format(filename, e.msg, e.lineno, e.colno)
-            raise e
-        except OSError as e:
-            e.nicemsg = "Could not load '{0}': {1}".format(filename, e.msg)
-            raise e
+        except json.decoder.JSONDecodeError as err:
+            nicestr = "Bad syntax in '{0}' line {2} column {3}: {1}"
+            err.nicemsg = nicestr.format(filename, err.msg, err.lineno, err.colno)
+            raise err
+        except OSError as err:
+            err.nicemsg = "Could not load '{0}': {1}".format(filename, err.strerror)
+            raise err
 
 def error(*args, **kwargs):
     """
