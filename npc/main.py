@@ -36,15 +36,15 @@ def cli(argv):
 
     try:
         chdir(base)
-    except OSError as e:
-        util.error("{}: '{}'".format(e.strerror, base))
+    except OSError as err:
+        util.error("{}: '{}'".format(err.strerror, base))
         return 4 # internal code for a filesystem error
 
     # load settings data
     try:
         prefs = settings.InternalSettings(args.debug)
-    except OSError as e:
-        util.error(e.strerror + " (%s)" % prefs.get_settings_path('default'))
+    except OSError as err:
+        util.error(err.strerror + " (%s)" % prefs.get_settings_path('default'))
         return 4
 
     if not settings.lint_changeling_settings(prefs):
@@ -74,8 +74,8 @@ def cli(argv):
             serial_args = []
 
         result = args.func(*serial_args, **full_args)
-    except AttributeError as e:
-        util.error(e)
+    except AttributeError as err:
+        util.error(err)
         parser.print_help()
         return 6
 
