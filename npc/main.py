@@ -1,5 +1,11 @@
 #!/usr/bin/env python3.5
 
+"""
+Main entry point for NPC
+
+Provides the cli method for interpreting commandline arguments.
+"""
+
 import argparse
 from os import chdir, getcwd, path
 from subprocess import run
