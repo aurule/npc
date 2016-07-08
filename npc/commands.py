@@ -1,4 +1,9 @@
-#!/usr/bin/env python3.5
+"""
+Individual command functions and their helpers
+
+These functions handle the real work of NPC. They can be called on their own
+without going through the CLI.
+"""
 
 import re
 import json
@@ -13,7 +18,7 @@ import itertools
 from . import formatters, linters, parser, util, settings
 
 def create_changeling(name, seeming, kith,
-                      court=None, motley=None, groups=[],
+                      court=None, motley=None, groups=None,
                       dead=False, foreign=False,
                       prefs=None, **kwargs):
     """
@@ -42,13 +47,15 @@ def create_changeling(name, seeming, kith,
     """
     if not prefs:
         prefs = settings.InternalSettings()
+    if groups is None:
+        groups = []
 
     seeming_re = re.compile(
-        '^(\s+)seeming(\s+)\w+$',
+        r'^(\s+)seeming(\s+)\w+$',
         re.MULTILINE | re.IGNORECASE
     )
     kith_re = re.compile(
-        '^(\s+)kith(\s+)\w+$',
+        r'^(\s+)kith(\s+)\w+$',
         re.MULTILINE | re.IGNORECASE
     )
 
@@ -70,12 +77,12 @@ def create_changeling(name, seeming, kith,
         character['foreign'] = foreign
 
     # get path for the new file
-    target_path = create_path_from_character(character, prefs = prefs)
+    target_path = create_path_from_character(character, prefs=prefs)
 
     filename = name + '.nwod'
     target_path = path.join(target_path, filename)
     if path.exists(target_path):
-        return Result(False, errmsg="Character '%s' already exists!" % name, errcode = 1)
+        return Result(False, errmsg="Character '%s' already exists!" % name, errcode=1)
 
     # Create tags
     seeming_name = seeming.title()
@@ -85,44 +92,44 @@ def create_changeling(name, seeming, kith,
         tags.append('@motley %s' % motley)
     if court:
         tags.append('@court %s' % court.title())
-    tags.extend(_make_std_tags(groups = groups, dead = dead, foreign = foreign))
+    tags.extend(_make_std_tags(groups=groups, dead=dead, foreign=foreign))
 
     header = "\n".join(tags) + '\n\n'
 
     # Copy template data
     try:
-        with open(prefs.get('templates.changeling'), 'r') as f:
-            data = header + f.read()
-    except IOError as e:
-        return Result(False, errmsg=e.strerror + " (%s)" % prefs.get('templates.changeling'), errcode=4)
+        with open(prefs.get('templates.changeling'), 'r') as template:
+            data = header + template.read()
+    except IOError as err:
+        return Result(False, errmsg=err.strerror + " (%s)" % prefs.get('templates.changeling'), errcode=4)
 
     # insert seeming and kith in the advantages block
-    sk = prefs.get('changeling')
+    sk_data = prefs.get('changeling')
     seeming_key = seeming.lower()
-    if seeming_key in sk['seemings']:
-        seeming_notes = "%s; %s" % (sk['blessings'][seeming_key], sk['curses'][seeming_key])
+    if seeming_key in sk_data['seemings']:
+        seeming_notes = "%s; %s" % (sk_data['blessings'][seeming_key], sk_data['curses'][seeming_key])
         data = seeming_re.sub(
-            '\g<1>Seeming\g<2>%s (%s)' % (seeming_name, seeming_notes),
+            r'\g<1>Seeming\g<2>%s (%s)' % (seeming_name, seeming_notes),
             data
         )
     kith_key = kith.lower()
-    if kith_key in sk['kiths']:
-        kith_notes = sk['blessings'][kith_key]
+    if kith_key in sk_data['kiths']:
+        kith_notes = sk_data['blessings'][kith_key]
         data = kith_re.sub(
-            '\g<1>Kith\g<2>%s (%s)' % (kith_name, kith_notes),
+            r'\g<1>Kith\g<2>%s (%s)' % (kith_name, kith_notes),
             data
         )
 
     # Save the new character
     try:
-        with open(target_path, 'w') as f:
-            f.write(data)
-    except IOError as e:
-        return Result(False, errmsg=e.strerror + " (%s)" % target_path, errcode=4)
+        with open(target_path, 'w') as target_file:
+            target_file.write(data)
+    except IOError as err:
+        return Result(False, errmsg=err.strerror + " (%s)" % target_path, errcode=4)
 
-    return Result(True, openable = [target_path])
+    return Result(True, openable=[target_path])
 
-def _make_std_tags(groups = [], dead = False, foreign = ""):
+def _make_std_tags(groups=None, dead=False, foreign=""):
     """
     Create standard tags that apply to all character types.
 
@@ -139,6 +146,9 @@ def _make_std_tags(groups = [], dead = False, foreign = ""):
     Returns:
         List of strings containing group, dead, and foreign tags.
     """
+    if groups is None:
+        groups = []
+
     tags = ["@group %s" % g for g in groups]
     if dead != False:
         dead_details = " %s" % dead if len(dead) else ""
@@ -147,7 +157,7 @@ def _make_std_tags(groups = [], dead = False, foreign = ""):
         tags.append("@foreign %s" % foreign)
     return tags
 
-def create_simple(name, ctype, groups=[], dead=False, foreign=False, prefs=None, **kwargs):
+def create_simple(name, ctype, groups=None, dead=False, foreign=False, prefs=None, **kwargs):
     """
     Create a character without extra processing.
 
@@ -173,6 +183,8 @@ def create_simple(name, ctype, groups=[], dead=False, foreign=False, prefs=None,
     """
     if not prefs:
         prefs = settings.InternalSettings()
+    if groups is None:
+        groups = []
 
     if ctype not in prefs.get('templates'):
         return Result(False, errmsg="Unrecognized template '%s'" % ctype, errcode=7)
@@ -189,16 +201,16 @@ def create_simple(name, ctype, groups=[], dead=False, foreign=False, prefs=None,
         character['foreign'] = foreign
 
     # get path for the new file
-    target_path = create_path_from_character(character, prefs = prefs)
+    target_path = create_path_from_character(character, prefs=prefs)
 
     filename = name + '.nwod'
     target_path = path.join(target_path, filename)
     if path.exists(target_path):
-        return Result(False, errmsg="Character '%s' already exists!" % name, errcode = 1)
+        return Result(False, errmsg="Character '%s' already exists!" % name, errcode=1)
 
     # Add tags
     typetag = ctype.title()
-    tags = ['@type %s' % typetag] + _make_std_tags(groups = groups, dead = dead, foreign = foreign)
+    tags = ['@type %s' % typetag] + _make_std_tags(groups=groups, dead=dead, foreign=foreign)
     header = "\n".join(tags) + '\n\n'
 
     # Copy template
@@ -216,7 +228,7 @@ def create_simple(name, ctype, groups=[], dead=False, foreign=False, prefs=None,
     except IOError as e:
         return Result(False, errmsg=e.strerror + " (%s)" % target_path, errcode=4)
 
-    return Result(True, openable = [target_path])
+    return Result(True, openable=[target_path])
 
 def _add_path_if_exists(base, potential):
     """Add a directory to the base path if that directory exists."""
@@ -243,13 +255,13 @@ def session(prefs=None, **kwargs):
     if not prefs:
         prefs = settings.InternalSettings()
 
-    plot_re = re.compile('(?i)^plot (\d+)$')
-    session_re = re.compile('(?i)^session (\d+)$')
+    plot_re = re.compile(r'(?i)^plot (\d+)$')
+    session_re = re.compile(r'(?i)^session (\d+)$')
 
     # find latest plot file and its number
     plot_files = [f.name for f in scandir(prefs.get('paths.plot')) if f.is_file() and plot_re.match(path.splitext(f.name)[0])]
     try:
-        latest_plot = max(plot_files, key=lambda plot_files:re.split(r"\s", plot_files)[1])
+        latest_plot = max(plot_files, key=lambda plot_files: re.split(r"\s", plot_files)[1])
         (latest_plot_name, latest_plot_ext) = path.splitext(latest_plot)
         plot_match = plot_re.match(latest_plot_name)
         plot_number = int(plot_match.group(1))
@@ -259,7 +271,7 @@ def session(prefs=None, **kwargs):
     # find latest session log and its number
     session_files = [f.name for f in scandir(prefs.get('paths.session')) if f.is_file() and session_re.match(path.splitext(f.name)[0])]
     try:
-        latest_session = max(session_files, key=lambda session_files:re.split(r"\s", session_files)[1])
+        latest_session = max(session_files, key=lambda session_files: re.split(r"\s", session_files)[1])
         (latest_session_name, latest_session_ext) = path.splitext(latest_session)
         session_match = session_re.match(latest_session_name)
         session_number = int(session_match.group(1))
@@ -279,7 +291,7 @@ def session(prefs=None, **kwargs):
             # present existing plot files, since we don't have to create one
             old_session_path = path.join(prefs.get('paths.session'), ("session %i" % (session_number - 1)) + latest_session_ext)
             new_session_path = path.join(prefs.get('paths.session'), latest_session)
-        openable.extend( (new_session_path, old_session_path) )
+        openable.extend((new_session_path, old_session_path))
     else:
         # no old session
         new_session_path = path.join(prefs.get('paths.session'), ("session %i.md" % new_number))
@@ -296,7 +308,7 @@ def session(prefs=None, **kwargs):
             # present existing sessions files, since we don't have to create one
             old_plot_path = path.join(prefs.get('paths.plot'), ("plot %i" % (plot_number - 1)) + latest_plot_ext)
             new_plot_path = path.join(prefs.get('paths.plot'), latest_plot)
-        openable.extend( (new_plot_path, old_plot_path) )
+        openable.extend((new_plot_path, old_plot_path))
     else:
         # no old plot to copy, so use a blank
         new_plot_path = path.join(prefs.get('paths.plot'), ("plot %i.md" % new_number))
@@ -657,7 +669,7 @@ def lint(search, ignore=[], fix=False, prefs=None, **kwargs):
 
     return Result(True, openable)
 
-def init(create_types = False, create_all = False, prefs=None, **kwargs):
+def init(create_types=False, create_all=False, prefs=None, **kwargs):
     """
     Create the basic directories for a campaign.
 
@@ -689,7 +701,7 @@ def init(create_types = False, create_all = False, prefs=None, **kwargs):
 
     return Result(True)
 
-def open_settings(location, show_defaults = False, prefs=None, **kwargs):
+def open_settings(location, show_defaults=False, prefs=None, **kwargs):
     """
     Open the named settings file.
 
@@ -722,7 +734,7 @@ def open_settings(location, show_defaults = False, prefs=None, **kwargs):
         openable = [prefs.get_settings_path('default'), target_path]
     else:
         openable = [target_path]
-    return Result(True, openable = openable)
+    return Result(True, openable=openable)
 
 class Result:
     """
@@ -747,7 +759,7 @@ class Result:
         errmsg (str): Human-readable error message. Will be displayed to the
             user.
     """
-    def __init__(self, success, openable = None, errcode = 0, errmsg = ''):
+    def __init__(self, success, openable=None, errcode=0, errmsg=''):
         super(Result, self).__init__()
         self.success = success
         self.openable = openable
