@@ -1,5 +1,10 @@
+"""
+Handle settings storage and fetching
+
+Also has a helper function to check loaded settings for faults.
+"""
+
 import json
-import sys
 from os import path
 
 from . import util
@@ -35,7 +40,7 @@ class Settings:
     settings_files = ['settings.json', 'settings-changeling.json']
     settings_paths = [default_settings_path, user_settings_path, campaign_settings_path]
 
-    def __init__(self, verbose = False):
+    def __init__(self, verbose=False):
         """
         Loads all settings files.
 
@@ -56,18 +61,20 @@ class Settings:
         self.verbose = verbose
         self.data = util.load_json(path.join(self.default_settings_path, 'settings-default.json'))
 
-        for k, v in self.data['templates'].items():
-            self.data['templates'][k] = path.join(self.install_base, v)
+        # massage template names into real paths
+        for key, filename in self.data['templates'].items():
+            self.data['templates'][key] = path.join(self.install_base, filename)
 
+        # merge additional settings files
         for settings_path in self.settings_paths:
             for file in self.settings_files:
                 try:
                     self.load_more(path.join(settings_path, file))
-                except OSError as e:
+                except OSError as err:
                     # All of these files are optional, so normally we silently
                     # ignore these errors
                     if self.verbose:
-                        util.error(e.strerror, e.filename)
+                        util.error(err.strerror, err.filename)
 
     def load_more(self, settings_path):
         """
@@ -82,13 +89,24 @@ class Settings:
         """
         try:
             loaded = util.load_json(settings_path)
-        except json.decoder.JSONDecodeError as e:
-            util.error(e.nicemsg)
+        except json.decoder.JSONDecodeError as err:
+            util.error(err.nicemsg)
             return
 
         def evaluate_paths(base, loaded, key):
+            """
+            Get the canonical path for paths in a dict
+
+            Args:
+                base (str): Base path to use
+                loaded (dict): Dict containing an element 'key' whose value is a dict of paths
+                key (any): Key containing a dict of paths to evaluate
+
+            Returns:
+                No return value. Instead, replaces the paths in loaded['key'].
+            """
             if key in loaded:
-                loaded[key] = {k: path.join(absolute_path_base, path.expanduser(v)) for k, v in loaded[key].items()}
+                loaded[key] = {k: path.join(base, path.expanduser(v)) for k, v in loaded[key].items()}
 
         # paths should be evaluated relative to the settings file in settings_path
         absolute_path_base = path.dirname(path.realpath(settings_path))
@@ -118,14 +136,14 @@ class Settings:
         """
         dest = dict(orig)
 
-        for k, v in new_data.items():
-            if k in dest:
-                if isinstance(dest[k], dict):
-                    dest[k] = self._merge_settings(v, dest[k])
+        for key, val in new_data.items():
+            if key in dest:
+                if isinstance(dest[key], dict):
+                    dest[key] = self._merge_settings(val, dest[key])
                 else:
-                    dest[k] = v
+                    dest[key] = val
             else:
-                dest[k] = v
+                dest[key] = val
 
         return dest
 
@@ -148,7 +166,7 @@ class Settings:
         if settings_type == 'campaign':
             return path.join(self.campaign_settings_path, 'settings.json')
 
-    def get(self, key, default = None):
+    def get(self, key, default=None):
         """
         Get the value of a settings key
 
@@ -164,17 +182,29 @@ class Settings:
             The value in that key, or None if the key could not be resolved.
         """
         key_parts = key.split('.')
-        d = self.data
+        current_data = self.data
         for k in key_parts:
             try:
-                d = d[k]
+                current_data = current_data[k]
             except KeyError:
                 if self.verbose:
                     util.error("Key not found: %s" % key)
                 return default
-        return d
+        return current_data
 
     def get_metadata(self, fmt):
+        """
+        Get the configured extra metadata keys for a given format
+
+        Merges configured metadata keys from the all block with those in the
+        blcok for fmt.
+
+        Args:
+            fmt (str): Format identifier. Must appear in the settings files.
+
+        Returns:
+            Dict of metadata keys and values.
+        """
         return {**self.get('additional_metadata.all'), **self.get('additional_metadata.%s' % fmt)}
 
 class InternalSettings(Settings, metaclass=util.Singleton):
@@ -206,24 +236,24 @@ def lint_changeling_settings(prefs):
     seemings = set(prefs.get('changeling.seemings', []))
     kiths = set(prefs.get('changeling.kiths', []))
 
-    ok = (blessing_keys.issuperset(seemings) and
-            curse_keys.issuperset(seemings) and
-            blessing_keys.issuperset(kiths))
+    ok_result = (blessing_keys.issuperset(seemings) and
+                 curse_keys.issuperset(seemings) and
+                 blessing_keys.issuperset(kiths))
 
-    if not ok:
+    if not ok_result:
         util.error("Mismatch in changeling settings")
 
         if not blessing_keys.issuperset(seemings):
             util.error("    Seemings without blessings:")
-            for s in seemings.difference(blessing_keys):
-                util.error("        %s" % s)
+            for seeming in seemings.difference(blessing_keys):
+                util.error("        %s" % seeming)
         if not curse_keys.issuperset(seemings):
             util.error("    Seemings without curses:")
-            for s in seemings.difference(curse_keys):
-                util.error("        %s" % s)
+            for seeming in seemings.difference(curse_keys):
+                util.error("        %s" % seeming)
         if not blessing_keys.issuperset(kiths):
             util.error("    Kiths without blessings:")
-            for k in kiths.difference(blessing_keys):
-                util.error("        %s" % k)
+            for kith in kiths.difference(blessing_keys):
+                util.error("        %s" % kith)
 
-    return ok
+    return ok_result
