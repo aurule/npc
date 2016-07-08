@@ -622,34 +622,34 @@ def lint(search, ignore=[], fix=False, prefs=None, **kwargs):
         prefs = settings.InternalSettings()
 
     openable = []
-    problems = []
 
     # check each character
     characters = parser.get_characters(search, ignore)
-    for c in characters:
+    for character in characters:
+        problems = []
         # Check description
-        if not c['description'].strip():
+        if not character['description'].strip():
             problems.append("Missing description")
 
         # Check type tag
-        if not 'type' in c:
+        if not 'type' in character:
             problems.append("Missing @type tag")
         else:
             # Do additional processing based on reported type
-            types = [t.lower() for t in c['type']]
+            types = [t.lower() for t in character['type']]
             if 'changeling' in types:
                 # find (and fix) changeling-specific problems in the body of the sheet
-                problems.extend(linters.changeling.lint(c, fix=fix, sk=prefs.get('changeling')))
+                problems.extend(linters.changeling.lint(character, fix=fix, sk=prefs.get('changeling')))
 
         # Report problems on one line if possible, or as a block if there's more than one
         if len(problems):
-            openable.append(c['path'])
+            openable.append(character['path'])
             if len(problems) > 1:
-                print("File '%s':" % c['path'])
+                print("File '%s':" % character['path'])
                 for p in problems:
                     print("    %s" % p)
             else:
-                print("%s in '%s'" % (problems[0], c['path']))
+                print("%s in '%s'" % (problems[0], character['path']))
 
     return Result(True, openable)
 
