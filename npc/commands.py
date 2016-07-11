@@ -17,10 +17,9 @@ import itertools
 # local packages
 from . import formatters, linters, parser, settings
 
-def create_changeling(name, seeming, kith,
-                      court=None, motley=None, groups=None,
-                      dead=False, foreign=False,
-                      prefs=None, **kwargs):
+def create_changeling(name, seeming, kith, *,
+                      court=None, motley=None,
+                      dead=False, foreign=False, **kwargs):
     """
     Create a Changeling character.
 
@@ -31,24 +30,22 @@ def create_changeling(name, seeming, kith,
         kith (str): Name of the character's Kith. Added to the file with notes.
         court (str|none): Name of the character's Court. Used to derive path.
         motley (str|none): Name of the character's Motley.
-        groups (list): One or more names of groups the character belongs to.
-            Used to derive path.
         dead (bool|str): Whether to add the @dead tag. Pass False to exclude it
             (the default), an empty string to inlcude it with no details given,
             and a non-empty string to include the tag along with the contents of
             the argument.
         foreign (bool): Details of non-standard residence. Leave empty to
             exclude the @foreign tag.
+        groups (list): One or more names of groups the character belongs to.
+            Used to derive path.
         prefs (Settings): Settings object to use. Uses internal settings by
             default.
 
     Returns:
         Result object. Openable will contain the path to the new character file.
     """
-    if not prefs:
-        prefs = settings.InternalSettings()
-    if groups is None:
-        groups = []
+    prefs = kwargs.get('prefs', settings.InternalSettings())
+    groups = kwargs.get('groups', [])
 
     seeming_re = re.compile(
         r'^(\s+)seeming(\s+)\w+$',
@@ -157,7 +154,7 @@ def _make_std_tags(groups=None, dead=False, foreign=""):
         tags.append("@foreign %s" % foreign)
     return tags
 
-def create_simple(name, ctype, groups=None, dead=False, foreign=False, prefs=None, **kwargs):
+def create_simple(name, ctype, *, dead=False, foreign=False, **kwargs):
     """
     Create a character without extra processing.
 
@@ -167,24 +164,22 @@ def create_simple(name, ctype, groups=None, dead=False, foreign=False, prefs=Non
     Args:
         name (str): Base file name. Format is "<character name> - <brief note>".
         ctype (str): Character type. Must have a template configured in prefs.
-        groups (list): One or more names of groups the character belongs to.
-            Used to derive path.
         dead (bool|str): Whether to add the @dead tag. Pass False to exclude it
             (the default), an empty string to inlcude it with no details given,
             and a non-empty string to include the tag along with the contents of
             the argument.
         foreign (bool): Details of non-standard residence. Leave empty to
             exclude the @foreign tag.
+        groups (list): One or more names of groups the character belongs to.
+            Used to derive path.
         prefs (Settings): Settings object to use. Uses internal settings by
             default.
 
     Returns:
         Result object. Openable will contain the new character file.
     """
-    if not prefs:
-        prefs = settings.InternalSettings()
-    if groups is None:
-        groups = []
+    prefs = kwargs.get('prefs', settings.InternalSettings())
+    groups = kwargs.get('groups', [])
 
     if ctype not in prefs.get('templates'):
         return Result(False, errmsg="Unrecognized template '%s'" % ctype, errcode=7)
@@ -237,7 +232,7 @@ def _add_path_if_exists(base, potential):
         return test_path
     return base
 
-def session(prefs=None, **kwargs):
+def session(**kwargs):
     """
     Create the files for a new game session.
 
@@ -252,8 +247,7 @@ def session(prefs=None, **kwargs):
         Result object. Openable will contain the current and previous session
         log and plot planning files.
     """
-    if not prefs:
-        prefs = settings.InternalSettings()
+    prefs = kwargs.get('prefs', settings.InternalSettings())
 
     plot_re = re.compile(r'(?i)^plot (\d+)$')
     session_re = re.compile(r'(?i)^session (\d+)$')
@@ -318,7 +312,7 @@ def session(prefs=None, **kwargs):
 
     return Result(True, openable=openable)
 
-def reorg(search, ignore=None, purge=False, verbose=False, dry=False, prefs=None, **kwargs):
+def reorg(search, ignore=None, *, purge=False, verbose=False, dry=False, **kwargs):
     """
     Move character files into the correct paths.
 
@@ -339,8 +333,7 @@ def reorg(search, ignore=None, purge=False, verbose=False, dry=False, prefs=None
     Returns:
         Result object. Openable will be empty.
     """
-    if not prefs:
-        prefs = settings.InternalSettings()
+    prefs = kwargs.get('prefs', settings.InternalSettings())
     if not ignore:
         ignore = []
 
@@ -426,7 +419,7 @@ def create_path_from_character(character, target_path=None, prefs=None):
 
     return target_path
 
-def listing(search, ignore=None, fmt='markdown', metadata=None, outfile=None, prefs=None, **kwargs):
+def listing(search, ignore=None, *, fmt='markdown', metadata=None, outfile=None, **kwargs):
     """
     Generate a listing of NPCs.
 
@@ -452,8 +445,7 @@ def listing(search, ignore=None, fmt='markdown', metadata=None, outfile=None, pr
     Returns:
         Result object. Openable will contain the output file if given.
     """
-    if not prefs:
-        prefs = settings.InternalSettings()
+    prefs = kwargs.get('prefs', settings.InternalSettings())
     if not ignore:
         ignore = []
 
@@ -566,7 +558,7 @@ def _smart_open(filename=None):
         if stream is not sys.stdout:
             stream.close()
 
-def dump(search, ignore=None, sort=False, metadata=False, outfile=None, prefs=None, **kwargs):
+def dump(search, ignore=None, *, sort=False, metadata=False, outfile=None, **kwargs):
     """
     Dump the raw character data, unaltered.
 
@@ -586,8 +578,7 @@ def dump(search, ignore=None, sort=False, metadata=False, outfile=None, prefs=No
         Result object. If outfile pointed to a real file, the openable attribute
         will contain that filename.
     """
-    if not prefs:
-        prefs = settings.InternalSettings()
+    prefs = kwargs.get('prefs', settings.InternalSettings())
     if not ignore:
         ignore = []
 
@@ -614,7 +605,7 @@ def dump(search, ignore=None, sort=False, metadata=False, outfile=None, prefs=No
 
     return Result(True, openable=openable)
 
-def lint(search, ignore=None, fix=False, prefs=None, **kwargs):
+def lint(search, ignore=None, *, fix=False, **kwargs):
     """
     Check character files for completeness and correctness.
 
@@ -640,8 +631,7 @@ def lint(search, ignore=None, fix=False, prefs=None, **kwargs):
         Result object. On success, openable attribute will contain a list of all
         files that had errors.
     """
-    if not prefs:
-        prefs = settings.InternalSettings()
+    prefs = kwargs.get('prefs', settings.InternalSettings())
     if not ignore:
         ignore = []
 
@@ -677,7 +667,7 @@ def lint(search, ignore=None, fix=False, prefs=None, **kwargs):
 
     return Result(True, openable)
 
-def init(create_types=False, create_all=False, prefs=None, **kwargs):
+def init(create_types=False, create_all=False, **kwargs):
     """
     Create the basic directories for a campaign.
 
@@ -695,8 +685,7 @@ def init(create_types=False, create_all=False, prefs=None, **kwargs):
     Returns:
         Result object. Openable will be empty.
     """
-    if not prefs:
-        prefs = settings.InternalSettings()
+    prefs = kwargs.get('prefs', settings.InternalSettings())
 
     for _, basic_path in prefs.get('paths').items():
         makedirs(basic_path, mode=0o775, exist_ok=True)
@@ -709,7 +698,7 @@ def init(create_types=False, create_all=False, prefs=None, **kwargs):
 
     return Result(True)
 
-def open_settings(location, show_defaults=False, prefs=None, **kwargs):
+def open_settings(location, show_defaults=False, **kwargs):
     """
     Open the named settings file.
 
@@ -728,8 +717,7 @@ def open_settings(location, show_defaults=False, prefs=None, **kwargs):
         was passed in show_defaults, it will also contain the reference settings
         file.
     """
-    if not prefs:
-        prefs = settings.InternalSettings()
+    prefs = kwargs.get('prefs', settings.InternalSettings())
 
     target_path = prefs.get_settings_path(location)
     if not path.exists(target_path):
