@@ -464,12 +464,12 @@ def listing(search, ignore=None, *, fmt='markdown', metadata=None, outfile=None,
         # call out to get the markdown
         with _smart_open(outfile) as outstream:
             meta = prefs.get_metadata('markdown')
-            response = formatters.markdown.dump(characters, outstream, metadata_type, meta)
+            response = formatters.markdown.dump(characters, outstream, include_metadata=metadata_type, metadata_extra=meta)
     elif out_type == 'json':
         # make some json
         with _smart_open(outfile) as outstream:
             meta = prefs.get_metadata('json')
-            response = formatters.json.dump(characters, outstream, metadata, meta)
+            response = formatters.json.dump(characters, outstream, include_metadata=metadata, metadata_extra=meta)
 
     else:
         return Result(False, errmsg="Cannot create output of format '%s'", errcode=5)
