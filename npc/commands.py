@@ -18,8 +18,7 @@ import itertools
 from . import formatters, linters, parser, settings
 
 def create_changeling(name, seeming, kith, *,
-                      court=None, motley=None,
-                      dead=False, foreign=False, **kwargs):
+                      court=None, motley=None, dead=False, foreign=False, **kwargs):
     """
     Create a Changeling character.
 
@@ -340,7 +339,7 @@ def reorg(search, ignore=None, *, purge=False, verbose=False, dry=False, **kwarg
     base_path = prefs.get('paths.characters')
     characters = parser.get_characters(search, ignore)
     for char_data in characters:
-        new_path = create_path_from_character(char_data, base_path, prefs)
+        new_path = create_path_from_character(char_data, target_path=base_path)
         if new_path != path.dirname(char_data['path']):
             if verbose or dry:
                 print("Moving {} to {}".format(char_data['path'], new_path))
@@ -370,7 +369,7 @@ def find_empty_dirs(root):
         if not dirs and not files:
             yield dirpath
 
-def create_path_from_character(character, target_path=None, prefs=None):
+def create_path_from_character(character, *, target_path=None, **kwargs):
     """
     Determine the best file path for a character.
 
@@ -386,8 +385,7 @@ def create_path_from_character(character, target_path=None, prefs=None):
     Returns:
         Constructed file path based on the character data.
     """
-    if not prefs:
-        prefs = settings.InternalSettings()
+    prefs = kwargs.get('prefs', settings.InternalSettings())
 
     if not target_path:
         target_path = prefs.get('paths.characters')
