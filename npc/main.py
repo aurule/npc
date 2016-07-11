@@ -132,7 +132,7 @@ def _make_parser():
     paths_parser.set_defaults(serialize=['search'])
 
     # This is the main parser which handles program-wide options. These should be kept sparse.
-    parser = argparse.ArgumentParser(description = 'GM helper script to manage game files')
+    parser = argparse.ArgumentParser(description='GM helper script to manage game files')
     parser.add_argument('-b', '--batch', action='store_true', default=False, help="Do not open any newly created files")
     parser.add_argument('--campaign', default='auto', help="Use the campaign files in a different directory", metavar='DIR')
     parser.add_argument('--debug', action='store_true', default=False, help="Show all error messages, not just important ones")
