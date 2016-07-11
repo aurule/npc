@@ -58,27 +58,11 @@ def dump(characters, outstream, *, include_metadata=None, metadata_extra=None):
 
         # info block
         info_block = []
-
-        # AKA line (info block)
-        if len(char['name']) > 1:
-            info_block.append('*AKA %s*' % ", ".join(char['name'][1:]))
-
-        #  Titles line (info block)
-        if 'title' in char:
-            info_block.append(', '.join(char['title']))
-
-        # character type and dependent values (info block)
-        info_block.append(_build_character_type(char))
-
-        # subtype information (info block)
-        subtype = _build_character_subtype(char)
-        if subtype:
-            info_block.append(subtype)
-
-        # list all groups (info block)
-        secondary_groups = _build_secondary_groups(char)
-        if secondary_groups:
-            info_block.append('Member of %s' % secondary_groups)
+        _append_aka_line(char['name'], info_block)
+        _append_titles_line(char.get('title', []), info_block)
+        _append_character_type_line(char, info_block)
+        _append_character_subtype_line(char, info_block)
+        _append_secondary_groups(char, info_block)
 
         outstream.write('  \n'.join(info_block))
         outstream.write('\n')
@@ -104,9 +88,40 @@ def dump(characters, outstream, *, include_metadata=None, metadata_extra=None):
         outstream.write("\n")
     return commands.Result(True)
 
-def _build_character_type(char):
+def _get_character_type(char):
+    return char['type'][0].lower()
+
+def _append_aka_line(names, info_block):
+    """
+    Build the AKA line for a character's names
+
+    Appends a line like "*AKA name1, name2*" to info_block.
+
+    Args:
+        names (list): Additional names for the character
+        info_block (list): Target list of info lines
+    """
+    if len(names) > 1:
+        info_block.append('*AKA %s*' % ", ".join(names[1:]))
+
+def _append_titles_line(titles, info_block):
+    """
+    Build the Titles line for a character's titles
+
+    Appends a comma-spearated list of titles to info_block.
+
+    Args:
+        titles (list): Titles the character has
+        info_block (list): Target list of info lines
+    """
+    if titles:
+        info_block.append(', '.join(titles))
+
+def _append_character_type_line(char, info_block):
     """
     Build the character type line
+
+    Appends a line describing the character's type and primary affiliation to info_block.
 
     The values in this line vary by character type.
 
@@ -119,43 +134,63 @@ def _build_character_type(char):
         2. first @group if present
 
     Args:
-        char (dict): Character data
-
-    Returns:
-        String of character type info
+        char (dict): Character information
+        info_block (list): Target list of info lines
     """
-    character_type = char['type'][0].lower()
-    if character_type == 'changeling':
-        type_parts = []
-        base = 'Changeling'
-        if 'foreign' in char:
-            base += ' in %s' % ' and '.join(char['foreign'])
-        type_parts.append(base)
+
+    type_parts = []
+    base = char['type'][0]
+    if 'foreign' in char:
+        base += ' in %s' % ' and '.join(char['foreign'])
+    type_parts.append(base)
+
+    character_type_code = _get_character_type(char)
+    if character_type_code == 'changeling':
         if 'motley' in char:
             motley = char['motley'][0]
-            slug = _add_group_ranks('%s Motley' % motley, motley, char)
+            slug = _add_group_ranks('%s Motley' % motley, motley, char['rank'])
             type_parts.append(slug)
 
         if 'court' in char:
             court = char['court'][0]
-            slug = _add_group_ranks('%s Court' % court, court, char)
+            slug = _add_group_ranks('%s Court' % court, court, char['rank'])
             type_parts.append(slug)
-
-        return ', '.join(type_parts)
     else:
-        type_parts = []
-        base = char['type'][0]
-        if 'foreign' in char:
-            base += ' in %s' % ' and '.join(char['foreign'])
-        type_parts.append(base)
         if 'group' in char:
             group = char['group'][0]
-            slug = _add_group_ranks(group, group, char)
+            slug = _add_group_ranks(group, group, char['rank'])
             type_parts.append(slug)
 
-        return ', '.join(type_parts)
+    info_block.append(', '.join(type_parts))
 
-def _add_group_ranks(slug, name, char):
+def _append_character_subtype_line(char, info_block):
+    """
+    Append the subtype line for a character
+
+    Appends a line to info_block for certain character types.
+
+    Changeling characters:
+        1. Seemings, separated by a slash ('/')
+        2. Kiths, separated by a slash ('/')
+    All others:
+        No subtype line is appended
+
+    Args:
+        char (dict): Character info
+        info_block (list): Target list of info lines
+    """
+    character_type = _get_character_type(char)
+    if character_type == 'changeling' and (
+            'seeming' in char or
+            'kith' in char):
+        subtype_parts = []
+        if 'seeming' in char:
+            subtype_parts.append('/'.join(char['seeming']))
+        if 'kith' in char:
+            subtype_parts.append('/'.join(char['kith']))
+        info_block.append(' '.join(subtype_parts))
+
+def _add_group_ranks(slug, name, ranks):
     """
     Add ranks to a group
 
@@ -167,44 +202,14 @@ def _add_group_ranks(slug, name, char):
     Returns:
         Complete group string with ranks
     """
-    if name in char['rank']:
-        slug += " (%s)" % ', '.join(char['rank'][name])
+    if name in ranks:
+        return slug + " (%s)" % ', '.join(ranks[name])
+
     return slug
 
-def _build_character_subtype(char):
+def _append_secondary_groups(char, info_block):
     """
-    Build the subtype string for a character
-
-    The subtype may or may not exist based on the character's type. It also
-    takes different forms based on type.
-
-    * changeling:
-        1. Seemings, separated by a slash ('/')
-        2. Kiths, separated by a slash ('/')
-    * all others: no subtype (returns None)
-
-    Args:
-        char (dict): Character info
-
-    Returns:
-        String of character subtype information, or None if no subtype info is present/matters
-    """
-    character_type = char['type'][0].lower()
-    if character_type == 'changeling' and (
-            'seeming' in char or
-            'kith' in char):
-        subtype_parts = []
-        if 'seeming' in char:
-            subtype_parts.append('/'.join(char['seeming']))
-        if 'kith' in char:
-            subtype_parts.append('/'.join(char['kith']))
-        return ' '.join(subtype_parts)
-    else:
-        return None
-
-def _build_secondary_groups(char):
-    """
-    Build the list of other groups the character belongs to
+    Build lines for other groups the character belongs to
 
     The first group listed usually ends up in the character type line. This
     method builds the list of other groups. Its contents are somewhat dependent
@@ -220,38 +225,22 @@ def _build_secondary_groups(char):
 
     Args:
         char (dict): Character info
-
-    Returns:
-        Description of the groups the character belongs to
+        info_block (list): Target list of info lines
     """
-    character_type = char['type'][0].lower()
     group_parts = []
+
+    character_type = _get_character_type(char)
     if character_type == "changeling":
-        if 'court' in char and len(char['court']) > 1:
-            for court in char['court'][1:]:
-                slug = _add_group_ranks('%s court' % court, court, char)
-                group_parts.append(slug)
-        if 'motley' in char and len(char['motley']) > 1:
-            for motley in char['motley'][1:]:
-                slug = _add_group_ranks('%s Motley' % motley, motley, char)
-                group_parts.append(slug)
-        if 'group' in char:
-            for group in char['group']:
-                slug = _add_group_ranks(group, group, char)
-                group_parts.append(slug)
+        for court in char.get('court', [])[1:]:
+            group_parts.append(_add_group_ranks('%s court' % court, court, char['rank']))
 
-        return ', '.join(group_parts)
-    else:
-        if 'motley' in char and len(char['motley']) > 1:
-            for motley in char['motley'][1:]:
-                slug = _add_group_ranks('%s Motley' % motley, motley, char)
-                group_parts.append(slug)
-        if 'group' in char:
-            for group in char['group'][1:]:
-                slug = _add_group_ranks(group, group, char)
-                group_parts.append(slug)
+    for motley in char.get('motley', [])[1:]:
+        group_parts.append(_add_group_ranks('%s Motley' % motley, motley, char['rank']))
+    for group in char.get('group', []):
+        group_parts.append(_add_group_ranks(group, group, char['rank']))
 
-        return ', '.join(group_parts)
+    if group_parts:
+        info_block.append(', '.join(group_parts))
 
 def _build_appearance(char):
     """
@@ -271,7 +260,7 @@ def _build_appearance(char):
     Returns:
         Appearance description string
     """
-    character_type = char['type'][0].lower()
+    character_type = _get_character_type(char)
     if character_type == 'changeling':
         appearance_parts = []
         if 'appearance' in char:
