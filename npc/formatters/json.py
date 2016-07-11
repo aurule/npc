@@ -1,8 +1,15 @@
+"""
+Formatter for creating json exports of a set of characters.
+
+Has a single entry point `dump` which mostly just inserts metadata and calls
+`json.dump`.
+"""
+
 import json
 from datetime import datetime
 from .. import commands
 
-def dump(characters, f, include_metadata=False, metadata_extra={}, **kwargs):
+def dump(characters, outstream, *, include_metadata=False, metadata_extra=None):
     """
     Dump a json representation of all character data
 
@@ -10,7 +17,7 @@ def dump(characters, f, include_metadata=False, metadata_extra={}, **kwargs):
 
     Args:
         characters (list): Character dicts to dump
-        f (stream): Output stream to receive the json output
+        outstream (stream): Output stream to receive the json output
             include_metadata (bool): Whether to insert a metadata object. The
             metadata object will always include a title and creation date, along
             with the key `"meta": true` to distinguish it from character data.
@@ -21,6 +28,9 @@ def dump(characters, f, include_metadata=False, metadata_extra={}, **kwargs):
     Returns:
         A commands.Result object. Openable will not be set.
     """
+    if not metadata_extra:
+        metadata_extra = {}
+
     if include_metadata:
         base_meta = {
             'meta': True,
@@ -31,7 +41,7 @@ def dump(characters, f, include_metadata=False, metadata_extra={}, **kwargs):
         characters = [meta] + characters
 
     try:
-        json.dump(characters, f)
-    except Exception as e:
-        return commands.Result(False, errmsg=e, errcode=9)
+        json.dump(characters, outstream)
+    except TypeError as err:
+        return commands.Result(False, errmsg=err, errcode=9)
     return commands.Result(True)
