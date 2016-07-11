@@ -15,7 +15,7 @@ from shutil import copy as shcopy, move as shmove
 import itertools
 
 # local packages
-from . import formatters, linters, parser, util, settings
+from . import formatters, linters, parser, settings
 
 def create_changeling(name, seeming, kith,
                       court=None, motley=None, groups=None,
@@ -43,7 +43,7 @@ def create_changeling(name, seeming, kith,
             default.
 
     Returns:
-        Result object. Openable will contain the new character file.
+        Result object. Openable will contain the path to the new character file.
     """
     if not prefs:
         prefs = settings.InternalSettings()
@@ -216,17 +216,17 @@ def create_simple(name, ctype, groups=None, dead=False, foreign=False, prefs=Non
     # Copy template
     template = prefs.get('templates.%s' % ctype)
     try:
-        with open(template, 'r') as f:
-            data = header + f.read()
-    except IOError as e:
-        return Result(False, errmsg=e.strerror + " (%s)" % template, errcode=4)
+        with open(template, 'r') as template_data:
+            data = header + template_data.read()
+    except IOError as err:
+        return Result(False, errmsg=err.strerror + " (%s)" % template, errcode=4)
 
     # Write the new file
     try:
-        with open(target_path, 'w') as f:
-            f.write(data)
-    except IOError as e:
-        return Result(False, errmsg=e.strerror + " (%s)" % target_path, errcode=4)
+        with open(target_path, 'w') as char_file:
+            char_file.write(data)
+    except IOError as err:
+        return Result(False, errmsg=err.strerror + " (%s)" % target_path, errcode=4)
 
     return Result(True, openable=[target_path])
 
@@ -312,13 +312,13 @@ def session(prefs=None, **kwargs):
     else:
         # no old plot to copy, so use a blank
         new_plot_path = path.join(prefs.get('paths.plot'), ("plot %i.md" % new_number))
-        with open(new_plot_path, 'w') as f:
-            f.write(' ')
+        with open(new_plot_path, 'w') as new_plot:
+            new_plot.write(' ')
         openable.append(new_plot_path)
 
     return Result(True, openable=openable)
 
-def reorg(search, ignore=[], purge=False, verbose=False, dry=False, prefs=None, **kwargs):
+def reorg(search, ignore=None, purge=False, verbose=False, dry=False, prefs=None, **kwargs):
     """
     Move character files into the correct paths.
 
@@ -341,16 +341,18 @@ def reorg(search, ignore=[], purge=False, verbose=False, dry=False, prefs=None, 
     """
     if not prefs:
         prefs = settings.InternalSettings()
+    if not ignore:
+        ignore = []
 
     base_path = prefs.get('paths.characters')
     characters = parser.get_characters(search, ignore)
-    for c in characters:
-        new_path = create_path_from_character(c, base_path, prefs)
-        if new_path != path.dirname(c['path']):
+    for char_data in characters:
+        new_path = create_path_from_character(char_data, base_path, prefs)
+        if new_path != path.dirname(char_data['path']):
             if verbose or dry:
-                print("Moving {} to {}".format(c['path'], new_path))
+                print("Moving {} to {}".format(char_data['path'], new_path))
             if not dry:
-                shmove(c['path'], new_path)
+                shmove(char_data['path'], new_path)
 
     if purge:
         for empty_path in find_empty_dirs(base_path):
@@ -424,14 +426,14 @@ def create_path_from_character(character, target_path=None, prefs=None):
 
     return target_path
 
-def listing(search, ignore=[], format='markdown', metadata=None, outfile=None, prefs=None, **kwargs):
+def listing(search, ignore=None, fmt='markdown', metadata=None, outfile=None, prefs=None, **kwargs):
     """
     Generate a listing of NPCs.
 
     Args:
         search (list): Paths to search for character files
         ignore (list): Paths to ignore
-        format (str): Format of the output. Supported types are 'markdown'
+        fmt (str): Format of the output. Supported types are 'markdown'
             ('md'), and 'json'.
         metadata (str|None): Whether to include metadata in the output and what
             kind of metadata to use. Pass 'default' to use the format configured
@@ -452,10 +454,12 @@ def listing(search, ignore=[], format='markdown', metadata=None, outfile=None, p
     """
     if not prefs:
         prefs = settings.InternalSettings()
+    if not ignore:
+        ignore = []
 
     characters = _sort_chars(_prune_chars(parser.get_characters(search, ignore)))
 
-    out_type = format.lower()
+    out_type = fmt.lower()
     if out_type == "default":
         out_type = prefs.get('default_list_format')
 
@@ -466,14 +470,14 @@ def listing(search, ignore=[], format='markdown', metadata=None, outfile=None, p
             metadata_type = prefs.get('metadata_format.markdown')
 
         # call out to get the markdown
-        with _smart_open(outfile) as f:
+        with _smart_open(outfile) as outstream:
             meta = prefs.get_metadata('markdown')
-            response = formatters.markdown.dump(characters, f, metadata_type, meta)
+            response = formatters.markdown.dump(characters, outstream, metadata_type, meta)
     elif out_type == 'json':
         # make some json
-        with _smart_open(outfile) as f:
+        with _smart_open(outfile) as outstream:
             meta = prefs.get_metadata('json')
-            response = formatters.json.dump(characters, f, metadata, meta)
+            response = formatters.json.dump(characters, outstream, metadata, meta)
 
     else:
         return Result(False, errmsg="Cannot create output of format '%s'", errcode=5)
@@ -517,20 +521,20 @@ def _prune_chars(characters):
         Dictionary of characters with modified information.
     """
 
-    for c in characters:
+    for char in characters:
         # skip if asked
-        if 'skip' in c:
+        if 'skip' in char:
             continue
 
         # use fake types if present
-        if 'faketype' in c:
-            c['type'] = c['faketype']
+        if 'faketype' in char:
+            char['type'] = char['faketype']
 
         # Use a placeholder for unknown type
-        if 'type' not in c:
-            c['type'] = 'Unknown'
+        if 'type' not in char:
+            char['type'] = 'Unknown'
 
-        yield c
+        yield char
 
 @contextmanager
 def _smart_open(filename=None):
@@ -552,17 +556,17 @@ def _smart_open(filename=None):
 
     """
     if filename and filename != '-':
-        fh = open(filename, 'w')
+        stream = open(filename, 'w')
     else:
-        fh = sys.stdout
+        stream = sys.stdout
 
     try:
-        yield fh
+        yield stream
     finally:
-        if fh is not sys.stdout:
-            fh.close()
+        if stream is not sys.stdout:
+            stream.close()
 
-def dump(search, ignore=[], sort=False, metadata=False, outfile=None, prefs=None, **kwargs):
+def dump(search, ignore=None, sort=False, metadata=False, outfile=None, prefs=None, **kwargs):
     """
     Dump the raw character data, unaltered.
 
@@ -584,6 +588,8 @@ def dump(search, ignore=[], sort=False, metadata=False, outfile=None, prefs=None
     """
     if not prefs:
         prefs = settings.InternalSettings()
+    if not ignore:
+        ignore = []
 
     characters = parser.get_characters(search, ignore)
     if sort:
@@ -599,8 +605,8 @@ def dump(search, ignore=[], sort=False, metadata=False, outfile=None, prefs=None
         meta = {**base_meta, **prefs.get_metadata('json')}
         characters = itertools.chain([meta], characters)
 
-    with _smart_open(outfile) as f:
-        json.dump([c for c in characters], f)
+    with _smart_open(outfile) as outstream:
+        json.dump([c for c in characters], outstream)
 
     openable = None
     if outfile and outfile != '-':
@@ -608,7 +614,7 @@ def dump(search, ignore=[], sort=False, metadata=False, outfile=None, prefs=None
 
     return Result(True, openable=openable)
 
-def lint(search, ignore=[], fix=False, prefs=None, **kwargs):
+def lint(search, ignore=None, fix=False, prefs=None, **kwargs):
     """
     Check character files for completeness and correctness.
 
@@ -636,6 +642,8 @@ def lint(search, ignore=[], fix=False, prefs=None, **kwargs):
     """
     if not prefs:
         prefs = settings.InternalSettings()
+    if not ignore:
+        ignore = []
 
     openable = []
 
@@ -662,8 +670,8 @@ def lint(search, ignore=[], fix=False, prefs=None, **kwargs):
             openable.append(character['path'])
             if len(problems) > 1:
                 print("File '%s':" % character['path'])
-                for p in problems:
-                    print("    %s" % p)
+                for detail in problems:
+                    print("    %s" % detail)
             else:
                 print("%s in '%s'" % (problems[0], character['path']))
 
@@ -690,14 +698,14 @@ def init(create_types=False, create_all=False, prefs=None, **kwargs):
     if not prefs:
         prefs = settings.InternalSettings()
 
-    for k, p in prefs.get('paths').items():
-        makedirs(p, mode=0o775, exist_ok=True)
+    for _, basic_path in prefs.get('paths').items():
+        makedirs(basic_path, mode=0o775, exist_ok=True)
     makedirs('.npc', mode=0o775, exist_ok=True)
 
     if create_types or create_all:
         cbase = prefs.get('paths.characters')
-        for k, p in prefs.get('type_paths').items():
-            makedirs(path.join(cbase, p), mode=0o775, exist_ok=True)
+        for _, type_path in prefs.get('type_paths').items():
+            makedirs(path.join(cbase, type_path), mode=0o775, exist_ok=True)
 
     return Result(True)
 
@@ -727,8 +735,8 @@ def open_settings(location, show_defaults=False, prefs=None, **kwargs):
     if not path.exists(target_path):
         dirname = path.dirname(target_path)
         makedirs(dirname, mode=0o775, exist_ok=True)
-        with open(target_path, 'a') as f:
-            f.write('{}')
+        with open(target_path, 'a') as settings_file:
+            settings_file.write('{}')
 
     if show_defaults:
         openable = [prefs.get_settings_path('default'), target_path]
