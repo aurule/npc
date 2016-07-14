@@ -93,9 +93,12 @@ class Result:
         errmsg (str): Human-readable error message. Will be displayed to the
             user.
     """
-    def __init__(self, success, openable=None, errcode=0, errmsg=''):
+    def __init__(self, success, **kwargs):
         super(Result, self).__init__()
         self.success = success
-        self.openable = openable
-        self.errcode = errcode
-        self.errmsg = errmsg
+        self.openable = kwargs.get('openable')
+        self.errcode = kwargs.get('errcode', 0)
+        self.errmsg = kwargs.get('errmsg', '')
+
+    def __str__(self):
+        return self.errmsg

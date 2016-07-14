@@ -79,7 +79,7 @@ def cli(argv):
 
     # handle errors
     if not result.success:
-        util.error(result.errmsg)
+        util.error(result)
         return result.errcode
 
     # open the resulting files, if allowed
