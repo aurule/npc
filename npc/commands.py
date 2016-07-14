@@ -343,6 +343,9 @@ def reorg(search, ignore=None, *, purge=False, verbose=False, dry=False, **kwarg
         ignore = []
 
     base_path = prefs.get('paths.characters')
+    if not path.exists(base_path):
+        return Result(False, errmsg="Cannot access '{}'".format(base_path), errcode=4)
+
     characters = parser.get_characters(search, ignore)
     for char_data in characters:
         new_path = create_path_from_character(char_data, target_path=base_path)
