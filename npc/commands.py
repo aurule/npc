@@ -476,7 +476,7 @@ def listing(search, ignore=None, *, fmt='markdown', metadata=None, outfile=None,
             response = formatters.json.dump(characters, outstream, include_metadata=metadata, metadata_extra=meta)
 
     else:
-        return Result(False, errmsg="Cannot create output of format '%s'", errcode=5)
+        return Result(False, errmsg="Cannot create output of format '{}'".format(out_type), errcode=5)
 
     if not response.success:
         return response
