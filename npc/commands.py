@@ -94,11 +94,12 @@ def create_changeling(name, seeming, kith, *,
     header = "\n".join(tags) + '\n\n'
 
     # Copy template data
+    template_path = prefs.get('templates.changeling')
     try:
-        with open(prefs.get('templates.changeling'), 'r') as template:
+        with open(template_path, 'r') as template:
             data = header + template.read()
     except IOError as err:
-        return Result(False, errmsg=err.strerror + " ({})".format(prefs.get('templates.changeling')), errcode=4)
+        return Result(False, errmsg=err.strerror + " ({})".format(template_path), errcode=4)
 
     # insert seeming and kith in the advantages block
     sk_data = prefs.get('changeling')
