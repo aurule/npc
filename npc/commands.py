@@ -248,12 +248,17 @@ def session(**kwargs):
         log and plot planning files.
     """
     prefs = kwargs.get('prefs', settings.InternalSettings())
+    plot_path = prefs.get('paths.plot')
+    session_path = prefs.get('paths.session')
+
+    if not (path.exists(plot_path) and path.exists(session_path)):
+        return Result(False, errmsg="Cannot access paths '{}' and/or '{}'".format(plot_path, session_path), errcode=4)
 
     plot_re = re.compile(r'(?i)^plot (\d+)$')
     session_re = re.compile(r'(?i)^session (\d+)$')
 
     # find latest plot file and its number
-    plot_files = [f.name for f in scandir(prefs.get('paths.plot')) if f.is_file() and plot_re.match(path.splitext(f.name)[0])]
+    plot_files = [f.name for f in scandir(plot_path) if f.is_file() and plot_re.match(path.splitext(f.name)[0])]
     try:
         latest_plot = max(plot_files, key=lambda plot_files: re.split(r"\s", plot_files)[1])
         (latest_plot_name, latest_plot_ext) = path.splitext(latest_plot)
@@ -263,7 +268,7 @@ def session(**kwargs):
         plot_number = 0
 
     # find latest session log and its number
-    session_files = [f.name for f in scandir(prefs.get('paths.session')) if f.is_file() and session_re.match(path.splitext(f.name)[0])]
+    session_files = [f.name for f in scandir(session_path) if f.is_file() and session_re.match(path.splitext(f.name)[0])]
     try:
         latest_session = max(session_files, key=lambda session_files: re.split(r"\s", session_files)[1])
         (latest_session_name, latest_session_ext) = path.splitext(latest_session)
@@ -278,34 +283,34 @@ def session(**kwargs):
     if session_number:
         if session_number < new_number:
             # create new session log
-            old_session_path = path.join(prefs.get('paths.session'), latest_session)
-            new_session_path = path.join(prefs.get('paths.session'), ("session %i" % new_number) + latest_session_ext)
+            old_session_path = path.join(session_path, latest_session)
+            new_session_path = path.join(session_path, ("session %i" % new_number) + latest_session_ext)
             shcopy(prefs.get('templates.session'), new_session_path)
         else:
             # present existing plot files, since we don't have to create one
-            old_session_path = path.join(prefs.get('paths.session'), ("session %i" % (session_number - 1)) + latest_session_ext)
-            new_session_path = path.join(prefs.get('paths.session'), latest_session)
+            old_session_path = path.join(session_path, ("session %i" % (session_number - 1)) + latest_session_ext)
+            new_session_path = path.join(session_path, latest_session)
         openable.extend((new_session_path, old_session_path))
     else:
         # no old session
-        new_session_path = path.join(prefs.get('paths.session'), ("session %i.md" % new_number))
+        new_session_path = path.join(session_path, ("session %i.md" % new_number))
         shcopy(prefs.get('templates.session'), new_session_path)
         openable.append(new_session_path)
 
     if plot_number:
         if plot_number < new_number:
             # copy old plot
-            old_plot_path = path.join(prefs.get('paths.plot'), latest_plot)
-            new_plot_path = path.join(prefs.get('paths.plot'), ("plot %i" % new_number) + latest_plot_ext)
+            old_plot_path = path.join(plot_path, latest_plot)
+            new_plot_path = path.join(plot_path, ("plot %i" % new_number) + latest_plot_ext)
             shcopy(old_plot_path, new_plot_path)
         else:
             # present existing sessions files, since we don't have to create one
-            old_plot_path = path.join(prefs.get('paths.plot'), ("plot %i" % (plot_number - 1)) + latest_plot_ext)
-            new_plot_path = path.join(prefs.get('paths.plot'), latest_plot)
+            old_plot_path = path.join(plot_path, ("plot %i" % (plot_number - 1)) + latest_plot_ext)
+            new_plot_path = path.join(plot_path, latest_plot)
         openable.extend((new_plot_path, old_plot_path))
     else:
         # no old plot to copy, so use a blank
-        new_plot_path = path.join(prefs.get('paths.plot'), ("plot %i.md" % new_number))
+        new_plot_path = path.join(plot_path, ("plot %i.md" % new_number))
         with open(new_plot_path, 'w') as new_plot:
             new_plot.write(' ')
         openable.append(new_plot_path)
