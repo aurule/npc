@@ -188,7 +188,7 @@ class Settings:
                 current_data = current_data[k]
             except KeyError:
                 if self.verbose:
-                    util.error("Key not found: %s" % key)
+                    util.error("Key not found: {}".format(key))
                 return default
         return current_data
 
@@ -205,7 +205,7 @@ class Settings:
         Returns:
             Dict of metadata keys and values.
         """
-        return {**self.get('additional_metadata.all'), **self.get('additional_metadata.%s' % fmt)}
+        return {**self.get('additional_metadata.all'), **self.get('additional_metadata.{}'.format(fmt))}
 
 class InternalSettings(Settings, metaclass=util.Singleton):
     """
@@ -246,14 +246,14 @@ def lint_changeling_settings(prefs):
         if not blessing_keys.issuperset(seemings):
             util.error("    Seemings without blessings:")
             for seeming in seemings.difference(blessing_keys):
-                util.error("        %s" % seeming)
+                util.error("        {}".format(seeming))
         if not curse_keys.issuperset(seemings):
             util.error("    Seemings without curses:")
             for seeming in seemings.difference(curse_keys):
-                util.error("        %s" % seeming)
+                util.error("        {}".format(seeming))
         if not blessing_keys.issuperset(kiths):
             util.error("    Kiths without blessings:")
             for kith in kiths.difference(blessing_keys):
-                util.error("        %s" % kith)
+                util.error("        {}".format(kith))
 
     return ok_result

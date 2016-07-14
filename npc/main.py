@@ -42,7 +42,7 @@ def cli(argv):
     try:
         prefs = settings.InternalSettings(args.debug)
     except OSError as err:
-        util.error(err.strerror + " (%s)" % prefs.get_settings_path('default'))
+        util.error(err.strerror + " ({})".format(prefs.get_settings_path('default')))
         return 4
 
     if not settings.lint_changeling_settings(prefs):

@@ -43,7 +43,7 @@ def dump(characters, outstream, *, include_metadata=None, metadata_extra=None):
         else:
             return util.Result(
                 False,
-                errmsg="Unrecognized metadata format option '%s'" % include_metadata,
+                errmsg="Unrecognized metadata format option '{}'".format(include_metadata),
                 errcode=6)
 
         outstream.write(metadata)
@@ -51,7 +51,7 @@ def dump(characters, outstream, *, include_metadata=None, metadata_extra=None):
     for char in characters:
         # name (header)
         realname = char['name'][0]
-        outstream.write("# %s" % realname)
+        outstream.write("# {}".format(realname))
         if 'dead' in char:
             outstream.write(" (Deceased)")
         outstream.write("\n\n")
@@ -102,7 +102,7 @@ def _append_aka_line(names, info_block):
         info_block (list): Target list of info lines
     """
     if len(names) > 1:
-        info_block.append('*AKA %s*' % ", ".join(names[1:]))
+        info_block.append('*AKA {}*'.format(", ".join(names[1:])))
 
 def _append_titles_line(titles, info_block):
     """
@@ -141,19 +141,19 @@ def _append_character_type_line(char, info_block):
     type_parts = []
     base = char['type'][0]
     if 'foreign' in char:
-        base += ' in %s' % ' and '.join(char['foreign'])
+        base += ' in {}'.format(' and '.join(char['foreign']))
     type_parts.append(base)
 
     character_type_code = _get_character_type(char)
     if character_type_code == 'changeling':
         if 'motley' in char:
             motley = char['motley'][0]
-            slug = _add_group_ranks('%s Motley' % motley, motley, char['rank'])
+            slug = _add_group_ranks('{} Motley'.format(motley, motley, char['rank']))
             type_parts.append(slug)
 
         if 'court' in char:
             court = char['court'][0]
-            slug = _add_group_ranks('%s Court' % court, court, char['rank'])
+            slug = _add_group_ranks('{} Court'.format(court, court, char['rank']))
             type_parts.append(slug)
     else:
         if 'group' in char:
@@ -203,7 +203,7 @@ def _add_group_ranks(slug, name, ranks):
         Complete group string with ranks
     """
     if name in ranks:
-        return slug + " (%s)" % ', '.join(ranks[name])
+        return slug + " ({})".format(', '.join(ranks[name]))
 
     return slug
 
@@ -232,10 +232,10 @@ def _append_secondary_groups(char, info_block):
     character_type = _get_character_type(char)
     if character_type == "changeling":
         for court in char.get('court', [])[1:]:
-            group_parts.append(_add_group_ranks('%s court' % court, court, char['rank']))
+            group_parts.append(_add_group_ranks('{} court'.format(court, court, char['rank'])))
 
     for motley in char.get('motley', [])[1:]:
-        group_parts.append(_add_group_ranks('%s Motley' % motley, motley, char['rank']))
+        group_parts.append(_add_group_ranks('{} Motley'.format(motley, motley, char['rank'])))
     for group in char.get('group', []):
         group_parts.append(_add_group_ranks(group, group, char['rank']))
 

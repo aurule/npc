@@ -79,16 +79,16 @@ def create_changeling(name, seeming, kith, *,
     filename = name + '.nwod'
     target_path = path.join(target_path, filename)
     if path.exists(target_path):
-        return Result(False, errmsg="Character '%s' already exists!" % name, errcode=1)
+        return Result(False, errmsg="Character '{}' already exists!".format(name), errcode=1)
 
     # Create tags
     seeming_name = seeming.title()
     kith_name = kith.title()
-    tags = ['@changeling %s %s' % (seeming_name, kith_name)]
+    tags = ['@changeling {} {}'.format(seeming_name, kith_name)]
     if motley:
-        tags.append('@motley %s' % motley)
+        tags.append('@motley {}'.format(motley))
     if court:
-        tags.append('@court %s' % court.title())
+        tags.append('@court {}'.format(court.title()))
     tags.extend(_make_std_tags(groups=groups, dead=dead, foreign=foreign))
 
     header = "\n".join(tags) + '\n\n'
@@ -98,22 +98,22 @@ def create_changeling(name, seeming, kith, *,
         with open(prefs.get('templates.changeling'), 'r') as template:
             data = header + template.read()
     except IOError as err:
-        return Result(False, errmsg=err.strerror + " (%s)" % prefs.get('templates.changeling'), errcode=4)
+        return Result(False, errmsg=err.strerror + " ({})".format(prefs.get('templates.changeling')), errcode=4)
 
     # insert seeming and kith in the advantages block
     sk_data = prefs.get('changeling')
     seeming_key = seeming.lower()
     if seeming_key in sk_data['seemings']:
-        seeming_notes = "%s; %s" % (sk_data['blessings'][seeming_key], sk_data['curses'][seeming_key])
+        seeming_notes = "{}; {}".format(sk_data['blessings'][seeming_key], sk_data['curses'][seeming_key])
         data = seeming_re.sub(
-            r'\g<1>Seeming\g<2>%s (%s)' % (seeming_name, seeming_notes),
+            r"\g<1>Seeming\g<2>{} ({})".format(seeming_name, seeming_notes),
             data
         )
     kith_key = kith.lower()
     if kith_key in sk_data['kiths']:
         kith_notes = sk_data['blessings'][kith_key]
         data = kith_re.sub(
-            r'\g<1>Kith\g<2>%s (%s)' % (kith_name, kith_notes),
+            r"\g<1>Kith\g<2>{} ({})".format(kith_name, kith_notes),
             data
         )
 
@@ -122,7 +122,7 @@ def create_changeling(name, seeming, kith, *,
         with open(target_path, 'w') as target_file:
             target_file.write(data)
     except IOError as err:
-        return Result(False, errmsg=err.strerror + " (%s)" % target_path, errcode=4)
+        return Result(False, errmsg=err.strerror + " ({})".format(target_path), errcode=4)
 
     return Result(True, openable=[target_path])
 
@@ -146,12 +146,12 @@ def _make_std_tags(groups=None, dead=False, foreign=""):
     if groups is None:
         groups = []
 
-    tags = ["@group %s" % g for g in groups]
+    tags = ["@group {}".format(g) for g in groups]
     if dead != False:
-        dead_details = " %s" % dead if len(dead) else ""
-        tags.append("@dead%s" % dead_details)
+        dead_details = " {}".format(dead) if len(dead) else ""
+        tags.append("@dead{}".format(dead_details))
     if foreign:
-        tags.append("@foreign %s" % foreign)
+        tags.append("@foreign {}".format(foreign))
     return tags
 
 def create_simple(name, ctype, *, dead=False, foreign=False, **kwargs):
@@ -182,7 +182,7 @@ def create_simple(name, ctype, *, dead=False, foreign=False, **kwargs):
     groups = kwargs.get('groups', [])
 
     if ctype not in prefs.get('templates'):
-        return Result(False, errmsg="Unrecognized template '%s'" % ctype, errcode=7)
+        return Result(False, errmsg="Unrecognized template '{}'".format(ctype), errcode=7)
 
     # build minimal character dict
     character = {
@@ -201,27 +201,27 @@ def create_simple(name, ctype, *, dead=False, foreign=False, **kwargs):
     filename = name + '.nwod'
     target_path = path.join(target_path, filename)
     if path.exists(target_path):
-        return Result(False, errmsg="Character '%s' already exists!" % name, errcode=1)
+        return Result(False, errmsg="Character '{}' already exists!".format(name), errcode=1)
 
     # Add tags
     typetag = ctype.title()
-    tags = ['@type %s' % typetag] + _make_std_tags(groups=groups, dead=dead, foreign=foreign)
+    tags = ['@type {}'.format(typetag)] + _make_std_tags(groups=groups, dead=dead, foreign=foreign)
     header = "\n".join(tags) + '\n\n'
 
     # Copy template
-    template = prefs.get('templates.%s' % ctype)
+    template = prefs.get('templates.{}'.format(ctype))
     try:
         with open(template, 'r') as template_data:
             data = header + template_data.read()
     except IOError as err:
-        return Result(False, errmsg=err.strerror + " (%s)" % template, errcode=4)
+        return Result(False, errmsg=err.strerror + " ({})".format(template), errcode=4)
 
     # Write the new file
     try:
         with open(target_path, 'w') as char_file:
             char_file.write(data)
     except IOError as err:
-        return Result(False, errmsg=err.strerror + " (%s)" % target_path, errcode=4)
+        return Result(False, errmsg=err.strerror + " ({})".format(target_path), errcode=4)
 
     return Result(True, openable=[target_path])
 
@@ -399,7 +399,7 @@ def create_path_from_character(character, *, target_path=None, **kwargs):
     # add type-based directory if we can
     if 'type' in character:
         ctype = character['type'][0].lower()
-        target_path = _add_path_if_exists(target_path, prefs.get('type_paths.%s' % ctype))
+        target_path = _add_path_if_exists(target_path, prefs.get('type_paths.{}'.format(ctype)))
     else:
         ctype = 'none'
 
@@ -663,11 +663,11 @@ def lint(search, ignore=None, *, fix=False, **kwargs):
         if len(problems):
             openable.append(character['path'])
             if len(problems) > 1:
-                print("File '%s':" % character['path'])
+                print("File '{}':".format(character['path']))
                 for detail in problems:
-                    print("    %s" % detail)
+                    print("    {}".format(detail))
             else:
-                print("%s in '%s'" % (problems[0], character['path']))
+                print("{} in '{}'".format(problems[0], character['path']))
 
     return Result(True, openable=openable)
 

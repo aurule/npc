@@ -1,8 +1,8 @@
 import re
 
 replaceable = ('x', 'y')
-seeming_regex = '^(?P<name>\s+seeming\s+)(?P<seeming>%s)[ \t]*(?P<notes>\(.*\))?$'
-kith_regex = '^(?P<name>\s+kith\s+)(?P<kith>%s)[ \t]*(?P<notes>\(.*\))?$'
+seeming_regex = '^(?P<name>\s+seeming\s+)(?P<seeming>{})[ \t]*(?P<notes>\(.*\))?$'
+kith_regex = '^(?P<name>\s+kith\s+)(?P<kith>{})[ \t]*(?P<notes>\(.*\))?$'
 
 def lint(character, fix = False, sk = None, **kwargs):
     """
@@ -33,11 +33,11 @@ def lint(character, fix = False, sk = None, **kwargs):
 
     # Check that only one court is present
     if 'court' in character and len(character['court']) > 1:
-        problems.append("Multiple courts: %s" % ', '.join(character['court']))
+        problems.append("Multiple courts: {}".format(', '.join(character['court'])))
 
     # Check that only one motley is present
     if 'motley' in character and len(character['motley']) > 1:
-        problems.append("Multiple motleys: %s" % ', '.join(character['motley']))
+        problems.append("Multiple motleys: {}".format(', '.join(character['motley'])))
 
     # Check that seeming tag exists and is valid
     seeming_tags = None
@@ -47,7 +47,7 @@ def lint(character, fix = False, sk = None, **kwargs):
         seeming_tags = [t.lower() for t in character['seeming']] # used later
         for seeming_name in character['seeming']:
             if seeming_name.lower() not in sk['seemings']:
-                problems.append("Unrecognized @seeming '%s'" % seeming_name)
+                problems.append("Unrecognized @seeming '{}'".format(seeming_name))
 
     # Check that kith tag exists and is valid
     kith_tags = None
@@ -57,7 +57,7 @@ def lint(character, fix = False, sk = None, **kwargs):
         kith_tags = [t.lower() for t in character['kith']] # used later
         for kith_name in character['kith']:
             if kith_name.lower() not in sk['kiths']:
-                problems.append("Unrecognized @kith '%s'" % kith_name)
+                problems.append("Unrecognized @kith '{}'".format(kith_name))
 
     # tags are ok. now compare against listed seeming and kith in stats
 
@@ -67,7 +67,7 @@ def lint(character, fix = False, sk = None, **kwargs):
         if seeming_tags:
             # ensure the listed seemings match our seeming tags
             seeming_re = re.compile(
-                seeming_regex % '\w+',
+                seeming_regex.format(r'\w+'),
                 re.MULTILINE | re.IGNORECASE
             )
             seeming_matches = list(seeming_re.finditer(data))
@@ -80,12 +80,17 @@ def lint(character, fix = False, sk = None, **kwargs):
                     if fix:
                         seeming_tag = seeming_tags[0]
                         try:
-                            seeming_line = "%s (%s; %s)" % (seeming_tag.title(), sk['blessings'][seeming_tag], sk['curses'][seeming_tag])
+                            seeming_parts = {
+                                'title': seeming_tag.title(),
+                                'seeming': sk['blessings'][seeming_tag],
+                                'kith': sk['curses'][seeming_tag]
+                            }
+                            seeming_line = "{title} ({seeming}; {kith})".format(seeming_parts)
                         except IndexError:
-                            seeming_line = "%s" % seeming_tag.title()
+                            seeming_line = seeming_tag.title()
 
                         data = seeming_re.sub(
-                            '\g<1>%s' % seeming_line,
+                            r'\g<1>{}'.format(seeming_line),
                             data
                         )
                         problems[-1] += ' (placeholder; FIXED)'
@@ -100,9 +105,9 @@ def lint(character, fix = False, sk = None, **kwargs):
                         continue
 
                     loaded_seeming_notes = m.group('notes')
-                    seeming_notes = "(%s; %s)" % (sk['blessings'][seeming_tag], sk['curses'][seeming_tag])
+                    seeming_notes = "({}; {})".format(sk['blessings'][seeming_tag], sk['curses'][seeming_tag])
                     if not loaded_seeming_notes:
-                        problems.append("Missing notes for Seeming '%s'" % m.group('seeming'))
+                        problems.append("Missing notes for Seeming '{}'".format(m.group('seeming')))
                         if fix:
                             data = _fix_seeming_notes(m.group('seeming'), seeming_notes, data)
                             problems[-1] += ' (FIXED)'
@@ -111,7 +116,7 @@ def lint(character, fix = False, sk = None, **kwargs):
                             problems[-1] += ' (can fix)'
                     else:
                         if loaded_seeming_notes != seeming_notes:
-                            problems.append("Incorrect notes for Seeming '%s'" % m.group('seeming'))
+                            problems.append("Incorrect notes for Seeming '{}'".format(m.group('seeming')))
                             if fix:
                                 data = _fix_seeming_notes(m.group('seeming'), seeming_notes, data)
                                 problems[-1] += ' (FIXED)'
@@ -123,7 +128,7 @@ def lint(character, fix = False, sk = None, **kwargs):
         if kith_tags:
             # ensure the listed kiths match our kith tags
             kith_re = re.compile(
-                kith_regex % '\w+( \w+)?',
+                kith_regex.format(r'\w+( \w+)?'),
                 re.MULTILINE | re.IGNORECASE
             )
             kith_matches = list(kith_re.finditer(data))
@@ -136,12 +141,12 @@ def lint(character, fix = False, sk = None, **kwargs):
                     if fix:
                         kith_tag = kith_tags[0]
                         try:
-                            kith_line = "%s (%s)" % (kith_tag.title(), sk['blessings'][kith_tag])
+                            kith_line = "{} ({})".format(kith_tag.title(), sk['blessings'][kith_tag])
                         except IndexError:
-                            kith_line = "%s" % kith_tag.title()
+                            kith_line = kith_tag.title()
 
                         data = kith_re.sub(
-                            '\g<1>%s' % kith_line,
+                            r'\g<1>{}'.format(kith_line),
                             data
                         )
                         problems[-1] += ' (placeholder; FIXED)'
@@ -156,9 +161,9 @@ def lint(character, fix = False, sk = None, **kwargs):
                         continue
 
                     loaded_kith_notes = m.group('notes')
-                    kith_notes = "(%s)" % (sk['blessings'][kith_tag])
+                    kith_notes = "({})".format(sk['blessings'][kith_tag])
                     if not loaded_kith_notes:
-                        problems.append("Missing notes for Kith '%s'" % m.group('kith'))
+                        problems.append("Missing notes for Kith '{}'".format(m.group('kith')))
                         if fix:
                             data = _fix_kith_notes(m.group('kith'), kith_notes, data)
                             problems[-1] += ' (FIXED)'
@@ -167,7 +172,7 @@ def lint(character, fix = False, sk = None, **kwargs):
                             problems[-1] += ' (can fix)'
                     else:
                         if loaded_kith_notes != kith_notes:
-                            problems.append("Incorrect notes for Kith '%s'" % m.group('kith'))
+                            problems.append("Incorrect notes for Kith '{}'".format(m.group('kith')))
                             if fix:
                                 data = _fix_kith_notes(m.group('kith'), kith_notes, data)
                                 problems[-1] += ' (FIXED)'
@@ -194,11 +199,11 @@ def _fix_seeming_notes(seeming, notes, data):
         Altered string character data with the new notes inserted
     """
     seeming_fix_re = re.compile(
-        seeming_regex % seeming,
+        seeming_regex.format(seeming),
         re.MULTILINE | re.IGNORECASE
     )
     return seeming_fix_re.sub(
-        '\g<1>\g<2> %s' % notes,
+        r'\g<1>\g<2> {}'.format(notes),
         data
     )
 
@@ -215,10 +220,10 @@ def _fix_kith_notes(kith, notes, data):
         Altered string character data with the new notes inserted
     """
     kith_fix_re = re.compile(
-        kith_regex % kith,
+        kith_regex.format(kith),
         re.MULTILINE | re.IGNORECASE
     )
     return kith_fix_re.sub(
-        '\g<1>\g<2> %s' % notes,
+        r'\g<1>\g<2> {}'.format(notes),
         data
     )
