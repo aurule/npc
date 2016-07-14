@@ -69,3 +69,33 @@ class Singleton(type):
         if cls not in cls._instances:
             cls._instances[cls] = super(Singleton, cls).__call__(*args, **kwargs)
         return cls._instances[cls]
+
+class Result:
+    """
+    Data about the result of a subcommand
+
+    Attributes:
+        success (bool): Whether the subcommand ran correctly
+        openable (list): Paths to files which were changed by or are relevant to
+            the subcommand
+        errcode (int): Error code indicating the type of error encountered.
+
+            Error codes:
+            0 -- Everything's fine
+            1 -- Tried to create a file that already exists
+            2 -- Latest plot and session files have different numbers
+            3 -- Feature is not yet implemented
+            4 -- Filesystem error
+            5 -- Unrecognized format
+            6 -- Invalid option
+            7 -- Unrecognized template
+            8 -- Missing required file
+        errmsg (str): Human-readable error message. Will be displayed to the
+            user.
+    """
+    def __init__(self, success, openable=None, errcode=0, errmsg=''):
+        super(Result, self).__init__()
+        self.success = success
+        self.openable = openable
+        self.errcode = errcode
+        self.errmsg = errmsg

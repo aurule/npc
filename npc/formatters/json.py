@@ -7,7 +7,7 @@ Has a single entry point `dump` which mostly just inserts metadata and calls
 
 import json
 from datetime import datetime
-from .. import commands
+from .. import util
 
 def dump(characters, outstream, *, include_metadata=False, metadata_extra=None):
     """
@@ -26,7 +26,7 @@ def dump(characters, outstream, *, include_metadata=False, metadata_extra=None):
             will overwrite the generated values for those keys.
 
     Returns:
-        A commands.Result object. Openable will not be set.
+        A util.Result object. Openable will not be set.
     """
     if not metadata_extra:
         metadata_extra = {}
@@ -43,5 +43,5 @@ def dump(characters, outstream, *, include_metadata=False, metadata_extra=None):
     try:
         json.dump(characters, outstream)
     except TypeError as err:
-        return commands.Result(False, errmsg=err, errcode=9)
-    return commands.Result(True)
+        return util.Result(False, errmsg=err, errcode=9)
+    return util.Result(True)

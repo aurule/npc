@@ -19,8 +19,8 @@ def cli(argv):
         argv (list): Arguments from the command invocation
 
     Returns:
-        Return code indicating success or failure type. See `commands.Result`
-        for a list of return codes.
+        Return code indicating success or failure type. See `util.Result` for a
+        list of return codes.
     """
 
     # create parser and parse args

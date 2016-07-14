@@ -5,7 +5,7 @@ Has a single entry point `dump`.
 """
 
 from datetime import datetime
-from .. import commands
+from .. import util
 
 def dump(characters, outstream, *, include_metadata=None, metadata_extra=None):
     """
@@ -23,7 +23,7 @@ def dump(characters, outstream, *, include_metadata=None, metadata_extra=None):
             overwrite the generated values for those keys.
 
     Returns:
-        A commands.Result object. Openable will not be set.
+        A util.Result object. Openable will not be set.
     """
     if not metadata_extra:
         metadata_extra = {}
@@ -41,7 +41,7 @@ def dump(characters, outstream, *, include_metadata=None, metadata_extra=None):
             metadata_lines = ['{}: {}'.format(k, v) for k, v in metadata_raw.items()]
             metadata = "---\n" + "\n".join(metadata_lines) + "\n---\n"
         else:
-            return commands.Result(
+            return util.Result(
                 False,
                 errmsg="Unrecognized metadata format option '%s'" % include_metadata,
                 errcode=6)
@@ -86,7 +86,7 @@ def dump(characters, outstream, *, include_metadata=None, metadata_extra=None):
             outstream.write("\n")
 
         outstream.write("\n")
-    return commands.Result(True)
+    return util.Result(True)
 
 def _get_character_type(char):
     return char['type'][0].lower()
