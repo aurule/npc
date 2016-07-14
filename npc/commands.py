@@ -664,7 +664,7 @@ def lint(search, ignore=None, *, fix=False, **kwargs):
             else:
                 print("%s in '%s'" % (problems[0], character['path']))
 
-    return Result(True, openable)
+    return Result(True, openable=openable)
 
 def init(create_types=False, create_all=False, **kwargs):
     """
