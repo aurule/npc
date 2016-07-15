@@ -151,11 +151,15 @@ class Settings:
         """
         Get a settings file path
 
+        Does not check that the path goes to a settings file that will actually
+        be loaded. If a settings type is given that is not supported by default,
+        it will need to be loaded manually.
+
         Args:
             location (str): Settings path to get. One of 'default', 'user', or
                 'campaign'.
-            settings_type (str): Type of settings file to get. If left
-                unspecified, the normal settings file is used.
+            settings_type (str): Type of settings file to get. If set to 'base'
+                or left unspecified, the normal settings file is used.
 
         Returns
             Path of the named settings file.
@@ -167,8 +171,8 @@ class Settings:
         if location == 'campaign':
             base_path = self.campaign_settings_path
 
-        if settings_type:
-            pass
+        if settings_type and settings_type != 'base':
+            filename = "settings-{}.json".format(settings_type)
         else:
             if location == 'default':
                 filename = 'settings-default.json'
