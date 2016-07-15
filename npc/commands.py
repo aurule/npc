@@ -729,6 +729,8 @@ def open_settings(location, show_defaults=False, settings_type=None, **kwargs):
         file.
     """
     prefs = kwargs.get('prefs', settings.InternalSettings())
+    if settings_type:
+        settings_type = settings_type.lower()
 
     target_path = prefs.get_settings_path(location, settings_type)
     if not path.exists(target_path):
