@@ -202,6 +202,7 @@ While you can edit settings files manually (see [Configuration](#configuration) 
 Options:
 
 * `location`: The settings file to open. Use `user` to open your user settings, or `campaign` to open the current campaign's settings.
+* `--type`: The type of settings to open. Leave it off to open the main settings file, or specify `changeling` to open the changeling-specific settings.
 
 # Gotchas
 
