@@ -706,7 +706,7 @@ def init(create_types=False, create_all=False, **kwargs):
 
     return Result(True)
 
-def open_settings(location, show_defaults=False, **kwargs):
+def open_settings(location, show_defaults=False, settings_type=None, **kwargs):
     """
     Open the named settings file.
 
@@ -717,6 +717,9 @@ def open_settings(location, show_defaults=False, **kwargs):
         location (str): Which settings file to open. One of 'user' or 'campaign'.
         show_defaults (bool): Whether the default settings file should be opened
             for reference alongside the specified settings file.
+        settings_type (str): Determines which kind of settings file to open,
+            like base settings or changeling settings. If left unset, base
+            settings are opened. One of 'base' or 'changeling'.
         prefs (Settings): Settings object to use. Uses internal settings by
             default.
 
@@ -727,7 +730,7 @@ def open_settings(location, show_defaults=False, **kwargs):
     """
     prefs = kwargs.get('prefs', settings.InternalSettings())
 
-    target_path = prefs.get_settings_path(location)
+    target_path = prefs.get_settings_path(location, settings_type)
     if not path.exists(target_path):
         dirname = path.dirname(target_path)
         makedirs(dirname, mode=0o775, exist_ok=True)
@@ -735,7 +738,7 @@ def open_settings(location, show_defaults=False, **kwargs):
             settings_file.write('{}')
 
     if show_defaults:
-        openable = [prefs.get_settings_path('default'), target_path]
+        openable = [prefs.get_settings_path('default', settings_type), target_path]
     else:
         openable = [target_path]
     return Result(True, openable=openable)
