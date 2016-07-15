@@ -140,8 +140,8 @@ def _make_parser():
 
     # Subcommand to create the basic directories
     parser_init = subparsers.add_parser('init', help="Create the basic directory structure for campaign files")
-    parser_init.add_argument('-t', '--types', action="store_true", default=False, help="Create directories for character types")
-    parser_init.add_argument('-a', '--all', action="store_true", default=False, help="Create all optional directories")
+    parser_init.add_argument('-t', '--types', action="store_true", default=False, help="Create directories for character types", dest="create_types")
+    parser_init.add_argument('-a', '--all', action="store_true", default=False, help="Create all optional directories", dest="create_all")
     parser_init.set_defaults(func=commands.init)
 
     # Session subcommand
@@ -176,7 +176,7 @@ def _make_parser():
 
     # Subcommand to list character data in multiple formats
     parser_list = subparsers.add_parser('list', parents=[paths_parser], help="Generate an NPC Listing")
-    parser_list.add_argument('-t', '--format', choices=['markdown', 'md', 'json'], default='default', help="Format to use for the listing. Defaults to 'md'")
+    parser_list.add_argument('-t', '--format', choices=['markdown', 'md', 'json'], default='default', help="Format to use for the listing. Defaults to 'md'", dest="fmt")
     parser_list.add_argument('-m', '--metadata', nargs="?", const='default', default=False, help="Add metadata to the output. If the output format supports more than one metadata format, you can specify that format as well.")
     parser_list.add_argument('-o', '--outfile', nargs="?", const='-', default=None, help="File where the listing will be saved")
     parser_list.set_defaults(func=commands.listing)
@@ -192,7 +192,7 @@ def _make_parser():
     parser_reorg = subparsers.add_parser('reorg', parents=[paths_parser], help="Move character files to the most appropriate directories")
     parser_reorg.add_argument('-p', '--purge', action="store_true", default=False, help="After moving all files, remove any empty directories within the base characters path")
     parser_reorg.add_argument('-v', '--verbose', action="store_true", default=False, help="Show the changes that are made")
-    parser_reorg.add_argument('-d', '--dry-run', action="store_true", default=False, help="Show the changes that would be made, but don't change anything")
+    parser_reorg.add_argument('-d', '--dry-run', action="store_true", default=False, help="Show the changes that would be made, but don't change anything", dest="dry")
     parser_reorg.set_defaults(func=commands.reorg)
 
     # Open settings files
