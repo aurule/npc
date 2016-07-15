@@ -147,24 +147,35 @@ class Settings:
 
         return dest
 
-    def get_settings_path(self, settings_type):
+    def get_settings_path(self, location, settings_type=None):
         """
         Get a settings file path
 
         Args:
-            settings_type (str): Settings path to get. One of 'default', 'user', or 'campaign'.
+            location (str): Settings path to get. One of 'default', 'user', or
+                'campaign'.
+            settings_type (str): Type of settings file to get. If left
+                unspecified, the normal settings file is used.
 
         Returns
             Path of the named settings file.
         """
-        if settings_type == 'default':
-            return path.join(self.default_settings_path, 'settings-default.json')
+        if location == 'default':
+            base_path = self.default_settings_path
+        if location == 'user':
+            base_path = self.user_settings_path
+        if location == 'campaign':
+            base_path = self.campaign_settings_path
 
-        if settings_type == 'user':
-            return path.join(self.user_settings_path, 'settings.json')
+        if settings_type:
+            pass
+        else:
+            if location == 'default':
+                filename = 'settings-default.json'
+            else:
+                filename = 'settings.json'
 
-        if settings_type == 'campaign':
-            return path.join(self.campaign_settings_path, 'settings.json')
+        return path.join(base_path, filename)
 
     def get(self, key, default=None):
         """
