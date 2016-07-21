@@ -30,7 +30,6 @@ def dump(characters, outstream, *, include_metadata=None, metadata_extra=None):
 
     if include_metadata:
         default_metadata = {
-            'title': 'NPC Listing',
             'created': datetime.now().isoformat()
         }
         metadata_raw = {**default_metadata, **metadata_extra}

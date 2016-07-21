@@ -47,6 +47,9 @@
     // Default format to use when creating a list of characters.
     "default_list_format": "markdown",
 
+    // Default title for character lists.
+    "list_title": "NPC Listing",
+
     // Default format to use when metadata is requested for the listed format.
     "metadata_format": {
 

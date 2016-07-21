@@ -220,7 +220,11 @@ class Settings:
         Returns:
             Dict of metadata keys and values.
         """
-        return {**self.get('additional_metadata.all'), **self.get('additional_metadata.{}'.format(fmt))}
+        return {
+            'title': self.get('list_title'),
+            **self.get('additional_metadata.all'),
+            **self.get('additional_metadata.{}'.format(fmt))
+        }
 
 class InternalSettings(Settings, metaclass=util.Singleton):
     """
