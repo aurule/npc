@@ -461,7 +461,7 @@ def listing(search, ignore=None, *, fmt='markdown', metadata=None, outfile=None,
 
     out_type = fmt.lower()
     if out_type == "default":
-        out_type = prefs.get('default_list_format')
+        out_type = prefs.get('list_format')
 
     if out_type in ('md', 'markdown'):
         # ensure 'default' gets replaced with the right default metadata format
