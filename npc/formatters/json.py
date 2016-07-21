@@ -8,7 +8,7 @@ Has a single entry point `dump` which mostly just inserts metadata and calls
 import json
 from .. import util
 
-def dump(characters, outstream, *, include_metadata=False, metadata_extra=None):
+def dump(characters, outstream, *, include_metadata=False, metadata=None):
     """
     Dump a json representation of all character data
 
@@ -20,18 +20,18 @@ def dump(characters, outstream, *, include_metadata=False, metadata_extra=None):
             include_metadata (bool): Whether to insert a metadata object. The
             metadata object will always include a title and creation date, along
             with the key `"meta": true` to distinguish it from character data.
-        metadata_extra (dict): Additional metadata keys. Ignored unless
+        metadata (dict): Additional metadata keys. Ignored unless
             include_metadata is True. The keys 'meta', 'title', and 'created'
             will overwrite the generated values for those keys.
 
     Returns:
         A util.Result object. Openable will not be set.
     """
-    if not metadata_extra:
-        metadata_extra = {}
+    if not metadata:
+        metadata = {}
 
     if include_metadata:
-        meta = {'meta': True, **metadata_extra}
+        meta = {'meta': True, **metadata}
         characters = [meta] + characters
 
     try:

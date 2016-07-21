@@ -6,7 +6,7 @@ Has a single entry point `dump`.
 
 from .. import util
 
-def dump(characters, outstream, *, include_metadata=None, metadata_extra=None):
+def dump(characters, outstream, *, include_metadata=None, metadata=None):
     """
     Create a markdown character listing
 
@@ -17,30 +17,30 @@ def dump(characters, outstream, *, include_metadata=None, metadata_extra=None):
             format to use.What kind of metadata to include, if any. Accepts
             values of 'mmd', 'yaml', or 'yfm'. Metadata will always include a
             title and creation date.
-        metadata_extra (dict): Additional metadata to insert. Ignored unless
+        metadata (dict): Additional metadata to insert. Ignored unless
             include_metadata is set. The keys 'title', and 'created' will
             overwrite the generated values for those keys.
 
     Returns:
         A util.Result object. Openable will not be set.
     """
-    if not metadata_extra:
-        metadata_extra = {}
+    if not metadata:
+        metadata = {}
 
     if include_metadata:
         if include_metadata == 'mmd':
-            metadata_lines = ['{}: {}'.format(k.title(), v) for k, v in metadata_extra.items()]
-            metadata = "  \n".join(metadata_lines)
+            metadata_lines = ['{}: {}'.format(k.title(), v) for k, v in metadata.items()]
+            final_metadata = "  \n".join(metadata_lines)
         elif include_metadata in ('yaml', 'yfm'):
-            metadata_lines = ['{}: {}'.format(k, v) for k, v in metadata_extra.items()]
-            metadata = "---\n" + "\n".join(metadata_lines) + "\n---\n"
+            metadata_lines = ['{}: {}'.format(k, v) for k, v in metadata.items()]
+            final_metadata = "---\n" + "\n".join(metadata_lines) + "\n---\n"
         else:
             return util.Result(
                 False,
                 errmsg="Unrecognized metadata format option '{}'".format(include_metadata),
                 errcode=6)
 
-        outstream.write(metadata)
+        outstream.write(final_metadata)
 
     for char in characters:
         # name (header)
