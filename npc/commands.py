@@ -478,7 +478,6 @@ def listing(search, ignore=None, *, fmt='markdown', metadata=None, outfile=None,
         with _smart_open(outfile) as outstream:
             meta = prefs.get_metadata('json')
             response = formatters.json.dump(characters, outstream, include_metadata=metadata, metadata=meta)
-
     else:
         return Result(False, errmsg="Cannot create output of format '{}'".format(out_type), errcode=5)
 
