@@ -50,6 +50,10 @@
     // Default title for character lists.
     "list_title": "NPC Listing",
 
+    // Format to use for the metadata timestamp. Uses formatting options from
+    // strftime (see http://strftime.org/).
+    "metadata_timestamp": "%a, %b %d %I:%M%p",
+
     // Default format to use when metadata is requested for the listed format.
     "metadata_format": {
 

@@ -4,7 +4,6 @@ Markdown formatter for creating a page of characters.
 Has a single entry point `dump`.
 """
 
-from datetime import datetime
 from .. import util
 
 def dump(characters, outstream, *, include_metadata=None, metadata_extra=None):
@@ -29,15 +28,11 @@ def dump(characters, outstream, *, include_metadata=None, metadata_extra=None):
         metadata_extra = {}
 
     if include_metadata:
-        default_metadata = {
-            'created': datetime.now().isoformat()
-        }
-        metadata_raw = {**default_metadata, **metadata_extra}
-        if include_metadata in 'mmd':
-            metadata_lines = ['{}: {}'.format(k.title(), v) for k, v in metadata_raw.items()]
+        if include_metadata == 'mmd':
+            metadata_lines = ['{}: {}'.format(k.title(), v) for k, v in metadata_extra.items()]
             metadata = "  \n".join(metadata_lines)
         elif include_metadata in ('yaml', 'yfm'):
-            metadata_lines = ['{}: {}'.format(k, v) for k, v in metadata_raw.items()]
+            metadata_lines = ['{}: {}'.format(k, v) for k, v in metadata_extra.items()]
             metadata = "---\n" + "\n".join(metadata_lines) + "\n---\n"
         else:
             return util.Result(

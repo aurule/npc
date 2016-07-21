@@ -6,7 +6,6 @@ Has a single entry point `dump` which mostly just inserts metadata and calls
 """
 
 import json
-from datetime import datetime
 from .. import util
 
 def dump(characters, outstream, *, include_metadata=False, metadata_extra=None):
@@ -32,11 +31,7 @@ def dump(characters, outstream, *, include_metadata=False, metadata_extra=None):
         metadata_extra = {}
 
     if include_metadata:
-        base_meta = {
-            'meta': True,
-            'created': datetime.now().isoformat()
-        }
-        meta = {**base_meta, **metadata_extra}
+        meta = {'meta': True, **metadata_extra}
         characters = [meta] + characters
 
     try:

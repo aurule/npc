@@ -6,6 +6,7 @@ Also has a helper function to check loaded settings for faults.
 
 import json
 from os import path
+from datetime import datetime
 
 from . import util
 
@@ -222,6 +223,7 @@ class Settings:
         """
         return {
             'title': self.get('list_title'),
+            'created': datetime.now().strftime(self.get('metadata_timestamp')),
             **self.get('additional_metadata.all'),
             **self.get('additional_metadata.{}'.format(fmt))
         }
