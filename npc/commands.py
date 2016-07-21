@@ -440,11 +440,11 @@ def listing(search, ignore=None, *, fmt='markdown', metadata=None, outfile=None,
             kind of metadata to use. Pass 'default' to use the format configured
             in Settings.
 
-            The markdown format supports adding either 'mmd' (MultiMarkdown) or
+            The markdown format allows either 'mmd' (MultiMarkdown) or
             'yfm'/'yaml' (Yaml Front Matter) metadata.
 
-            The json format has no format options, so the value of `metadata` is
-            ignored.
+            The json format only allows one form of metadata, so pass any truthy
+            value to include the metadata keys.
         outfile (string|None): Filename to put the listed data. None and "-"
             print to stdout.
         prefs (Settings): Settings object to use. Uses internal settings by
