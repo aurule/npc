@@ -41,6 +41,9 @@
         "session": "templates/Session Log.md"
     },
 
+    // Text to add to the beginning of new character files.
+    "template_header": "",
+
     // Default format to use when creating a list of characters.
     "default_list_format": "markdown",
 

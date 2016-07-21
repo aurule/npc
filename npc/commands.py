@@ -91,7 +91,7 @@ def create_changeling(name, seeming, kith, *,
         tags.append('@court {}'.format(court.title()))
     tags.extend(_make_std_tags(groups=groups, dead=dead, foreign=foreign))
 
-    header = "\n".join(tags) + '\n\n'
+    header = prefs.get('template_header') + "\n".join(tags) + '\n\n'
 
     # Copy template data
     template_path = prefs.get('templates.changeling')
@@ -207,7 +207,7 @@ def create_simple(name, ctype, *, dead=False, foreign=False, **kwargs):
     # Add tags
     typetag = ctype.title()
     tags = ['@type {}'.format(typetag)] + _make_std_tags(groups=groups, dead=dead, foreign=foreign)
-    header = "\n".join(tags) + '\n\n'
+    header = prefs.get('template_header') + "\n".join(tags) + '\n\n'
 
     # Copy template
     template = prefs.get('templates.{}'.format(ctype))
