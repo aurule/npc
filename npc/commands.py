@@ -465,28 +465,27 @@ def listing(search, ignore=None, *, fmt='markdown', metadata=None, title=None, o
     if out_type == "default":
         out_type = prefs.get('list_format')
 
+    metadata_type = metadata
     if out_type in ('md', 'markdown'):
-        # ensure 'default' gets replaced with the right default metadata format
-        metadata_type = metadata
+        out_type = 'markdown' # coerce output type to canonical form
+        # Ensure 'default' metadata type gets replaced with the right default
+        # metadata format
         if metadata_type == 'default':
             metadata_type = prefs.get('metadata_format.markdown')
-
-        # call out to get the markdown
-        with _smart_open(outfile) as outstream:
-            meta = prefs.get_metadata('markdown')
-            if title:
-                meta['title'] = title
-            response = formatters.markdown.dump(characters, outstream, include_metadata=metadata_type, metadata=meta)
+        dumper = formatters.markdown.dump
     elif out_type == 'json':
-        # make some json
-        with _smart_open(outfile) as outstream:
-            meta = prefs.get_metadata('json')
-            if title:
-                meta['title'] = title
-            response = formatters.json.dump(characters, outstream, include_metadata=metadata, metadata=meta)
+        dumper = formatters.json.dump
     else:
         return Result(False, errmsg="Cannot create output of format '{}'".format(out_type), errcode=5)
 
+    meta = prefs.get_metadata(out_type)
+    if title:
+        meta['title'] = title
+
+    with _smart_open(outfile) as outstream:
+        response = dumper(characters, outstream, include_metadata=metadata_type, metadata=meta)
+
+    # pass errors straight through
     if not response.success:
         return response
 
