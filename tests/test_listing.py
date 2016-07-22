@@ -121,3 +121,9 @@ class TestMetadata:
         search = fixture_dir(['listing', 'valid-json'])
         result = npc.commands.listing([search], fmt='md', metadata='asdf')
         assert not result.success
+
+    def test_custom_title(self, list_json_output):
+        listing = list_json_output(['valid-json'], metadata=True, title="I'm a test list")
+        for part in listing:
+            if 'meta' in part:
+                assert part['title'] == "I'm a test list"
