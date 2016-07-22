@@ -427,7 +427,7 @@ def create_path_from_character(character, *, target_path=None, **kwargs):
 
     return target_path
 
-def listing(search, ignore=None, *, fmt='markdown', metadata=None, outfile=None, **kwargs):
+def listing(search, ignore=None, *, fmt='markdown', metadata=None, title=None, outfile=None, **kwargs):
     """
     Generate a listing of NPCs.
 
@@ -445,6 +445,8 @@ def listing(search, ignore=None, *, fmt='markdown', metadata=None, outfile=None,
 
             The json format only allows one form of metadata, so pass any truthy
             value to include the metadata keys.
+        title (str|None): The title to put in the metadata, if included.
+            Overrides the title from settings.
         outfile (string|None): Filename to put the listed data. None and "-"
             print to stdout.
         prefs (Settings): Settings object to use. Uses internal settings by
@@ -472,11 +474,15 @@ def listing(search, ignore=None, *, fmt='markdown', metadata=None, outfile=None,
         # call out to get the markdown
         with _smart_open(outfile) as outstream:
             meta = prefs.get_metadata('markdown')
+            if title:
+                meta['title'] = title
             response = formatters.markdown.dump(characters, outstream, include_metadata=metadata_type, metadata=meta)
     elif out_type == 'json':
         # make some json
         with _smart_open(outfile) as outstream:
             meta = prefs.get_metadata('json')
+            if title:
+                meta['title'] = title
             response = formatters.json.dump(characters, outstream, include_metadata=metadata, metadata=meta)
     else:
         return Result(False, errmsg="Cannot create output of format '{}'".format(out_type), errcode=5)
