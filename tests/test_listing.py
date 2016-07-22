@@ -6,10 +6,10 @@ import re
 
 @pytest.fixture
 def list_json_output(tmpdir, prefs):
-    def make_list(search_parts, outformat='json', metadata=None, prefs=prefs):
+    def make_list(search_parts, outformat='json', metadata=None, prefs=prefs, title=None):
         outfile = tmpdir.join("output.json")
         search = fixture_dir(['listing'] + search_parts)
-        npc.commands.listing([search], fmt=outformat, metadata=metadata, outfile=str(outfile), prefs=prefs)
+        npc.commands.listing([search], fmt=outformat, metadata=metadata, outfile=str(outfile), prefs=prefs, title=title)
         return json.load(outfile)
     return make_list
 
