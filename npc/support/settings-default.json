@@ -54,7 +54,7 @@
     // strftime (see http://strftime.org/).
     "metadata_timestamp": "%a, %b %d %I:%M%p",
 
-    // Default format to use when metadata is requested for the listed format.
+    // Default format to use when metadata is requested for the named format.
     "metadata_format": {
 
         // The markdown output formatter can add metadata using the
