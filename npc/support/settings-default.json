@@ -47,6 +47,38 @@
     // Default format to use when creating a list of characters.
     "list_format": "markdown",
 
+    // Options for the generated metadata in character lists.
+    "metadata": {
+        // Default title for character lists.
+        "title": "NPC Listing",
+
+        // Format to use for the metadata timestamp. Uses formatting options
+        // from strftime (see http://strftime.org/).
+        "timestamp": "%a, %b %d %I:%M%p",
+
+        // Default format to use when metadata is requested for the named
+        // format.
+        "default_format": {
+            // The markdown output formatter can add metadata using the
+            // MultiMarkdown and Yaml Front Matter formats. To use
+            // MultiMarkdown, use the value "mmd". To use Yaml Front Matter, use
+            // the values "yfm" or "yaml".
+            "markdown": "mmd"
+        },
+
+        // Additional metadata keys to include in generated character lists.
+        "additional_keys": {
+            // Keys listed under "all" will be added to all lists, regardless
+            // of the output format.
+            "all": {},
+
+            // Metadata listed in these hashes will only be added to lists of
+            // the named format.
+            "markdown" : {},
+            "json": {}
+        }
+    },
+
     // Default title for character lists.
     "list_title": "NPC Listing",
 
