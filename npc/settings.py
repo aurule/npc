@@ -222,10 +222,10 @@ class Settings:
             Dict of metadata keys and values.
         """
         return {
-            'title': self.get('list_title'),
-            'created': datetime.now().strftime(self.get('metadata_timestamp')),
-            **self.get('additional_metadata.all'),
-            **self.get('additional_metadata.{}'.format(fmt))
+            'title': self.get('metadata.title'),
+            'created': datetime.now().strftime(self.get('metadata.timestamp')),
+            **self.get('metadata.additional_keys.all'),
+            **self.get('metadata.additional_keys.{}'.format(fmt))
         }
 
 class InternalSettings(Settings, metaclass=util.Singleton):
