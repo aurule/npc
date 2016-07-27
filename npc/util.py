@@ -135,6 +135,19 @@ class Character(defaultdict):
         self.update(kwargs)
 
     def get_first(self, key):
+        """
+        Get the first element from the named key.
+
+        Args:
+            key (str): Name of the key
+
+        Returns:
+            The first value in the named key's array. Usually a string. Returns
+            None if the key is not present or has no values.
+
+            The "description" key is not an array, so this method will return the
+            entire description.
+        """
         if key == "description":
             return self["description"]
 
@@ -144,13 +157,41 @@ class Character(defaultdict):
             return None
 
     def get_remaining(self, key):
+        """
+        Get all non-first elements from the named key.
+
+        Args:
+            key (str): Name of the key
+
+        Returns:
+            A slice of the key's array including all elements but the first.
+            May be empty.
+
+            The "description" key is not an array, so this method will return the
+            entire description.
+        """
         if key == "description":
             return self["description"]
 
         return self[key][1:]
 
     def append(self, key, value):
+        """
+        Add a value to a key's array.
+
+        The "description" key is not an array, so `value` will be appended to
+        the existing description.
+
+        Args:
+            key (str): Name of the key
+            value (any): Value to add to the key's list
+
+        Returns:
+            This character object. Convenient for chaining.
+        """
         if key == "description":
             self["description"] += value
         else:
             self[key].append(value)
+
+        return self
