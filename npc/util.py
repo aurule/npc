@@ -195,3 +195,17 @@ class Character(defaultdict):
             self[key].append(value)
 
         return self
+
+    def append_rank(self, group, value):
+        """
+        Add a rank value for the named group
+
+        Args:
+            group (str): Group name
+            value (str): Rank name to insert
+
+        Returns:
+            This character object. Convenient for chaining.
+        """
+        self['rank'][group].append(value)
+        return self

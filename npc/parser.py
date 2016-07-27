@@ -144,7 +144,7 @@ def _parse_character(char_file_path):
                     last_group = value
                 if tag == 'rank':
                     if last_group:
-                        parsed_char['rank'][last_group].append(value)
+                        parsed_char.append_rank(last_group, value)
                     continue
             else:
                 if line == "\n":
