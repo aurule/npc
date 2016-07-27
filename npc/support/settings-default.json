@@ -49,6 +49,12 @@
             "header": {
                 "mmd": "templates/listing/Header.mmd.mako",
                 "yfm": "templates/listing/Header.yfm.mako"
+            },
+            "character": {
+                "md": {
+                    "default": "templates/listing/Character.md.mako",
+                    "changeling": "templates/listing/Changeling.md.mako"
+                }
             }
         }
     },
