@@ -621,15 +621,8 @@ def lint(search, ignore=None, *, fix=False, **kwargs):
     Check character files for completeness and correctness.
 
     This method checks that every character file has a few required tags, and
-    applies extra checking for some character types.
-
-    Required tags:
-    * description - Not a tag, but the file must have description content
-    * @type - Character type
-
-    Extra checks for Changelings:
-    * @seeming tag is present and valid
-    * @kith tag is present and valid
+    applies extra checking for some character types. See util.Character.validate
+    for details.
 
     Args:
         search (list): Paths to search for character files

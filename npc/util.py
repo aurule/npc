@@ -241,6 +241,18 @@ class Character(defaultdict):
         return len(self.problems) == 0
 
     def _validate_changeling(self):
+        """
+        Validate the basic elements of a changeling file
+
+        The following must be true:
+            * seeming is present
+            * kith is present
+            * zero or one court is present
+            * zero or one motley is present
+
+        Returns:
+            None
+        """
         if not self.get_first('seeming'):
             self.problems.append("Missing seeming")
         if not self.get_first('kith'):
@@ -254,7 +266,9 @@ class Character(defaultdict):
         """
         Get whether this Character is valid
 
-        Does not redo the validation. When in doubt, call validate instead.
+        This method does not redo the validation, so it should only be called
+        when you're sure the object's state has not changed since the last
+        validation. When in doubt, call validate instead.
 
         Returns:
             True if this Character has no validation problems, false if not.

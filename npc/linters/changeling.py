@@ -18,11 +18,10 @@ def lint(character, fix=False, *, sk_data=None):
     Checks for changeling-specific problems within the rules blocks of the
     character sheet. The problems it checks for are as follows:
 
-    1. Court and motley must either not be present, or appear only once.
-    2. Both seeming and kith must appear in the sheet's body -- not just the
+    1. Both seeming and kith must appear in the sheet's body -- not just the
         tags.
-    3. Both seeming and kith must match the value of the corresponding tag.
-    4. Both seeming and kith must have correct notes about its blessing (and
+    2. Both seeming and kith must match the value of the corresponding tag.
+    3. Both seeming and kith must have correct notes about its blessing (and
         curse for Seeming)
 
     Missing or incorrect notes can be fixed automatically if desired.
