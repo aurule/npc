@@ -85,7 +85,7 @@ def _walk_ignore(root, ignore):
         dirnames[:] = [d for d in dirnames if included(dirpath, d)]
         yield dirpath, dirnames, filenames
 
-def _parse_character(char_file_path):
+def _parse_character(char_file_path: str) -> Character:
     """
     Parse a single character file
 

@@ -377,7 +377,7 @@ def find_empty_dirs(root):
         if not dirs and not files:
             yield dirpath
 
-def create_path_from_character(character, *, target_path=None, **kwargs):
+def create_path_from_character(character: Character, *, target_path=None, **kwargs):
     """
     Determine the best file path for a character.
 
@@ -385,7 +385,7 @@ def create_path_from_character(character, *, target_path=None, **kwargs):
     which already exist.
 
     Args:
-        character (Character): Parsed character data
+        character: Parsed character data
         target_path (str): Base path for character files
         prefs (Settings): Settings object to use. Uses internal settings by
             default.
