@@ -148,3 +148,9 @@ class Character(defaultdict):
             return self["description"]
 
         return self[key][1:]
+
+    def append(self, key, value):
+        if key == "description":
+            self["description"] += value
+        else:
+            self[key].append(value)
