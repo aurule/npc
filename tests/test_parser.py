@@ -16,7 +16,7 @@ class TestInclusion:
         ignore_me = fixture_dir(['parsing', 'characters', 'Fetches'])
         characters = npc.parser.get_characters(search_paths=[parseables], ignore_paths=[ignore_me])
         for c in characters:
-            assert c['type'][0] != 'Fetch'
+            assert c.get_first('type') != 'Fetch'
 
     def test_ignore_file(self):
         parseables = fixture_dir(['parsing', 'characters'])
