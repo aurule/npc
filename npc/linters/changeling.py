@@ -38,39 +38,22 @@ def lint(character, fix=False, *, sk_data=None):
     problems = []
     dirty = False
 
-    # Check that only one court is present
-    if 'court' in character and len(character['court']) > 1:
-        problems.append("Multiple courts: {}".format(', '.join(character['court'])))
-
-    # Check that only one motley is present
-    if 'motley' in character and len(character['motley']) > 1:
-        problems.append("Multiple motleys: {}".format(', '.join(character['motley'])))
-
     # Check that seeming tag exists and is valid
-    seeming_tags = None
-    if not 'seeming' in character:
-        problems.append("Missing @seeming tag")
-    else:
-        seeming_tags = [t.lower() for t in character['seeming']] # used later
-        for seeming_name in character['seeming']:
-            if seeming_name.lower() not in sk_data['seemings']:
-                problems.append("Unrecognized @seeming '{}'".format(seeming_name))
+    for seeming_name in character['seeming']:
+        if seeming_name.lower() not in sk_data['seemings']:
+            problems.append("Unrecognized @seeming '{}'".format(seeming_name))
 
     # Check that kith tag exists and is valid
-    kith_tags = None
-    if not 'kith' in character:
-        problems.append("Missing @kith tag")
-    else:
-        kith_tags = [t.lower() for t in character['kith']] # used later
-        for kith_name in character['kith']:
-            if kith_name.lower() not in sk_data['kiths']:
-                problems.append("Unrecognized @kith '{}'".format(kith_name))
+    for kith_name in character['kith']:
+        if kith_name.lower() not in sk_data['kiths']:
+            problems.append("Unrecognized @kith '{}'".format(kith_name))
 
     # tags are ok. now compare against listed seeming and kith in stats
 
     with open(character['path'], 'r') as char_file:
         data = char_file.read()
 
+    seeming_tags = [t.lower() for t in character['seeming']]
     if seeming_tags:
         # ensure the listed seemings match our seeming tags
         seeming_re = re.compile(
@@ -133,60 +116,61 @@ def lint(character, fix=False, *, sk_data=None):
                             problems[-1] += ' (can fix)'
 
 
-        if kith_tags:
-            # ensure the listed kiths match our kith tags
-            kith_re = re.compile(
-                KITH_REGEX.format(r'\w+( \w+)?'),
-                re.MULTILINE | re.IGNORECASE
-            )
-            kith_matches = list(kith_re.finditer(data))
-            kith_stat_names = [m.group('kith').lower() for m in kith_matches]
-            if set(kith_tags) != set([m.group('kith').lower() for m in kith_matches]):
-                problems.append("Kith stats do not match @kith tags")
-                if (len(kith_stat_names) == 1
-                        and len(kith_tags) == 1
-                        and kith_stat_names[0] in REPLACEABLE):
-                    if fix:
-                        kith_tag = kith_tags[0]
-                        try:
-                            kith_line = "{} ({})".format(kith_tag.title(), sk_data['blessings'][kith_tag])
-                        except IndexError:
-                            kith_line = kith_tag.title()
+    kith_tags = [t.lower() for t in character['kith']]
+    if kith_tags:
+        # ensure the listed kiths match our kith tags
+        kith_re = re.compile(
+            KITH_REGEX.format(r'\w+( \w+)?'),
+            re.MULTILINE | re.IGNORECASE
+        )
+        kith_matches = list(kith_re.finditer(data))
+        kith_stat_names = [m.group('kith').lower() for m in kith_matches]
+        if set(kith_tags) != set([m.group('kith').lower() for m in kith_matches]):
+            problems.append("Kith stats do not match @kith tags")
+            if (len(kith_stat_names) == 1
+                    and len(kith_tags) == 1
+                    and kith_stat_names[0] in REPLACEABLE):
+                if fix:
+                    kith_tag = kith_tags[0]
+                    try:
+                        kith_line = "{} ({})".format(kith_tag.title(), sk_data['blessings'][kith_tag])
+                    except IndexError:
+                        kith_line = kith_tag.title()
 
-                        data = kith_re.sub(
-                            r'\g<1>{}'.format(kith_line),
-                            data
-                        )
-                        problems[-1] += ' (placeholder; FIXED)'
+                    data = kith_re.sub(
+                        r'\g<1>{}'.format(kith_line),
+                        data
+                    )
+                    problems[-1] += ' (placeholder; FIXED)'
+                    dirty = True
+                else:
+                    problems[-1] += ' (placeholder; can fix)'
+        else:
+            # tags and stats match. iterate through each kith and make sure the notes are right
+            for match in list(kith_matches):
+                kith_tag = match.group('kith').lower()
+                if not kith_tag in sk_data['kiths']:
+                    continue
+
+                loaded_kith_notes = match.group('notes')
+                kith_notes = "({})".format(sk_data['blessings'][kith_tag])
+                if not loaded_kith_notes:
+                    problems.append("Missing notes for Kith '{}'".format(match.group('kith')))
+                    if fix:
+                        data = _fix_kith_notes(match.group('kith'), kith_notes, data)
+                        problems[-1] += ' (FIXED)'
                         dirty = True
                     else:
-                        problems[-1] += ' (placeholder; can fix)'
-            else:
-                # tags and stats match. iterate through each kith and make sure the notes are right
-                for match in list(kith_matches):
-                    kith_tag = match.group('kith').lower()
-                    if not kith_tag in sk_data['kiths']:
-                        continue
-
-                    loaded_kith_notes = match.group('notes')
-                    kith_notes = "({})".format(sk_data['blessings'][kith_tag])
-                    if not loaded_kith_notes:
-                        problems.append("Missing notes for Kith '{}'".format(match.group('kith')))
+                        problems[-1] += ' (can fix)'
+                else:
+                    if loaded_kith_notes != kith_notes:
+                        problems.append("Incorrect notes for Kith '{}'".format(match.group('kith')))
                         if fix:
                             data = _fix_kith_notes(match.group('kith'), kith_notes, data)
                             problems[-1] += ' (FIXED)'
                             dirty = True
                         else:
                             problems[-1] += ' (can fix)'
-                    else:
-                        if loaded_kith_notes != kith_notes:
-                            problems.append("Incorrect notes for Kith '{}'".format(match.group('kith')))
-                            if fix:
-                                data = _fix_kith_notes(match.group('kith'), kith_notes, data)
-                                problems[-1] += ' (FIXED)'
-                                dirty = True
-                            else:
-                                problems[-1] += ' (can fix)'
 
     if dirty and data:
         with open(character['path'], 'w') as char_file:

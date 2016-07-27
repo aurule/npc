@@ -33,7 +33,7 @@ class TestChangeling:
 
     @pytest.mark.parametrize('charname', ['No Kith.nwod', 'No Kith Also.nwod'])
     def test_seeming_present(self, lint_output, charname):
-        assert "Missing @kith" in lint_output(charname)
+        assert "Missing kith" in lint_output(charname)
 
     def test_seeming_info_present(self, lint_output):
         assert "Missing notes for Seeming" in lint_output('No Info.nwod')
@@ -42,7 +42,7 @@ class TestChangeling:
         assert "Incorrect notes for Seeming" in lint_output('Bad Info.nwod')
 
     def test_kith_present(self, lint_output):
-        assert "Missing @seeming" in lint_output('No Seeming.nwod')
+        assert "Missing seeming" in lint_output('No Seeming.nwod')
 
     def test_kith_info_present(self, lint_output):
         assert "Missing notes for Kith" in lint_output('No Info.nwod')

@@ -142,16 +142,18 @@ class Character(defaultdict):
         self.update(kwargs)
         self.problems = []
 
-    def get_first(self, key):
+    def get_first(self, key, default=None):
         """
         Get the first element from the named key.
 
         Args:
             key (str): Name of the key
+            default (any): Value to return if the key is not present or has no
+                values
 
         Returns:
             The first value in the named key's array. Usually a string. Returns
-            None if the key is not present or has no values.
+            default if the key is not present or has no values.
 
             The "description" key is not an array, so this method will return the
             entire description.
@@ -162,7 +164,7 @@ class Character(defaultdict):
         try:
             return self[key][0]
         except IndexError:
-            return None
+            return default
 
     def get_remaining(self, key):
         """
@@ -225,18 +227,28 @@ class Character(defaultdict):
         Returns:
             True if this Character has no validation problems, false if not.
         """
-        probs = []
+        self.problems = []
         if not self['description'].strip():
-            probs.append("Missing description")
-
+            self.problems.append("Missing description")
         if not self.get_first('type'):
-            probs.append("Missing type")
-
+            self.problems.append("Missing type")
         if not self.get_first('name'):
-            probs.append("Missing name")
+            self.problems.append("Missing name")
 
-        self.problems = probs
+        if self.get_first('type', '').lower() == "changeling":
+            self._validate_changeling()
+
         return len(self.problems) == 0
+
+    def _validate_changeling(self):
+        if not self.get_first('seeming'):
+            self.problems.append("Missing seeming")
+        if not self.get_first('kith'):
+            self.problems.append("Missing kith")
+        if len(self['court']) > 1:
+            self.problems.append("Multiple courts: {}".format(', '.join(self['court'])))
+        if len(self['motley']) > 1:
+            self.problems.append("Multiple motleys: {}".format(', '.join(self['motley'])))
 
     def is_valid(self):
         """
