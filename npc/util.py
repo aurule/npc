@@ -235,7 +235,7 @@ class Character(defaultdict):
         if not self.get_first('name'):
             self.problems.append("Missing name")
 
-        if self.get_first('type', '').lower() == "changeling":
+        if self.get_type_key() == "changeling":
             self._validate_changeling()
 
         return len(self.problems) == 0
@@ -274,3 +274,19 @@ class Character(defaultdict):
             True if this Character has no validation problems, false if not.
         """
         return len(self.problems) == 0
+
+    def get_type_key(self):
+        """
+        Get the type key for this character
+
+        The type key is a lower case string made from the first entry under
+        'type'.
+
+        Returns:
+            The canonical type key for this character as a string, or None if
+            no type is present.
+        """
+        try:
+            return self.get_first('type').lower()
+        except AttributeError:
+            return None

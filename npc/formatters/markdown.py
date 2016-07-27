@@ -82,9 +82,6 @@ def dump(characters, outstream, *, include_metadata=None, metadata=None):
         outstream.write("\n")
     return util.Result(True)
 
-def _get_character_type(char):
-    return char.get_first('type').lower()
-
 def _append_aka_line(names, info_block):
     """
     Build the AKA line for a character's names
@@ -138,8 +135,7 @@ def _append_character_type_line(char, info_block):
         base += ' in {}'.format(' and '.join(char['foreign']))
     type_parts.append(base)
 
-    character_type_code = _get_character_type(char)
-    if character_type_code == 'changeling':
+    if char.get_type_key() == 'changeling':
         if 'motley' in char:
             motley = char.get_first('motley')
             slug = _add_group_ranks('{} Motley'.format(motley, motley, char['rank']))
@@ -173,8 +169,7 @@ def _append_character_subtype_line(char, info_block):
         char (dict): Character info
         info_block (list): Target list of info lines
     """
-    character_type = _get_character_type(char)
-    if character_type == 'changeling' and (
+    if char.get_type_key() == 'changeling' and (
             'seeming' in char or
             'kith' in char):
         subtype_parts = []
@@ -223,8 +218,7 @@ def _append_secondary_groups(char, info_block):
     """
     group_parts = []
 
-    character_type = _get_character_type(char)
-    if character_type == "changeling":
+    if char.get_type_key() == "changeling":
         for court in char.get_remaining('court'):
             group_parts.append(_add_group_ranks('{} court'.format(court, court, char['rank'])))
 
@@ -254,8 +248,7 @@ def _build_appearance(char):
     Returns:
         Appearance description string
     """
-    character_type = _get_character_type(char)
-    if character_type == 'changeling':
+    if char.get_type_key() == 'changeling':
         appearance_parts = []
         if 'appearance' in char:
             appearance_parts.append('*Appearance:* ' + ' '.join(char['appearance']))
