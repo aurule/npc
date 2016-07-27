@@ -117,7 +117,14 @@ class Character(defaultdict):
     """
     def __init__(self, attributes=None, **kwargs):
         """
-        Create a new Character object
+        Create a new Character object.
+
+        When supplying values through `attributes` or `**kwargs`, remember that
+        almost everything needs to be in a list. The exceptions are the
+        "description" key, which must be a string, and the "rank" key, which is
+        special. It is a dict of dicts, and the members of that dict are lists.
+        When in doubt, it's safer to build the object using the append and
+        append_rank methods.
 
         Args:
             attributes (dict): Dictionary of attributes to insert into the
