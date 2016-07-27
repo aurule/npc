@@ -109,17 +109,38 @@ class Character(defaultdict):
 
     Basically a dictionary with some helper methods. When accessed like a dict,
     missing keys will return an empty array instead of throwing an exception.
+    The "description" key is special: it will always contain a string.
     """
-    def __init__(self):
+    def __init__(self, attributes=None, **kwargs):
+        """
+        Create a new Character object
+
+        Args:
+            attributes (dict): Dictionary of attributes to insert into the
+                Character.
+            **kwargs: Named arguments will be added verbatim to the new
+                Character. Keys here will overwrite keys of the same name from
+                the `attributes` arg.
+        """
         super().__init__(list)
         self['description'] = ''
         self['rank'] = defaultdict(list)
 
+        if attributes is not None:
+            self.update(attributes)
+        self.update(kwargs)
+
     def get_first(self, key):
+        if key == "description":
+            return self["description"]
+
         try:
             return self[key][0]
         except IndexError:
             return None
 
     def get_remaining(self, key):
+        if key == "description":
+            return self["description"]
+
         return self[key][1:]

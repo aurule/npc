@@ -16,7 +16,7 @@ import itertools
 
 # local packages
 from . import formatters, linters, parser, settings
-from .util import Result
+from .util import Result, Character
 
 def create_changeling(name, seeming, kith, *,
                       court=None, motley=None, dead=False, foreign=False, **kwargs):
@@ -57,24 +57,24 @@ def create_changeling(name, seeming, kith, *,
     )
 
     # build minimal character dict
-    character = {
+    temp_char_data = {
         'type': ['changeling'],
         'seeming': seeming,
         'kith': kith
     }
     if court:
-        character['court'] = court.title()
+        temp_char_data['court'] = court.title()
     if motley:
-        character['motley'] = motley
+        temp_char_data['motley'] = motley
     if groups:
-        character['group'] = groups
+        temp_char_data['group'] = groups
     if dead:
-        character['dead'] = dead
+        temp_char_data['dead'] = dead
     if foreign:
-        character['foreign'] = foreign
+        temp_char_data['foreign'] = foreign
 
     # get path for the new file
-    target_path = create_path_from_character(character, prefs=prefs)
+    target_path = create_path_from_character(Character(**temp_char_data), prefs=prefs)
 
     filename = name + '.nwod'
     target_path = path.join(target_path, filename)
@@ -186,18 +186,18 @@ def create_simple(name, ctype, *, dead=False, foreign=False, **kwargs):
         return Result(False, errmsg="Unrecognized template '{}'".format(ctype), errcode=7)
 
     # build minimal character dict
-    character = {
+    temp_char_data = {
         'type': [ctype],
     }
     if groups:
-        character['group'] = groups
+        temp_char_data['group'] = groups
     if dead:
-        character['dead'] = dead
+        temp_char_data['dead'] = dead
     if foreign:
-        character['foreign'] = foreign
+        temp_char_data['foreign'] = foreign
 
     # get path for the new file
-    target_path = create_path_from_character(character, prefs=prefs)
+    target_path = create_path_from_character(Character(**temp_char_data), prefs=prefs)
 
     filename = name + '.nwod'
     target_path = path.join(target_path, filename)
@@ -349,7 +349,7 @@ def reorg(search, ignore=None, *, purge=False, verbose=False, dry=False, **kwarg
 
     characters = parser.get_characters(search, ignore)
     for char_data in characters:
-        new_path = create_path_from_character(char_data, target_path=base_path)
+        new_path = create_path_from_character(Character(**char_data), target_path=base_path)
         if new_path != path.dirname(char_data['path']):
             if verbose or dry:
                 print("Moving {} to {}".format(char_data['path'], new_path))
@@ -402,7 +402,7 @@ def create_path_from_character(character, *, target_path=None, **kwargs):
 
     # add type-based directory if we can
     if 'type' in character:
-        ctype = character['type'][0].lower()
+        ctype = character.get_first('type').lower()
         target_path = _add_path_if_exists(target_path, prefs.get('type_paths.{}'.format(ctype)))
     else:
         ctype = 'none'
@@ -508,7 +508,7 @@ def _sort_chars(characters):
     Returns:
         List of characters ordered by last name.
     """
-    return sorted(characters, key=lambda c: c['name'][0].split(' ')[-1])
+    return sorted(characters, key=lambda c: c.get_first('name').split(' ')[-1])
 
 def _prune_chars(characters):
     """
