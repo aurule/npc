@@ -482,7 +482,7 @@ def listing(search, ignore=None, *, fmt='markdown', metadata=None, title=None, o
         meta['title'] = title
 
     with _smart_open(outfile) as outstream:
-        response = dumper(characters, outstream, include_metadata=metadata_type, metadata=meta)
+        response = dumper(characters, outstream, include_metadata=metadata_type, metadata=meta, prefs=prefs)
 
     # pass errors straight through
     if not response.success:
