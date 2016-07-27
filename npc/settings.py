@@ -7,6 +7,7 @@ Also has a helper function to check loaded settings for faults.
 import json
 from os import path
 from datetime import datetime
+from collections import OrderedDict
 
 from . import util
 
@@ -221,12 +222,12 @@ class Settings:
         Returns:
             Dict of metadata keys and values.
         """
-        return {
-            'title': self.get('metadata.title'),
-            'created': datetime.now().strftime(self.get('metadata.timestamp')),
+        return OrderedDict(
+            title=self.get('metadata.title'),
+            created=datetime.now().strftime(self.get('metadata.timestamp')),
             **self.get('metadata.additional_keys.all'),
             **self.get('metadata.additional_keys.{}'.format(fmt))
-        }
+        )
 
 class InternalSettings(Settings, metaclass=util.Singleton):
     """
