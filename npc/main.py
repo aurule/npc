@@ -120,7 +120,7 @@ def _make_parser():
     # This parser stores options shared by all character creation commands. It is never exposed directly.
     character_parser = argparse.ArgumentParser(add_help=False)
     character_parser.add_argument('name', help="Character name", metavar='name')
-    character_parser.add_argument('-g', '--groups', default=[], nargs="*", help='Name of a group that counts the character as a member', metavar='group')
+    character_parser.add_argument('-g', '--groups', default=None, nargs="*", help='Name of a group that counts the character as a member', metavar='group')
     character_parser.add_argument('--dead', default=False, const='', nargs='?', help='Mark that the character has died, with optional notes', metavar='notes')
     character_parser.add_argument('--foreign', default=False, help="Mark that the character is foreign to the main campaign setting, with optional notes on where they're from", metavar='location')
     character_parser.set_defaults(serialize=['name', 'ctype'])
@@ -128,7 +128,7 @@ def _make_parser():
     # Parent parser for shared pathing options
     paths_parser = argparse.ArgumentParser(add_help=False)
     paths_parser.add_argument('--search', nargs="*", default=None, help="Paths to search. Individual files are added verbatim and directories are searched recursively.", metavar="PATH")
-    paths_parser.add_argument('--ignore', nargs="*", default=[], help="Paths to skip when searching for character files", metavar="PATH")
+    paths_parser.add_argument('--ignore', nargs="*", default=None, help="Paths to skip when searching for character files", metavar="PATH")
     paths_parser.set_defaults(serialize=['search'])
 
     # This is the main parser which handles program-wide options. These should be kept sparse.
