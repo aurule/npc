@@ -345,14 +345,13 @@ def reorg(search, ignore=None, *, purge=False, verbose=False, dry=False, **kwarg
     if not path.exists(base_path):
         return Result(False, errmsg="Cannot access '{}'".format(base_path), errcode=4)
 
-    characters = parser.get_characters(search, ignore)
-    for char_data in characters:
-        new_path = create_path_from_character(Character(**char_data), target_path=base_path)
-        if new_path != path.dirname(char_data['path']):
+    for parsed_character in parser.get_characters(search, ignore):
+        new_path = create_path_from_character(parsed_character, target_path=base_path)
+        if new_path != path.dirname(parsed_character['path']):
             if verbose or dry:
-                print("Moving {} to {}".format(char_data['path'], new_path))
+                print("Moving {} to {}".format(parsed_character['path'], new_path))
             if not dry:
-                shmove(char_data['path'], new_path)
+                shmove(parsed_character['path'], new_path)
 
     if purge:
         for empty_path in find_empty_dirs(base_path):
