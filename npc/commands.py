@@ -57,24 +57,23 @@ def create_changeling(name, seeming, kith, *,
     )
 
     # build minimal character dict
-    temp_char_data = {
-        'type': ['changeling'],
-        'seeming': seeming,
-        'kith': kith
-    }
+    temp_char = Character()
+    temp_char.append('type', 'changeling')
+    temp_char.append('seeming', seeming)
+    temp_char.append('kith', kith)
     if court:
-        temp_char_data['court'] = court.title()
+        temp_char.append('court', court.title())
     if motley:
-        temp_char_data['motley'] = motley
+        temp_char.append('motley', motley)
     if groups:
-        temp_char_data['group'] = groups
+        temp_char['group'] = groups
     if dead:
-        temp_char_data['dead'] = dead
+        temp_char.append('dead', dead)
     if foreign:
-        temp_char_data['foreign'] = foreign
+        temp_char.append('foreign', foreign)
 
     # get path for the new file
-    target_path = create_path_from_character(Character(**temp_char_data), prefs=prefs)
+    target_path = create_path_from_character(temp_char, prefs=prefs)
 
     filename = name + '.nwod'
     target_path = path.join(target_path, filename)
@@ -186,18 +185,17 @@ def create_simple(name, ctype, *, dead=False, foreign=False, **kwargs):
         return Result(False, errmsg="Unrecognized template '{}'".format(ctype), errcode=7)
 
     # build minimal character dict
-    temp_char_data = {
-        'type': [ctype],
-    }
+    temp_char = Character()
+    temp_char.append('type', ctype)
     if groups:
-        temp_char_data['group'] = groups
+        temp_char['group'] = groups
     if dead:
-        temp_char_data['dead'] = dead
+        temp_char.append('dead', dead)
     if foreign:
-        temp_char_data['foreign'] = foreign
+        temp_char.append('foreign', foreign)
 
     # get path for the new file
-    target_path = create_path_from_character(Character(**temp_char_data), prefs=prefs)
+    target_path = create_path_from_character(temp_char, prefs=prefs)
 
     filename = name + '.nwod'
     target_path = path.join(target_path, filename)
@@ -412,6 +410,7 @@ def create_path_from_character(character, *, target_path=None, **kwargs):
         # changelings use court first, then groups
         if 'court' in character:
             for court_name in character['court']:
+                print(court_name)
                 target_path = _add_path_if_exists(target_path, court_name)
         else:
             target_path = _add_path_if_exists(target_path, 'Courtless')
