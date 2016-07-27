@@ -30,7 +30,7 @@ This project is very much a work in progress. It works well enough for me to use
 
 ## Requirements
 
-NPC requires at least Python 3.5.0.
+NPC requires at least Python 3.5.0 and Mako 1.0.0.
 
 ## Installation
 

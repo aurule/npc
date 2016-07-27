@@ -5,8 +5,9 @@ Has a single entry point `dump`.
 """
 
 from .. import util
+from mako.template import Template
 
-def dump(characters, outstream, *, include_metadata=None, metadata=None):
+def dump(characters, outstream, *, include_metadata=None, metadata=None, prefs=None):
     """
     Create a markdown character listing
 
@@ -20,6 +21,8 @@ def dump(characters, outstream, *, include_metadata=None, metadata=None):
         metadata (dict): Additional metadata to insert. Ignored unless
             include_metadata is set. The keys 'title', and 'created' will
             overwrite the generated values for those keys.
+        prefs (Settings): Settings object. Used to get the location of template
+            files.
 
     Returns:
         A util.Result object. Openable will not be set.
@@ -28,19 +31,20 @@ def dump(characters, outstream, *, include_metadata=None, metadata=None):
         metadata = {}
 
     if include_metadata:
-        if include_metadata == 'mmd':
-            metadata_lines = ['{}: {}'.format(k.title(), v) for k, v in metadata.items()]
-            final_metadata = "  \n".join(metadata_lines)
-        elif include_metadata in ('yaml', 'yfm'):
-            metadata_lines = ['{}: {}'.format(k, v) for k, v in metadata.items()]
-            final_metadata = "---\n" + "\n".join(metadata_lines) + "\n---\n"
-        else:
+        # coerce to canonical form
+        if include_metadata == "yaml":
+            include_metadata = "yfm"
+
+        # load and render template
+        header_file = prefs.get("templates.listing.header.{}".format(include_metadata))
+        if not header_file:
             return util.Result(
                 False,
                 errmsg="Unrecognized metadata format option '{}'".format(include_metadata),
                 errcode=6)
 
-        outstream.write(final_metadata)
+        header_template = Template(filename=header_file)
+        outstream.write(header_template.render(metadata=metadata))
 
     for char in characters:
         # name (header)

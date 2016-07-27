@@ -31,14 +31,26 @@
         "goblin": "Goblins"
     },
 
-    // List of templates indexed by character type. These templates are copied
-    // into the base character path when creating a new character of their type.
+    // List of templates
     "templates": {
+        //  Character templates indexed by character type. These templates are
+        //  copied into the base character path when creating a new character of
+        //  their type.
         "human": "templates/Human Character Sheet.nwod",
         "changeling": "templates/Changeling Character Sheet.nwod",
         "fetch": "templates/Fetch Character Sheet.nwod",
         "goblin": "templates/Goblin Character Sheet.nwod",
-        "session": "templates/Session Log.md"
+
+        // Session template used for making new session entries
+        "session": "templates/Session Log.md",
+
+        // Output templates. These are used when creating character listings.
+        "listing": {
+            "header": {
+                "mmd": "templates/listing/Header.mmd.mako",
+                "yfm": "templates/listing/Header.yfm.mako"
+            }
+        }
     },
 
     // Text to add to the beginning of new character files.
