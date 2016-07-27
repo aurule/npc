@@ -140,6 +140,7 @@ class Character(defaultdict):
         if attributes is not None:
             self.update(attributes)
         self.update(kwargs)
+        self.problems = []
 
     def get_first(self, key):
         """
@@ -216,3 +217,31 @@ class Character(defaultdict):
         """
         self['rank'][group].append(value)
         return self
+
+    def validate(self):
+        """
+        Validate the presence of a few required elements: description and type.
+
+        Returns:
+            True if this Character has no validation problems, false if not.
+        """
+        probs = []
+        if not self['description'].strip():
+            probs.append("Missing description")
+
+        if not self.get_first('type'):
+            probs.append("Missing type")
+
+        self.problems = probs
+        return len(self.problems) == 0
+
+    def is_valid(self):
+        """
+        Get whether this Character is valid
+
+        Does not redo the validation. When in doubt, call validate instead.
+
+        Returns:
+            True if this Character has no validation problems, false if not.
+        """
+        return len(self.problems) == 0

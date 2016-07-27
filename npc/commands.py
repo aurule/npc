@@ -651,30 +651,23 @@ def lint(search, ignore=None, *, fix=False, **kwargs):
     # check each character
     characters = parser.get_characters(search, ignore)
     for character in characters:
-        problems = []
-        # Check description
-        if not character['description'].strip():
-            problems.append("Missing description")
+        character.validate()
 
-        # Check type tag
-        if not 'type' in character:
-            problems.append("Missing @type tag")
-        else:
-            # Do additional processing based on reported type
-            types = [t.lower() for t in character['type']]
-            if 'changeling' in types:
-                # find (and fix) changeling-specific problems in the body of the sheet
-                problems.extend(linters.changeling.lint(character, fix=fix, sk_data=prefs.get('changeling')))
+        # Do additional processing based on reported type
+        types = [t.lower() for t in character['type']]
+        if 'changeling' in [t.lower() for t in character['type']]:
+            # find (and fix) changeling-specific problems in the body of the sheet
+            character.problems.extend(linters.changeling.lint(character, fix=fix, sk_data=prefs.get('changeling')))
 
         # Report problems on one line if possible, or as a block if there's more than one
-        if len(problems):
+        if not character.is_valid():
             openable.append(character['path'])
-            if len(problems) > 1:
+            if len(character.problems) > 1:
                 print("File '{}':".format(character['path']))
-                for detail in problems:
+                for detail in character.problems:
                     print("    {}".format(detail))
             else:
-                print("{} in '{}'".format(problems[0], character['path']))
+                print("{} in '{}'".format(character.problems[0], character['path']))
 
     return Result(True, openable=openable)
 
