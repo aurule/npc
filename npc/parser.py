@@ -6,6 +6,7 @@ import re
 import itertools
 from os import path, walk
 from collections import defaultdict
+from .util import Character
 
 def get_characters(search_paths=None, ignore_paths=None):
     """
@@ -112,7 +113,7 @@ def _parse_character(char_file_path):
 
     # rank uses a dict keyed by group name instead of an array
     # description is always a plain string
-    char_properties = defaultdict(list)
+    char_properties = Character()
     char_properties.update({'name': [name], 'description': '', 'rank': defaultdict(list)})
 
     with open(char_file_path, 'r') as char_file:

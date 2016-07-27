@@ -2,10 +2,10 @@
 Helper functions shared between the other modules
 """
 
-
 import re
 import json
 import sys
+from collections import defaultdict
 
 def load_json(filename):
     """
@@ -102,3 +102,24 @@ class Result:
 
     def __str__(self):
         return self.errmsg
+
+class Character(defaultdict):
+    """
+    Object to hold and access data for a single character
+
+    Basically a dictionary with some helper methods. When accessed like a dict,
+    missing keys will return an empty array instead of throwing an exception.
+    """
+    def __init__(self):
+        super().__init__(list)
+        self['description'] = ''
+        self['rank'] = defaultdict(list)
+
+    def get_first(self, key):
+        try:
+            return self[key][0]
+        except IndexError:
+            return None
+
+    def get_remaining(self, key):
+        return self[key][1:]
