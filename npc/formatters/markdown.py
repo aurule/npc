@@ -44,7 +44,7 @@ def dump(characters, outstream, *, include_metadata=None, metadata=None):
 
     for char in characters:
         # name (header)
-        realname = char['name'][0]
+        realname = char.get_first('name')
         outstream.write("# {}".format(realname))
         if 'dead' in char:
             outstream.write(" (Deceased)")
@@ -83,7 +83,7 @@ def dump(characters, outstream, *, include_metadata=None, metadata=None):
     return util.Result(True)
 
 def _get_character_type(char):
-    return char['type'][0].lower()
+    return char.get_first('type').lower()
 
 def _append_aka_line(names, info_block):
     """
@@ -133,7 +133,7 @@ def _append_character_type_line(char, info_block):
     """
 
     type_parts = []
-    base = char['type'][0]
+    base = char.get_first('type')
     if 'foreign' in char:
         base += ' in {}'.format(' and '.join(char['foreign']))
     type_parts.append(base)
@@ -141,17 +141,17 @@ def _append_character_type_line(char, info_block):
     character_type_code = _get_character_type(char)
     if character_type_code == 'changeling':
         if 'motley' in char:
-            motley = char['motley'][0]
+            motley = char.get_first('motley')
             slug = _add_group_ranks('{} Motley'.format(motley, motley, char['rank']))
             type_parts.append(slug)
 
         if 'court' in char:
-            court = char['court'][0]
+            court = char.get_first('court')
             slug = _add_group_ranks('{} Court'.format(court, court, char['rank']))
             type_parts.append(slug)
     else:
         if 'group' in char:
-            group = char['group'][0]
+            group = char.get_first('group')
             slug = _add_group_ranks(group, group, char['rank'])
             type_parts.append(slug)
 
@@ -225,10 +225,10 @@ def _append_secondary_groups(char, info_block):
 
     character_type = _get_character_type(char)
     if character_type == "changeling":
-        for court in char.get('court', [])[1:]:
+        for court in char.get_remaining('court'):
             group_parts.append(_add_group_ranks('{} court'.format(court, court, char['rank'])))
 
-    for motley in char.get('motley', [])[1:]:
+    for motley in char.get_remaining('motley'):
         group_parts.append(_add_group_ranks('{} Motley'.format(motley, motley, char['rank'])))
     for group in char.get('group', []):
         group_parts.append(_add_group_ranks(group, group, char['rank']))
