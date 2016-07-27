@@ -56,7 +56,7 @@ def create_changeling(name, seeming, kith, *,
         re.MULTILINE | re.IGNORECASE
     )
 
-    # build minimal character dict
+    # build minimal Character
     temp_char = Character()
     temp_char.append('type', 'changeling') \
              .append('seeming', seeming)   \
@@ -184,7 +184,7 @@ def create_simple(name, ctype, *, dead=False, foreign=False, **kwargs):
     if ctype not in prefs.get('templates'):
         return Result(False, errmsg="Unrecognized template '{}'".format(ctype), errcode=7)
 
-    # build minimal character dict
+    # build minimal character
     temp_char = Character()
     temp_char.append('type', ctype)
     if groups:
@@ -385,7 +385,7 @@ def create_path_from_character(character, *, target_path=None, **kwargs):
     which already exist.
 
     Args:
-        character (dict): Parsed character data
+        character (Character): Parsed character data
         target_path (str): Base path for character files
         prefs (Settings): Settings object to use. Uses internal settings by
             default.
@@ -496,13 +496,13 @@ def listing(search, ignore=None, *, fmt='markdown', metadata=None, title=None, o
 
 def _sort_chars(characters):
     """
-    Sort a list of character dicts.
+    Sort a list of character Characters.
 
     In the future, this is where different sort methods will be handled. Right
     now, it just sorts them by the last element of their name (space-delimeted).
 
     Args:
-        characters -- list of character dicts
+        characters -- list of Characters
 
     Returns:
         List of characters ordered by last name.
@@ -518,10 +518,10 @@ def _prune_chars(characters):
     type if one was not specified.
 
     Args:
-        characters (list): List of dicts containing character information
+        characters (list): List of Character objects
 
     Yields:
-        Dictionary of characters with modified information.
+        Modified Character objects
     """
 
     for char in characters:

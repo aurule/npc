@@ -1,11 +1,10 @@
 """
-Parse character files into dictionaries
+Parse character files into Character objects
 """
 
 import re
 import itertools
 from os import path, walk
-from collections import defaultdict
 from .util import Character
 
 def get_characters(search_paths=None, ignore_paths=None):
@@ -17,7 +16,7 @@ def get_characters(search_paths=None, ignore_paths=None):
         ignore_paths (list): Paths to exclude from the search
 
     Returns:
-        List of dictionaries containing parsed character information
+        List of Characters containing parsed character information
     """
     if search_paths is None:
         search_paths = ['.']
@@ -35,7 +34,7 @@ def _parse_path(start_path, ignore_paths=None, include_bare=False):
             extension in addition to .nwod files.
 
     Returns:
-        List of dictionaries containing parsed character data
+        List of Characters containing parsed character data
     """
     if path.isfile(start_path):
         return [_parse_character(start_path)]
@@ -94,10 +93,9 @@ def _parse_character(char_file_path):
         char_file_path (str): Path to the character file to parse
 
     Returns:
-        Dictionary of character data. Most keys store a list of values from the
-        character. The `description` key stores a simple string, and the `rank`
-        key stores a dict of list entries. Those keys are individual group
-        names.
+        Character object. Most keys store a list of values from the character.
+        The `description` key stores a simple string, and the `rank` key stores
+        a dict of list entries. Those keys are individual group names.
     """
     name_re = re.compile(r'(?P<name>\w+(\s\w+)*)(?: - )?.*')
     section_re = re.compile(r'^--.+--\s*$')
