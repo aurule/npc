@@ -109,12 +109,9 @@ def _parse_character(char_file_path):
     # derive character name from basename
     basename = path.basename(char_file_path)
     match = name_re.match(path.splitext(basename)[0])
-    name = match.group('name')
 
-    # rank uses a dict keyed by group name instead of an array
-    # description is always a plain string
-    char_properties = Character()
-    char_properties.update({'name': [name], 'description': '', 'rank': defaultdict(list)})
+    # instantiate new character
+    parsed_char = Character(name=[match.group('name')])
 
     with open(char_file_path, 'r') as char_file:
         last_group = ''
@@ -131,23 +128,25 @@ def _parse_character(char_file_path):
                 value = match.group('value')
 
                 if tag == 'changeling':
+                    # grab attributes from compound tag
                     bits = value.split(maxsplit=1)
-                    char_properties['type'].append('Changeling')
+                    parsed_char.append('type', 'Changeling')
                     if len(bits):
-                        char_properties['seeming'].append(bits[0])
+                        parsed_char.append('seeming', bits[0])
                     if len(bits) > 1:
-                        char_properties['kith'].append(bits[1])
+                        parsed_char.append('kith', bits[1])
                     continue
 
                 if tag == 'realname':
-                    char_properties['name'][0] = value
+                    # replace the first name
+                    parsed_char['name'][0] = value
                     continue
 
                 if tag in group_tags:
                     last_group = value
                 if tag == 'rank':
                     if last_group:
-                        char_properties['rank'][last_group].append(value)
+                        parsed_char['rank'][last_group].append(value)
                     continue
             else:
                 if line == "\n":
@@ -158,11 +157,11 @@ def _parse_character(char_file_path):
                 else:
                     previous_line_empty = False
 
-                char_properties['description'] += line
+                parsed_char.append('description', line)
                 continue
 
-            char_properties[tag].append(value)
+            parsed_char.append(tag, value)
 
-    char_properties['description'] = char_properties['description'].strip()
-    char_properties['path'] = char_file_path
-    return char_properties
+    parsed_char['description'] = parsed_char['description'].strip()
+    parsed_char['path'] = char_file_path
+    return parsed_char
