@@ -232,6 +232,9 @@ class Character(defaultdict):
         if not self.get_first('type'):
             probs.append("Missing type")
 
+        if not self.get_first('name'):
+            probs.append("Missing name")
+
         self.problems = probs
         return len(self.problems) == 0
 
