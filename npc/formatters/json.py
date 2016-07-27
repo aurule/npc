@@ -8,7 +8,7 @@ Has a single entry point `dump` which mostly just inserts metadata and calls
 import json
 from .. import util
 
-def dump(characters, outstream, *, include_metadata=False, metadata=None):
+def dump(characters, outstream, *, include_metadata=False, metadata=None, **kwargs):
     """
     Dump a json representation of all character data
 
