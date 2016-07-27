@@ -250,6 +250,8 @@ class Character(defaultdict):
             * zero or one court is present
             * zero or one motley is present
 
+        Any errors are added to the problems list.
+
         Returns:
             None
         """
