@@ -648,7 +648,7 @@ def lint(search, ignore=None, *, fix=False, **kwargs):
 
         # Do additional processing based on reported type
         types = [t.lower() for t in character['type']]
-        if 'changeling' in [t.lower() for t in character['type']]:
+        if 'changeling' in types:
             # find (and fix) changeling-specific problems in the body of the sheet
             character.problems.extend(linters.changeling.lint(character, fix=fix, sk_data=prefs.get('changeling')))
 
