@@ -64,8 +64,7 @@ class Settings:
         self.data = util.load_json(path.join(self.default_settings_path, 'settings-default.json'))
 
         # massage template names into real paths
-        for key, filename in self.data['templates'].items():
-            self.data['templates'][key] = path.join(self.install_base, filename)
+        self.data['templates'] = self._expand_filenames(base_path=self.install_base, data=self.data['templates'])
 
         # merge additional settings files
         for settings_path in self.settings_paths:
@@ -77,6 +76,28 @@ class Settings:
                     # ignore these errors
                     if self.verbose:
                         util.error(err.strerror, err.filename)
+
+    def _expand_filenames(self, base_path, data):
+        """
+        Recursively expand template filenames into full, canonical paths
+
+        Assumes that every non-dict value is a path string.
+
+        Args:
+            base_path (str): Base path for relative pathing
+            data (dict): Dict containing path information, possibly nested
+
+        Returns:
+            Dict with altered paths
+        """
+        expanded_data = {}
+        for key, value in data.items():
+            if isinstance(value, dict):
+                expanded_data[key] = self._expand_filenames(base_path, value)
+            else:
+                expanded_data[key] = path.join(base_path, path.expanduser(value))
+
+        return expanded_data
 
     def load_more(self, settings_path):
         """
@@ -95,25 +116,12 @@ class Settings:
             util.error(err.nicemsg)
             return
 
-        def evaluate_paths(base, loaded, key):
-            """
-            Get the canonical path for paths in a dict
-
-            Args:
-                base (str): Base path to use
-                loaded (dict): Dict containing an element 'key' whose value is a dict of paths
-                key (any): Key containing a dict of paths to evaluate
-
-            Returns:
-                No return value. Instead, replaces the paths in loaded['key'].
-            """
-            if key in loaded:
-                loaded[key] = {k: path.join(base, path.expanduser(v)) for k, v in loaded[key].items()}
-
         # paths should be evaluated relative to the settings file in settings_path
         absolute_path_base = path.dirname(path.realpath(settings_path))
-        evaluate_paths(absolute_path_base, loaded, 'support')
-        evaluate_paths(absolute_path_base, loaded, 'templates')
+        if 'templates' in loaded:
+            loaded['templates'] = self._expand_filenames(absolute_path_base, loaded['templates'])
+        if 'support' in loaded:
+            loaded['support'] = self._expand_filenames(absolute_path_base, loaded['support'])
 
         self.data = self._merge_settings(loaded, self.data)
 
