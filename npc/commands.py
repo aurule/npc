@@ -58,9 +58,9 @@ def create_changeling(name, seeming, kith, *,
 
     # build minimal character dict
     temp_char = Character()
-    temp_char.append('type', 'changeling')
-    temp_char.append('seeming', seeming)
-    temp_char.append('kith', kith)
+    temp_char.append('type', 'changeling') \
+             .append('seeming', seeming)   \
+             .append('kith', kith)
     if court:
         temp_char.append('court', court.title())
     if motley:
