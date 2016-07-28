@@ -47,6 +47,14 @@ def dump(characters, outstream, *, include_metadata=None, metadata=None, prefs=N
         outstream.write(header_template.render(metadata=metadata))
 
     for char in characters:
+        if char.get_type_key() == "human":
+            body_file = prefs.get("templates.listing.character.md.{}".format(char.get_type_key()))
+            if not body_file:
+                body_file = prefs.get("templates.listing.character.md.default")
+            body_template = Template(filename=body_file)
+            outstream.write(body_template.render(character=char))
+            continue
+
         # name (header)
         realname = char.get_first('name')
         outstream.write("# {}".format(realname))
