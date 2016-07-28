@@ -292,3 +292,17 @@ class Character(defaultdict):
             return self.get_first('type').lower()
         except AttributeError:
             return None
+
+    def has_items(self, key, threshold=1):
+        """
+        Get whether there are a certain number of values for key
+
+        Args:
+            key (str): The key to check
+            threshold (int): The number of values that must be in key
+
+        Returns:
+            True if key is present and has at least as many values in its list
+            as threshold. False if not.
+        """
+        return len(self[key]) >= threshold
