@@ -36,7 +36,7 @@ ${motley} Motley${make_ranks(motley)}\
     % endfor
 % endif
 \
-% if character.has_items('group'):
+% if character.has_items('group', 2):
 
     % for group in character.get_remaining('group'):
 ${group}${make_ranks(group)}\
@@ -46,8 +46,8 @@ ${group}${make_ranks(group)}\
     % endfor
 % endif
 
-
 % if character.has_items('appearance'):
+
 *Appearance:* ${' '.join(character['appearance'])}
 % endif
 
