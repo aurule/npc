@@ -464,18 +464,24 @@ def listing(search, ignore=None, *, fmt='markdown', metadata=None, title=None, o
     if out_type == "default":
         out_type = prefs.get('list_format')
 
-    metadata_type = metadata
     if out_type in ('md', 'markdown'):
         out_type = 'markdown' # coerce output type to canonical form
-        # Ensure 'default' metadata type gets replaced with the right default
-        # metadata format
-        if metadata_type == 'default':
-            metadata_type = prefs.get('metadata.default_format.markdown')
         dumper = formatters.markdown.dump
+    elif out_type in ('htm', 'html'):
+        out_type = 'html'
+        dumper = formatters.html.dump
     elif out_type == 'json':
         dumper = formatters.json.dump
     else:
         return Result(False, errmsg="Cannot create output of format '{}'".format(out_type), errcode=5)
+
+
+    if metadata == 'default' and out_type != 'json':
+        # Ensure 'default' metadata type gets replaced with the right default
+        # metadata format. Irrelevant for json format.
+        metadata_type = prefs.get('metadata.default_format.markdown')
+    else:
+        metadata_type = metadata
 
     meta = prefs.get_metadata(out_type)
     if title:

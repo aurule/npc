@@ -48,12 +48,16 @@
         "listing": {
             "header": {
                 "mmd": "templates/listing/Header.mmd.mako",
-                "yfm": "templates/listing/Header.yfm.mako"
+                "yfm": "templates/listing/Header.yfm.mako",
+                "meta": "templates/listing/Header.meta.mako"
             },
             "character": {
-                "md": {
+                "markdown": {
                     "default": "templates/listing/Character.md.mako",
                     "changeling": "templates/listing/Changeling.md.mako"
+                },
+                "html": {
+                    "default": "templates/listing/Character.html.mako"
                 }
             }
         }
