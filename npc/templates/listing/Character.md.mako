@@ -1,3 +1,4 @@
+<%page args="character"/>\
 <%def name="make_ranks(group_name)">\
     % if group_name in character['rank']:
  (${', '.join(character['rank'][group_name])})\
