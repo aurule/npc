@@ -5,6 +5,7 @@ Has a single entry point `dump`.
 """
 
 import html
+import markdown
 import tempfile
 from .. import util
 from mako.template import Template
@@ -53,7 +54,10 @@ def dump(characters, outstream, *, include_metadata=None, metadata=None, prefs=N
                 body_file = prefs.get("templates.listing.character.html.default")
             body_template = Template(filename=body_file, module_directory=tempdir)
             outstream.write(
-                body_template.render(
-                    character=char.copy_and_alter(html.escape)))
+                markdown.markdown(
+                    body_template.render(
+                        character=char.copy_and_alter(html.escape)),
+                    ['markdown.extensions.extra']
+                ))
     outstream.write("</body>\n</html>\n")
     return util.Result(True)

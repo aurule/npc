@@ -39,11 +39,11 @@ ${', '.join(["{}{}".format(g, make_ranks(g)) for g in character.get_remaining('g
 %endif
 \
 %if character.has_items('appearance'):
-<p><em>Appearance:</em> ${' '.join(character['appearance'])}</p>
+<p markdown="1"><em>Appearance:</em> ${' '.join(character['appearance'])}</p>
 %endif
 \
-<p>${character['description']}</p>
+<p markdown="1">${character['description']}</p>
 \
 %if character.has_items('dead'):
-<p><em>Dead:</em> ${' '.join(character['dead'])}</p>
+<p markdown="1"><em>Dead:</em> ${' '.join(character['dead'])}</p>
 %endif
