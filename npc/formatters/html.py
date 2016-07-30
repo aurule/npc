@@ -4,6 +4,7 @@ Markdown formatter for creating a page of characters.
 Has a single entry point `dump`.
 """
 
+import html
 import tempfile
 from .. import util
 from mako.template import Template
@@ -51,6 +52,8 @@ def dump(characters, outstream, *, include_metadata=None, metadata=None, prefs=N
             if not body_file:
                 body_file = prefs.get("templates.listing.character.html.default")
             body_template = Template(filename=body_file, module_directory=tempdir)
-            outstream.write(body_template.render(character=char))
+            outstream.write(
+                body_template.render(
+                    character=util.Character.copy_and_alter(char, html.escape)))
     outstream.write("</body>\n</html>\n")
     return util.Result(True)
