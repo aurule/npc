@@ -4,6 +4,7 @@ Markdown formatter for creating a page of characters.
 Has a single entry point `dump`.
 """
 
+import codecs
 import html
 import markdown
 import tempfile
@@ -33,6 +34,14 @@ def dump(characters, outstream, *, include_metadata=None, metadata=None, prefs=N
     if not metadata:
         metadata = {}
 
+    # encode as ascii unless our stream has an opinion
+    try:
+        encoding = outstream.encoding
+    except AttributeError:
+        encoding = 'ascii'
+
+    modstream = codecs.getwriter(encoding)(outstream, errors='xmlcharrefreplace')
+
     if include_metadata:
         # load and render template
         header_file = prefs.get("templates.listing.header.{}".format(include_metadata))
@@ -43,9 +52,9 @@ def dump(characters, outstream, *, include_metadata=None, metadata=None, prefs=N
                 errcode=6)
 
         header_template = Template(filename=header_file)
-        outstream.write(header_template.render(metadata=metadata))
+        modstream.write(header_template.render(metadata=metadata))
     else:
-        outstream.write("<!DOCTYPE html>\n<html>\n<head></head>\n<body>\n")
+        modstream.write("<!DOCTYPE html>\n<html>\n<head></head>\n<body>\n")
 
     with tempfile.TemporaryDirectory() as tempdir:
         for char in characters:
@@ -53,11 +62,11 @@ def dump(characters, outstream, *, include_metadata=None, metadata=None, prefs=N
             if not body_file:
                 body_file = prefs.get("templates.listing.character.html.default")
             body_template = Template(filename=body_file, module_directory=tempdir)
-            outstream.write(
+            modstream.write(
                 markdown.markdown(
                     body_template.render(
                         character=char.copy_and_alter(html.escape)),
                     ['markdown.extensions.extra']
                 ))
-    outstream.write("</body>\n</html>\n")
+    modstream.write("</body>\n</html>\n")
     return util.Result(True)
