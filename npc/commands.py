@@ -8,6 +8,7 @@ without going through the CLI.
 import re
 import json
 import sys
+import codecs
 from contextlib import contextmanager
 from datetime import datetime
 from os import path, walk, makedirs, rmdir, scandir
@@ -487,7 +488,7 @@ def listing(search, ignore=None, *, fmt='markdown', metadata=None, title=None, o
     if title:
         meta['title'] = title
 
-    with _smart_open(outfile) as outstream:
+    with _smart_open(outfile, (out_type=='html')) as outstream:
         response = dumper(characters, outstream, include_metadata=metadata_type, metadata=meta, prefs=prefs)
 
     # pass errors straight through
@@ -546,7 +547,7 @@ def _prune_chars(characters):
         yield char
 
 @contextmanager
-def _smart_open(filename=None):
+def _smart_open(filename=None, html=False):
     """
     Open a named file or stdout as appropriate.
 
@@ -555,6 +556,8 @@ def _smart_open(filename=None):
     Args:
         filename (str|None): Name of the file path to open. None and '-' mean
             stdout.
+        html (bool): If opening a file, whether to replace unicode characters
+            with html entities.
 
     Yields:
         File-like object.
@@ -565,7 +568,7 @@ def _smart_open(filename=None):
 
     """
     if filename and filename != '-':
-        stream = open(filename, 'w')
+        stream = codecs.open(filename, 'w', encoding='ascii', errors='xmlcharrefreplace') if html else open(filename, 'w')
     else:
         stream = sys.stdout
 
