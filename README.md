@@ -30,7 +30,11 @@ This project is very much a work in progress. It works well enough for me to use
 
 ## Requirements
 
-NPC requires at least Python 3.5.0 and Mako 1.0.0.
+NPC requires at least:
+
+* Python 3.5.0
+* [Mako](http://www.makotemplates.org/) 1.0.0
+* [Python Markdown](http://pythonhosted.org/Markdown/index.html) 2.6.0
 
 ## Installation
 
@@ -164,9 +168,11 @@ Options:
 
 * `--search`: Only look in these files and directories. Defaults to the base characters path.
 * `--ignore`: Ignore these files and directories. By default, nothing is ignored.
-* `--format`: Specify the format of the output. One of `markdown`, `md`, or `json`. Defaults to `markdown`.
-* `--metadata`: Include metadata in the output. Can optionally specify the format of this metadata, if the main format supports it. Recognized values when used with the `markdown` format are `mmd` for MultiMarkdown metadata, and `yfm` or `yaml` for YAML Front Matter metadata.
-* `--outfile`: Path where the output should go. If omitted (or you pass "`-`"), the output will go to stdout for chaining to another command.
+* `--format`: Specify the format of the output. One of `markdown`, `md`, `json`, 'htm', or 'html'. Defaults to `markdown`.
+* `--metadata`: Include metadata in the output. Can optionally specify the format of this metadata, if the main format supports it. Recognized values depend on the output format:
+    - Markdown supports `mmd` for MultiMarkdown metadata, and `yfm` or `yaml` for YAML Front Matter metadata
+    - HTML supports `meta` to put metadata in `<meta>` elements in the document `<head>`
+* `--outfile`: Path where the output should go. If omitted (or you pass `-`), the output will go to stdout for chaining to another command.
 
 ## Dump Raw NPC Data
 
@@ -186,7 +192,7 @@ The `reorg` command builds default paths for all the characters and then moves t
 
 For an explanation of the default paths, see [Create a Character](#create-a-character).
 
-Characters are always placed into the default characters path, regardless of the `search` argument.
+Characters are always placed within the default characters path, regardless of the `search` argument.
 
 Options:
 
