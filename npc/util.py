@@ -306,3 +306,33 @@ class Character(defaultdict):
             as threshold. False if not.
         """
         return len(self[key]) >= threshold
+
+    @classmethod
+    def copy_and_alter(cls, original, func):
+        """
+        Copy a character object and change its fields
+
+        Makes a copy of a character object. The function func is called on every
+        value in the original Character, and its return value is inserted into
+        the copy.
+
+        Args:
+            original (Character): Character object to copy
+            func (function): Function to apply to every value within the
+                original
+
+        Returns:
+            Character object containing values from the original after being
+            altered by func.
+        """
+        new_char = Character()
+        for attr, values in original.items():
+            if attr == 'rank':
+                for group, ranks in values.items():
+                    for item in ranks:
+                        new_char.append_rank(group, func(item))
+            else:
+                for item in values:
+                    new_char.append(attr, func(item))
+
+        return new_char
