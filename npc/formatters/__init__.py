@@ -8,3 +8,6 @@ in each linter.
 """
 
 from . import markdown, json, html
+
+BINARY_TYPES = ('html')
+"""tuple: Format names that require a binary stream instead of a text stream"""
