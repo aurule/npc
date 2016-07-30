@@ -90,5 +90,7 @@ ${group}${make_ranks(group)}\
 
 ${character['description']}
 % if character.has_items('dead'):
-${' '.join(character['dead'])}
+
+*Dead:* ${' '.join(character['dead'])}
 % endif
+
