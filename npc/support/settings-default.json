@@ -49,7 +49,7 @@
             "header": {
                 "mmd": "templates/listing/Header.mmd.mako",
                 "yfm": "templates/listing/Header.yfm.mako",
-                "meta": "templates/listing/Header.meta.mako"
+                "meta": "templates/listing/Header.html.meta.mako"
             },
             "character": {
                 "markdown": {
