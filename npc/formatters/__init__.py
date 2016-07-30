@@ -7,4 +7,4 @@ minimum, the characters to list and where to put them. Other args are available
 in each linter.
 """
 
-from . import markdown, json
+from . import markdown, json, html

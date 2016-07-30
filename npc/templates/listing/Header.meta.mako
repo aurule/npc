@@ -1,4 +1,14 @@
 <%page args="metadata"/>\
-% for k, v in metadata.items():
+<!DOCTYPE html>
+<html>
+<head>
+    <title>${metadata['title']}</title>
+    % for k, v in metadata.items():
+    <%
+        if v == 'title':
+            continue
+    %>\
 <meta name="${k}" content="${v}" />
-% endfor
+    % endfor
+</head>
+<body>

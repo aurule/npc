@@ -479,7 +479,7 @@ def listing(search, ignore=None, *, fmt='markdown', metadata=None, title=None, o
     if metadata == 'default' and out_type != 'json':
         # Ensure 'default' metadata type gets replaced with the right default
         # metadata format. Irrelevant for json format.
-        metadata_type = prefs.get('metadata.default_format.markdown')
+        metadata_type = prefs.get('metadata.default_format.{}'.format(out_type))
     else:
         metadata_type = metadata
 

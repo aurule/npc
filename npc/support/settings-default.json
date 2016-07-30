@@ -57,7 +57,8 @@
                     "changeling": "templates/listing/Changeling.md.mako"
                 },
                 "html": {
-                    "default": "templates/listing/Character.html.mako"
+                    "default": "templates/listing/Character.html.mako",
+                    "changeling": "templates/listing/Changeling.html.mako"
                 }
             }
         }
@@ -97,7 +98,8 @@
             // Metadata listed in these hashes will only be added to lists of
             // the named format.
             "markdown" : {},
-            "json": {}
+            "json": {},
+            "html": {}
         }
     }
 }
