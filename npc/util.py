@@ -328,6 +328,8 @@ class Character(defaultdict):
                 for group, ranks in values.items():
                     for item in ranks:
                         new_char.append_rank(group, func(item))
+            elif attr == 'description':
+                new_char.append('description', func(values))
             else:
                 for item in values:
                     new_char.append(attr, func(item))
