@@ -54,6 +54,6 @@ def dump(characters, outstream, *, include_metadata=None, metadata=None, prefs=N
             body_template = Template(filename=body_file, module_directory=tempdir)
             outstream.write(
                 body_template.render(
-                    character=util.Character.copy_and_alter(char, html.escape)))
+                    character=char.copy_and_alter(html.escape)))
     outstream.write("</body>\n</html>\n")
     return util.Result(True)
