@@ -7,7 +7,7 @@ Has a single entry point `dump`.
 import codecs
 import html
 import tempfile
-import markdown
+from markdown import Markdown
 from mako.template import Template
 from .. import util
 
@@ -57,7 +57,7 @@ def dump(characters, outstream, *, include_metadata=None, metadata=None, prefs=N
         modstream.write("<!DOCTYPE html>\n<html>\n<head></head>\n<body>\n")
 
     with tempfile.TemporaryDirectory() as tempdir:
-        md_converter = markdown.Markdown(extensions=['markdown.extensions.extra', 'markdown.extensions.smarty'])
+        md_converter = Markdown(extensions=['markdown.extensions.extra', 'markdown.extensions.smarty'])
         for char in characters:
             body_file = prefs.get("templates.listing.character.html.{}".format(char.get_type_key()))
             if not body_file:
