@@ -57,16 +57,16 @@ def dump(characters, outstream, *, include_metadata=None, metadata=None, prefs=N
         modstream.write("<!DOCTYPE html>\n<html>\n<head></head>\n<body>\n")
 
     with tempfile.TemporaryDirectory() as tempdir:
+        md = markdown.Markdown(extensions=['markdown.extensions.extra'])
         for char in characters:
             body_file = prefs.get("templates.listing.character.html.{}".format(char.get_type_key()))
             if not body_file:
                 body_file = prefs.get("templates.listing.character.html.default")
             body_template = Template(filename=body_file, module_directory=tempdir)
             modstream.write(
-                markdown.markdown(
+                md.reset().convert(
                     body_template.render(
-                        character=char.copy_and_alter(html.escape)),
-                    ['markdown.extensions.extra']
+                        character=char.copy_and_alter(html.escape))
                 ))
     modstream.write("</body>\n</html>\n")
     return util.Result(True)
