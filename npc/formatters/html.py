@@ -6,10 +6,10 @@ Has a single entry point `dump`.
 
 import codecs
 import html
-import markdown
 import tempfile
-from .. import util
+import markdown
 from mako.template import Template
+from .. import util
 
 def dump(characters, outstream, *, include_metadata=None, metadata=None, prefs=None):
     """
@@ -57,14 +57,14 @@ def dump(characters, outstream, *, include_metadata=None, metadata=None, prefs=N
         modstream.write("<!DOCTYPE html>\n<html>\n<head></head>\n<body>\n")
 
     with tempfile.TemporaryDirectory() as tempdir:
-        md = markdown.Markdown(extensions=['markdown.extensions.extra', 'markdown.extensions.smarty'])
+        md_converter = markdown.Markdown(extensions=['markdown.extensions.extra', 'markdown.extensions.smarty'])
         for char in characters:
             body_file = prefs.get("templates.listing.character.html.{}".format(char.get_type_key()))
             if not body_file:
                 body_file = prefs.get("templates.listing.character.html.default")
             body_template = Template(filename=body_file, module_directory=tempdir)
             modstream.write(
-                md.reset().convert(
+                md_converter.reset().convert(
                     body_template.render(
                         character=char.copy_and_alter(html.escape))
                 ))

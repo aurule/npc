@@ -5,8 +5,8 @@ Has a single entry point `dump`.
 """
 
 import tempfile
-from .. import util
 from mako.template import Template
+from .. import util
 
 def dump(characters, outstream, *, include_metadata=None, metadata=None, prefs=None):
     """
