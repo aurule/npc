@@ -7,7 +7,7 @@ from tests.util import fixture_dir
 def lint_output(capsys):
     def do_lint(charname):
         search = fixture_dir(['linter', 'characters', 'Humans', charname])
-        npc.commands.lint([search])
+        npc.commands.lint(search)
         output, _ = capsys.readouterr()
         return output
     return do_lint
@@ -26,7 +26,7 @@ class TestChangeling:
     def lint_output(self, capsys):
         def do_lint(charname):
             search = fixture_dir(['linter', 'characters', 'Changelings', charname])
-            npc.commands.lint([search])
+            npc.commands.lint(search)
             output, _ = capsys.readouterr()
             return output
         return do_lint

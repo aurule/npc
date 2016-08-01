@@ -16,7 +16,7 @@ import itertools
 
 # local packages
 from . import formatters, linters, parser, settings
-from .util import Result, Character
+from .util import Result, Character, flatten
 
 def create_changeling(name, seeming, kith, *,
                       court=None, motley=None, dead=False, foreign=False, **kwargs):
@@ -316,7 +316,7 @@ def session(**kwargs):
 
     return Result(True, openable=openable)
 
-def reorg(search, ignore=None, *, purge=False, verbose=False, dry=False, **kwargs):
+def reorg(*search, ignore=None, purge=False, verbose=False, dry=False, **kwargs):
     """
     Move character files into the correct paths.
 
@@ -324,7 +324,8 @@ def reorg(search, ignore=None, *, purge=False, verbose=False, dry=False, **kwarg
     closely as possible. No new directories are created.
 
     Args:
-        search (list): Paths to search for character files
+        search (list): Paths to search for character files. Items can be strings
+            or lists of strings.
         ignore (list): Paths to ignore
         purge (bool): Whether empty directories should be deleted after all
             files have been moved.
@@ -346,7 +347,7 @@ def reorg(search, ignore=None, *, purge=False, verbose=False, dry=False, **kwarg
     if not path.exists(base_path):
         return Result(False, errmsg="Cannot access '{}'".format(base_path), errcode=4)
 
-    for parsed_character in parser.get_characters(search, ignore):
+    for parsed_character in parser.get_characters(flatten(search), ignore):
         new_path = create_path_from_character(parsed_character, target_path=base_path)
         if new_path != path.dirname(parsed_character['path']):
             if verbose:
@@ -426,12 +427,13 @@ def create_path_from_character(character: Character, *, target_path=None, **kwar
 
     return target_path
 
-def listing(search, ignore=None, *, fmt='markdown', metadata=None, title=None, outfile=None, **kwargs):
+def listing(*search, ignore=None, fmt='markdown', metadata=None, title=None, outfile=None, **kwargs):
     """
     Generate a listing of NPCs.
 
     Args:
-        search (list): Paths to search for character files
+        search (list): Paths to search for character files. Items can be strings
+            or lists of strings.
         ignore (list): Paths to ignore
         fmt (str): Format of the output. Supported types are 'markdown'
             ('md'), and 'json'.
@@ -458,7 +460,7 @@ def listing(search, ignore=None, *, fmt='markdown', metadata=None, title=None, o
     if not ignore:
         ignore = []
 
-    characters = _sort_chars(_prune_chars(parser.get_characters(search, ignore)))
+    characters = _sort_chars(_prune_chars(parser.get_characters(flatten(search), ignore)))
 
     out_type = fmt.lower()
     if out_type == "default":
@@ -577,7 +579,7 @@ def _smart_open(filename=None, binary=False):
         if stream is not sys.stdout:
             stream.close()
 
-def dump(search, ignore=None, *, sort=False, metadata=False, outfile=None, **kwargs):
+def dump(*search, ignore=None, sort=False, metadata=False, outfile=None, **kwargs):
     """
     Dump the raw character data, unaltered.
 
@@ -601,7 +603,7 @@ def dump(search, ignore=None, *, sort=False, metadata=False, outfile=None, **kwa
     if not ignore:
         ignore = []
 
-    characters = parser.get_characters(search, ignore)
+    characters = parser.get_characters(flatten(search), ignore)
     if sort:
         characters = _sort_chars(characters)
 
@@ -624,7 +626,7 @@ def dump(search, ignore=None, *, sort=False, metadata=False, outfile=None, **kwa
 
     return Result(True, openable=openable)
 
-def lint(search, ignore=None, *, fix=False, **kwargs):
+def lint(*search, ignore=None, fix=False, **kwargs):
     """
     Check character files for completeness and correctness.
 
@@ -633,7 +635,8 @@ def lint(search, ignore=None, *, fix=False, **kwargs):
     for details.
 
     Args:
-        search (list): Paths to search for character files
+        search (list): Paths to search for character files. Items can be strings
+            or lists of strings.
         ignore (list): Paths to ignore
         fix (bool): Whether to automatically fix errors when possible
         prefs (Settings): Settings object to use. Uses internal settings by
@@ -650,7 +653,7 @@ def lint(search, ignore=None, *, fix=False, **kwargs):
     openable = []
 
     # check each character
-    characters = parser.get_characters(search, ignore)
+    characters = parser.get_characters(flatten(search), ignore)
     for character in characters:
         character.validate()
 

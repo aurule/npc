@@ -60,6 +60,28 @@ def error(*args, **kwargs):
     """
     print(*args, file=sys.stderr, **kwargs)
 
+def flatten(thing):
+    """
+    Flatten a non-homogenous list
+
+    Example:
+        >>> flatten([1, 2, [3, [4, 5]], 6, [7, 8]])
+        [1, 2, 3, 4, 5, 6, 7, 8]
+
+    Args:
+        thing (list): The list to flatten. Items can be lists or other types.
+
+    Yields:
+        Items from the list and any lists within it, as though condensed into a
+            single, flat list.
+    """
+    for item in thing:
+        if hasattr(item, '__iter__') and not isinstance(item, str):
+            for flattened_item in flatten(item):
+                yield flattened_item
+        else:
+            yield item
+
 class Singleton(type):
     """
     Metaclass for creating singleton classes.

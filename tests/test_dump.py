@@ -9,7 +9,7 @@ def list_json_output(tmpdir):
         outfile = tmpdir.join("output.json")
         search = fixture_dir(['dump'] + search_parts)
 
-        npc.commands.dump([search], outfile=str(outfile), metadata=metadata, sort=sort)
+        npc.commands.dump(search, outfile=str(outfile), metadata=metadata, sort=sort)
         return json.load(outfile)
     return make_list
 
@@ -47,14 +47,14 @@ def test_metadata(list_json_output):
 @pytest.mark.parametrize('outopt', [None, '-'])
 def test_output_no_file(capsys, outopt):
     search = fixture_dir(['dump'])
-    npc.commands.dump([search], outfile=outopt)
+    npc.commands.dump(search, outfile=outopt)
     output, _ = capsys.readouterr()
     assert output
 
 def test_output_to_file(argparser, tmpdir):
     outfile = tmpdir.join("output.json")
     search = fixture_dir(['dump'])
-    npc.commands.dump([search], outfile=str(outfile))
+    npc.commands.dump(search, outfile=str(outfile))
     assert outfile.read()
 
 def test_directive(list_json_output):
