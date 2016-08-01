@@ -5,7 +5,7 @@
     <title>${metadata['title']}</title>
     % for k, v in metadata.items():
     <%
-        if v == 'title':
+        if k == 'title':
             continue
     %>\
 <meta name="${k}" content="${v}" />
