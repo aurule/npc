@@ -97,7 +97,7 @@ These are the directories that are appended, in order:
 1. Type path, like `Humans/`
 2. First listed group name, if given (like `Police/`)
     * Other group names are also tried, in order.
-3. If the @foreign tag is present, `Foreign/`
+3. If the [@foreign](https://github.com/aurule/npc/wiki/Character-Sheet-Format#foreign-location) tag is present, `Foreign/`
 
 Here are some examples:
 
@@ -163,6 +163,8 @@ Changeling character files are checked for these additional problems:
 ## Make an NPC Listing
 
 The `list` command creates a page of character information. It ignores everything except the tags and description in each character file.
+
+See the wiki page on [NPC Listings](https://github.com/aurule/npc/wiki/NPC-Listings) for details on how the different formats work.
 
 Options:
 
