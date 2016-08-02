@@ -82,7 +82,7 @@ All characters support the following options:
 
 Simple characters have no unique options, they just change the character's type. They are created using a few commands:
 
-The `generic` command creates a new simple character using the named type. As long as that type has a defined template and type_path, it'll work. There are a few accelerators for common simple types as well:
+The `generic` command creates a new simple character using the named type. As long as that type has a defined template and type path, it'll work. There are a few accelerators for common simple types as well:
 
 * `human`: Create a human. Type path is `Humans/`
 * `fetch`: Create a fetch. Type path is `Fetches/`
