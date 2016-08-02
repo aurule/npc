@@ -6,7 +6,7 @@ Has a single entry point `dump`.
 
 import tempfile
 from mako.template import Template
-from .. import util
+from .. import util, settings
 
 def dump(characters, outstream, *, include_metadata=None, metadata=None, prefs=None):
     """
@@ -28,6 +28,8 @@ def dump(characters, outstream, *, include_metadata=None, metadata=None, prefs=N
     Returns:
         A util.Result object. Openable will not be set.
     """
+    if not prefs:
+        prefs = settings.InternalSettings()
     if not metadata:
         metadata = {}
 
