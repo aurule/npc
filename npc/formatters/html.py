@@ -36,12 +36,7 @@ def dump(characters, outstream, *, include_metadata=None, metadata=None, prefs=N
     if not metadata:
         metadata = {}
 
-    # encode as ascii unless our stream has an opinion
-    try:
-        encoding = outstream.encoding
-    except AttributeError:
-        encoding = 'ascii'
-
+    encoding = prefs.get('html_encoding')
     modstream = codecs.getwriter(encoding)(outstream, errors='xmlcharrefreplace')
 
     if include_metadata:
