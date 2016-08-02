@@ -178,7 +178,7 @@ def _make_parser():
     parser_list = subparsers.add_parser('list', parents=[paths_parser], help="Generate an NPC Listing")
     parser_list.add_argument('-t', '--format', choices=['markdown', 'md', 'json', 'htm', 'html'], default='default', help="Format to use for the listing. Defaults to 'md'", dest="fmt")
     parser_list.add_argument('-m', '--metadata', nargs="?", const='default', default=False, help="Add metadata to the output. If the output format supports more than one metadata format, you can specify that format as well.")
-    parser_lint.add_argument('--title', help="Title to show in the metadata. Overrides the title in settings.", metavar="TITLE")
+    parser_list.add_argument('--title', help="Title to show in the metadata. Overrides the title in settings.", metavar="TITLE")
     parser_list.add_argument('-o', '--outfile', nargs="?", const='-', default=None, help="File where the listing will be saved")
     parser_list.set_defaults(func=commands.listing)
 
