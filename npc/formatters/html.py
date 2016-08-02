@@ -56,7 +56,8 @@ def dump(characters, outstream, *, include_metadata=None, metadata=None, prefs=N
         header_template = Template(filename=header_file)
         modstream.write(header_template.render(metadata=metadata))
     else:
-        modstream.write("<!DOCTYPE html>\n<html>\n<head></head>\n<body>\n")
+        header_template = Template(filename=prefs.get("templates.listing.header.plain"))
+        modstream.write(header_template.render(encoding=encoding))
 
     with tempfile.TemporaryDirectory() as tempdir:
         md_converter = Markdown(extensions=['markdown.extensions.extra', 'markdown.extensions.smarty'])

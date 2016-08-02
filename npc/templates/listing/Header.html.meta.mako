@@ -1,4 +1,4 @@
-<%page args="metadata"/>\
+<%page args="metadata, encoding"/>\
 <!DOCTYPE html>
 <html>
 <head>
@@ -10,5 +10,6 @@
     %>\
 <meta name="${k}" content="${v}" />
     % endfor
+    <meta charset="${encoding}">
 </head>
 <body>
