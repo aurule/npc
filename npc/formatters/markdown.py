@@ -8,7 +8,7 @@ import tempfile
 from mako.template import Template
 from .. import util, settings
 
-def dump(characters, outstream, *, include_metadata=None, metadata=None, prefs=None):
+def dump(characters, outstream, *, include_metadata=None, metadata=None, **kwargs):
     """
     Create a markdown character listing
 
@@ -28,8 +28,7 @@ def dump(characters, outstream, *, include_metadata=None, metadata=None, prefs=N
     Returns:
         A util.Result object. Openable will not be set.
     """
-    if not prefs:
-        prefs = settings.InternalSettings()
+    prefs = kwargs.get('prefs', settings.InternalSettings())
     if not metadata:
         metadata = {}
 
