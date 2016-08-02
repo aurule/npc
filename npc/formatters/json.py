@@ -16,8 +16,8 @@ def dump(characters, outstream, *, include_metadata=False, metadata=None, **kwar
 
     Args:
         characters (list): Character dicts to dump
-        outstream (stream): Output stream to receive the json output
-            include_metadata (bool): Whether to insert a metadata object. The
+        outstream (stream): Output stream
+        include_metadata (bool): Whether to insert a metadata object. The
             metadata object will always include a title and creation date, along
             with the key `"meta": true` to distinguish it from character data.
         metadata (dict): Additional metadata keys. Ignored unless

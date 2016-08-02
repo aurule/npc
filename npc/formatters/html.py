@@ -19,20 +19,19 @@ def dump(characters, outstream, *, include_metadata=None, metadata=None, partial
         characters (list): Character info dicts to show
         outstream (stream): Output stream
         include_metadata (string|None): Whether to include metadata, and what
-            format to use.What kind of metadata to include, if any. Accepts
-            values of 'mmd', 'yaml', or 'yfm'. Metadata will always include a
-            title and creation date.
+            format to use. Accepts values of 'mmd', 'yaml', or 'yfm'. Metadata
+            will always include a title and creation date.
         metadata (dict): Additional metadata to insert. Ignored unless
             include_metadata is set. The keys 'title', and 'created' will
             overwrite the generated values for those keys.
+        prefs (Settings): Settings object. Used to get the location of template
+            files.
         partial (bool): Whether to produce partial output by omitting the head
             and other tags. Only the content of the body tag is created.
             Does not allow metadata to be included, the include_metadata and
             metadata args are ignored.
         encoding (string): Encoding format of the output text. Overrides the
             value in settings.
-        prefs (Settings): Settings object. Used to get the location of template
-            files.
 
     Returns:
         A util.Result object. Openable will not be set.
