@@ -61,13 +61,19 @@ def dump(characters, outstream, *, include_metadata=None, metadata=None, partial
 
     with tempfile.TemporaryDirectory() as tempdir:
         md_converter = Markdown(extensions=['markdown.extensions.extra', 'markdown.extensions.smarty'])
+
+        # directly access certain functions for speed
+        _clean_conv = md_converter.reset
+        _prefs_get = prefs.get
+        _mod_write = modstream.write
+
         for char in characters:
-            body_file = prefs.get("templates.listing.character.html.{}".format(char.get_type_key()))
+            body_file = _prefs_get("templates.listing.character.html.{}".format(char.get_type_key()))
             if not body_file:
-                body_file = prefs.get("templates.listing.character.html.default")
+                body_file = _prefs_get("templates.listing.character.html.default")
             body_template = Template(filename=body_file, module_directory=tempdir)
-            modstream.write(
-                md_converter.reset().convert(
+            _mod_write(
+                _clean_conv().convert(
                     body_template.render(
                         character=char.copy_and_alter(html.escape))
                 ))

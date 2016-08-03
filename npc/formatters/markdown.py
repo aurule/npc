@@ -46,10 +46,14 @@ def dump(characters, outstream, *, include_metadata=None, metadata=None, **kwarg
         outstream.write(header_template.render(metadata=metadata))
 
     with tempfile.TemporaryDirectory() as tempdir:
+        # directly access certain functions for speed
+        _prefs_get = prefs.get
+        _out_write = outstream.write
+
         for char in characters:
-            body_file = prefs.get("templates.listing.character.markdown.{}".format(char.get_type_key()))
+            body_file = _prefs_get("templates.listing.character.markdown.{}".format(char.get_type_key()))
             if not body_file:
-                body_file = prefs.get("templates.listing.character.markdown.default")
+                body_file = _prefs_get("templates.listing.character.markdown.default")
             body_template = Template(filename=body_file, module_directory=tempdir)
-            outstream.write(body_template.render(character=char))
+            _out_write(body_template.render(character=char))
     return util.Result(True)
