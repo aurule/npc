@@ -1,7 +1,7 @@
 """
 Formatter for creating json exports of a set of characters.
 
-Has a single entry point `dump` which mostly just inserts metadata and calls
+Has a single function `dump` which mostly just inserts metadata and calls
 `json.dump`.
 """
 

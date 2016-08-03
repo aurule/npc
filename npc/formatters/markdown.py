@@ -1,7 +1,5 @@
 """
 Markdown formatter for creating a page of characters.
-
-Has a single entry point `dump`.
 """
 
 import tempfile
