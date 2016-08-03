@@ -30,7 +30,7 @@ def cli(argv):
     # change to the proper campaign directory if needed
     base = args.campaign
     if base == 'auto':
-        base = _find_campaign_base()
+        base = find_campaign_root()
 
     try:
         chdir(base)
@@ -88,7 +88,7 @@ def cli(argv):
 
     return 0
 
-def _find_campaign_base():
+def find_campaign_root():
     """
     Determine the base campaign directory
 
