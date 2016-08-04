@@ -9,7 +9,7 @@ from markdown import Markdown
 from mako.template import Template
 from .. import util, settings
 
-def dump(characters, outstream, *, include_metadata=None, metadata=None, partial=False):
+def dump(characters, outstream, *, include_metadata=None, metadata=None, partial=False, **kwargs):
     """
     Create a markdown character listing
 
