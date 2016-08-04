@@ -21,6 +21,9 @@ ${'/'.join(character['type'])}\
 % if character.has_items('foreign'):
  in ${' and '.join(character['foreign'])}\
 % endif
+% if 'wanderer' in character:
+, Wanderer\
+% endif
 % if character.has_items('group'):
 , ${character.get_first('group')}${make_ranks(character.get_first('group'))}\
 % endif

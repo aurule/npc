@@ -22,6 +22,9 @@ ${character.get_first('type')}\
 % if character.has_items('foreign'):
  in ${' and '.join(character['foreign'])}\
 % endif
+% if 'wanderer' in character:
+, Wanderer\
+% endif
 % if character.has_items('motley'):
 , ${character.get_first('motley')} Motley${make_ranks((character.get_first('motley')))}\
 % endif
