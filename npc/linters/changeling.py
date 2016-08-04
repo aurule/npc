@@ -49,6 +49,9 @@ def lint(character, fix=False, *, sk_data=None):
 
     # tags are ok. now compare against listed seeming and kith in stats
 
+    if 'path' not in character:
+        return problems
+
     with open(character['path'], 'r') as char_file:
         data = char_file.read()
 
