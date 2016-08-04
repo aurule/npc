@@ -47,14 +47,25 @@ def lint(character, fix=False, *, sk_data=None):
         if kith_name.lower() not in sk_data['kiths']:
             problems.append("Unrecognized @kith '{}'".format(kith_name))
 
-    # tags are ok. now compare against listed seeming and kith in stats
-
+    # If the character has no sheet, we're done
     if 'path' not in character:
         return problems
 
+    # Load the sheet for deep linting
     with open(character['path'], 'r') as char_file:
         data = char_file.read()
 
+    # # Check that the mantle matches the court if given
+    #   needs to match Mantle (name), name Mantle, name Court Mantle
+    # if mantle merit in sheet:
+    r'^\s+mantle \((?P<court>[a-zA-Z ]+)\)' # matches `Mantle (name)`
+    r'^\s+(?P<court>[a-zA-Z]+) (?:court )?mantle' # matches `name Court Mantle` and `name Mantle`
+    #     if matches > 1:
+    #         problems.append("Multiple mantle merits")
+    #     elif character.get_first('court') != first match:
+    #         problems.append("Court tag '{}' does not match mantle '{}'".format(tag, match))
+
+    # Check that seeming tag matches listed seeming with correct notes
     seeming_tags = [t.lower() for t in character['seeming']]
     if seeming_tags:
         # ensure the listed seemings match our seeming tags
@@ -118,6 +129,7 @@ def lint(character, fix=False, *, sk_data=None):
                             problems[-1] += ' (can fix)'
 
 
+    # Check that kith tag matches listed kith with correct notes
     kith_tags = [t.lower() for t in character['kith']]
     if kith_tags:
         # ensure the listed kiths match our kith tags
