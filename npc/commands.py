@@ -427,7 +427,7 @@ def _add_path_if_exists(base, potential):
         return test_path
     return base
 
-def listing(*search, ignore=None, fmt='markdown', metadata=None, title=None, outfile=None, **kwargs):
+def listing(*search, ignore=None, fmt=None, metadata=None, title=None, outfile=None, **kwargs):
     """
     Generate a listing of NPCs.
 
@@ -435,8 +435,9 @@ def listing(*search, ignore=None, fmt='markdown', metadata=None, title=None, out
         search (list): Paths to search for character files. Items can be strings
             or lists of strings.
         ignore (list): Paths to ignore
-        fmt (str): Format of the output. Supported types are 'markdown'
-            ('md'), and 'json'.
+        fmt (str): Format of the output. Supported types are 'markdown', 'md',
+            'htm', 'html', and 'json'. Pass 'default' or None to get format from
+            settings.
         metadata (str|None): Whether to include metadata in the output and what
             kind of metadata to use. Pass 'default' to use the format configured
             in Settings.
@@ -462,21 +463,13 @@ def listing(*search, ignore=None, fmt='markdown', metadata=None, title=None, out
 
     characters = _sort_chars(_prune_chars(parser.get_characters(flatten(search), ignore)))
 
-    out_type = fmt.lower()
-    if out_type == "default":
-        out_type = prefs.get('list_format')
+    if fmt == "default" or not fmt:
+        fmt = prefs.get('list_format')
+    out_type = formatters.get_canonical_format_name(fmt)
 
-    if out_type in ('md', 'markdown'):
-        out_type = 'markdown' # coerce output type to canonical form
-        dumper = formatters.markdown.dump
-    elif out_type in ('htm', 'html'):
-        out_type = 'html'
-        dumper = formatters.html.dump
-    elif out_type == 'json':
-        dumper = formatters.json.dump
-    else:
+    dumper = formatters.get_formatter(out_type)
+    if not dumper:
         return Result(False, errmsg="Cannot create output of format '{}'".format(out_type), errcode=5)
-
 
     if metadata == 'default' and out_type != 'json':
         # Ensure 'default' metadata type gets replaced with the right default
