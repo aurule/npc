@@ -224,13 +224,6 @@ def create_simple(name, ctype, *, dead=False, foreign=False, **kwargs):
 
     return Result(True, openable=[target_path])
 
-def _add_path_if_exists(base, potential):
-    """Add a directory to the base path if that directory exists."""
-    test_path = path.join(base, potential)
-    if path.exists(test_path):
-        return test_path
-    return base
-
 def session(**kwargs):
     """
     Create the files for a new game session.
@@ -426,6 +419,13 @@ def create_path_from_character(character: Character, *, target_path=None, **kwar
         target_path = _add_path_if_exists(target_path, 'Foreign')
 
     return target_path
+
+def _add_path_if_exists(base, potential):
+    """Add a directory to the base path if that directory exists."""
+    test_path = path.join(base, potential)
+    if path.exists(test_path):
+        return test_path
+    return base
 
 def listing(*search, ignore=None, fmt='markdown', metadata=None, title=None, outfile=None, **kwargs):
     """
