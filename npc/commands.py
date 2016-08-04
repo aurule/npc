@@ -649,12 +649,7 @@ def lint(*search, ignore=None, fix=False, **kwargs):
     characters = parser.get_characters(flatten(search), ignore)
     for character in characters:
         character.validate()
-
-        # Do additional processing based on reported type
-        types = [t.lower() for t in character['type']]
-        if 'changeling' in types:
-            # find (and fix) changeling-specific problems in the body of the sheet
-            character.problems.extend(linters.changeling.lint(character, fix=fix, sk_data=prefs.get('changeling')))
+        character.problems.extend(linters.lint(character, fix=fix, prefs=prefs))
 
         # Report problems on one line if possible, or as a block if there's more than one
         if not character.is_valid():
