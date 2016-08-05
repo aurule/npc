@@ -415,7 +415,7 @@ def create_path_from_character(character: Character, *, target_path=None, **kwar
             target_path = _add_path_if_exists(target_path, group_name)
 
     # foreigners get a special folder
-    if 'foreign' in character:
+    if 'foreign' in character or 'wanderer' in character:
         target_path = _add_path_if_exists(target_path, 'Foreign')
 
     return target_path

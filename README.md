@@ -101,7 +101,7 @@ These are the directories that are appended, in order:
 1. Type path, like `Humans/`
 2. First listed group name, if given (like `Police/`)
     * Other group names are also tried, in order.
-3. If the [@foreign](https://github.com/aurule/npc/wiki/Character-Sheet-Format#foreign-location) tag is present, `Foreign/`
+3. If the [@foreign](https://github.com/aurule/npc/wiki/Character-Sheet-Format#foreign-location) or @wanderer tag is present, `Foreign/`
 
 Here are some examples:
 
