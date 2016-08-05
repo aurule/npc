@@ -23,6 +23,12 @@ STANDARD_MANTLE_REGEX = r'^\s+mantle \((?P<court>[a-zA-Z ]+)\)' # matches `Mantl
 ALT_MANTLE_REGEX = r'^\s+(?P<court>[a-zA-Z]+) (?:court )?mantle' # matches `name Court Mantle` and `name Mantle`
 """Regex to match alternate ways of writing the mantle merit: court Court Mantle, or court Mantle."""
 
+STANDARD_GOODWILL_REGEX = r'^\s+(?:court )?goodwill \((?P<court>[a-zA-Z ]+)\)' # matches `Mantle (name)`
+"""Regex to match the standard way of writing the mantle merit: Mantle (court)."""
+
+ALT_GOODWILL_REGEX = r'^\s+(?P<court>[a-zA-Z]+) (?:court )?goodwill' # matches `name Court Mantle` and `name Mantle`
+"""Regex to match alternate ways of writing the mantle merit: court Court Mantle, or court Mantle."""
+
 def lint(character, fix=False, *, sk_data=None):
     """
     Verify the more complex elements in a changeling sheet.
@@ -32,9 +38,10 @@ def lint(character, fix=False, *, sk_data=None):
 
     1. Seeming and kith appear in sk_data
     2. Mantle merit matches court tag and appears at most one time
-    3. Seeming and kith appear in the sheet's body, not just the tags.
-    4. Seeming and kith match the value of their corresponding tag.
-    5. Seeming and kith have correct notes for their blessing (and curse for
+    3. Court Goodwill merit must not match mantle or court tag
+    4. Seeming and kith appear in the sheet's body, not just the tags.
+    5. Seeming and kith match the value of their corresponding tag.
+    6. Seeming and kith have correct notes for their blessing (and curse for
         Seeming)
 
     Missing or incorrect notes can be fixed automatically if desired.
@@ -76,6 +83,14 @@ def lint(character, fix=False, *, sk_data=None):
             problems.append("Multiple mantle merits: {}".format(', '.join(mantle_courts)))
         elif court != mantle_courts[0]:
             problems.append("Court mantle '{}' does not match court tag '{}'".format(mantle_courts[0], court))
+
+    # Check that goodwill does not match the character's own court
+    goodwill_courts = _get_goodwill(data)
+    if goodwill_courts:
+        if court in goodwill_courts:
+            problems.append("Court goodwill listed for court tag '{}'".format(court))
+        if mantle_courts and mantle_courts[0] in goodwill_courts:
+            problems.append("Court goodwill listed for court mantle '{}'".format(mantle_courts[0]))
 
     # Check that seeming tag matches listed seeming with correct notes
     seeming_tags = [t.lower() for t in character['seeming']]
@@ -258,4 +273,18 @@ def _get_mantle(data):
 
     std_matches = std_mantle_re.finditer(data)
     alt_matches = alt_mantle_re.finditer(data)
+    return [m.group('court') for m in util.flatten([std_matches, alt_matches])]
+
+def _get_goodwill(data):
+    std_goodwill_re = re.compile(
+        STANDARD_GOODWILL_REGEX,
+        re.MULTILINE | re.IGNORECASE
+    )
+    alt_goodwill_re = re.compile(
+        ALT_GOODWILL_REGEX,
+        re.MULTILINE | re.IGNORECASE
+    )
+
+    std_matches = std_goodwill_re.finditer(data)
+    alt_matches = alt_goodwill_re.finditer(data)
     return [m.group('court') for m in util.flatten([std_matches, alt_matches])]

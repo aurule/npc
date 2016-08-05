@@ -61,3 +61,9 @@ class TestChangeling:
 
     def test_wrong_mantle(self, lint_output):
         assert "Court mantle 'Winter' does not match court tag 'Summer'" in lint_output('Wrong Mantle.nwod')
+
+    def test_goodwill_vs_court(self, lint_output):
+        assert "Court goodwill listed for court tag 'Winter'" in lint_output('Goodwill.nwod')
+
+    def test_goodwill_vs_mantle(self, lint_output):
+        assert "Court goodwill listed for court mantle 'Winter'" in lint_output('Goodwill.nwod')

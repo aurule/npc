@@ -165,6 +165,7 @@ Changeling character files are checked for these additional problems:
 * The notes for each kith in the stats are present and correct. If `--fix` is passed, these notes will be updated.
 * The mantle merit appears at most once.
 * The court for the mantle merit matches the value of the `@court` tag.
+* The court goodwill merit does not match the value of the `@court` tag or the mantle merit.
 
 ## Make an NPC Listing
 
