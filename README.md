@@ -182,7 +182,7 @@ Options:
 
 ## Dump Raw NPC Data
 
-The `dump` command builds a list of parseable NPCs in json format. It ignores everything except the tags and description.
+The `dump` command builds a list of parseable NPCs in json format. It ignores everything except the tags and description. A metadata object is always included in the output.
 
 Options:
 
