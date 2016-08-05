@@ -8,8 +8,13 @@ only public entry point is the lint function.
 import re
 
 REPLACEABLE = ('x', 'y')
+"""Standard placeholder values for seeming and kith"""
+
 SEEMING_REGEX = r'^(?P<name>\s+seeming\s+)(?P<seeming>{})[ \t]*(?P<notes>\(.*\))?$'
+"""Regex to match a seeming line"""
+
 KITH_REGEX = r'^(?P<name>\s+kith\s+)(?P<kith>{})[ \t]*(?P<notes>\(.*\))?$'
+"""Regex to match a kith line"""
 
 def lint(character, fix=False, *, sk_data=None):
     """
