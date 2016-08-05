@@ -23,11 +23,11 @@ def lint(character, fix=False, *, sk_data=None):
     Checks for changeling-specific problems within the rules blocks of the
     character sheet. The problems it checks for are as follows:
 
-    1. Both seeming and kith must appear in the sheet's body -- not just the
-        tags.
-    2. Both seeming and kith must match the value of the corresponding tag.
-    3. Both seeming and kith must have correct notes about its blessing (and
-        curse for Seeming)
+    1. Seeming and kith appear in sk_data
+    2. Seeming and kith appear in the sheet's body, not just the tags.
+    2. Seeming and kith match the value of their corresponding tag.
+    3. Seeming and kith have correct notes for their blessing (and curse for
+        Seeming)
 
     Missing or incorrect notes can be fixed automatically if desired.
 
