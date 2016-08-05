@@ -55,3 +55,9 @@ class TestChangeling:
 
     def test_multiple_motleys(self, lint_output):
         assert "Multiple motleys" in lint_output('Many Motleys.nwod')
+
+    def test_multiple_mantles(self, lint_output):
+        assert "Multiple mantle" in lint_output('Many Mantles.nwod')
+
+    def test_wrong_mantle(self, lint_output):
+        assert "Court tag 'Summer' does not match court mantle 'Winter'" in lint_output('Wrong Mantle.nwod')

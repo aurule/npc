@@ -163,6 +163,8 @@ Changeling character files are checked for these additional problems:
 * The stats specify the same kith(s) as the `@kith` tag(s)
 * The notes for each seeming in the stats are present and correct. If `--fix` is passed, these notes will be updated.
 * The notes for each kith in the stats are present and correct. If `--fix` is passed, these notes will be updated.
+* The mantle merit appears at most once.
+* The court for the mantle merit matches the value of the `@court` tag.
 
 ## Make an NPC Listing
 

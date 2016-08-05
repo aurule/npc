@@ -6,6 +6,7 @@ only public entry point is the lint function.
 """
 
 import re
+from .. import util
 
 REPLACEABLE = ('x', 'y')
 """Standard placeholder values for seeming and kith"""
@@ -16,6 +17,12 @@ SEEMING_REGEX = r'^(?P<name>\s+seeming\s+)(?P<seeming>{})[ \t]*(?P<notes>\(.*\))
 KITH_REGEX = r'^(?P<name>\s+kith\s+)(?P<kith>{})[ \t]*(?P<notes>\(.*\))?$'
 """Regex to match a kith line"""
 
+STANDARD_MANTLE_REGEX = r'^\s+mantle \((?P<court>[a-zA-Z ]+)\)' # matches `Mantle (name)`
+"""Regex to match the standard way of writing the mantle merit: Mantle (court)."""
+
+ALT_MANTLE_REGEX = r'^\s+(?P<court>[a-zA-Z]+) (?:court )?mantle' # matches `name Court Mantle` and `name Mantle`
+"""Regex to match alternate ways of writing the mantle merit: court Court Mantle, or court Mantle."""
+
 def lint(character, fix=False, *, sk_data=None):
     """
     Verify the more complex elements in a changeling sheet.
@@ -24,9 +31,10 @@ def lint(character, fix=False, *, sk_data=None):
     character sheet. The problems it checks for are as follows:
 
     1. Seeming and kith appear in sk_data
-    2. Seeming and kith appear in the sheet's body, not just the tags.
-    2. Seeming and kith match the value of their corresponding tag.
-    3. Seeming and kith have correct notes for their blessing (and curse for
+    2. Mantle merit matches court tag and appears at most one time
+    3. Seeming and kith appear in the sheet's body, not just the tags.
+    4. Seeming and kith match the value of their corresponding tag.
+    5. Seeming and kith have correct notes for their blessing (and curse for
         Seeming)
 
     Missing or incorrect notes can be fixed automatically if desired.
@@ -60,15 +68,14 @@ def lint(character, fix=False, *, sk_data=None):
     with open(character['path'], 'r') as char_file:
         data = char_file.read()
 
-    # # Check that the mantle matches the court if given
-    #   needs to match Mantle (name), name Mantle, name Court Mantle
-    # if mantle merit in sheet:
-    r'^\s+mantle \((?P<court>[a-zA-Z ]+)\)' # matches `Mantle (name)`
-    r'^\s+(?P<court>[a-zA-Z]+) (?:court )?mantle' # matches `name Court Mantle` and `name Mantle`
-    #     if matches > 1:
-    #         problems.append("Multiple mantle merits")
-    #     elif character.get_first('court') != first match:
-    #         problems.append("Court tag '{}' does not match mantle '{}'".format(tag, match))
+    # Check that the mantle matches the court if given
+    court = character.get_first('court')
+    mantle_matches = _get_mantle(data)
+    if mantle_matches:
+        if len(mantle_matches) > 1:
+            problems.append("Multiple mantle merits: {}".format(', '.join(mantle_matches)))
+        elif court != mantle_matches[0]:
+            problems.append("Court tag '{}' does not match court mantle '{}'".format(court, mantle_matches[0]))
 
     # Check that seeming tag matches listed seeming with correct notes
     seeming_tags = [t.lower() for t in character['seeming']]
@@ -238,3 +245,17 @@ def _fix_kith_notes(kith, notes, data):
         r'\g<1>\g<2> {}'.format(notes),
         data
     )
+
+def _get_mantle(data):
+    std_mantle_re = re.compile(
+        STANDARD_MANTLE_REGEX,
+        re.MULTILINE | re.IGNORECASE
+    )
+    alt_mantle_re = re.compile(
+        ALT_MANTLE_REGEX,
+        re.MULTILINE | re.IGNORECASE
+    )
+
+    std_matches = std_mantle_re.finditer(data)
+    alt_matches = alt_mantle_re.finditer(data)
+    return [m.group('court') for m in util.flatten([std_matches, alt_matches])]
