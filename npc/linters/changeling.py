@@ -77,19 +77,22 @@ def lint(character, fix=False, *, sk_data=None):
 
     # Check that the mantle matches the court if given
     court = character.get_first('court')
+    court_key = court.lower() if court else 'none'
     mantle_courts = _get_mantle(data)
+    mantle_court_keys = [c.lower() for c in mantle_courts]
     if mantle_courts:
         if len(mantle_courts) > 1:
             problems.append("Multiple mantle merits: {}".format(', '.join(mantle_courts)))
-        elif court != mantle_courts[0]:
+        elif court_key != mantle_court_keys[0]:
             problems.append("Court mantle '{}' does not match court tag '{}'".format(mantle_courts[0], court))
 
     # Check that goodwill does not match the character's own court
     goodwill_courts = _get_goodwill(data)
+    goodwill_court_keys = [c.lower() for c in goodwill_courts]
     if goodwill_courts:
-        if court in goodwill_courts:
+        if court_key in goodwill_court_keys:
             problems.append("Court goodwill listed for court tag '{}'".format(court))
-        if mantle_courts and mantle_courts[0] in goodwill_courts:
+        if mantle_courts and mantle_court_keys[0] in goodwill_court_keys:
             problems.append("Court goodwill listed for court mantle '{}'".format(mantle_courts[0]))
 
     # Check that seeming tag matches listed seeming with correct notes
