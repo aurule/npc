@@ -97,7 +97,7 @@ def _parse_character(char_file_path: str) -> Character:
         The `description` key stores a simple string, and the `rank` key stores
         a dict of list entries. Those keys are individual group names.
     """
-    name_re = re.compile(r'(?P<name>\w+(\s\w+)*)(?: - )?.*')
+    name_re = re.compile(r'(?P<name>[\w]+\.?(?:\s[\w.]+)*)(?: - )?.*')
     section_re = re.compile(r'^--.+--\s*$')
     tag_re = re.compile(r'^@(?P<tag>\w+)\s+(?P<value>.*)$')
 
