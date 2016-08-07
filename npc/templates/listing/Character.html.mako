@@ -4,11 +4,11 @@
  (${', '.join(character['rank'][group_name])})\
     %endif
 </%def>\
-<h1>${character.get_first('name')}\
+<h3>${character.get_first('name')}\
 %if 'dead' in character:
  (Deceased)\
 %endif
-</h1>
+</h3>
 
 %if character.has_items('name', 2):
 <div><em>AKA ${', '.join(character.get_remaining('name'))}</em></div>
@@ -31,13 +31,18 @@
 \
 %if character.has_items('motley'):
 <div>\
-${', '.join(["{} Motley{}".format(m, make_ranks(m)) for m in character['motley']])}\
+${character.get_first('motley')} Motley${make_ranks(character.get_first('motley'))}\
 </div>
 %endif
 \
 %if character.has_items('group', 2):
 <div>\
-${', '.join(["{}{}".format(g, make_ranks(g)) for g in character.get_remaining('group')])}\
+%for g in character.get_remaining('group'):
+${g}${make_ranks(g)}\
+    %if not loop.last:
+${', '}
+    %endif
+%endfor
 </div>
 %endif
 \
