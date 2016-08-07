@@ -461,11 +461,11 @@ def listing(*search, ignore=None, fmt=None, metadata=None, title=None, outfile=N
     prefs = kwargs.get('prefs', settings.InternalSettings())
     if not ignore:
         ignore = []
+    sort_order = kwargs.get('sort', 'last')
 
     characters = _sort_chars(
         _prune_chars(parser.get_characters(flatten(search), ignore)),
-        order=kwargs.get('sort')
-    )
+        order=sort_order )
 
     if fmt == "default" or not fmt:
         fmt = prefs.get('list_format')
@@ -487,7 +487,13 @@ def listing(*search, ignore=None, fmt=None, metadata=None, title=None, outfile=N
         meta['title'] = title
 
     with _smart_open(outfile, binary=(out_type in formatters.BINARY_TYPES)) as outstream:
-        response = dumper(characters, outstream, include_metadata=metadata_type, metadata=meta, prefs=prefs)
+        response = dumper(
+            characters,
+            outstream,
+            include_metadata=metadata_type,
+            metadata=meta,
+            prefs=prefs,
+            sectioner=_get_sectioner(sort_order))
 
     # pass errors straight through
     if not response.success:
@@ -526,6 +532,31 @@ def _sort_chars(characters, order=None):
     if order == "first":
         return sorted(characters, key=first_name)
     return characters
+
+def _get_sectioner(order):
+    """
+    Get a sectioning function
+
+    Args:
+        order (str): Name of the order that defines the sections. One of "last"
+            or "first"
+
+    Returns:
+        A sectioning function, or None if the order was not recognized
+    """
+    def first_letter_last_name(character):
+        """Get the first letter of the character's last-most name"""
+        return character.get_first('name').split(' ')[-1][0]
+
+    def first_letter_first_name(character):
+        """Get the first letter of the character's first name"""
+        return character.get_first('name').split(' ')[0][0]
+
+    if order == 'first':
+        return first_letter_first_name
+    if order == 'last':
+        return first_letter_last_name
+    return None
 
 def _prune_chars(characters):
     """
@@ -602,7 +633,6 @@ def dump(*search, ignore=None, sort=False, metadata=False, outfile=None, **kwarg
         metadata (bool): Whether to prepend metadata to the output
         outfile (string|None): Filename to put the dumped data. None and "-"
             print to stdout.
-        sort (string|None): Sort order for characters. Defaults to "last".
         prefs (Settings): Settings object to use. Uses internal settings by
             default.
 

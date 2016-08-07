@@ -30,6 +30,9 @@ def dump(characters, outstream, *, include_metadata=None, metadata=None, partial
             metadata args are ignored.
         encoding (string): Encoding format of the output text. Overrides the
             value in settings.
+        sectioner (function): Function that returns a section heading for each
+            character. When its return value changes, the section template is
+            rendered with the new title. Omit to suppress sections.
 
     Returns:
         A util.Result object. Openable will not be set.
@@ -40,6 +43,7 @@ def dump(characters, outstream, *, include_metadata=None, metadata=None, partial
         prefs = settings.InternalSettings()
     if not metadata:
         metadata = {}
+    sectioner = kwargs.get('sectioner', lambda c: '')
 
     modstream = codecs.getwriter(encoding)(outstream, errors='xmlcharrefreplace')
 
@@ -67,7 +71,17 @@ def dump(characters, outstream, *, include_metadata=None, metadata=None, partial
         _prefs_get = prefs.get
         _mod_write = modstream.write
 
+        section_title = ''
+        section_template = Template(
+            filename=_prefs_get("templates.listing.section.html"),
+            module_directory=tempdir)
         for char in characters:
+            if sectioner(char) != section_title:
+                section_title = sectioner(char)
+                _mod_write(
+                    _clean_conv().convert(
+                        section_template.render(
+                            title=section_title)))
             body_file = _prefs_get("templates.listing.character.html.{}".format(char.get_type_key()))
             if not body_file:
                 body_file = _prefs_get("templates.listing.character.html.default")
@@ -75,8 +89,7 @@ def dump(characters, outstream, *, include_metadata=None, metadata=None, partial
             _mod_write(
                 _clean_conv().convert(
                     body_template.render(
-                        character=char.copy_and_alter(html.escape))
-                ))
+                        character=char.copy_and_alter(html.escape))))
     if not partial:
         modstream.write("</body>\n</html>\n")
     return util.Result(True)

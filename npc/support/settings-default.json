@@ -61,6 +61,9 @@
                     "default": "templates/listing/Character.html.mako",
                     "changeling": "templates/listing/Changeling.html.mako"
                 }
+            },
+            "section": {
+                "html": "templates/listing/Section.html.mako"
             }
         }
     },
