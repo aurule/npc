@@ -50,7 +50,7 @@ ${', '}
 <p markdown="1"><em>Appearance:</em> ${' '.join(character['appearance'])}</p>
 %endif
 \
-<p markdown="1">${character['description']}</p>
+<p markdown="1"><em>Notes:</em> ${character['description']}</p>
 \
 %if character.has_items('dead'):
 <p markdown="1"><em>Dead:</em> ${' '.join(character['dead'])}</p>
