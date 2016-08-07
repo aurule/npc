@@ -451,6 +451,7 @@ def listing(*search, ignore=None, fmt=None, metadata=None, title=None, outfile=N
             Overrides the title from settings.
         outfile (string|None): Filename to put the listed data. None and "-"
             print to stdout.
+        sort (string|None): Sort order for characters. Defaults to "last".
         prefs (Settings): Settings object to use. Uses internal settings by
             default.
 
@@ -461,7 +462,10 @@ def listing(*search, ignore=None, fmt=None, metadata=None, title=None, outfile=N
     if not ignore:
         ignore = []
 
-    characters = _sort_chars(_prune_chars(parser.get_characters(flatten(search), ignore)))
+    characters = _sort_chars(
+        _prune_chars(parser.get_characters(flatten(search), ignore)),
+        order=kwargs.get('sort')
+    )
 
     if fmt == "default" or not fmt:
         fmt = prefs.get('list_format')
@@ -495,23 +499,33 @@ def listing(*search, ignore=None, fmt=None, metadata=None, title=None, outfile=N
 
     return Result(True, openable=openable)
 
-def _sort_chars(characters):
+def _sort_chars(characters, order=None):
     """
-    Sort a list of character Characters.
-
-    In the future, this is where different sort methods will be handled. Right
-    now, it just sorts them by the last element of their name (space-delimeted).
+    Sort a list of Characters.
 
     Args:
-        characters -- list of Characters
+        characters (list): Characters to sort. Defaults to "last".
+        order (str): The order in which the characters should be sorted.
+            Unrecognized sort orders are ignored. Supported orders are:
+            * "last" - sort by last-most name
+            * "first" - sort by first name
 
     Returns:
-        List of characters ordered by last name.
+        List of characters ordered as requested.
     """
     def last_name(character):
+        """Get the character's last-most name"""
         return character.get_first('name').split(' ')[-1]
 
-    return sorted(characters, key=last_name)
+    def first_name(character):
+        """Get the character's first name"""
+        return character.get_first('name').split(' ')[0]
+
+    if not order or order == "last":
+        return sorted(characters, key=last_name)
+    if order == "first":
+        return sorted(characters, key=first_name)
+    return characters
 
 def _prune_chars(characters):
     """
@@ -588,6 +602,7 @@ def dump(*search, ignore=None, sort=False, metadata=False, outfile=None, **kwarg
         metadata (bool): Whether to prepend metadata to the output
         outfile (string|None): Filename to put the dumped data. None and "-"
             print to stdout.
+        sort (string|None): Sort order for characters. Defaults to "last".
         prefs (Settings): Settings object to use. Uses internal settings by
             default.
 
