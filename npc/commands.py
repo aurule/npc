@@ -508,7 +508,10 @@ def _sort_chars(characters):
     Returns:
         List of characters ordered by last name.
     """
-    return sorted(characters, key=lambda c: c.get_first('name').split(' ')[-1])
+    def last_name(character):
+        return character.get_first('name').split(' ')[-1]
+
+    return sorted(characters, key=last_name)
 
 def _prune_chars(characters):
     """
