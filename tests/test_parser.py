@@ -90,3 +90,22 @@ class TestTags:
         """@rank should not be added without a prior @group"""
         c = character('Bare Rank.nwod')
         assert not c['rank']
+
+class TestNames:
+    """Tests the way character names are grabbed from filenames"""
+
+    @pytest.fixture
+    def character(self):
+        def make_character(filename):
+            parseables = fixture_dir(['parsing', 'names', filename])
+            characters = list(npc.parser.get_characters(search_paths=[parseables]))
+            return characters[0]
+        return make_character
+
+    def test_notes(self, character):
+        c = character('Standard Dude - dude man.nwod')
+        assert c.get_first('name') == 'Standard Dude'
+
+    def test_doctor(self, character):
+        c = character('Dr. Manly Mann.nwod')
+        assert c.get_first('name') == "Dr. Manly Mann"
