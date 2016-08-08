@@ -780,3 +780,44 @@ def open_settings(location, show_defaults=False, settings_type=None, **kwargs):
     else:
         openable = [target_path]
     return Result(True, openable=openable)
+
+def report(tag, *search, ignore=None, include_none=False, fmt=None, outfile=None, **kwargs):
+    """
+    Create a report for the given tag
+
+    The tabular report shows how many characters have each unique value for tag.
+
+    Args:
+        tag (str): Tag name to report on
+        search (list): Paths to search for character files. Items can be strings
+            or lists of strings.
+        ignore (list): Paths to ignore
+        include_none (bool): Whether to include an additional row to tally
+            characters that don't have the named tag.
+        fmt (str|): Output format to use. Recognized values are "mmd" and "csv".
+            Pass "default" or None to get the format from settings.
+        outfile (string|None): Filename to put the listed data. None and "-"
+            print to stdout.
+        prefs (Settings): Settings object to use. Uses internal settings by
+            default.
+
+    Returns:
+        Result object. Openable will contain the output file if given.
+    """
+    prefs = kwargs.get('prefs', settings.InternalSettings())
+
+    if not ignore:
+        ignore = []
+    characters = parser.get_characters(flatten(search), ignore)
+
+    # build the table
+
+    with _smart_open(outfile) as outstream:
+        # write to outstream
+        pass
+
+    openable = None
+    if outfile and outfile != '-':
+        openable = [outfile]
+
+    return Result(True, openable=openable)
