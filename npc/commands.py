@@ -465,7 +465,7 @@ def listing(*search, ignore=None, fmt=None, metadata=None, title=None, outfile=N
 
     characters = _sort_chars(
         _prune_chars(parser.get_characters(flatten(search), ignore)),
-        order=sort_order )
+        order=sort_order)
 
     if fmt == "default" or not fmt:
         fmt = prefs.get('list_format')
