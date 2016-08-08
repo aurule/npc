@@ -51,7 +51,7 @@ def dump(characters, outstream, *, include_metadata=None, metadata=None, **kwarg
         _out_write = outstream.write
 
         for char in characters:
-            body_file = _prefs_get("templates.listing.character.markdown.{}".format(char.get_type_key()))
+            body_file = _prefs_get("templates.listing.character.markdown.{}".format(char.type_key))
             if not body_file:
                 body_file = _prefs_get("templates.listing.character.markdown.default")
             body_template = Template(filename=body_file, module_directory=tempdir)

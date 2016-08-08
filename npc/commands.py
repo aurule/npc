@@ -393,7 +393,7 @@ def create_path_from_character(character: Character, *, target_path=None, **kwar
         target_path = prefs.get('paths.characters')
 
     # add type-based directory if we can
-    ctype = character.get_type_key()
+    ctype = character.type_key
     if ctype:
         target_path = _add_path_if_exists(target_path, prefs.get('type_paths.{}'.format(ctype)))
     else:
@@ -700,7 +700,7 @@ def lint(*search, ignore=None, fix=False, **kwargs):
         character.problems.extend(linters.lint(character, fix=fix, prefs=prefs))
 
         # Report problems on one line if possible, or as a block if there's more than one
-        if not character.is_valid():
+        if not character.valid:
             openable.append(character['path'])
             if len(character.problems) > 1:
                 print("File '{}':".format(character['path']))

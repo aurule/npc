@@ -82,7 +82,7 @@ def dump(characters, outstream, *, include_metadata=None, metadata=None, partial
                     _clean_conv().convert(
                         section_template.render(
                             title=section_title)))
-            body_file = _prefs_get("templates.listing.character.html.{}".format(char.get_type_key()))
+            body_file = _prefs_get("templates.listing.character.html.{}".format(char.type_key))
             if not body_file:
                 body_file = _prefs_get("templates.listing.character.html.default")
             body_template = Template(filename=body_file, module_directory=tempdir)

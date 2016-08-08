@@ -164,6 +164,24 @@ class Character(defaultdict):
         self.update(kwargs)
         self.problems = []
 
+    @property
+    def valid(self):
+        """
+        bool: Whether this character is valid based on the most recent results
+            of validate().
+        """
+        return len(self.problems) == 0
+
+    @property
+    def type_key(self):
+        """
+        str: Type key for this character or None if no type is present
+        """
+        try:
+            return self.get_first('type').lower()
+        except AttributeError:
+            return None
+
     def get_first(self, key, default=None):
         """
         Get the first element from the named key.
@@ -257,7 +275,7 @@ class Character(defaultdict):
         if not self.get_first('name'):
             self.problems.append("Missing name")
 
-        if self.get_type_key() == "changeling":
+        if self.type_key == "changeling":
             self._validate_changeling()
 
         return len(self.problems) == 0
@@ -285,35 +303,6 @@ class Character(defaultdict):
             self.problems.append("Multiple courts: {}".format(', '.join(self['court'])))
         if len(self['motley']) > 1:
             self.problems.append("Multiple motleys: {}".format(', '.join(self['motley'])))
-
-    def is_valid(self):
-        """
-        Get whether this Character is valid
-
-        This method does not redo the validation, so it should only be called
-        when you're sure the object's state has not changed since the last
-        validation. When in doubt, call validate instead.
-
-        Returns:
-            True if this Character has no validation problems, false if not.
-        """
-        return len(self.problems) == 0
-
-    def get_type_key(self):
-        """
-        Get the type key for this character
-
-        The type key is a lower case string made from the first entry under
-        'type'.
-
-        Returns:
-            The canonical type key for this character as a string, or None if
-            no type is present.
-        """
-        try:
-            return self.get_first('type').lower()
-        except AttributeError:
-            return None
 
     def has_items(self, key, threshold=1):
         """
