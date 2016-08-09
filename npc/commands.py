@@ -472,7 +472,7 @@ def listing(*search, ignore=None, fmt=None, metadata=None, title=None, outfile=N
         fmt = prefs.get('list_format')
     out_type = formatters.get_canonical_format_name(fmt)
 
-    dumper = formatters.get_formatter(out_type)
+    dumper = formatters.get_list_formatter(out_type)
     if not dumper:
         return Result(False, errmsg="Cannot create output of format '{}'".format(out_type), errcode=5)
 

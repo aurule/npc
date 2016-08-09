@@ -21,9 +21,9 @@ CANONICAL_FORMATS = {
 }
 """dict: mapping of accepted format names and abbreviations and their canonical format name keys"""
 
-def get_formatter(format_name):
+def get_list_formatter(format_name):
     """
-    Get the correct output function for a named format
+    Get the correct npc listing output function for a named format
 
     Args:
         format_name (str): Name of the desired format
@@ -32,7 +32,6 @@ def get_formatter(format_name):
         A formatting output function if the format is recognized, or None if it
         is not.
     """
-
     format_name = get_canonical_format_name(format_name)
     if format_name == 'markdown':
         return markdown.dump
