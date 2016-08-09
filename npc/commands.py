@@ -500,9 +500,7 @@ def listing(*search, ignore=None, fmt=None, metadata=None, title=None, outfile=N
     if not response.success:
         return response
 
-    openable = None
-    if outfile and outfile != '-':
-        openable = [outfile]
+    openable = [outfile] if outfile and outfile != '-' else None
 
     return Result(True, openable=openable)
 
@@ -662,9 +660,7 @@ def dump(*search, ignore=None, sort=False, metadata=False, outfile=None, **kwarg
     with _smart_open(outfile) as outstream:
         json.dump([c for c in characters], outstream)
 
-    openable = None
-    if outfile and outfile != '-':
-        openable = [outfile]
+    openable = [outfile] if outfile and outfile != '-' else None
 
     return Result(True, openable=openable)
 
