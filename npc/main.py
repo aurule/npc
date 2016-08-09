@@ -176,7 +176,7 @@ def _make_parser():
 
     # Subcommand to list character data in multiple formats
     parser_list = subparsers.add_parser('list', parents=[paths_parser], help="Generate an NPC Listing")
-    parser_list.add_argument('-t', '--format', choices=['markdown', 'md', 'json', 'htm', 'html'], default='default', help="Format to use for the listing. Defaults to 'md'", dest="fmt")
+    parser_list.add_argument('-t', '--format', choices=['markdown', 'md', 'json', 'htm', 'html'], default='default', help="Format to use for the listing. Defaults to the list format in settings", dest="fmt")
     parser_list.add_argument('-m', '--metadata', nargs="?", const='default', default=False, help="Add metadata to the output. If the output format supports more than one metadata format, you can specify that format as well.")
     parser_list.add_argument('--title', help="Title to show in the metadata. Overrides the title in settings.", metavar="TITLE")
     parser_list.add_argument('-o', '--outfile', nargs="?", const='-', default=None, help="File where the listing will be saved")
@@ -209,7 +209,7 @@ def _make_parser():
     parser_report.add_argument('tags', nargs="+", help="Tag names to analyze")
     parser_report.add_argument('--search', nargs="*", default=None, help="Paths to search. Individual files are added verbatim and directories are searched recursively.", metavar="PATH")
     parser_report.add_argument('--ignore', nargs="*", default=None, help="Paths to skip when searching for character files", metavar="PATH")
-    parser_report.add_argument('-t', '--format', choices=['mmd'], default='default', help="Format to use for the tables. Defaults to 'mmd'", dest="fmt")
+    parser_report.add_argument('-t', '--format', choices=['json'], default='default', help="Format to use for the tables. Defaults to the table format in settings", dest="fmt")
     parser_report.add_argument('-o', '--outfile', nargs="?", const='-', default=None, help="File where the listing will be saved")
     parser_report.set_defaults(func=commands.report, serialize=['tags'])
 
