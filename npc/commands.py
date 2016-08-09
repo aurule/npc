@@ -778,7 +778,7 @@ def open_settings(location, show_defaults=False, settings_type=None, **kwargs):
         openable = [target_path]
     return Result(True, openable=openable)
 
-def report(*tags, search=None, ignore=None, include_none=False, fmt=None, outfile=None, **kwargs):
+def report(*tags, search=None, ignore=None, fmt=None, outfile=None, **kwargs):
     """
     Create a report for the given tags
 
@@ -791,8 +791,6 @@ def report(*tags, search=None, ignore=None, include_none=False, fmt=None, outfil
         search (list): Paths to search for character files. Items can be strings
             or lists of strings.
         ignore (list): Paths to ignore
-        include_none (bool): Whether to include an additional row to tally
-            characters that don't have the named tag.
         fmt (str|None): Output format to use. Recognized values are "mmd". Pass
             "default" or None to get the format from settings.
         outfile (string|None): Filename to put the listed data. None and "-"
