@@ -820,7 +820,7 @@ def report(*tags, search=None, ignore=None, fmt=None, outfile=None, **kwargs):
     if not outputter:
         return Result(False, errmsg="Cannot create output of format '{}'".format(fmt), errcode=5)
     with _smart_open(outfile, binary=(fmt in formatters.BINARY_TYPES)) as outstream:
-        response = outputter(table_data, outstream)
+        response = outputter(table_data, outstream=outstream, prefs=prefs)
 
     # pass errors straight through
     if not response.success:

@@ -40,7 +40,7 @@ def dump(characters, outstream, *, include_metadata=False, metadata=None, **kwar
         return util.Result(False, errmsg=err, errcode=9)
     return util.Result(True)
 
-def report(tables, outstream):
+def report(tables, outstream, **kwargs):
     """
     Write a json representation of one or more sets of table data
 
