@@ -71,6 +71,9 @@
     // Text to add to the beginning of new character files.
     "template_header": "",
 
+    // Default format for generated reports
+    "report_format": "mmd",
+
     // Default format to use when creating a list of characters.
     "list_format": "markdown",
 

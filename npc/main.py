@@ -204,4 +204,14 @@ def _make_parser():
     parser_settings.add_argument('-d', '--defaults', action="store_true", default=False, help="Open the default settings file for easy reference", dest='show_defaults')
     parser_settings.set_defaults(func=commands.open_settings, serialize=['location'])
 
+    # Report on character tags
+    parser_report = subparsers.add_parser('report', help="Create a report of the values for one or more tags")
+    parser_report.add_argument('tags', nargs="+", help="Tag names to analyze")
+    parser_report.add_argument('--search', nargs="*", default=None, help="Paths to search. Individual files are added verbatim and directories are searched recursively.", metavar="PATH")
+    parser_report.add_argument('--ignore', nargs="*", default=None, help="Paths to skip when searching for character files", metavar="PATH")
+    parser_report.add_argument('--tally_none', action="store_true", default=False, help="Include the number of characters without values for each tag", dest="include_none")
+    parser_report.add_argument('-t', '--format', choices=['mmd'], default='default', help="Format to use for the tables. Defaults to 'mmd'", dest="fmt")
+    parser_report.add_argument('-o', '--outfile', nargs="?", const='-', default=None, help="File where the listing will be saved")
+    parser_report.set_defaults(func=commands.report, serialize=['tags'])
+
     return parser

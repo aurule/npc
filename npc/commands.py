@@ -8,6 +8,7 @@ without going through the CLI.
 import re
 import json
 import sys
+from collections import Counter
 from contextlib import contextmanager
 from datetime import datetime
 from os import path, walk, makedirs, rmdir, scandir
@@ -781,21 +782,23 @@ def open_settings(location, show_defaults=False, settings_type=None, **kwargs):
         openable = [target_path]
     return Result(True, openable=openable)
 
-def report(tag, *search, ignore=None, include_none=False, fmt=None, outfile=None, **kwargs):
+def report(*tags, search=None, ignore=None, include_none=False, fmt=None, outfile=None, **kwargs):
     """
-    Create a report for the given tag
+    Create a report for the given tags
 
-    The tabular report shows how many characters have each unique value for tag.
+    The tabular report shows how many characters have each unique value for each
+    tag.
 
     Args:
-        tag (str): Tag name to report on
+        tag (list): Tag names to report on. Can contain strings and lists of
+            strings.
         search (list): Paths to search for character files. Items can be strings
             or lists of strings.
         ignore (list): Paths to ignore
         include_none (bool): Whether to include an additional row to tally
             characters that don't have the named tag.
-        fmt (str|): Output format to use. Recognized values are "mmd" and "csv".
-            Pass "default" or None to get the format from settings.
+        fmt (str|None): Output format to use. Recognized values are "mmd". Pass
+            "default" or None to get the format from settings.
         outfile (string|None): Filename to put the listed data. None and "-"
             print to stdout.
         prefs (Settings): Settings object to use. Uses internal settings by
@@ -808,13 +811,15 @@ def report(tag, *search, ignore=None, include_none=False, fmt=None, outfile=None
 
     if not ignore:
         ignore = []
-    characters = parser.get_characters(flatten(search), ignore)
+    if not fmt or fmt == 'default':
+        fmt = prefs.get('report_format')
 
-    # build the table
+    characters = list(parser.get_characters(flatten(search), ignore))
+
+    table_data = {tag : Counter(flatten([c.get(tag) for c in characters])) for tag in flatten(tags)}
 
     with _smart_open(outfile) as outstream:
-        # write to outstream
-        pass
+        outstream.write(repr(table_data))
 
     openable = None
     if outfile and outfile != '-':
