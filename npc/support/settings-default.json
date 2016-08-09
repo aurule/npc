@@ -72,7 +72,7 @@
     "template_header": "",
 
     // Default format for generated reports
-    "report_format": "mmd",
+    "report_format": "json",
 
     // Default format to use when creating a list of characters.
     "list_format": "markdown",

@@ -808,15 +808,24 @@ def report(*tags, search=None, ignore=None, fmt=None, outfile=None, **kwargs):
     if not fmt or fmt == 'default':
         fmt = prefs.get('report_format')
 
+    # use a list so we can iterate more than once
     characters = list(parser.get_characters(flatten(search), ignore))
 
+    # Construct a dict keyed by tag name whose values are Counters. Each Counter
+    # is initialized with a flattened list of lists and we let it count the
+    # duplicates.
     table_data = {tag : Counter(flatten([c.get(tag) for c in characters])) for tag in flatten(tags)}
 
-    with _smart_open(outfile) as outstream:
-        outstream.write(repr(table_data))
+    outputter = formatters.get_report_formatter(fmt)
+    if not outputter:
+        return Result(False, errmsg="Cannot create output of format '{}'".format(fmt), errcode=5)
+    with _smart_open(outfile, binary=(fmt in formatters.BINARY_TYPES)) as outstream:
+        response = outputter(table_data, outstream)
 
-    openable = None
-    if outfile and outfile != '-':
-        openable = [outfile]
+    # pass errors straight through
+    if not response.success:
+        return response
+
+    openable = [outfile] if outfile and outfile != '-' else None
 
     return Result(True, openable=openable)
