@@ -42,6 +42,23 @@ def get_list_formatter(format_name):
 
     return None
 
+def get_report_formatter(format_name):
+    """
+    Get the correct report table output function for a named format
+
+    Args:
+        format_name (str): Name of the desired format
+
+    Returns:
+        A formatting output function if the format is recognized, or None if it
+        is not.
+    """
+    format_name = get_canonical_format_name(format_name)
+    if format_name == 'json':
+        return json.report
+
+    return None
+
 def get_canonical_format_name(format_name):
     """
     Get the canonical format name for a possible abbreviation

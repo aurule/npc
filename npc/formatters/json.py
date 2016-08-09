@@ -39,3 +39,21 @@ def dump(characters, outstream, *, include_metadata=False, metadata=None, **kwar
     except TypeError as err:
         return util.Result(False, errmsg=err, errcode=9)
     return util.Result(True)
+
+def report(tables, outstream):
+    """
+    Write a json representation of one or more sets of table data
+
+    Args:
+        tables (dict): One or more objects with table data
+        outstream (stream): Output stream
+
+    Returns:
+        A util.Result object. Openable will not be set.
+    """
+    try:
+        json.dump(tables, outstream)
+    except TypeError as err:
+        return util.Result(False, errmsg=err, errcode=9)
+    return util.Result(True)
+
