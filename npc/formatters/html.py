@@ -39,12 +39,11 @@ def dump(characters, outstream, *, include_metadata=None, metadata=None, partial
     """
     prefs = kwargs.get('prefs', settings.InternalSettings())
     encoding = kwargs.get('encoding', prefs.get('html_encoding'))
-    if not prefs:
-        prefs = settings.InternalSettings()
     if not metadata:
         metadata = {}
     sectioner = kwargs.get('sectioner', lambda c: '')
 
+    # Get a stream writer that automatically encodes special characters
     modstream = codecs.getwriter(encoding)(outstream, errors='xmlcharrefreplace')
 
     if not partial:
