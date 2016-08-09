@@ -44,7 +44,7 @@
         // Session template used for making new session entries
         "session": "templates/Session Log.md",
 
-        // Output templates. These are used when creating character listings.
+        // Output templates to use when creating character listings.
         "listing": {
             "header": {
                 "mmd": "templates/listing/Header.mmd.mako",
