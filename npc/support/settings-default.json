@@ -65,6 +65,11 @@
             "section": {
                 "html": "templates/listing/Section.html.mako"
             }
+        },
+
+        // Output templates to use when creating a report
+        "report": {
+            "html": "templates/Report.html.mako"
         }
     },
 

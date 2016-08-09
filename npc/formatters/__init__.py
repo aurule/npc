@@ -54,7 +54,9 @@ def get_report_formatter(format_name):
         is not.
     """
     format_name = get_canonical_format_name(format_name)
-    if format_name == 'json':
+    if format_name == 'html':
+        return html.report
+    elif format_name == 'json':
         return json.report
 
     return None

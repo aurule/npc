@@ -92,3 +92,28 @@ def dump(characters, outstream, *, include_metadata=None, metadata=None, partial
     if not partial:
         modstream.write("</body>\n</html>\n")
     return util.Result(True)
+
+def report(tables, outstream, **kwargs):
+    """
+    Create one or more html tables
+
+    Args:
+        tables (dict): Table data to use
+        outstream (stream): Output stream
+        prefs (Settings): Settings object. Used to get the location of template
+            files.
+        encoding (string): Encoding format of the output text. Overrides the
+            value in settings.
+    """
+    prefs = kwargs.get('prefs', settings.InternalSettings())
+    encoding = kwargs.get('encoding', prefs.get('html_encoding'))
+
+    modstream = codecs.getwriter(encoding)(outstream, errors='xmlcharrefreplace')
+
+    with tempfile.TemporaryDirectory() as tempdir:
+        table_template = Template(filename=prefs.get("templates.report.html"), module_directory=tempdir)
+
+        for table in tables:
+            modstream.write(table_template.render(data=table))
+
+    return util.Result(True)
