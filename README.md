@@ -177,7 +177,7 @@ Options:
 
 * `--search`: Only look in these files and directories. Defaults to the base characters path.
 * `--ignore`: Ignore these files and directories. By default, nothing is ignored.
-* `--format`: Specify the format of the output. One of `markdown`, `md`, `json`, 'htm', or 'html'. Defaults to `markdown`.
+* `--format`: Specify the format of the output. One of `markdown`, `md`, `json`, 'htm', or 'html'. Defaults to the value configured for `list_format` in settings.
 * `--metadata`: Include metadata in the output. Can optionally specify the format of this metadata, if the main format supports it. Pass `default` to use the metadata type from your settings. Recognized values depend on the output format:
     - Markdown supports `mmd` for MultiMarkdown metadata, and `yfm` or `yaml` for YAML Front Matter metadata
     - HTML supports `meta` to put metadata in `<meta>` elements in the document `<head>`
