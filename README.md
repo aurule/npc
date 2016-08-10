@@ -12,6 +12,7 @@
     - [Dump Raw NPC Data](#dump-raw-npc-data)
     - [Reorganize Character Files](#reorganize-character-files)
     - [Edit Settings](#edit-settings)
+    - [Make Character Tag Reports](#make-character-tag-reports)
 - [Gotchas](#gotchas)
     - [Using both `search` and `ignore`](#using-both-search-and-ignore)
 - [Configuration](#configuration)
@@ -220,6 +221,18 @@ Options:
 
 * `location`: The settings file to open. Use `user` to open your user settings, or `campaign` to open the current campaign's settings.
 * `--type`: The type of settings to open. Leave it off to open the main settings file, or specify `changeling` to open the changeling-specific settings.
+
+## Make Character Tag Reports
+
+The `report` command lets you see how many characters there are for each unique value of a tag. It can make multiple tables at a time, one for each tag. See the wiki page on [Tag Reports](https://github.com/aurule/npc/wiki/Tag-Reports) for more information on how they work.
+
+Options:
+
+* `tags`: Name of one or more tags to analyze.
+* `--search`: Only look in these files and directories. Defaults to the base characters path.
+* `--ignore`: Ignore these files and directories. By default, nothing is ignored.
+* `--format`: Specify the format of the output. One of `markdown`, `md`, `json`, `htm`, or `html`. Defaults to the value configured for `report_format` in settings.
+* `--outfile`: Path where the output should go. If omitted (or you pass "`-`"), the output will go to stdout for chaining to another command.
 
 # Gotchas
 
