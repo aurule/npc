@@ -75,6 +75,8 @@ If anything goes wrong in this process (like malformatted file names) it will ye
 
 Most subcommands involve creating a specific type of character. Character files are put into the base characters directory (`Characters/` by default), with further options based on their type, groups, and sometimes other factors.
 
+Character templates are plain text files containing the body of the character sheet. When NPC creates a character for you, it copies this template and adds its tags to the top, above everything else.
+
 All characters support the following options:
 
 * `name`: The first positional argument is always the character/file name. The expected format is `character name - brief note`. During parsing, everything after "` - `" is ignored.
