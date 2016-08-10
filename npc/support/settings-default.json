@@ -69,7 +69,8 @@
 
         // Output templates to use when creating a report
         "report": {
-            "html": "templates/Report.html.mako"
+            "html": "templates/Report.html.mako",
+            "markdown": "templates/Report.md.mako"
         }
     },
 

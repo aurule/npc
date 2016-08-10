@@ -57,3 +57,23 @@ def dump(characters, outstream, *, include_metadata=None, metadata=None, **kwarg
             body_template = Template(filename=body_file, module_directory=tempdir)
             _out_write(body_template.render(character=char))
     return util.Result(True)
+
+def report(tables, outstream, **kwargs):
+    """
+    Create one or more MultiMarkdown tables
+
+    Args:
+        tables (dict): Table data to use
+        outstream (stream): Output stream
+        prefs (Settings): Settings object. Used to get the location of template
+            files.
+    """
+    prefs = kwargs.get('prefs', settings.InternalSettings())
+
+    with tempfile.TemporaryDirectory() as tempdir:
+        table_template = Template(filename=prefs.get("templates.report.markdown"), module_directory=tempdir)
+
+        for key, table in tables.items():
+            outstream.write(table_template.render(data=table, tag=key))
+
+    return util.Result(True)
