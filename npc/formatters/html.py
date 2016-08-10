@@ -113,7 +113,7 @@ def report(tables, outstream, **kwargs):
     with tempfile.TemporaryDirectory() as tempdir:
         table_template = Template(filename=prefs.get("templates.report.html"), module_directory=tempdir)
 
-        for table in tables:
-            modstream.write(table_template.render(data=table))
+        for key, table in tables.items():
+            modstream.write(table_template.render(data=table, tag=key))
 
     return util.Result(True)
