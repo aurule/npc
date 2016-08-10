@@ -1,14 +1,14 @@
 """
 Formatter for creating json exports of a set of characters.
 
-Has a single function `dump` which mostly just inserts metadata and calls
-`json.dump`.
+The functions in this module are very barebones and rely on json.dump to handle
+the actual output. At most, they add some keys to the data first.
 """
 
 import json
 from .. import util
 
-def dump(characters, outstream, *, include_metadata=False, metadata=None, **kwargs):
+def listing(characters, outstream, *, include_metadata=False, metadata=None, **kwargs):
     """
     Dump a json representation of all character data
 

@@ -1,10 +1,14 @@
 """
-Character listing formatters
+Output formatters
 
-These modules encapsulate the logic needed to create a character listing in
-various formats. Each module has a single `dump` entry point which accepts, at
-minimum, the characters to list and where to put them. Other args are available
-in each linter.
+The submodules in this package handle the logic for creating specially formatted
+output for a few different commands. Each has one or more functions named after
+the command they are designed for. Functions designed to work for the same
+command share most of the same arguments, though optional arguments are
+sometimes available.
+
+The functions here can be used to easily get the appropriate formatting function
+for a use case and output type.
 """
 
 from . import markdown, json, html
@@ -19,9 +23,9 @@ CANONICAL_FORMATS = {
     "html": "html",
     "json": "json"
 }
-"""dict: mapping of accepted format names and abbreviations and their canonical format name keys"""
+"""dict: mapping of accepted format names and abbreviations to their canonical format name keys"""
 
-def get_list_formatter(format_name):
+def get_listing_formatter(format_name):
     """
     Get the correct npc listing output function for a named format
 
@@ -34,11 +38,11 @@ def get_list_formatter(format_name):
     """
     format_name = get_canonical_format_name(format_name)
     if format_name == 'markdown':
-        return markdown.dump
+        return markdown.listing
     if format_name == 'html':
-        return html.dump
+        return html.listing
     if format_name == 'json':
-        return json.dump
+        return json.listing
 
     return None
 

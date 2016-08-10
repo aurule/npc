@@ -6,7 +6,7 @@ import tempfile
 from mako.template import Template
 from .. import util, settings
 
-def dump(characters, outstream, *, include_metadata=None, metadata=None, **kwargs):
+def listing(characters, outstream, *, include_metadata=None, metadata=None, **kwargs):
     """
     Create a markdown character listing
 
