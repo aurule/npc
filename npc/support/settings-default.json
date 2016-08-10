@@ -78,7 +78,7 @@
     "template_header": "",
 
     // Default format for generated reports
-    "report_format": "json",
+    "report_format": "markdown",
 
     // Default format to use when creating a list of characters.
     "list_format": "markdown",
