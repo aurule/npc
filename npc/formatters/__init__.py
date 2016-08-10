@@ -35,9 +35,9 @@ def get_list_formatter(format_name):
     format_name = get_canonical_format_name(format_name)
     if format_name == 'markdown':
         return markdown.dump
-    elif format_name == 'html':
+    if format_name == 'html':
         return html.dump
-    elif format_name == 'json':
+    if format_name == 'json':
         return json.dump
 
     return None
