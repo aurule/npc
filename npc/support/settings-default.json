@@ -83,6 +83,9 @@
     // Default format to use when creating a list of characters.
     "list_format": "markdown",
 
+    // Default sorting method for character listings
+    "list_sort": "last",
+
     // Encoding to use when creating html data, like for an NPC listing
     "html_encoding": "ascii",
 

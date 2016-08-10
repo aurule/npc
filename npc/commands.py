@@ -452,7 +452,8 @@ def listing(*search, ignore=None, fmt=None, metadata=None, title=None, outfile=N
             Overrides the title from settings.
         outfile (string|None): Filename to put the listed data. None and "-"
             print to stdout.
-        sort (string|None): Sort order for characters. Defaults to "last".
+        sort (string|None): Sort order for characters. Defaults to the value of
+            "list_sort" in settings.
         prefs (Settings): Settings object to use. Uses internal settings by
             default.
 
@@ -462,7 +463,7 @@ def listing(*search, ignore=None, fmt=None, metadata=None, title=None, outfile=N
     prefs = kwargs.get('prefs', settings.InternalSettings())
     if not ignore:
         ignore = []
-    sort_order = kwargs.get('sort', 'last')
+    sort_order = kwargs.get('sort', prefs.get('list_sort'))
 
     characters = _sort_chars(
         _prune_chars(parser.get_characters(flatten(search), ignore)),
