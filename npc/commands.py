@@ -815,7 +815,7 @@ def report(*tags, search=None, ignore=None, fmt=None, outfile=None, **kwargs):
     # Construct a dict keyed by tag name whose values are Counters. Each Counter
     # is initialized with a flattened list of lists and we let it count the
     # duplicates.
-    table_data = {tag : Counter(flatten([c.get(tag) for c in characters])) for tag in flatten(tags)}
+    table_data = {tag : Counter(flatten([c.get(tag, 'None') for c in characters])) for tag in flatten(tags)}
 
     outputter = formatters.get_report_formatter(fmt)
     if not outputter:
