@@ -405,7 +405,6 @@ def create_path_from_character(character: Character, *, target_path=None, **kwar
         # changelings use court first, then groups
         if 'court' in character:
             for court_name in character['court']:
-                print(court_name)
                 target_path = _add_path_if_exists(target_path, court_name)
         else:
             target_path = _add_path_if_exists(target_path, 'Courtless')
