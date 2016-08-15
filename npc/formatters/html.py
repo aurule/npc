@@ -57,7 +57,7 @@ def listing(characters, outstream, *, include_metadata=None, metadata=None, part
                     errcode=6)
 
             header_template = Template(filename=header_file)
-            modstream.write(header_template.render(metadata=metadata))
+            modstream.write(header_template.render(metadata=metadata, encoding=encoding))
         else:
             header_template = Template(filename=prefs.get("templates.listing.header.plain"))
             modstream.write(header_template.render(encoding=encoding))

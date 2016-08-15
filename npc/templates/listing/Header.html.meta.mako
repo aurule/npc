@@ -10,6 +10,6 @@
     %>\
 <meta name="${k}" content="${v}" />
     % endfor
-    <meta charset="${encoding}">
+<meta charset="${encoding}">
 </head>
 <body>
