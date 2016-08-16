@@ -163,15 +163,15 @@ def _make_parser():
 
     # Subcommand for making changelings, with their unique options
     parser_changeling = subparsers.add_parser('changeling', aliases=['c'], parents=[character_parser], help="Create a new changeling character")
-    parser_changeling.add_argument('seeming', help="character's Seeming", metavar='seeming')
-    parser_changeling.add_argument('kith', help="character's Kith", metavar='kith')
-    parser_changeling.add_argument('-c', '--court', help="the character's Court", metavar='court')
-    parser_changeling.add_argument('-m', '--motley', help="the character's Motley", metavar='motley')
+    parser_changeling.add_argument('seeming', help="The character's Seeming", metavar='seeming')
+    parser_changeling.add_argument('kith', help="The character's Kith", metavar='kith')
+    parser_changeling.add_argument('-c', '--court', help="The character's Court", metavar='court')
+    parser_changeling.add_argument('-m', '--motley', help="The character's Motley", metavar='motley')
     parser_changeling.set_defaults(func=commands.create_changeling, serialize=['name', 'seeming', 'kith'])
 
     # Subcommand for linting characer files
     parser_lint = subparsers.add_parser('lint', parents=[paths_parser], help="Check the character files for minimum completeness")
-    parser_lint.add_argument('-f', '--fix', action='store_true', default=False, help="automatically fix certain problems")
+    parser_lint.add_argument('-f', '--fix', action='store_true', default=False, help="Automatically fix certain problems")
     parser_lint.set_defaults(func=commands.lint)
 
     # Subcommand to list character data in multiple formats
