@@ -121,7 +121,10 @@ def parse_character(char_file_path: str) -> Character:
     match = name_re.match(path.splitext(basename)[0])
 
     # instantiate new character
-    parsed_char = Character(name=[match.group('name')])
+    parsed_char = Character(
+        name=[match.group('name')],
+        path=char_file_path
+    )
 
     with open(char_file_path, 'r') as char_file:
         last_group = ''
@@ -173,5 +176,4 @@ def parse_character(char_file_path: str) -> Character:
             parsed_char.append(tag, value)
 
     parsed_char['description'] = parsed_char['description'].strip()
-    parsed_char['path'] = char_file_path
     return parsed_char
