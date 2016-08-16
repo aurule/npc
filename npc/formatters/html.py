@@ -2,7 +2,6 @@
 HTML formatter for creating a page of characters.
 """
 
-import codecs
 import html
 import tempfile
 from markdown import Markdown
@@ -43,8 +42,10 @@ def listing(characters, outstream, *, include_metadata=None, metadata=None, part
         metadata = {}
     sectioner = kwargs.get('sectioner', lambda c: '')
 
-    # Get a stream writer that automatically encodes special characters
-    modstream = codecs.getwriter(encoding)(outstream, errors='xmlcharrefreplace')
+    encoding_options = {
+        'output_encoding': encoding,
+        'encoding_errors': 'xmlcharrefreplace'
+    }
 
     if not partial:
         if include_metadata:
@@ -56,41 +57,42 @@ def listing(characters, outstream, *, include_metadata=None, metadata=None, part
                     errmsg="Unrecognized metadata format option '{}'".format(include_metadata),
                     errcode=6)
 
-            header_template = Template(filename=header_file)
-            modstream.write(header_template.render(metadata=metadata, encoding=encoding))
+            header_template = Template(filename=header_file, **encoding_options)
+            outstream.write(header_template.render(metadata=metadata))
         else:
-            header_template = Template(filename=prefs.get("templates.listing.header.plain"))
-            modstream.write(header_template.render(encoding=encoding))
+            header_template = Template(filename=prefs.get("templates.listing.header.plain"), **encoding_options)
+            outstream.write(header_template.render(encoding=encoding))
 
     with tempfile.TemporaryDirectory() as tempdir:
-        md_converter = Markdown(extensions=['markdown.extensions.extra', 'markdown.extensions.smarty'])
+        md_converter = Markdown(extensions=['markdown.extensions.smarty'])
 
         # directly access certain functions for speed
         _clean_conv = md_converter.reset
         _prefs_get = prefs.get
-        _mod_write = modstream.write
+        _out_write = outstream.write
 
         section_title = ''
         section_template = Template(
             filename=_prefs_get("templates.listing.section.html"),
-            module_directory=tempdir)
+            module_directory=tempdir, **encoding_options)
         for char in characters:
             if sectioner(char) != section_title:
                 section_title = sectioner(char)
-                _mod_write(
-                    _clean_conv().convert(
-                        section_template.render(
-                            title=section_title)))
+                _out_write(
+                    section_template.render(
+                        title=section_title))
             body_file = _prefs_get("templates.listing.character.html.{}".format(char.type_key))
             if not body_file:
                 body_file = _prefs_get("templates.listing.character.html.default")
-            body_template = Template(filename=body_file, module_directory=tempdir)
-            _mod_write(
-                _clean_conv().convert(
-                    body_template.render(
-                        character=char.copy_and_alter(html.escape))))
+            body_template = Template(filename=body_file, module_directory=tempdir, **encoding_options)
+            _out_write(
+                body_template.render(
+                    character=char.copy_and_alter(html.escape),
+                    mdconv=_clean_conv().convert
+                    ))
     if not partial:
-        modstream.write("</body>\n</html>\n")
+        footer_template = Template(filename=prefs.get("templates.listing.footer.html"), **encoding_options)
+        outstream.write(footer_template.render())
     return util.Result(True)
 
 def report(tables, outstream, **kwargs):
@@ -108,12 +110,18 @@ def report(tables, outstream, **kwargs):
     prefs = kwargs.get('prefs', settings.InternalSettings())
     encoding = kwargs.get('encoding', prefs.get('html_encoding'))
 
-    modstream = codecs.getwriter(encoding)(outstream, errors='xmlcharrefreplace')
+    encoding_options = {
+        'output_encoding': encoding,
+        'encoding_errors': 'xmlcharrefreplace'
+    }
 
     with tempfile.TemporaryDirectory() as tempdir:
-        table_template = Template(filename=prefs.get("templates.report.html"), module_directory=tempdir)
+        table_template = Template(
+            filename=prefs.get("templates.report.html"),
+            module_directory=tempdir,
+            **encoding_options)
 
         for key, table in tables.items():
-            modstream.write(table_template.render(data=table, tag=key))
+            outstream.write(table_template.render(data=table, tag=key))
 
     return util.Result(True)

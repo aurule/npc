@@ -1,4 +1,4 @@
-<%page args="character"/>
+<%page args="character, mdconv"/>
 <%def name="make_ranks(group_name)">\
     %if group_name in character['rank']:
  (${', '.join(character['rank'][group_name])})\
@@ -47,11 +47,11 @@ ${', '}
 %endif
 \
 %if character.has_items('appearance'):
-<p markdown="1"><em>Appearance:</em> ${' '.join(character['appearance'])}</p>
+<p><em>Appearance:</em> ${mdconv(' '.join(character['appearance']))}</p>
 %endif
 \
-<p markdown="1"><em>Notes:</em> ${character['description']}</p>
+<p><em>Notes:</em> ${mdconv(character['description'])}</p>
 \
 %if character.has_items('dead'):
-<p markdown="1"><em>Dead:</em> ${' '.join(character['dead'])}</p>
+<p><em>Dead:</em> ${mdconv(' '.join(character['dead']))}</p>
 %endif

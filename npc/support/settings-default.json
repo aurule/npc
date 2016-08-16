@@ -52,6 +52,9 @@
                 "meta": "templates/listing/Header.html.meta.mako",
                 "plain": "templates/listing/Header.html.plain.mako"
             },
+            "footer": {
+                "html": "templates/listing/Footer.html.mako"
+            },
             "character": {
                 "markdown": {
                     "default": "templates/listing/Character.md.mako",
