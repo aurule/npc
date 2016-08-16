@@ -10,6 +10,9 @@ import itertools
 from os import path, walk
 from .util import Character
 
+VALID_EXTENSIONS = ['.nwod']
+"""tuple: file extensions that should be parsed"""
+
 def get_characters(search_paths=None, ignore_paths=None):
     """
     Get data from character files
@@ -60,7 +63,7 @@ def _parse_path(start_path, ignore_paths=None, include_bare=False):
                 # skip ignored files
                 continue
             _, ext = path.splitext(name)
-            if ext == '.nwod' or (include_bare and not ext):
+            if ext in VALID_EXTENSIONS or (include_bare and not ext):
                 data = parse_character(target_path)
                 characters.append(data)
     return characters
