@@ -172,6 +172,7 @@ def _make_parser():
     # Subcommand for linting characer files
     parser_lint = subparsers.add_parser('lint', parents=[paths_parser], help="Check the character files for minimum completeness")
     parser_lint.add_argument('-f', '--fix', action='store_true', default=False, help="Automatically fix certain problems")
+    parser_lint.add_argument('--strict', action='store_true', default=False, help="Report all non-critical errors")
     parser_lint.set_defaults(func=commands.lint)
 
     # Subcommand to list character data in multiple formats

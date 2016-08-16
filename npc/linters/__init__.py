@@ -17,7 +17,7 @@ use a discrete linter function.
 from . import changeling
 from .. import settings
 
-def lint(character, fix=False, prefs=None):
+def lint(character, fix=False, prefs=None, strict=False):
     """
     Lint a character object
 
@@ -26,6 +26,7 @@ def lint(character, fix=False, prefs=None):
     Args:
         character (Character): Character object to lint
         fix (bool): Whether to automatically correct certain problems
+        strict (bool): Whether to report non-critical errors and omissions
         prefs (Settings): Settings object to use. Uses internal settings by
             default.
 
@@ -39,6 +40,10 @@ def lint(character, fix=False, prefs=None):
     all_types = [t.lower() for t in character['type']]
 
     if 'changeling' in all_types:
-        problems.extend(changeling.lint(character, fix=fix, sk_data=prefs.get('changeling')))
+        problems.extend(
+            changeling.lint(character,
+                fix=fix,
+                strict=strict,
+                sk_data=prefs.get('changeling')))
 
     return problems

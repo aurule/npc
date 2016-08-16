@@ -664,7 +664,7 @@ def dump(*search, ignore=None, sort=False, metadata=False, outfile=None, **kwarg
 
     return Result(True, openable=openable)
 
-def lint(*search, ignore=None, fix=False, **kwargs):
+def lint(*search, ignore=None, fix=False, strict=False, **kwargs):
     """
     Check character files for completeness and correctness.
 
@@ -677,6 +677,7 @@ def lint(*search, ignore=None, fix=False, **kwargs):
             or lists of strings.
         ignore (list): Paths to ignore
         fix (bool): Whether to automatically fix errors when possible
+        strict (bool): Whether to report non-critical errors and omissions
         prefs (Settings): Settings object to use. Uses internal settings by
             default.
 
@@ -694,7 +695,7 @@ def lint(*search, ignore=None, fix=False, **kwargs):
     characters = parser.get_characters(flatten(search), ignore)
     for character in characters:
         character.validate()
-        character.problems.extend(linters.lint(character, fix=fix, prefs=prefs))
+        character.problems.extend(linters.lint(character, fix=fix, strict=strict, prefs=prefs))
 
         # Report problems on one line if possible, or as a block if there's more than one
         if not character.valid:

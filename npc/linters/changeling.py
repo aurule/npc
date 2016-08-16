@@ -29,7 +29,7 @@ STANDARD_GOODWILL_REGEX = r'^\s+(?:court )?goodwill \((?P<court>[a-zA-Z ]+)\)' #
 ALT_GOODWILL_REGEX = r'^\s+(?P<court>[a-zA-Z]+) (?:court )?goodwill' # matches `name Court Mantle` and `name Mantle`
 """Regex to match alternate ways of writing the mantle merit: court Court Mantle, or court Mantle."""
 
-def lint(character, fix=False, *, sk_data=None):
+def lint(character, fix=False, *, strict=False, sk_data=None):
     """
     Verify the more complex elements in a changeling sheet.
 
@@ -49,6 +49,7 @@ def lint(character, fix=False, *, sk_data=None):
     Args:
         character (dict): Character data to lint
         fix (bool): Whether to automatically correct certain problems
+        strict (bool): Whether to report non-critical errors and omissions
         sk_data (dict): Seeming and kith data, as from the support/settings-changeling.json file.
 
     Returns:
@@ -86,7 +87,7 @@ def lint(character, fix=False, *, sk_data=None):
         elif court_key != mantle_court_keys[0]:
             problems.append("Court mantle '{}' does not match court tag '{}'".format(mantle_courts[0], court))
 
-    # Check that goodwill does not match the character's own court
+    # Check that goodwill does not match the character's own court or mantle
     goodwill_courts = _get_goodwill(data)
     goodwill_court_keys = [c.lower() for c in goodwill_courts]
     if goodwill_courts:
@@ -94,6 +95,10 @@ def lint(character, fix=False, *, sk_data=None):
             problems.append("Court goodwill listed for court tag '{}'".format(court))
         if mantle_courts and mantle_court_keys[0] in goodwill_court_keys:
             problems.append("Court goodwill listed for court mantle '{}'".format(mantle_courts[0]))
+
+    # STRICT: Check that they have a mantle for their court
+    if strict and court and court_key not in mantle_court_keys:
+        problems.append("No mantle for court '{}'".format(court))
 
     # Check that seeming tag matches listed seeming with correct notes
     seeming_tags = [t.lower() for t in character['seeming']]
