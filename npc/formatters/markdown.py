@@ -35,7 +35,7 @@ def listing(characters, outstream, *, include_metadata=None, metadata=None, **kw
             include_metadata = "yfm"
 
         # load and render template
-        header_file = prefs.get("templates.listing.header.{}".format(include_metadata))
+        header_file = prefs.get("templates.listing.header.markdown.{}".format(include_metadata))
         if not header_file:
             return util.Result(
                 False,

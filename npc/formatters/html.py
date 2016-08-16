@@ -50,7 +50,7 @@ def listing(characters, outstream, *, include_metadata=None, metadata=None, part
     if not partial:
         if include_metadata:
             # load and render template
-            header_file = prefs.get("templates.listing.header.{}".format(include_metadata))
+            header_file = prefs.get("templates.listing.header.html.{}".format(include_metadata))
             if not header_file:
                 return util.Result(
                     False,
@@ -60,7 +60,7 @@ def listing(characters, outstream, *, include_metadata=None, metadata=None, part
             header_template = Template(filename=header_file, **encoding_options)
             outstream.write(header_template.render(metadata=metadata))
         else:
-            header_template = Template(filename=prefs.get("templates.listing.header.plain"), **encoding_options)
+            header_template = Template(filename=prefs.get("templates.listing.header.html.plain"), **encoding_options)
             outstream.write(header_template.render(encoding=encoding))
 
     with tempfile.TemporaryDirectory() as tempdir:

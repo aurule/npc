@@ -47,10 +47,14 @@
         // Output templates to use when creating character listings.
         "listing": {
             "header": {
-                "mmd": "templates/listing/Header.mmd.mako",
-                "yfm": "templates/listing/Header.yfm.mako",
-                "meta": "templates/listing/Header.html.meta.mako",
-                "plain": "templates/listing/Header.html.plain.mako"
+                "markdown": {
+                    "mmd": "templates/listing/Header.mmd.mako",
+                    "yfm": "templates/listing/Header.yfm.mako"
+                },
+                "html": {
+                    "meta": "templates/listing/Header.html.meta.mako",
+                    "plain": "templates/listing/Header.html.plain.mako"
+                }
             },
             "footer": {
                 "html": "templates/listing/Footer.html.mako"
