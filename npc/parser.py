@@ -11,6 +11,8 @@ def get_characters(search_paths=None, ignore_paths=None):
     """
     Get data from character files
 
+    Normalizes the ignore paths with os.path.normpath.
+
     Args:
         search_paths (list): Paths to search for character files
         ignore_paths (list): Paths to exclude from the search
@@ -20,6 +22,9 @@ def get_characters(search_paths=None, ignore_paths=None):
     """
     if search_paths is None:
         search_paths = ['.']
+
+    if ignore_paths:
+        ignore_paths[:] = [path.normpath(d) for d in ignore_paths]
 
     return itertools.chain.from_iterable((_parse_path(path, ignore_paths) for path in search_paths))
 
@@ -66,7 +71,7 @@ def _walk_ignore(root, ignore):
     Yields:
         A tuple (path, [dirs], [files]) as from `os.walk`.
     """
-    def included(base, check):
+    def should_search(base, check):
         """
         Determine whether a path should be searched
 
@@ -80,10 +85,11 @@ def _walk_ignore(root, ignore):
         Returns:
             True if d should be searched, false if it should be ignored
         """
-        return (path.join(base, check) not in ignore) and (base not in ignore)
+        return base not in ignore \
+            and path.join(base, check) not in ignore
 
     for dirpath, dirnames, filenames in walk(root, followlinks=True):
-        dirnames[:] = [d for d in dirnames if included(dirpath, d)]
+        dirnames[:] = [d for d in dirnames if should_search(dirpath, d)]
         yield dirpath, dirnames, filenames
 
 def _parse_character(char_file_path: str) -> Character:
