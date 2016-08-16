@@ -1,5 +1,8 @@
 """
 Parse character files into Character objects
+
+The main entry point is get_characters, which creates a list of characters. To
+parse a single file, use parse_character instead.
 """
 
 import re
@@ -18,7 +21,8 @@ def get_characters(search_paths=None, ignore_paths=None):
         ignore_paths (list): Paths to exclude from the search
 
     Returns:
-        List of Characters containing parsed character information
+        List of Characters generated from every parseable character file within
+        every path of search_paths, but not in ignore_paths.
     """
     if search_paths is None:
         search_paths = ['.']
@@ -40,10 +44,11 @@ def _parse_path(start_path, ignore_paths=None, include_bare=False):
             extension in addition to .nwod files.
 
     Returns:
-        List of Characters containing parsed character data
+        List of Characters generated from every parseable character file within
+        start_path, but not in ignore_paths.
     """
     if path.isfile(start_path):
-        return [_parse_character(start_path)]
+        return [parse_character(start_path)]
     if ignore_paths is None:
         ignore_paths = []
 
@@ -56,7 +61,7 @@ def _parse_path(start_path, ignore_paths=None, include_bare=False):
                 continue
             _, ext = path.splitext(name)
             if ext == '.nwod' or (include_bare and not ext):
-                data = _parse_character(target_path)
+                data = parse_character(target_path)
                 characters.append(data)
     return characters
 
@@ -92,7 +97,7 @@ def _walk_ignore(root, ignore):
         dirnames[:] = [d for d in dirnames if should_search(dirpath, d)]
         yield dirpath, dirnames, filenames
 
-def _parse_character(char_file_path: str) -> Character:
+def parse_character(char_file_path: str) -> Character:
     """
     Parse a single character file
 
