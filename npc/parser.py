@@ -29,7 +29,8 @@ def _parse_path(start_path, ignore_paths=None, include_bare=False):
 
     Args:
         start_path (str): Path to search
-        ignore_paths (list): Pathsh to exclude
+        ignore_paths (list): Paths to exclude. Assumed to be normalized, as from
+            os.path.normpath.
         include_bare (bool): Whether to attempt to parse files without an
             extension in addition to .nwod files.
 
