@@ -13,7 +13,7 @@ for a use case and output type.
 
 from . import markdown, json, html
 
-BINARY_TYPES = ('html')
+BINARY_TYPES = ['html']
 """tuple: Format names that require a binary stream instead of a text stream"""
 
 CANONICAL_FORMATS = {
