@@ -174,6 +174,7 @@ Changeling character files are checked for these additional problems:
 If `strict` is true, Changelings are also checked for the following:
 
 * The Mantle merit is present for the same court as the `@court` tag.
+* The Unseen Sense merit must not be present.
 
 ## Make an NPC Listing
 
