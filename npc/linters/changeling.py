@@ -29,6 +29,8 @@ STANDARD_GOODWILL_REGEX = r'^\s+(?:court )?goodwill \((?P<court>[a-zA-Z ]+)\)' #
 ALT_GOODWILL_REGEX = r'^\s+(?P<court>[a-zA-Z]+) (?:court )?goodwill' # matches `name Court Mantle` and `name Mantle`
 """Regex to match alternate ways of writing the mantle merit: court Court Mantle, or court Mantle."""
 
+UNSEEN_SENSE_REGEX = r'^\s+Unseen Sense\s+\((?P<thing>[\w\s]+)\)'
+
 def lint(character, fix=False, *, strict=False, sk_data=None):
     """
     Verify the more complex elements in a changeling sheet.
@@ -99,6 +101,11 @@ def lint(character, fix=False, *, strict=False, sk_data=None):
     # STRICT: Check that they have a mantle for their court
     if strict and court and court_key not in mantle_court_keys:
         problems.append("No mantle for court '{}'".format(court))
+
+    # STRICT: Check that they do not have the Unseen Sense merit
+    unseen_sense = _get_unseen_sense(data)
+    if strict and unseen_sense:
+        problems.append("Changelings cannot have the Unseen Sense merit")
 
     # Check that seeming tag matches listed seeming with correct notes
     seeming_tags = [t.lower() for t in character['seeming']]
@@ -296,3 +303,11 @@ def _get_goodwill(data):
     std_matches = std_goodwill_re.finditer(data)
     alt_matches = alt_goodwill_re.finditer(data)
     return [m.group('court') for m in util.flatten([std_matches, alt_matches])]
+
+def _get_unseen_sense(data):
+    merit_re = re.compile(
+        UNSEEN_SENSE_REGEX,
+        re.MULTILINE | re.IGNORECASE
+    )
+
+    return [m.group('thing') for m in merit_re.finditer(data)]
