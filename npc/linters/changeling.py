@@ -17,13 +17,13 @@ SEEMING_REGEX = r'^(?P<name>\s+seeming\s+)(?P<seeming>{})[ \t]*(?P<notes>\(.*\))
 KITH_REGEX = r'^(?P<name>\s+kith\s+)(?P<kith>{})[ \t]*(?P<notes>\(.*\))?$'
 """Regex to match a kith line"""
 
-STANDARD_MANTLE_REGEX = r'^\s+mantle \((?P<court>[a-zA-Z ]+)\)' # matches `Mantle (name)`
+STANDARD_MANTLE_REGEX = r'^\s+mantle\s+\((?P<court>[a-zA-Z ]+)\)' # matches `Mantle (name)`
 """Regex to match the standard way of writing the mantle merit: Mantle (court)."""
 
 ALT_MANTLE_REGEX = r'^\s+(?P<court>[a-zA-Z]+) (?:court )?mantle' # matches `name Court Mantle` and `name Mantle`
 """Regex to match alternate ways of writing the mantle merit: court Court Mantle, or court Mantle."""
 
-STANDARD_GOODWILL_REGEX = r'^\s+(?:court )?goodwill \((?P<court>[a-zA-Z ]+)\)' # matches `Mantle (name)`
+STANDARD_GOODWILL_REGEX = r'^\s+(?:court )?goodwill\s+\((?P<court>[a-zA-Z ]+)\)' # matches `Mantle (name)`
 """Regex to match the standard way of writing the mantle merit: Mantle (court)."""
 
 ALT_GOODWILL_REGEX = r'^\s+(?P<court>[a-zA-Z]+) (?:court )?goodwill' # matches `name Court Mantle` and `name Mantle`
