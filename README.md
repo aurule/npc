@@ -150,6 +150,7 @@ Options:
 * `--search`: Only look in these files and directories. Defaults to the base characters path.
 * `--ignore`: Ignore these files and directories. By default, nothing is ignored.
 * `--fix`: Automatically fix a few problems. Most require manual fixing, though.
+* `--strict`: Include optional checks.
 
 Every character file is checked for these problems:
 
@@ -167,8 +168,12 @@ Changeling character files are checked for these additional problems:
 * The notes for each seeming in the stats are present and correct. If `--fix` is passed, these notes will be updated.
 * The notes for each kith in the stats are present and correct. If `--fix` is passed, these notes will be updated.
 * The mantle merit appears at most once.
-* The court for the mantle merit matches the value of the `@court` tag.
-* The court goodwill merit does not match the value of the `@court` tag or the mantle merit.
+* The court of the Mantle merit (if present) matches the value of the `@court` tag.
+* The court of the Court Goodwill merit (if present) does not match the value of the `@court` tag or the Mantle merit.
+
+If `strict` is true, Changelings are also checked for the following:
+
+* The Mantle merit is present for the same court as the `@court` tag.
 
 ## Make an NPC Listing
 
