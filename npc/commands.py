@@ -694,7 +694,7 @@ def lint(*search, ignore=None, fix=False, strict=False, **kwargs):
     # check each character
     characters = parser.get_characters(flatten(search), ignore)
     for character in characters:
-        character.validate()
+        character.validate(strict)
         character.problems.extend(linters.lint(character, fix=fix, strict=strict, prefs=prefs))
 
         # Report problems on one line if possible, or as a block if there's more than one

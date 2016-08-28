@@ -260,9 +260,12 @@ class Character(defaultdict):
         self['rank'][group].append(value)
         return self
 
-    def validate(self):
+    def validate(self, strict=False):
         """
         Validate the presence of a few required elements: description and type.
+
+        Args:
+            strict (bool): Whether to report non-critical errors and omissions
 
         Returns:
             True if this Character has no validation problems, false if not.
@@ -280,9 +283,12 @@ class Character(defaultdict):
 
         return len(self.problems) == 0
 
-    def _validate_changeling(self):
+    def _validate_changeling(self, strict=False):
         """
         Validate the basic elements of a changeling file
+
+        Args:
+            strict (bool): Whether to report non-critical errors and omissions
 
         The following must be true:
             * seeming is present
