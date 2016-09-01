@@ -58,3 +58,6 @@ target/
 
 # Linux directory information
 .directory
+
+# Convenient testing characters
+Characters
