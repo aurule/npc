@@ -73,3 +73,28 @@ class TestChangeling:
 
     def test_unseen_sense(self, lint_output):
         assert "Changelings cannot have the Unseen Sense merit" in lint_output('Unseen Sense.nwod', strict=True)
+
+    def test_virtue(self, lint_output):
+        assert "Missing virtue" in lint_output('No Virtue.nwod', strict=True)
+
+    def test_vice(self, lint_output):
+        assert "Missing vice" in lint_output('No Vice.nwod', strict=True)
+
+class TestHuman:
+    """Tests the linting of changeling-specific tags"""
+
+    @pytest.fixture
+    def lint_output(self, capsys):
+        def do_lint(charname, strict=False):
+            search = fixture_dir(['linter', 'characters', 'Humans', charname])
+            npc.commands.lint(search, strict=strict)
+            output, _ = capsys.readouterr()
+            return output
+        return do_lint
+
+    def test_virtue(self, lint_output):
+        assert "Missing virtue" in lint_output('No Virtue.nwod', strict=True)
+
+    def test_vice(self, lint_output):
+        assert "Missing vice" in lint_output('No Vice.nwod', strict=True)
+
