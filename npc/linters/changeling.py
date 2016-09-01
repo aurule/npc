@@ -6,6 +6,7 @@ only public entry point is the lint function.
 """
 
 import re
+from . import nwod
 from .. import util
 
 REPLACEABLE = ('x', 'y')
@@ -46,16 +47,24 @@ def lint(character, fix=False, *, strict=False, sk_data=None):
     6. Seeming and kith have correct notes for their blessing (and curse for
         Seeming)
 
+    Additional checks when strict is true:
+
+    1. Virtue and Vice are present
+    2. Mantle merit appears exactly once for the court in their tags
+    3. The Unseen Sense merit must not be present
+
     Missing or incorrect notes can be fixed automatically if desired.
 
     Args:
         character (dict): Character data to lint
         fix (bool): Whether to automatically correct certain problems
         strict (bool): Whether to report non-critical errors and omissions
-        sk_data (dict): Seeming and kith data, as from the support/settings-changeling.json file.
+        sk_data (dict): Seeming and kith data, as from the
+            support/settings-changeling.json file.
 
     Returns:
-        List of problem descriptions. If no problems were found, the list will be empty.
+        List of problem descriptions. If no problems were found, the list will
+        be empty.
     """
     problems = []
     dirty = False
@@ -77,6 +86,10 @@ def lint(character, fix=False, *, strict=False, sk_data=None):
     # Load the sheet for deep linting
     with open(character['path'], 'r') as char_file:
         data = char_file.read()
+
+    # STRICT: Check that they have a virtue and a vice
+    if strict:
+        problems.extend(nwod.lint_vice_virtue(data))
 
     # Check that the mantle matches the court if given
     court = character.get_first('court')
