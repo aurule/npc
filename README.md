@@ -148,7 +148,7 @@ The `lint` command checks character files for errors and inconsistencies. It's a
 Options:
 
 * `--search`: Only look in these files and directories. Defaults to the base characters path.
-* `--ignore`: Ignore these files and directories. By default, nothing is ignored.
+* `--ignore`: Ignore these files and directories. By default, nothing is ignored. Added to the default ignore paths from settings
 * `--fix`: Automatically fix a few problems. Most require manual fixing, though.
 * `--strict`: Include optional checks.
 
@@ -185,7 +185,7 @@ See the wiki page on [NPC Listings](https://github.com/aurule/npc/wiki/NPC-Listi
 Options:
 
 * `--search`: Only look in these files and directories. Defaults to the base characters path.
-* `--ignore`: Ignore these files and directories. By default, nothing is ignored.
+* `--ignore`: Ignore these files and directories. By default, nothing is ignored. Added to the default ignore paths from settings
 * `--format`: Specify the format of the output. One of `markdown`, `md`, `json`, 'htm', or 'html'. Defaults to the value configured for `list_format` in settings.
 * `--metadata`: Include metadata in the output. Can optionally specify the format of this metadata, if the main format supports it. Pass `default` to use the metadata type from your settings. Recognized values depend on the output format:
     - Markdown supports `mmd` for MultiMarkdown metadata, and `yfm` or `yaml` for YAML Front Matter metadata
@@ -199,7 +199,7 @@ The `dump` command builds a list of parseable NPCs in json format. It ignores ev
 Options:
 
 * `--search`: Only look in these files and directories. Defaults to the base characters path.
-* `--ignore`: Ignore these files and directories. By default, nothing is ignored.
+* `--ignore`: Ignore these files and directories. By default, nothing is ignored. Added to the default ignore paths from settings
 * `--sort`: Sort NPCs by name before dumping the output
 * `--metadata`: Include metadata in the output. Uses the json default metadata from the settings.
 * `--outfile`: Path where the output should go. If omitted (or you pass "`-`"), the output will go to stdout for chaining to another command.
@@ -215,7 +215,7 @@ Characters are always placed within the default characters path, regardless of t
 Options:
 
 * `--search`: Only look in these files and directories. Defaults to the base characters path.
-* `--ignore`: Ignore these files and directories. By default, nothing is ignored.
+* `--ignore`: Ignore these files and directories. By default, nothing is ignored. Added to the default ignore paths from settings
 * `--purge`: After moving the files, remove any empty directories within the root characters path
 * `--verbose`: Show each change as it's made
 
@@ -236,7 +236,7 @@ Options:
 
 * `tags`: Name of one or more tags to analyze.
 * `--search`: Only look in these files and directories. Defaults to the base characters path.
-* `--ignore`: Ignore these files and directories. By default, nothing is ignored.
+* `--ignore`: Ignore these files and directories. By default, nothing is ignored. Added to the default ignore paths from settings
 * `--format`: Specify the format of the output. One of `markdown`, `md`, `json`, `htm`, or `html`. Defaults to the value configured for `report_format` in settings.
 * `--outfile`: Path where the output should go. If omitted (or you pass "`-`"), the output will go to stdout for chaining to another command.
 
