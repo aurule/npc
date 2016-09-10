@@ -12,6 +12,10 @@
         // character files.
         "characters": "Characters",
 
+        // Paths that will always be ignored. Evaluated relative to the campaign
+        // root.
+        "ignore": [],
+
         // The session path is searched for session log files, and is where new
         // ones will be created.
         "session": "Session History",

@@ -335,6 +335,7 @@ def reorg(*search, ignore=None, purge=False, verbose=False, dry=False, **kwargs)
     prefs = kwargs.get('prefs', settings.InternalSettings())
     if not ignore:
         ignore = []
+    ignore.extend(prefs.get('paths.ignore'))
     verbose = verbose or dry
 
     base_path = prefs.get('paths.characters')
@@ -462,6 +463,7 @@ def listing(*search, ignore=None, fmt=None, metadata=None, title=None, outfile=N
     prefs = kwargs.get('prefs', settings.InternalSettings())
     if not ignore:
         ignore = []
+    ignore.extend(prefs.get('paths.ignore'))
     sort_order = kwargs.get('sort', prefs.get('list_sort'))
 
     characters = _sort_chars(
@@ -642,6 +644,7 @@ def dump(*search, ignore=None, sort=False, metadata=False, outfile=None, **kwarg
     prefs = kwargs.get('prefs', settings.InternalSettings())
     if not ignore:
         ignore = []
+    ignore.extend(prefs.get('paths.ignore'))
 
     characters = parser.get_characters(flatten(search), ignore)
     if sort:
@@ -688,6 +691,7 @@ def lint(*search, ignore=None, fix=False, strict=False, **kwargs):
     prefs = kwargs.get('prefs', settings.InternalSettings())
     if not ignore:
         ignore = []
+    ignore.extend(prefs.get('paths.ignore'))
 
     openable = []
 
@@ -806,6 +810,7 @@ def report(*tags, search=None, ignore=None, fmt=None, outfile=None, **kwargs):
 
     if not ignore:
         ignore = []
+    ignore.extend(prefs.get('paths.ignore'))
     if not fmt or fmt == 'default':
         fmt = prefs.get('report_format')
 
