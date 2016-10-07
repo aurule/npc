@@ -563,9 +563,13 @@ def _prune_chars(characters):
     """
     Alter character records for output.
 
-    This applies behavior from directives and certain tags. Specifically, it
-    handles skip, it overrides type with faketype, and it inserts a placeholder
-    type if one was not specified.
+    This applies behavior from directives and certain tags:
+
+    * skip: remove the character from the list
+    * hide: remove the named fields from the character
+    * faketype: replace the character's type with a new string
+
+    It also inserts a placeholder type if one was not specified.
 
     Args:
         characters (list): List of Character objects
@@ -578,6 +582,11 @@ def _prune_chars(characters):
         # skip if asked
         if 'skip' in char:
             continue
+
+        # hide named fields
+        if 'hide' in char:
+            for fieldname in char['hide']:
+                del char[fieldname]
 
         # use fake types if present
         if 'faketype' in char:
