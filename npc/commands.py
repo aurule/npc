@@ -584,16 +584,16 @@ def _prune_chars(characters):
             continue
 
         # remove named fields
-        for fieldname in char['hide']:
-            del char[fieldname] if fieldname in char else pass
+        for fieldname in char['hide'] and fieldname in char:
+            del char[fieldname]
 
         # remove named groups
         for groupname in char['hidegroup']:
             char['group'].remove(groupname)
 
         # remove all ranks for named groups
-        for groupname in char['hideranks']:
-            del char['rank'][groupname] if groupname in char['rank'] else pass
+        for groupname in char['hideranks'] and groupname in char['rank']:
+            del char['rank'][groupname]
 
         # use fake types if present
         if 'faketype' in char:
