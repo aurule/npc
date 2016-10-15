@@ -567,6 +567,8 @@ def _prune_chars(characters):
 
     * skip: remove the character from the list
     * hide: remove the named fields from the character
+    * hidegroup: remove the named group from the character
+    * hideranks: remove the character's ranks in the named group
     * faketype: replace the character's type with a new string
 
     It also inserts a placeholder type if one was not specified.
