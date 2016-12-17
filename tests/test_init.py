@@ -5,6 +5,8 @@ def test_init_bare(argparser, prefs, campaign):
     args = argparser.parse_args(['init'])
     npc.commands.init(args, prefs)
     for k, p in prefs.get('paths').items():
+        if k == "ignore":
+            continue
         assert os.path.exists(p)
 
 def test_init_types(argparser, prefs, campaign):

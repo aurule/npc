@@ -751,7 +751,9 @@ def init(create_types=False, create_all=False, **kwargs):
     """
     prefs = kwargs.get('prefs', settings.InternalSettings())
 
-    for _, basic_path in prefs.get('paths').items():
+    for key, basic_path in prefs.get('paths').items():
+        if key == "ignore":
+            continue
         makedirs(basic_path, mode=0o775, exist_ok=True)
     makedirs('.npc', mode=0o775, exist_ok=True)
 
