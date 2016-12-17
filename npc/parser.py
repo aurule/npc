@@ -114,7 +114,7 @@ def parse_character(char_file_path: str) -> Character:
     """
     name_re = re.compile(r'(?P<name>[\w]+\.?(?:\s[\w.]+)*)(?: - )?.*')
     section_re = re.compile(r'^--.+--\s*$')
-    tag_re = re.compile(r'^@(?P<tag>\w+)\s+(?P<value>.*)$')
+    tag_re = re.compile(r'^@(?P<tag>#\w+|\w+)\s+(?P<value>.*)$')
 
     # Group-like tags. These all accept an accompanying `rank` tag.
     group_tags = ['group', 'court', 'motley']
@@ -142,6 +142,9 @@ def parse_character(char_file_path: str) -> Character:
             if match:
                 tag = match.group('tag')
                 value = match.group('value')
+
+                if tag[0] == '#':
+                    continue
 
                 if tag == 'changeling':
                     # grab attributes from compound tag
