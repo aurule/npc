@@ -34,7 +34,7 @@ def test_move_by_group(campaign, new_path):
     assert character.check()
 
 @pytest.mark.parametrize('new_path', [
-    os.path.join('Humans', 'Mafia', 'Foreign', 'Manny Mafioso.nwod'),
+    os.path.join('Humans', 'Foreign', 'Manny Mafioso.nwod'),
     os.path.join('Humans', 'Mafia', 'Mafia Mann.nwod'),
     os.path.join('Humans', 'Police', 'Popo Panckett.nwod'),
 ])
