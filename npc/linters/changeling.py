@@ -40,6 +40,7 @@ def lint(character, fix=False, *, strict=False, sk_data=None):
     character sheet. The problems it checks for are as follows:
 
     1. Seeming and kith appear in sk_data
+    2. Entitlement tag appears at most one time
     2. Mantle merit matches court tag and appears at most one time
     3. Court Goodwill merit must not match mantle or court tag
     4. Seeming and kith appear in the sheet's body, not just the tags.
@@ -78,6 +79,9 @@ def lint(character, fix=False, *, strict=False, sk_data=None):
     for kith_name in character['kith']:
         if kith_name.lower() not in sk_data['kiths']:
             problems.append("Unrecognized @kith '{}'".format(kith_name))
+
+    if 'entitlement' in character and len(character['entitlement']):
+        problems.append("Too many entitlements")
 
     # If the character has no sheet, we're done
     if 'path' not in character:

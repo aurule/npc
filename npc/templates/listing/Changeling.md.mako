@@ -68,9 +68,13 @@ ${motley} Motley${make_ranks(motley)}\
         % endif
     % endfor
 % endif
+% if character.has_items('entitlement'):
+
+${character.get_first('entitlement')}${make_ranks(character.get_first('entitlement'))}\
+% endif
 % if character.has_items('group'):
 
-    % for group in character.get_remaining('group'):
+    % for group in character['group']:
 ${group}${make_ranks(group)}\
         % if not loop.last:
 , \

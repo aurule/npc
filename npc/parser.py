@@ -117,7 +117,7 @@ def parse_character(char_file_path: str) -> Character:
     tag_re = re.compile(r'^@(?P<tag>#\w+|\w+)\s+(?P<value>.*)$')
 
     # Group-like tags. These all accept an accompanying `rank` tag.
-    group_tags = ['group', 'court', 'motley']
+    group_tags = ['group', 'court', 'motley', 'entitlement']
 
     # derive character name from basename
     basename = path.basename(char_file_path)

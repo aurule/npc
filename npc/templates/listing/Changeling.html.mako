@@ -50,6 +50,12 @@ ${'/'.join(character['kith'])}\
 </div>
 %endif
 \
+%if character.has_items('entitlement'):
+<div>\
+${character.get_first('entitlement')}${make_ranks(character.get_first('entitlement'))}
+</div>
+%endif
+\
 %if character.has_items('group'):
 <div>\
 %for g in character['group']:
