@@ -140,7 +140,7 @@ def parse_character(char_file_path: str) -> Character:
 
             match = tag_re.match(line)
             if match:
-                tag = match.group('tag')
+                tag = match.group('tag').lower()
                 value = match.group('value')
 
                 if tag[0] == '#':
