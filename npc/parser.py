@@ -10,7 +10,7 @@ import itertools
 from os import path, walk
 from .util import Character
 
-VALID_EXTENSIONS = ['.nwod']
+VALID_EXTENSIONS = ['.nwod', '.dnd3', '.dfrpg']
 """tuple: file extensions that should be parsed"""
 
 def get_characters(search_paths=None, ignore_paths=None):
