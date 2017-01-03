@@ -102,9 +102,9 @@ Simple characters all use the same rules for determining the destination path. L
 These are the directories that are appended, in order:
 
 1. Type path, like `Humans/`
-2. First listed group name, if given (like `Police/`)
-    * Other group names are also tried, in order.
-3. If the [@foreign](https://github.com/aurule/npc/wiki/Character-Sheet-Format#foreign-location) or @wanderer tag is present, `Foreign/`
+2. If the [@foreign](https://github.com/aurule/npc/wiki/Character-Sheet-Format#foreign-location) or @wanderer tag is present, `Foreign/`
+3. First listed group name, if given (like `Police/`)
+    * Other group names are also tried in order.
 
 Here are some examples:
 
@@ -123,12 +123,14 @@ Here are some examples:
 > look in `Characters/Humans/` for `Police/`, and find it. There are no more groups to try, so it will create
 > `Characters/Humans/Police/Hans Fritz.nwod`.
 
-> The path `Characters/Humans/Police/Foreign` exists. Running `npc human "Frank Bullman" -g Police --foreign
-> Minneapolis` will quickly find `Characters/Humans/Police/`. It will then look for `Foreign/`, and find it.
+> The path `Characters/Humans/Foreign/Police/` exists. Running
+> `npc human "Frank Bullman" -g Police --foreign Minneapolis` will quickly find `Characters/Humans`. It will
+> look there for `Foreign/` and find it, then look for `Police/` and find it as well. It will create
+> `Characters/Humans/Foreign/Police/Frank Bullman.nwod` and open it.
 
-> With the same path, running `npc human "Norman Dirk" --foreign Seattle` will find `Characters/Humans/` and
-> since there are no groups to try, it will look for `Foreign/`. Since that directory does not exist, it will
-> create `Characters/Humans/NormanDirk.nwod`.
+> With the same path, running `npc human "Norman Dirk" -g Police` will find `Characters/Humans/` and will
+> look for the `Police/` directory. Since it is not there, it will create
+> `Characters/Humans/Norman Dirk.nwod` and open it.
 
 ### Changelings
 
