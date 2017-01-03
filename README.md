@@ -89,7 +89,7 @@ All characters support the following options:
 
 Simple characters have no unique options, they just change the character's type. They are created using a few commands:
 
-The `generic` command creates a new simple character using the named type. As long as that type has a defined template and type path, it'll work. There are a few accelerators for common simple types as well:
+The `new` command creates a new simple character using the named type. As long as that type has a defined template and type path, it'll work. There are a few accelerators for common simple types as well:
 
 * `human`: Create a human. Type path is `Humans/`
 * `fetch`: Create a fetch. Type path is `Fetches/`
@@ -140,6 +140,8 @@ Options:
 * `kith`: Name of their Kith. Also added to the character's stats with notes about the Kith Blessing, if the kith is found in `support/seeming-kith.json`.
 * `--court`: Name of the changeling's court, if they have one. This is the first "group" checked when creating the path.
 * `--motley`: Name of the changeling's motley, if known. This does not affect the path, but is added to the file as a tag.
+
+Note: The `changeling` command is not the only way to create a changeling character. If you just want to make a new sheet without specifying the seeming or kith, and without using the changeling-specific options, you can do so by running `npc new changeling [name]`.
 
 ## Lint Character Files
 
