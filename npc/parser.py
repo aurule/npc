@@ -146,9 +146,11 @@ def parse_character(char_file_path: str) -> Character:
                 tag = match.group('tag').lower()
                 value = match.group('value')
 
+                # skip comment tags
                 if tag[0] == '#':
                     continue
 
+                # handle compound tags
                 if tag == 'changeling':
                     # grab attributes from compound tag
                     bits = value.split(maxsplit=1)
@@ -159,11 +161,12 @@ def parse_character(char_file_path: str) -> Character:
                         parsed_char.append('kith', bits[1])
                     continue
 
+                # replace first name
                 if tag == 'realname':
-                    # replace the first name
                     parsed_char['name'][0] = value
                     continue
 
+                # handle rank logic for group tags
                 if tag in GROUP_TAGS:
                     last_group = value
                 if tag == 'rank':
@@ -171,18 +174,21 @@ def parse_character(char_file_path: str) -> Character:
                         parsed_char.append_rank(last_group, value)
                     continue
             else:
+                # don't add double newlines to the description text
                 if line == "\n":
-                    if not previous_line_empty:
-                        previous_line_empty = True
-                    else:
+                    if previous_line_empty:
                         continue
+                    else:
+                        previous_line_empty = True
                 else:
                     previous_line_empty = False
 
+                # all remaining text goes in the description
                 parsed_char.append('description', line)
                 continue
 
             parsed_char.append(tag, value)
 
+    # clean up leading and trailing whitespace
     parsed_char['description'] = parsed_char['description'].strip()
     return parsed_char
