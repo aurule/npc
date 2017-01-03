@@ -10,8 +10,14 @@ import itertools
 from os import path, walk
 from .util import Character
 
-VALID_EXTENSIONS = ['.nwod', '.dnd3', '.dfrpg']
+VALID_EXTENSIONS = ('.nwod', '.dnd3', '.dfrpg')
 """tuple: file extensions that should be parsed"""
+
+GROUP_TAGS = (
+    'group',                          # universal
+    'court', 'motley', 'entitlement'  # changeling
+)
+"""tuple: Group-like tags. These all accept an accompanying `rank` tag."""
 
 def get_characters(search_paths=None, ignore_paths=None):
     """
@@ -116,9 +122,6 @@ def parse_character(char_file_path: str) -> Character:
     section_re = re.compile(r'^--.+--\s*$')
     tag_re = re.compile(r'^@(?P<tag>#\w+|\w+)\s+(?P<value>.*)$')
 
-    # Group-like tags. These all accept an accompanying `rank` tag.
-    group_tags = ['group', 'court', 'motley', 'entitlement']
-
     # derive character name from basename
     basename = path.basename(char_file_path)
     match = name_re.match(path.splitext(basename)[0])
@@ -161,7 +164,7 @@ def parse_character(char_file_path: str) -> Character:
                     parsed_char['name'][0] = value
                     continue
 
-                if tag in group_tags:
+                if tag in GROUP_TAGS:
                     last_group = value
                 if tag == 'rank':
                     if last_group:
