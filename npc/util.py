@@ -114,6 +114,7 @@ class Result:
             8 -- Missing required file
         errmsg (str): Human-readable error message. Will be displayed to the
             user.
+        data (obj): Other data.
     """
     def __init__(self, success, **kwargs):
         super(Result, self).__init__()
@@ -121,6 +122,7 @@ class Result:
         self.openable = kwargs.get('openable')
         self.errcode = kwargs.get('errcode', 0)
         self.errmsg = kwargs.get('errmsg', '')
+        self.data = kwargs.get('data', None)
 
     def __str__(self):
         if self.success:
@@ -128,6 +130,9 @@ class Result:
         else:
             return self.errmsg
         return self.errmsg
+
+    def __bool__(self):
+        return success
 
 class Character(defaultdict):
     """
