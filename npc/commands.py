@@ -670,12 +670,10 @@ def dump(*search, ignore=None, sort=False, metadata=False, outfile=None, **kwarg
 
     # make some json
     if metadata:
-        base_meta = {
+        meta = {
             'meta': True,
-            'title': 'NPC Listing',
-            'created': datetime.now().isoformat()
+            **prefs.get_metadata('json')
         }
-        meta = {**base_meta, **prefs.get_metadata('json')}
         characters = itertools.chain([meta], characters)
 
     with _smart_open(outfile) as outstream:

@@ -200,14 +200,14 @@ Options:
 
 ## Dump Raw NPC Data
 
-The `dump` command builds a list of parseable NPCs in json format. It ignores everything except the tags and description. A metadata object is always included in the output.
+The `dump` command builds a list of parseable NPCs in json format. It ignores everything except the tags and description.
 
 Options:
 
 * `--search`: Only look in these files and directories. Defaults to the base characters path.
 * `--ignore`: Ignore these files and directories. By default, nothing is ignored. Added to the default ignore paths from settings
 * `--sort`: Sort NPCs by name before dumping the output
-* `--metadata`: Include metadata in the output. Uses the json default metadata from the settings.
+* `--metadata`: Include metadata in the output. Uses the json default metadata from the settings and includes a few special fields.
 * `--outfile`: Path where the output should go. If omitted (or you pass "`-`"), the output will go to stdout for chaining to another command.
 
 ## Reorganize Character Files

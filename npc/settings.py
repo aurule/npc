@@ -232,6 +232,7 @@ class Settings:
         """
         return OrderedDict(
             title=self.get('metadata.title'),
+            campaign=self.get('campaign'),
             created=datetime.now().strftime(self.get('metadata.timestamp')),
             **self.get('metadata.additional_keys.all'),
             **self.get('metadata.additional_keys.{}'.format(fmt))
