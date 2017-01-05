@@ -61,6 +61,8 @@ These global options must be passed *before* the name of the subcommand. They af
 
 The `init` command creates the basic directories that NPC expects to find. Every directory under the `paths` key in the settings file is created, along with the special `.npc` directory.
 
+Init creates a new campaign settings file inside of `.npc` with the campaign name. This defaults to the name of the current directory, so change it as needed.
+
 Options:
 
 * `--types`: Within `paths.characters`, create every directory in the `type_paths` key.

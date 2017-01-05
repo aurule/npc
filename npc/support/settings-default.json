@@ -1,4 +1,8 @@
 {
+    // Name of the current campaign. This should always be overwritten in by the
+    // campaign settings file.
+    "campaign": "Unknown",
+
     // Command to invoke your text editor of choice. This command must accept a
     // list of files as its command line arguments.
     "editor": "subl",
