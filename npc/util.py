@@ -132,7 +132,7 @@ class Result:
         return self.errmsg
 
     def __bool__(self):
-        return success
+        return self.success
 
 class Character(defaultdict):
     """
