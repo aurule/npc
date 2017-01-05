@@ -28,25 +28,17 @@ def cli(argv):
     args = parser.parse_args(argv)
 
     # change to the proper campaign directory if needed
-    base = args.campaign
-    if base == 'auto':
-        base = find_campaign_root()
-
-    try:
-        chdir(base)
-    except OSError as err:
-        util.error("{}: '{}'".format(err.strerror, base))
-        return 4 # internal code for a filesystem error
+    res = _chdir_to_campaign(args.campaign)
+    if not res:
+        util.error(res.errmsg)
+        return res.errcode
 
     # load settings data
-    try:
-        prefs = settings.InternalSettings(args.debug)
-    except OSError as err:
-        util.error(err.strerror + " ({})".format(prefs.get_settings_path('default')))
-        return 4
-
-    if not settings.lint_changeling_settings(prefs):
-        return 5
+    res = _load_settings(args.debug)
+    if not res:
+        util.error(res.errmsg)
+        return res.errcode
+    prefs = res.data
 
     # show help when no input was given
     if not hasattr(args, 'func'):
@@ -87,6 +79,50 @@ def cli(argv):
         run([prefs.get("editor")] + result.openable)
 
     return 0
+
+def _chdir_to_campaign(base='auto'):
+    """
+    Chdir to the campaign root directory.
+
+    Args:
+        base (str): Explicit campaign root directory, or 'auto' (the default) to
+            find the campaign root.
+
+    Returns:
+        Result object.
+    """
+    if base == 'auto':
+        base = find_campaign_root()
+
+    try:
+        chdir(base)
+    except OSError as err:
+        return util.Result(False, errmsg="{}: '{}'".format(err.strerror, base), errcode=4)
+         # 4 is the internal code for a filesystem error
+    return util.Result(True)
+
+def _load_settings(debug=False):
+    """
+    Load singleton settings object.
+
+    Additionally lints the changeling-specific settings for errors.
+
+    Args:
+        debug (bool): Whether to open the settings in debug/verbose mode.
+            Defaults to false.
+
+    Returns:
+        Result object. On success, the result's data var will contain the loaded prefs object.
+    """
+    try:
+        prefs = settings.InternalSettings(debug)
+    except OSError as err:
+        return util.Result(False, errmsg=err.strerror, errcode=4)
+
+    if not settings.lint_changeling_settings(prefs):
+        return util.Result(False, errmsg='Please fix these problems in the changeling settings', errcode=5)
+
+    return util.Result(True, data=prefs)
 
 def find_campaign_root():
     """
