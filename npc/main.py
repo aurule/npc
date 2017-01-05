@@ -13,7 +13,7 @@ from . import commands, util, settings
 
 def cli(argv):
     """
-    Run the interface
+    Run the command-line interface
 
     Args:
         argv (list): Arguments from the command invocation
@@ -251,3 +251,11 @@ def _make_parser():
     parser_report.set_defaults(func=commands.report, serialize=['tags'])
 
     return parser
+
+def gui(argv):
+    """Run the graphical interface
+
+    Args:
+        argv (list): Arguments from the command invocation
+    """
+    pass
