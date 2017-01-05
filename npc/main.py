@@ -10,6 +10,7 @@ from subprocess import run
 
 # local packages
 from . import commands, util, settings
+from . import gui as gui_core
 
 def cli(argv):
     """
@@ -258,4 +259,20 @@ def gui(argv):
     Args:
         argv (list): Arguments from the command invocation
     """
-    pass
+
+    # change to the proper campaign directory if needed
+    # res = _chdir_to_campaign(args.campaign)
+    # if not res:
+    #     util.error(res.errmsg)
+    #     return res.errcode
+
+    # load settings data
+    res = _load_settings()
+    if not res:
+        gui_core.startup_error(res.errmsg)
+        return res.errcode
+    prefs = res.data
+
+    gui_core.run()
+
+    return 0
