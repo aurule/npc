@@ -5,11 +5,11 @@ Package for handling the NPC windowed interface
 from tkinter import *
 from tkinter import messagebox
 from tkinter.ttk import *
+from subprocess import run
 
-from .. import commands
-from .. import main
+from .. import commands, main, settings
 
-def run():
+def start():
     root = Tk()
 
     # set up the widgets
@@ -20,24 +20,33 @@ def run():
 
 class NPCApp:
     def __init__(self, master):
+        self.prefs = settings.InternalSettings()
         self.master = master
 
         master.title("NPC")
         master.positionfrom('user')
         master.minsize(width=200, height=300)
 
-        menubar = Menu(master)
+        self.init_menubar()
+
+    def init_menubar(self):
+
+        menubar = Menu(self.master)
 
         file_menu = Menu(menubar, tearoff=False)
         file_menu.add_separator()
-        file_menu.add_command(label="Quit", command=master.quit, underline=0)
-        menubar.add_cascade(label="File", menu=file_menu, underline=0)
+        file_menu.add_command(label="Quit", underline=0, command=self.master.quit)
+        menubar.add_cascade(label="File", underline=0, menu=file_menu)
+
+        settings_menu = Menu(menubar, tearoff=False)
+        settings_menu.add_command(label="User", underline=0, command=self.show_user_settings)
+        menubar.add_cascade(label="Settings", underline=0, menu=settings_menu)
 
         help_menu = Menu(menubar, tearoff=False)
-        help_menu.add_command(label="About", command=self.show_about, underline=0)
-        menubar.add_cascade(label="Help", menu=help_menu, underline=0)
+        help_menu.add_command(label="About", underline=0, command=self.show_about)
+        menubar.add_cascade(label="Help", underline=0, menu=help_menu)
 
-        master.config(menu=menubar)
+        self.master.config(menu=menubar)
 
     def show_about(self):
         message = "\n".join([
@@ -49,6 +58,18 @@ class NPCApp:
             "Distributed under the MIT license"
         ])
         messagebox.showinfo("About NPC", message, parent=self.master)
+
+    def show_user_settings(self):
+        try:
+            result = commands.open_settings('campaign', show_defaults=True)
+        except AttributeError as err:
+            messagebox.showerror("Error!", err)
+
+        if not result.success:
+            messagebox.showerror("Error!", result)
+
+        if result.openable:
+            run([self.prefs.get("editor")] + result.openable)
 
 def startup_error(message):
     root = Tk()

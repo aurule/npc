@@ -277,6 +277,6 @@ def gui(argv):
         return res.errcode
     prefs = res.data
 
-    gui_core.run()
+    gui_core.start()
 
     return 0
