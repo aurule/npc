@@ -10,7 +10,16 @@ from .. import main
 
 def run():
     root = Tk()
+
+    # set default window properties
+    root.title("NPC")
+    root.positionfrom('user')
+    root.minsize(width=200, height=300)
+
+    # set up the widgets
     npc_app = NPCApp(root)
+
+    # run and done
     root.mainloop()
     root.destroy()
 
