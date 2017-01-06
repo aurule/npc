@@ -3,11 +3,11 @@ Package for handling the NPC windowed interface
 """
 
 from tkinter import *
+from tkinter import messagebox
 from tkinter.ttk import *
 
 from .. import commands
 from .. import main
-
 
 def run():
     root = Tk()
@@ -17,17 +17,6 @@ def run():
 
     # run and done
     root.mainloop()
-    root.destroy()
-
-def startup_error(message):
-    root = Tk()
-
-    # set up the widgets
-    error_window = StartupError(root, message)
-
-    # run and done
-    root.mainloop()
-    root.destroy()
 
 class NPCApp:
     def __init__(self, master):
@@ -37,17 +26,38 @@ class NPCApp:
         master.positionfrom('user')
         master.minsize(width=200, height=300)
 
-        frame = Frame(master)
-        frame.pack()
+        menubar = Menu(master)
 
-        self.quit_button = Button(frame, text="QUIT", command=frame.quit)
-        self.quit_button.pack(side=LEFT)
+        file_menu = Menu(menubar, tearoff=False)
+        file_menu.add_separator()
+        file_menu.add_command(label="Quit", command=master.quit, underline=0)
+        menubar.add_cascade(label="File", menu=file_menu, underline=0)
 
-        self.hi_button = Button(frame, text="Hello", command=self.say_hi)
-        self.hi_button.pack(side=LEFT)
+        help_menu = Menu(menubar, tearoff=False)
+        help_menu.add_command(label="About", command=self.show_about, underline=0)
+        menubar.add_cascade(label="Help", menu=help_menu, underline=0)
 
-    def say_hi(self):
-        print("hi there, everyone!")
+        master.config(menu=menubar)
+
+    def show_about(self):
+        message = "\n".join([
+            "NPC Version {0}".format(main.VERSION),
+            "",
+            "GM helper script to manage game files.",
+            "",
+            "Copyright (c) 2015-2017 Peter Andrews",
+            "Distributed under the MIT license"
+        ])
+        messagebox.showinfo("About NPC", message, parent=self.master)
+
+def startup_error(message):
+    root = Tk()
+
+    # set up the widgets
+    error_window = StartupError(root, message)
+
+    # run and done
+    root.mainloop()
 
 class StartupError:
     def __init__(self, master, message):
