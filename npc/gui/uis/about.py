@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'npc/gui/about.ui'
+# Form implementation generated from reading ui file 'npc/gui/uis/about.ui'
 #
 # Created by: PyQt5 UI code generator 5.7.1
 #
@@ -13,6 +13,7 @@ class Ui_AboutDialog(object):
         AboutDialog.setObjectName("AboutDialog")
         AboutDialog.setWindowModality(QtCore.Qt.WindowModal)
         AboutDialog.resize(271, 175)
+        AboutDialog.setContextMenuPolicy(QtCore.Qt.PreventContextMenu)
         AboutDialog.setModal(True)
         self.buttonBox = QtWidgets.QDialogButtonBox(AboutDialog)
         self.buttonBox.setGeometry(QtCore.QRect(10, 140, 241, 32))

@@ -3,6 +3,7 @@ Package for handling the NPC windowed interface
 """
 
 import sys
+from contextlib import contextmanager
 from PyQt5 import QtCore, QtGui, QtWidgets
 from subprocess import run
 
@@ -14,19 +15,20 @@ class MainWindow(Ui_MainWindow):
         self.prefs = settings.InternalSettings()
         Ui_MainWindow.__init__(self)
 
+        # main window setup
         self.setupUi(window)
         self.force_titles()
 
-        self.about_dialog = QtWidgets.QDialog()
+        # about dialog
+        self.about_dialog = QtWidgets.QDialog(window)
         about_dialog_content = About(self.about_dialog)
         self.actionAbout.triggered.connect(self.about_dialog.open)
 
+        # commands setup
         self.actionUserSettings.triggered.connect(self.run_user_settings)
 
+        # quit menu entry
         self.actionQuit.triggered.connect(self.quit)
-
-    def quit(self):
-        QtCore.QCoreApplication.instance().quit()
 
     def force_titles(self):
         _translate = QtCore.QCoreApplication.translate
@@ -34,16 +36,23 @@ class MainWindow(Ui_MainWindow):
         self.menuSettings.setTitle(_translate("MainWindow", "&Settings"))
 
     def run_user_settings(self):
-        try:
-            result = commands.open_settings('campaign', show_defaults=True)
-        except AttributeError as err:
-            messagebox.showerror("Error!", err)
+        with safe_command(commands.open_settings) as command:
+            result = command('campaign', show_defaults=True)
 
-        if not result.success:
-            messagebox.showerror("Error!", result)
+            if not result.success:
+                messagebox.showerror("Error!", result)
 
-        if result.openable:
             run([self.prefs.get("editor")] + result.openable)
+
+    def quit(self):
+        QtCore.QCoreApplication.instance().quit()
+
+@contextmanager
+def safe_command(command):
+    try:
+        yield command
+    except AttributeError as err:
+        messagebox.showerror("Error!", err)
 
 class About(Ui_AboutDialog):
     def __init__(self, dialog):
