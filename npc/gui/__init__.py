@@ -2,64 +2,38 @@
 Package for handling the NPC windowed interface
 """
 
-from tkinter import *
-from tkinter import messagebox
-from tkinter.ttk import *
+import sys
+from PyQt5 import QtCore, QtGui, QtWidgets
 from subprocess import run
 
+from .uis import *
 from .. import commands, main, settings
 
-def start():
-    root = Tk()
-
-    # set up the widgets
-    npc_app = NPCApp(root)
-
-    # run and done
-    root.mainloop()
-
-class NPCApp:
-    def __init__(self, master):
+class MainWindow(Ui_MainWindow):
+    def __init__(self, window):
         self.prefs = settings.InternalSettings()
-        self.master = master
+        Ui_MainWindow.__init__(self)
 
-        master.title("NPC")
-        master.positionfrom('user')
-        master.minsize(width=200, height=300)
+        self.setupUi(window)
+        self.force_titles()
 
-        self.init_menubar()
+        self.about_dialog = QtWidgets.QDialog()
+        about_dialog_content = About(self.about_dialog)
+        self.actionAbout.triggered.connect(self.about_dialog.open)
 
-    def init_menubar(self):
+        self.actionUserSettings.triggered.connect(self.run_user_settings)
 
-        menubar = Menu(self.master)
+        self.actionQuit.triggered.connect(self.quit)
 
-        file_menu = Menu(menubar, tearoff=False)
-        file_menu.add_separator()
-        file_menu.add_command(label="Quit", underline=0, command=self.master.quit)
-        menubar.add_cascade(label="File", underline=0, menu=file_menu)
+    def quit(self):
+        QtCore.QCoreApplication.instance().quit()
 
-        settings_menu = Menu(menubar, tearoff=False)
-        settings_menu.add_command(label="User", underline=0, command=self.show_user_settings)
-        menubar.add_cascade(label="Settings", underline=0, menu=settings_menu)
+    def force_titles(self):
+        _translate = QtCore.QCoreApplication.translate
+        self.menuFile.setTitle(_translate("MainWindow", "&File"))
+        self.menuSettings.setTitle(_translate("MainWindow", "&Settings"))
 
-        help_menu = Menu(menubar, tearoff=False)
-        help_menu.add_command(label="About", underline=0, command=self.show_about)
-        menubar.add_cascade(label="Help", underline=0, menu=help_menu)
-
-        self.master.config(menu=menubar)
-
-    def show_about(self):
-        message = "\n".join([
-            "NPC Version {0}".format(main.VERSION),
-            "",
-            "GM helper script to manage game files.",
-            "",
-            "Copyright (c) 2015-2017 Peter Andrews",
-            "Distributed under the MIT license"
-        ])
-        messagebox.showinfo("About NPC", message, parent=self.master)
-
-    def show_user_settings(self):
+    def run_user_settings(self):
         try:
             result = commands.open_settings('campaign', show_defaults=True)
         except AttributeError as err:
@@ -71,25 +45,17 @@ class NPCApp:
         if result.openable:
             run([self.prefs.get("editor")] + result.openable)
 
-def startup_error(message):
-    root = Tk()
+class About(Ui_AboutDialog):
+    def __init__(self, dialog):
+        Ui_AboutDialog.__init__(self)
+        self.setupUi(dialog)
+        self.labelVersion.setText("Version {0}".format(main.VERSION))
 
-    # set up the widgets
-    error_window = StartupError(root, message)
+def start():
+    app = QtWidgets.QApplication(sys.argv)
+    window = QtWidgets.QMainWindow()
 
-    # run and done
-    root.mainloop()
+    prog = MainWindow(window)
 
-class StartupError:
-    def __init__(self, master, message):
-        master.title("NPC - Startup Error!")
-        master.positionfrom('user')
-
-        frame = Frame(master)
-        frame.pack()
-
-        self.error_text = Message(frame, text=message)
-        self.error_text.pack()
-
-        self.quit_button = Button(frame, text="Quit", command=frame.quit)
-        self.quit_button.pack()
+    window.show()
+    sys.exit(app.exec_())
