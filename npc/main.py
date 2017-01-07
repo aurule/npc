@@ -49,8 +49,9 @@ def cli(argv):
         util.error(err.strerror)
         return 4
 
-    if not settings.lint_changeling_settings(prefs):
-        util.error('Please fix these problems in the changeling settings')
+    if not settings.lint_and_print_changeling_settings(prefs):
+        # The linting function prints its own output, so we can
+        # just exit.
         return 5
 
     # show help when no input was given
@@ -228,19 +229,6 @@ def gui(argv):
     Args:
         argv (list): Arguments from the command invocation
     """
-
-    # change to the proper campaign directory if needed
-    # res = _chdir_to_campaign(args.campaign)
-    # if not res:
-    #     util.error(res.errmsg)
-    #     return res.errcode
-
-    # load settings data
-    res = _load_settings()
-    if not res:
-        gui_core.startup_error(res.errmsg)
-        return res.errcode
-    prefs = res.data
 
     gui_core.start()
 

@@ -259,8 +259,8 @@ def lint_changeling_settings(prefs):
         prefs (Settings): Settings object to check
 
     Returns:
-        True if the changeling settings are OK, False if there were errors.
-        Errors are printed to stderr.
+        A list of string error messages, or an empty list if no errors were
+        found.
     """
     blessing_keys = set(prefs.get('changeling.blessings', {}).keys())
     curse_keys = set(prefs.get('changeling.curses', {}).keys())
@@ -271,20 +271,40 @@ def lint_changeling_settings(prefs):
                  curse_keys.issuperset(seemings) and
                  blessing_keys.issuperset(kiths))
 
+    errors = []
     if not ok_result:
-        util.error("Mismatch in changeling settings")
+        errors.append("Mismatch in changeling settings")
 
         if not blessing_keys.issuperset(seemings):
-            util.error("    Seemings without blessings:")
+            errors.append("    Seemings without blessings:")
             for seeming in seemings.difference(blessing_keys):
-                util.error("        {}".format(seeming))
+                errors.append("        {}".format(seeming))
         if not curse_keys.issuperset(seemings):
-            util.error("    Seemings without curses:")
+            errors.append("    Seemings without curses:")
             for seeming in seemings.difference(curse_keys):
-                util.error("        {}".format(seeming))
+                errors.append("        {}".format(seeming))
         if not blessing_keys.issuperset(kiths):
-            util.error("    Kiths without blessings:")
+            errors.append("    Kiths without blessings:")
             for kith in kiths.difference(blessing_keys):
-                util.error("        {}".format(kith))
+                errors.append("        {}".format(kith))
 
-    return ok_result
+    return errors
+
+def lint_and_print_changeling_settings(prefs):
+    """
+    Check correctness of changeling-specific settings and print the results.
+
+    The correctness checking is done by lint_changeling_settings.
+
+    Args:
+        prefs (Settings): Settings object to check
+
+    Returns:
+        True if the changeling settings are OK, False if there were errors.
+        Errors are printed to stderr.
+    """
+    failures = lint_changeling_settings(prefs)
+    if failures:
+        print("\n".join(failures))
+
+    return len(failures)

@@ -12,10 +12,21 @@ from .. import commands, main, settings
 
 def start():
     """Main entry point for the GUI"""
+
+    try:
+        prefs = settings.Settings()
+    except OSError as err:
+        startup_error(err.strerror)
+
+    changeling_errors = settings.lint_changeling_settings(prefs)
+    if changeling_errors:
+        message = "\n".join(changeling_errors)
+        startup_error(message)
+
     app = QtWidgets.QApplication(sys.argv)
     window = QtWidgets.QMainWindow()
 
-    prog = MainWindow(window)
+    prog = MainWindow(window, prefs)
 
     window.show()
     sys.exit(app.exec_())
@@ -36,6 +47,7 @@ def startup_error(message):
         'Could not start NPC',
         message,
         QtWidgets.QMessageBox.Ok)
+    sys.exit()
 
 def _show_error(parent, title, message):
     """
@@ -50,8 +62,8 @@ def _show_error(parent, title, message):
     errorbox = QtWidgets.QMessageBox.warning(parent, title, message, QtWidgets.QMessageBox.Ok)
 
 class MainWindow(Ui_MainWindow):
-    def __init__(self, window):
-        self.prefs = settings.InternalSettings()
+    def __init__(self, window, prefs):
+        self.prefs = prefs
         Ui_MainWindow.__init__(self)
 
         # main window setup
