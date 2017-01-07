@@ -24,10 +24,14 @@
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
+    <property name="layoutDirection">
+     <enum>Qt::LeftToRight</enum>
+    </property>
     <property name="title">
      <string>Fi&amp;le</string>
     </property>
     <addaction name="separator"/>
+    <addaction name="actionOpen_Campaign"/>
     <addaction name="actionQuit"/>
    </widget>
    <widget class="QMenu" name="menuSettings">
@@ -48,13 +52,22 @@
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <action name="actionAbout">
+   <property name="icon">
+    <iconset theme="help-about"/>
+   </property>
    <property name="text">
     <string>&amp;About NPC</string>
    </property>
   </action>
   <action name="actionQuit">
+   <property name="icon">
+    <iconset theme="application-exit"/>
+   </property>
    <property name="text">
     <string>&amp;Quit</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Q</string>
    </property>
   </action>
   <action name="actionUserSettings">
@@ -63,6 +76,17 @@
    </property>
    <property name="toolTip">
     <string>Open user settings</string>
+   </property>
+  </action>
+  <action name="actionOpen_Campaign">
+   <property name="icon">
+    <iconset theme="folder-open"/>
+   </property>
+   <property name="text">
+    <string>&amp;Open Campaign...</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+O</string>
    </property>
   </action>
  </widget>
