@@ -7,10 +7,12 @@ from contextlib import contextmanager
 from PyQt5 import QtCore, QtGui, QtWidgets
 from subprocess import run
 
-from .uis import *
-from .. import commands, main, settings
+import npc
+from npc import commands, settings
 
-def start():
+from .uis import *
+
+def start(argv):
     """Main entry point for the GUI"""
 
     try:
@@ -23,7 +25,7 @@ def start():
         message = "\n".join(changeling_errors)
         startup_error(message)
 
-    app = QtWidgets.QApplication(sys.argv)
+    app = QtWidgets.QApplication(argv)
     window = QtWidgets.QMainWindow()
 
     prog = MainWindow(window, prefs)
@@ -110,4 +112,4 @@ class AboutDialog(Ui_AboutDialog):
     def __init__(self, dialog):
         Ui_AboutDialog.__init__(self)
         self.setupUi(dialog)
-        self.labelVersion.setText("Version {0}".format(main.VERSION))
+        self.labelVersion.setText("Version {0}".format(npc.VERSION))

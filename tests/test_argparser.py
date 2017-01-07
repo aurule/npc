@@ -3,4 +3,4 @@ import argparse
 import pytest
 
 def test_creation():
-    assert type(npc.main._make_parser()) is argparse.ArgumentParser
+    assert type(npc.cli._make_parser()) is argparse.ArgumentParser

@@ -9,13 +9,11 @@ from os import chdir, getcwd, path
 from subprocess import run
 
 # local packages
-from . import commands, util, settings
-from . import gui as gui_core
+import npc
+from npc import commands, util, settings
+from npc import gui as gui_core
 
-VERSION = "1.0.0"
-"""str: Current code version"""
-
-def cli(argv):
+def start(argv):
     """
     Run the command-line interface
 
@@ -94,28 +92,6 @@ def cli(argv):
 
     return 0
 
-def find_campaign_root():
-    """
-    Determine the base campaign directory
-
-    Walks up the directory tree until it finds the '.npc' campaign config
-    directory, or hits the filesystem root. If the `.npc` directory is found,
-    its parent is assumed to be the campaign's root directory. Otherwise, the
-    current directory of the command invocation is used.
-
-    Returns:
-        Directory path to the campaign.
-    """
-    current_dir = getcwd()
-    base = current_dir
-    old_base = ''
-    while not path.isdir(path.join(base, '.npc')):
-        old_base = base
-        base = path.abspath(path.join(base, path.pardir))
-        if old_base == base:
-            return current_dir
-    return base
-
 def _make_parser():
     """
     Construct the arguments parser
@@ -142,7 +118,7 @@ def _make_parser():
     parser.add_argument('-b', '--batch', action='store_true', default=False, help="Do not open any newly created files")
     parser.add_argument('--campaign', default='auto', help="Use the campaign files in a different directory", metavar='DIR')
     parser.add_argument('--debug', action='store_true', default=False, help="Show all error messages, not just important ones")
-    parser.add_argument('--version', action='version', version=VERSION)
+    parser.add_argument('--version', action='version', version=npc.VERSION)
     subparsers = parser.add_subparsers(title='Subcommands', description="Commands that can be run on the current campaign. See `%(prog)s <command> -h` to get help with individual commands.")
 
     # Subcommand to create the basic directories
@@ -222,14 +198,3 @@ def _make_parser():
     parser_report.set_defaults(func=commands.report, serialize=['tags'])
 
     return parser
-
-def gui(argv):
-    """Run the graphical interface
-
-    Args:
-        argv (list): Arguments from the command invocation
-    """
-
-    gui_core.start()
-
-    return 0

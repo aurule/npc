@@ -82,6 +82,28 @@ def flatten(thing):
         else:
             yield item
 
+def find_campaign_root():
+    """
+    Determine the base campaign directory
+
+    Walks up the directory tree until it finds the '.npc' campaign config
+    directory, or hits the filesystem root. If the `.npc` directory is found,
+    its parent is assumed to be the campaign's root directory. Otherwise, the
+    current directory of the command invocation is used.
+
+    Returns:
+        Directory path to the campaign.
+    """
+    current_dir = getcwd()
+    base = current_dir
+    old_base = ''
+    while not path.isdir(path.join(base, '.npc')):
+        old_base = base
+        base = path.abspath(path.join(base, path.pardir))
+        if old_base == base:
+            return current_dir
+    return base
+
 class Singleton(type):
     """
     Metaclass for creating singleton classes.
