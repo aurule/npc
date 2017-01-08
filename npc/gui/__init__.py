@@ -98,7 +98,7 @@ class MainWindow(Ui_MainWindow):
 
     def run_user_settings(self):
         with self.safe_command(commands.open_settings) as command:
-            result = command('campaign', show_defaults=True)
+            result = command('campaign', show_defaults=True, prefs=self.prefs)
 
             if not result.success:
                 _show_error(self.window, 'Could not open user settings', result)
