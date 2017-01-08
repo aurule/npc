@@ -755,9 +755,10 @@ def init(create_types=False, create_all=False, **kwargs):
         if key == "ignore":
             continue
         makedirs(basic_path, mode=0o775, exist_ok=True)
-    makedirs('.npc', mode=0o775, exist_ok=True)
-    with open(prefs.get_settings_path('campaign'), 'a') as settings_file:
-        json.dump({'campaign': campaign_name}, settings_file, indent=4)
+    if not path.exists(prefs.get_settings_path('campaign')):
+        makedirs('.npc', mode=0o775, exist_ok=True)
+        with open(prefs.get_settings_path('campaign'), 'a') as settings_file:
+            json.dump({'campaign': campaign_name}, settings_file, indent=4)
 
     if create_types or create_all:
         cbase = prefs.get('paths.characters')
