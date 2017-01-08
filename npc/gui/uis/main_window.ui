@@ -10,6 +10,12 @@
     <height>392</height>
    </rect>
   </property>
+  <property name="minimumSize">
+   <size>
+    <width>384</width>
+    <height>392</height>
+   </size>
+  </property>
   <property name="windowTitle">
    <string>NPC</string>
   </property>
@@ -31,14 +37,16 @@
      <string>Fi&amp;le</string>
     </property>
     <addaction name="separator"/>
-    <addaction name="actionOpen_Campaign"/>
+    <addaction name="actionOpenCampaign"/>
     <addaction name="actionQuit"/>
    </widget>
    <widget class="QMenu" name="menuSettings">
     <property name="title">
      <string>Setti&amp;ngs</string>
     </property>
+    <addaction name="actionCampaignSettings"/>
     <addaction name="actionUserSettings"/>
+    <addaction name="actionReloadSettings"/>
    </widget>
    <widget class="QMenu" name="menuHelp">
     <property name="title">
@@ -46,14 +54,22 @@
     </property>
     <addaction name="actionAbout"/>
    </widget>
+   <widget class="QMenu" name="menuTools">
+    <property name="title">
+     <string>&amp;Tools</string>
+    </property>
+    <addaction name="actionInit"/>
+   </widget>
    <addaction name="menuFile"/>
    <addaction name="menuSettings"/>
+   <addaction name="menuTools"/>
    <addaction name="menuHelp"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <action name="actionAbout">
    <property name="icon">
-    <iconset theme="help-about"/>
+    <iconset theme="help-about">
+     <normaloff>.</normaloff>.</iconset>
    </property>
    <property name="text">
     <string>&amp;About NPC</string>
@@ -61,7 +77,8 @@
   </action>
   <action name="actionQuit">
    <property name="icon">
-    <iconset theme="application-exit"/>
+    <iconset theme="application-exit">
+     <normaloff>.</normaloff>.</iconset>
    </property>
    <property name="text">
     <string>&amp;Quit</string>
@@ -78,15 +95,46 @@
     <string>Open user settings</string>
    </property>
   </action>
-  <action name="actionOpen_Campaign">
+  <action name="actionOpenCampaign">
    <property name="icon">
-    <iconset theme="folder-open"/>
+    <iconset theme="folder-open">
+     <normaloff>.</normaloff>.</iconset>
    </property>
    <property name="text">
     <string>&amp;Open Campaign...</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+O</string>
+   </property>
+  </action>
+  <action name="actionCampaignSettings">
+   <property name="text">
+    <string>&amp;Campaign</string>
+   </property>
+   <property name="toolTip">
+    <string>Open campaign settings</string>
+   </property>
+  </action>
+  <action name="actionReloadSettings">
+   <property name="icon">
+    <iconset theme="view-refresh"/>
+   </property>
+   <property name="text">
+    <string>&amp;Reload</string>
+   </property>
+   <property name="toolTip">
+    <string>Reload settings</string>
+   </property>
+   <property name="shortcut">
+    <string>F5</string>
+   </property>
+  </action>
+  <action name="actionInit">
+   <property name="text">
+    <string>&amp;Setup...</string>
+   </property>
+   <property name="toolTip">
+    <string>Set up required folders</string>
    </property>
   </action>
  </widget>
