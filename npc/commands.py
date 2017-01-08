@@ -739,8 +739,9 @@ def init(create_types=False, create_all=False, **kwargs):
     Args:
         create_types (bool): Whether to create directories for each character
             type
-        create_all (bool): Whether to create all optional directories. Overrides
-            `types`.
+        create_all (bool): Whether to create all optional directories.
+        campaign_name (str): Name of the campaign. Defaults to the name of the
+            current directory.
         prefs (Settings): Settings object to use. Uses internal settings by
             default.
 
@@ -748,13 +749,13 @@ def init(create_types=False, create_all=False, **kwargs):
         Result object. Openable will be empty.
     """
     prefs = kwargs.get('prefs', settings.InternalSettings())
+    campaign_name = kwargs.get('campaign_name', path.basename(getcwd()))
 
     for key, basic_path in prefs.get('paths').items():
         if key == "ignore":
             continue
         makedirs(basic_path, mode=0o775, exist_ok=True)
     makedirs('.npc', mode=0o775, exist_ok=True)
-    campaign_name = path.basename(getcwd())
     with open(prefs.get_settings_path('campaign'), 'a') as settings_file:
         json.dump({'campaign': campaign_name}, settings_file, indent=4)
 
