@@ -192,9 +192,25 @@ class InitDialog(QtWidgets.QDialog, Ui_InitDialog):
 
         self.setupUi(self)
 
+        self.checkBoxCreateTypes.stateChanged.connect(self.update_dirlist)
+
+    @contextmanager
+    def safe_command(self, command):
+        try:
+            yield command
+        except AttributeError as err:
+            pass
+
+    def update_dirlist(self):
+        values = self.get_values()
+        with self.safe_command(commands.init) as command:
+            result = command(dryrun=True, **values)
+            self.initFoldersToCreate.setText("\n".join(result.data))
+
     def reset(self):
         self.checkBoxCreateTypes.setChecked(False)
         self.initCampaignTitle.setText("")
+        self.update_dirlist()
 
     def set_campaign_name(self, new_name, enabled=True):
         self.initCampaignTitle.setText(new_name)
