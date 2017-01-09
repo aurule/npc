@@ -742,6 +742,8 @@ def init(create_types=False, create_all=False, **kwargs):
         create_all (bool): Whether to create all optional directories.
         campaign_name (str): Name of the campaign. Defaults to the name of the
             current directory.
+        dryrun (bool): Do not create anything. This adds a string of changes
+            that would be made to the returned Result object's data variable.
         prefs (Settings): Settings object to use. Uses internal settings by
             default.
 
@@ -750,12 +752,22 @@ def init(create_types=False, create_all=False, **kwargs):
     """
     prefs = kwargs.get('prefs', settings.InternalSettings())
     campaign_name = kwargs.get('campaign_name', path.basename(getcwd()))
+    dryrun = kwargs.get('dryrun', False)
+
+    if dryrun:
+        changelog = []
+
+    def new_dir(path_name):
+        if dryrun:
+            changelog.append(path_name)
+            return
+        makedirs(path_name, mode=0o775, exist_ok=True)
 
     for key, basic_path in prefs.get('paths').items():
         if key == "ignore":
             continue
-        makedirs(basic_path, mode=0o775, exist_ok=True)
-    if not path.exists(prefs.get_settings_path('campaign')):
+        new_dir(basic_path)
+    if not dryrun and not path.exists(prefs.get_settings_path('campaign')):
         makedirs('.npc', mode=0o775, exist_ok=True)
         with open(prefs.get_settings_path('campaign'), 'a') as settings_file:
             json.dump({'campaign': campaign_name}, settings_file, indent=4)
@@ -763,8 +775,10 @@ def init(create_types=False, create_all=False, **kwargs):
     if create_types or create_all:
         cbase = prefs.get('paths.characters')
         for _, type_path in prefs.get('type_paths').items():
-            makedirs(path.join(cbase, type_path), mode=0o775, exist_ok=True)
+            new_dir(path.join(cbase, type_path))
 
+    if dryrun:
+        return Result(True, data=changelog)
     return Result(True)
 
 def open_settings(location, show_defaults=False, settings_type=None, **kwargs):
