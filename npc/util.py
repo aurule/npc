@@ -5,6 +5,7 @@ Helper functions shared between the other modules
 import re
 import json
 import sys
+from os import getcwd, path
 from collections import defaultdict
 
 def load_json(filename):
@@ -136,7 +137,8 @@ class Result:
             8 -- Missing required file
         errmsg (str): Human-readable error message. Will be displayed to the
             user.
-        data (obj): Other data.
+        changes (list[str]): List of strings that detail changes made. Safe to
+            leave blank.
     """
     def __init__(self, success, **kwargs):
         super(Result, self).__init__()
@@ -144,7 +146,7 @@ class Result:
         self.openable = kwargs.get('openable')
         self.errcode = kwargs.get('errcode', 0)
         self.errmsg = kwargs.get('errmsg', '')
-        self.data = kwargs.get('data', None)
+        self.changes = kwargs.get('changes', [])
 
     def __str__(self):
         if self.success:
