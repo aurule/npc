@@ -89,6 +89,6 @@ class Ui_MainWindow(object):
         self.actionReloadSettings.setText(_translate("MainWindow", "&Reload"))
         self.actionReloadSettings.setToolTip(_translate("MainWindow", "Reload settings"))
         self.actionReloadSettings.setShortcut(_translate("MainWindow", "F5"))
-        self.actionInit.setText(_translate("MainWindow", "&Setup..."))
-        self.actionInit.setToolTip(_translate("MainWindow", "Set up required folders"))
+        self.actionInit.setText(_translate("MainWindow", "&Set Up Campaign..."))
+        self.actionInit.setToolTip(_translate("MainWindow", "Set up required folders in this campaign"))
 

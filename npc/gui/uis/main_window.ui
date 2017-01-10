@@ -117,7 +117,8 @@
   </action>
   <action name="actionReloadSettings">
    <property name="icon">
-    <iconset theme="view-refresh"/>
+    <iconset theme="view-refresh">
+     <normaloff>.</normaloff>.</iconset>
    </property>
    <property name="text">
     <string>&amp;Reload</string>
@@ -131,10 +132,10 @@
   </action>
   <action name="actionInit">
    <property name="text">
-    <string>&amp;Setup...</string>
+    <string>&amp;Set Up Campaign...</string>
    </property>
    <property name="toolTip">
-    <string>Set up required folders</string>
+    <string>Set up required folders in this campaign</string>
    </property>
   </action>
  </widget>
