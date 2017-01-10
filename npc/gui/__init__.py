@@ -205,7 +205,7 @@ class InitDialog(QtWidgets.QDialog, Ui_InitDialog):
         values = self.get_values()
         with self.safe_command(commands.init) as command:
             result = command(dryrun=True, **values)
-            self.initFoldersToCreate.setText("\n".join(result.data))
+            self.initFoldersToCreate.setText("\n".join(sorted(result.data)))
 
     def reset(self):
         self.checkBoxCreateTypes.setChecked(False)
