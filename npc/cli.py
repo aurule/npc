@@ -32,13 +32,15 @@ def start(argv):
     # change to the proper campaign directory if needed
     base = args.campaign
     if base == 'auto':
-        base = find_campaign_root()
+        base = util.find_campaign_root()
 
     try:
         chdir(base)
     except OSError as err:
         util.error("{}: '{}'".format(err.strerror, base))
         return 4
+
+    print("in campaign dir")
 
     # load settings data
     try:
@@ -47,10 +49,13 @@ def start(argv):
         util.error(err.strerror)
         return 4
 
-    if not settings.lint_and_print_changeling_settings(prefs):
-        # The linting function prints its own output, so we can
-        # just exit.
+    changeling_errors = settings.lint_changeling_settings(prefs)
+    print(changeling_errors)
+    if changeling_errors:
+        print("\n".join(changeling_errors))
         return 5
+
+    print("settings loaded")
 
     # show help when no input was given
     if not hasattr(args, 'func'):
@@ -85,6 +90,11 @@ def start(argv):
     if not result.success:
         util.error(result)
         return result.errcode
+
+    # print any change messages that were returned
+    if result.changes and not args.batch:
+        print("{}:\n".format(args.help))
+        print("\n".join(result.changes))
 
     # open the resulting files, if allowed
     if result.openable and not args.batch:
@@ -126,6 +136,8 @@ def _make_parser():
     parser_init.add_argument('-n', '--name', default=None, help="Name of the campaign. Defaults to the name of the current directory.")
     parser_init.add_argument('-t', '--types', action="store_true", default=False, help="Create directories for all character types", dest="create_types")
     parser_init.add_argument('-a', '--all', action="store_true", default=False, help="Create all optional directories", dest="create_all")
+    parser_init.add_argument('-v', '--verbose', action="store_true", default=False, help="Show the changes that are made")
+    parser_init.add_argument('--dryrun', action="store_true", default=False, help="Show what would be created, but do not actually change anything")
     parser_init.set_defaults(func=commands.init)
 
     # Session subcommand

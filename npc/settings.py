@@ -289,22 +289,3 @@ def lint_changeling_settings(prefs):
                 errors.append("  - {}".format(kith))
 
     return errors
-
-def lint_and_print_changeling_settings(prefs):
-    """
-    Check correctness of changeling-specific settings and print the results.
-
-    The correctness checking is done by lint_changeling_settings.
-
-    Args:
-        prefs (Settings): Settings object to check
-
-    Returns:
-        True if the changeling settings are OK, False if there were errors.
-        Errors are printed to stderr.
-    """
-    failures = lint_changeling_settings(prefs)
-    if failures:
-        print("\n".join(failures))
-
-    return len(failures)
