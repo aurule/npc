@@ -40,8 +40,6 @@ def start(argv):
         util.error("{}: '{}'".format(err.strerror, base))
         return 4
 
-    print("in campaign dir")
-
     # load settings data
     try:
         prefs = settings.InternalSettings(args.debug)
@@ -50,12 +48,9 @@ def start(argv):
         return 4
 
     changeling_errors = settings.lint_changeling_settings(prefs)
-    print(changeling_errors)
     if changeling_errors:
         print("\n".join(changeling_errors))
         return 5
-
-    print("settings loaded")
 
     # show help when no input was given
     if not hasattr(args, 'func'):
@@ -93,7 +88,6 @@ def start(argv):
 
     # print any change messages that were returned
     if result.changes and not args.batch:
-        print("{}:\n".format(args.help))
         print("\n".join(result.changes))
 
     # open the resulting files, if allowed
