@@ -273,20 +273,20 @@ def lint_changeling_settings(prefs):
 
     errors = []
     if not ok_result:
-        errors.append("Mismatch in changeling settings")
+        errors.append("Mismatch in changeling settings:")
 
         if not blessing_keys.issuperset(seemings):
-            errors.append("    Seemings without blessings:")
+            errors.append("* Seemings without blessings:")
             for seeming in seemings.difference(blessing_keys):
-                errors.append("        {}".format(seeming))
+                errors.append("  - {}".format(seeming))
         if not curse_keys.issuperset(seemings):
-            errors.append("    Seemings without curses:")
+            errors.append("* Seemings without curses:")
             for seeming in seemings.difference(curse_keys):
-                errors.append("        {}".format(seeming))
+                errors.append("  - {}".format(seeming))
         if not blessing_keys.issuperset(kiths):
-            errors.append("    Kiths without blessings:")
+            errors.append("* Kiths without blessings:")
             for kith in kiths.difference(blessing_keys):
-                errors.append("        {}".format(kith))
+                errors.append("  - {}".format(kith))
 
     return errors
 
