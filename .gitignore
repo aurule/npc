@@ -58,3 +58,6 @@ target/
 
 # Linux directory information
 .directory
+
+# pyenv local version file
+.python-version
