@@ -86,9 +86,9 @@ def start(argv):
         util.error(result)
         return result.errcode
 
-    # print any change messages that were returned
-    if result.changes and not args.batch:
-        print("\n".join(result.changes))
+    # print any messages that were returned
+    if result.printable and not args.batch:
+        print("\n".join(result.printable))
 
     # open the resulting files, if allowed
     if result.openable and not args.batch:

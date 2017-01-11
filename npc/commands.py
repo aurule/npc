@@ -743,8 +743,9 @@ def init(create_types=False, create_all=False, **kwargs):
         campaign_name (str): Name of the campaign. Defaults to the name of the
             current directory.
         dryrun (bool): Do not create anything. This adds a string of changes
-            that would be made to the returned Result object's changes variable.
-        verbose (bool): Detail all changes made in the Result object's changes
+            that would be made to the returned Result object's printable
+            variable.
+        verbose (bool): Detail all changes made in the Result object's printable
             variable.
         prefs (Settings): Settings object to use. Uses internal settings by
             default.
@@ -784,7 +785,7 @@ def init(create_types=False, create_all=False, **kwargs):
         for _, type_path in prefs.get('type_paths').items():
             new_dir(path.join(cbase, type_path))
 
-    return Result(True, changes=changelog)
+    return Result(True, printable=changelog)
 
 def open_settings(location, show_defaults=False, settings_type=None, **kwargs):
     """

@@ -137,7 +137,7 @@ class Result:
             8 -- Missing required file
         errmsg (str): Human-readable error message. Will be displayed to the
             user.
-        changes (list[str]): List of strings that detail changes made. Safe to
+        printable (list[str]): List of strings that detail changes made. Safe to
             leave blank.
     """
     def __init__(self, success, **kwargs):
@@ -146,7 +146,7 @@ class Result:
         self.openable = kwargs.get('openable')
         self.errcode = kwargs.get('errcode', 0)
         self.errmsg = kwargs.get('errmsg', '')
-        self.changes = kwargs.get('changes', [])
+        self.printable = kwargs.get('printable', [])
 
     def __str__(self):
         if self.success:
