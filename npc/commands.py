@@ -588,8 +588,9 @@ def _prune_chars(characters):
             continue
 
         # remove named fields
-        for fieldname in char['hide'] and fieldname in char:
-            del char[fieldname]
+        for fieldname in char['hide']:
+            if fieldname in char:
+                del char[fieldname]
 
         # remove named groups
         for groupname in char['hidegroup']:
