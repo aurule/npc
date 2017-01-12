@@ -9,7 +9,8 @@ from os import path
 from datetime import datetime
 from collections import OrderedDict
 
-from . import util
+import npc
+from npc import util
 
 class Settings:
     """
@@ -217,15 +218,20 @@ class Settings:
                 return default
         return current_data
 
-    def get_metadata(self, fmt):
+    def get_metadata(self, target_format):
         """
-        Get the configured extra metadata keys for a given format
+        Get the metadata hash for a given output format
 
-        Merges configured metadata keys from the all block with those in the
-        blcok for fmt.
+        Merges default keys with the keys in "all" and finally the keys in the named format.
+
+        Default keys:
+            title: Configured metadata title
+            campaign: Configured name of the campaign
+            created: Timestamp when the metadata was fetched, formatted as per settings
+            npc: Version of NPC which created this metadata
 
         Args:
-            fmt (str): Format identifier. Must appear in the settings files.
+            target_format (str): Format identifier. Must appear in the settings files.
 
         Returns:
             Dict of metadata keys and values.
@@ -234,8 +240,9 @@ class Settings:
             title=self.get('metadata.title'),
             campaign=self.get('campaign'),
             created=datetime.now().strftime(self.get('metadata.timestamp')),
+            npc=npc.VERSION,
             **self.get('metadata.additional_keys.all'),
-            **self.get('metadata.additional_keys.{}'.format(fmt))
+            **self.get('metadata.additional_keys.{}'.format(target_format))
         )
 
 class InternalSettings(Settings, metaclass=util.Singleton):
