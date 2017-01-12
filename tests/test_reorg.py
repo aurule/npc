@@ -57,7 +57,7 @@ def test_partial_tree(campaign):
 
 def test_dry_run(campaign):
     campaign.populate_from_fixture_dir(['reorg', 'by_type'])
-    npc.commands.reorg('Characters', dry=True)
+    npc.commands.reorg('Characters', dryrun=True)
     character = campaign.get_character('Alpha Mann.nwod')
     assert character.check()
 

@@ -310,7 +310,7 @@ def session(**kwargs):
 
     return Result(True, openable=openable)
 
-def reorg(*search, ignore=None, purge=False, verbose=False, dry=False, **kwargs):
+def reorg(*search, ignore=None, purge=False, verbose=False, dryrun=False, **kwargs):
     """
     Move character files into the correct paths.
 
@@ -324,7 +324,7 @@ def reorg(*search, ignore=None, purge=False, verbose=False, dry=False, **kwargs)
         purge (bool): Whether empty directories should be deleted after all
             files have been moved.
         verbose (bool): Whether to print changes as they are made
-        dry (bool): Whether to show the changes that would be made, but not
+        dryrun (bool): Whether to show the changes that would be made, but not
             enact them.
         prefs (Settings): Settings object to use. Uses internal settings by
             default.
@@ -336,7 +336,9 @@ def reorg(*search, ignore=None, purge=False, verbose=False, dry=False, **kwargs)
     if not ignore:
         ignore = []
     ignore.extend(prefs.get('paths.ignore'))
-    verbose = verbose or dry
+    verbose = verbose or dryrun
+
+    changelog = []
 
     base_path = prefs.get('paths.characters')
     if not path.exists(base_path):
@@ -346,18 +348,18 @@ def reorg(*search, ignore=None, purge=False, verbose=False, dry=False, **kwargs)
         new_path = create_path_from_character(parsed_character, target_path=base_path)
         if new_path != path.dirname(parsed_character['path']):
             if verbose:
-                print("Moving {} to {}".format(parsed_character['path'], new_path))
-            if not dry:
+                changelog.append("Moving {} to {}".format(parsed_character['path'], new_path))
+            if not dryrun:
                 shmove(parsed_character['path'], new_path)
 
     if purge:
         for empty_path in find_empty_dirs(base_path):
             if verbose:
-                print("Removing empty directory {}".format(empty_path))
-            if not dry:
+                changelog.append("Removing empty directory {}".format(empty_path))
+            if not dryrun:
                 rmdir(empty_path)
 
-    return Result(True)
+    return Result(True, printable=changelog)
 
 def find_empty_dirs(root):
     """

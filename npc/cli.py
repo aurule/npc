@@ -185,7 +185,7 @@ def _make_parser():
     parser_reorg = subparsers.add_parser('reorg', parents=[paths_parser], help="Move character files to the most appropriate directories")
     parser_reorg.add_argument('-p', '--purge', action="store_true", default=False, help="After moving all files, remove any empty directories within the base characters path")
     parser_reorg.add_argument('-v', '--verbose', action="store_true", default=False, help="Show the changes that are made")
-    parser_reorg.add_argument('-d', '--dry-run', action="store_true", default=False, help="Show the changes that would be made, but don't change anything", dest="dry")
+    parser_reorg.add_argument('-d', '--dryrun', action="store_true", default=False, help="Show the changes that would be made, but don't change anything", dest="dryrun")
     parser_reorg.set_defaults(func=commands.reorg)
 
     # Open settings files
