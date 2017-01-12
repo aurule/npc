@@ -597,8 +597,9 @@ def _prune_chars(characters):
             char['group'].remove(groupname)
 
         # remove all ranks for named groups
-        for groupname in char['hideranks'] and groupname in char['rank']:
-            del char['rank'][groupname]
+        for groupname in char['hideranks']:
+            if groupname in char['rank']:
+                del char['rank'][groupname]
 
         # use fake types if present
         if 'faketype' in char:
