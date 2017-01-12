@@ -51,7 +51,7 @@ def test_output_no_file(capsys, outopt):
     output, _ = capsys.readouterr()
     assert output
 
-def test_output_to_file(argparser, tmpdir):
+def test_output_to_file(tmpdir):
     outfile = tmpdir.join("output.json")
     search = fixture_dir(['dump'])
     npc.commands.dump(search, outfile=str(outfile))
