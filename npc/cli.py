@@ -127,7 +127,7 @@ def _make_parser():
 
     # Subcommand to create the basic directories
     parser_init = subparsers.add_parser('init', help="Create the basic directory structure for campaign files")
-    parser_init.add_argument('-n', '--name', default=None, help="Name of the campaign. Defaults to the name of the current directory.")
+    parser_init.add_argument('-n', '--name', default=None, help="Name of the campaign. Defaults to the name of the current directory.", dest="campaign_name")
     parser_init.add_argument('-t', '--types', action="store_true", default=False, help="Create directories for all character types", dest="create_types")
     parser_init.add_argument('-a', '--all', action="store_true", default=False, help="Create all optional directories", dest="create_all")
     parser_init.add_argument('-v', '--verbose', action="store_true", default=False, help="Show the changes that are made")
