@@ -49,6 +49,24 @@ class TestBehavior:
             assert len(c['type']) == 1
             assert c['type'][0] == 'Human'
 
+    def test_hide(self, list_json_output):
+        """The fields named in @hide should not appear"""
+
+        listing = list_json_output(['hide'])
+        assert 'foreign' not in listing[0]
+
+    def test_hide_group(self, list_json_output):
+        """The groups named in @hidegroup should not appear"""
+
+        listing = list_json_output(['hidegroup'])
+        assert 'Lawbros' not in listing[0]['group']
+
+    def test_hide_ranks(self, list_json_output):
+        """The ranks for the groups named in @hiderank should not appear"""
+
+        listing = list_json_output(['hideranks'])
+        assert 'Big Corporation Place Thing' not in listing[0]['rank']
+
 class TestMetadata:
     """Tests the handling of metadata and related settings"""
 
