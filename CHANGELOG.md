@@ -2,7 +2,7 @@
 
 This file documents the changes made in each release. I didn't start maintaining this until I was in the middle of developing v1.3.0, so it's more sparse than it should be.
 
-The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
+The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/) (mostly).
 
 ## [Unreleased]
 ### Added
@@ -24,4 +24,4 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 * `npc.commands.reorg` had its `dry` flag renamed to `dryrun` to match the flag on `npc.commands.init`
 
 ### Removed
-* npc.main has gone away
+* `npc.main` has gone away
