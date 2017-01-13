@@ -849,8 +849,9 @@ def report(*tags, search=None, ignore=None, fmt=None, outfile=None, **kwargs):
         search (list): Paths to search for character files. Items can be strings
             or lists of strings.
         ignore (list): Paths to ignore
-        fmt (str|None): Output format to use. Recognized values are "mmd". Pass
-            "default" or None to get the format from settings.
+        fmt (str|None): Output format to use. Recognized values are defined in
+            formatters.get_report_formatter. Pass "default" or None to get the
+            format from settings.
         outfile (string|None): Filename to put the listed data. None and "-"
             print to stdout.
         prefs (Settings): Settings object to use. Uses internal settings by

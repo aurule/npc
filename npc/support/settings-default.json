@@ -63,19 +63,28 @@
 
         // Output templates to use when creating character listings.
         "listing": {
+            // Templates for the header of a listing, which contain metadata
+            // about that listing.
             "header": {
+                // Headers for listings in the markdown format
                 "markdown": {
                     "mmd": "templates/listing/Header.mmd.mako",
                     "yfm": "templates/listing/Header.yfm.mako"
                 },
+                // Headers for listings in the html format
                 "html": {
                     "meta": "templates/listing/Header.html.meta.mako",
                     "plain": "templates/listing/Header.html.plain.mako"
                 }
             },
+            // Footers, which appear at the bottom of the listing. So far only
+            // used for listings in the html format.
             "footer": {
                 "html": "templates/listing/Footer.html.mako"
             },
+            // Templates for different character types, split up by the format
+            // of the listing. Types that do not have their own template will
+            // use the default template instead.
             "character": {
                 "markdown": {
                     "default": "templates/listing/Character.md.mako",
@@ -86,12 +95,14 @@
                     "changeling": "templates/listing/Changeling.html.mako"
                 }
             },
+            // Template for dividing sections within a listing. Currently only
+            // used for listings in the html format.
             "section": {
                 "html": "templates/listing/Section.html.mako"
             }
         },
 
-        // Output templates to use when creating a report
+        // Template files to use when creating a report in the given format.
         "report": {
             "html": "templates/Report.html.mako",
             "markdown": "templates/Report.md.mako"
@@ -101,32 +112,38 @@
     // Text to add to the beginning of new character files.
     "template_header": "",
 
-    // Default file extension for the first plot file of a new campaign
+    // Default file extension for the first plot file of a new campaign.
     "plot_ext": ".md",
 
-    // Default format for generated reports
+    // Default format for generated reports. Recognized formats are markdown,
+    // html, and json.
     "report_format": "markdown",
 
-    // Default format to use when creating a list of characters.
+    // Default format to use when creating a list of characters. Recognized
+    // formats are markdown or md, html or htm, and json.
     "list_format": "markdown",
 
-    // Default sorting method for character listings
+    // Default sorting method for character listings. The method "last" sorts by
+    // the last word in the character's name, and the method "first" sorts by
+    // the first word in the character's name.
     "list_sort": "last",
 
-    // Encoding to use when creating html data, like for an NPC listing
+    // Encoding to use when creating html data for a report or NPC listing. Any
+    // valid html charset can be used, but the most common are "ascii" and
+    // "utf-8".
     "html_encoding": "ascii",
 
-    // Options for the generated metadata in character lists.
+    // Settings for the generated metadata in character lists.
     "metadata": {
         // Default title for character lists.
         "title": "NPC Listing",
 
         // Format to use for the metadata timestamp. Uses formatting options
-        // from strftime (see http://strftime.org/).
+        // from strftime: see http://strftime.org/.
         "timestamp": "%a, %b %d %I:%M%p",
 
-        // Default format to use when metadata is requested for the named
-        // format.
+        // Default metadata format to use when metadata is requested for a
+        // certain output format.
         "default_format": {
             // The markdown output formatter can add metadata using the
             // MultiMarkdown and Yaml Front Matter formats. To use
@@ -141,8 +158,8 @@
             // of the output format.
             "all": {},
 
-            // Metadata listed in these hashes will only be added to lists of
-            // the named format.
+            // Metadata given here will only appear in lists generated using the
+            // corresponding output format.
             "markdown" : {},
             "json": {},
             "html": {}
