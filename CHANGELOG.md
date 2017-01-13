@@ -15,6 +15,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
     - The meaning and name of this var is likely to change over time
 * Better test coverage
 * NPC version number is reported in all metadata output
+* New `plot_ext` setting for the default file extension of the first plot file in a new campaign
 
 ### Changed
 * The CLI interface now lives in npc.cli

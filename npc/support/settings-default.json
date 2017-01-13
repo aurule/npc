@@ -101,6 +101,9 @@
     // Text to add to the beginning of new character files.
     "template_header": "",
 
+    // Default file extension for the first plot file of a new campaign
+    "plot_ext": ".md",
+
     // Default format for generated reports
     "report_format": "markdown",
 
