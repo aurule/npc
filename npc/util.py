@@ -164,18 +164,22 @@ class Character(defaultdict):
 
     Basically a dictionary with some helper methods. When accessed like a dict,
     missing keys will return an empty array instead of throwing an exception.
-    The "description" key is special: it will always contain a string.
+    The "description" and "path" keys are special: they will always contain a
+    string.
     """
+
+    STRING_KEYS = ('description', 'path')
+
     def __init__(self, attributes=None, **kwargs):
         """
         Create a new Character object.
 
         When supplying values through `attributes` or `**kwargs`, remember that
         almost everything needs to be in a list. The exceptions are the
-        "description" key, which must be a string, and the "rank" key, which is
-        special. It is a dict of dicts, and the members of that dict are lists.
-        When in doubt, it's safer to build the object using the append and
-        append_rank methods.
+        "description" and "path" keys, which must be strings, and the "rank"
+        key, which is special. It is a dict of dicts, and the members of that
+        dict are lists. When in doubt, it's safer to build the object using the
+        append and append_rank methods.
 
         Args:
             attributes (dict): Dictionary of attributes to insert into the
@@ -185,7 +189,8 @@ class Character(defaultdict):
                 the `attributes` arg.
         """
         super().__init__(list)
-        self['description'] = ''
+        for key in STRING_KEYS:
+            self[key] = ''
         self['rank'] = defaultdict(list)
 
         if attributes is not None:
@@ -227,8 +232,8 @@ class Character(defaultdict):
             The "description" key is not an array, so this method will return the
             entire description.
         """
-        if key == "description":
-            return self["description"]
+        if key in STRING_KEYS:
+            return self[key]
 
         try:
             return self[key][0]
@@ -249,8 +254,8 @@ class Character(defaultdict):
             The "description" key is not an array, so this method will return the
             entire description.
         """
-        if key == "description":
-            return self["description"]
+        if key in STRING_KEYS:
+            return self[key]
 
         return self[key][1:]
 
@@ -268,8 +273,8 @@ class Character(defaultdict):
         Returns:
             This character object. Convenient for chaining.
         """
-        if key == "description":
-            self["description"] += value
+        if key in STRING_KEYS:
+            self[key] += value
         else:
             self[key].append(value)
 
@@ -374,8 +379,8 @@ class Character(defaultdict):
                 for group, ranks in values.items():
                     for item in ranks:
                         new_char.append_rank(group, func(item))
-            elif attr == 'description':
-                new_char.append('description', func(values))
+            elif attr in STRING_KEYS:
+                new_char.append(attr, func(values))
             else:
                 for item in values:
                     new_char.append(attr, func(item))
