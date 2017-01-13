@@ -24,6 +24,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 * Commands that used to print output now return a list of printed lines in their Result's `printable` var. The caller can decide what to do with them.
     - Very in-progress.
 * `npc.commands.reorg` had its `dry` flag renamed to `dryrun` to match the flag on `npc.commands.init`
+* The `path` item in Character objects now has the same special handling as `description`
 
 ### Removed
 * `npc.main` has gone away
