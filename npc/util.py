@@ -386,3 +386,68 @@ class Character(defaultdict):
                     new_char.append(attr, func(item))
 
         return new_char
+
+    def build_header(self):
+        """
+        description
+
+        type or compound type
+        special groups
+        groups
+        dead
+        foreign
+
+        appearance
+        """
+        lines = [self['description'], "\n"]
+
+        def tags_for_all(attrname):
+            lines.extend(["@{} {}".format(attrname, val) for val in self[attrname]])
+
+        def buffered_tags(attrname):
+            if attrname in self:
+                lines.append("\n")
+                tags_for_all(attrname)
+
+        def add_flag(attrname):
+            if attrname in self:
+                lines.append("@{}".format(attrname))
+
+        def group_with_ranks(tagname):
+            for group in self[tagname]:
+                line.append("@group {}".format(group))
+                for rank in self['rank']['group']:
+                    line.append("@rank {}".format(group))
+
+        add_flag('skip')
+        # add @type or compound type
+        #   use compound type if possible, otherwise type followed by subtype tags
+        tags_for_all('faketype')
+
+        first_name = self.get_first('name')
+        path = self.get('path')
+        if first_name and first_name not in path:
+            lines.append("@{} {}".format('realname', first_name))
+        lines.extend(["@{} {}".format(attrname, val) for val in self.get_remaining('name')])
+
+        tags_for_all('title')
+        tags_for_all('foreign')
+        add_flag('wanderer')
+        group_with_ranks('motley')
+        group_with_ranks('court')
+        group_with_ranks('entitlement')
+
+        # TODO: add newline
+        group_with_ranks('group')
+
+        buffered_tags('dead')
+        buffered_tags('appearance')
+        buffered_tags('mask')
+        buffered_tags('mien')
+
+        # TODO: add newline
+        tags_for_all('hide')
+        tags_for_all('hidegroup')
+        tags_for_all('hideranks')
+
+        return "\n".join(lines)
