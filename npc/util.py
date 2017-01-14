@@ -168,7 +168,17 @@ class Character(defaultdict):
     string.
     """
 
-    STRING_KEYS = ('description', 'path')
+    GROUP_TAGS = (
+        'court', 'motley', 'entitlement', # changeling
+        'group'                           # universal
+    )
+    """tuple (str): Group-like tags. These all accept an accompanying `rank` tag."""
+
+    STRING_TAGS = ('description', 'path')
+    """
+    tuple (Str): String-only data. These are stored as plain strings and do not, in
+        fact, come from a tag at all.
+    """
 
     def __init__(self, attributes=None, **kwargs):
         """
@@ -189,7 +199,7 @@ class Character(defaultdict):
                 the `attributes` arg.
         """
         super().__init__(list)
-        for key in STRING_KEYS:
+        for key in self.STRING_TAGS:
             self[key] = ''
         self['rank'] = defaultdict(list)
 
@@ -232,7 +242,7 @@ class Character(defaultdict):
             The "description" key is not an array, so this method will return the
             entire description.
         """
-        if key in STRING_KEYS:
+        if key in self.STRING_TAGS:
             return self[key]
 
         try:
@@ -254,7 +264,7 @@ class Character(defaultdict):
             The "description" key is not an array, so this method will return the
             entire description.
         """
-        if key in STRING_KEYS:
+        if key in self.STRING_TAGS:
             return self[key]
 
         return self[key][1:]
@@ -273,7 +283,7 @@ class Character(defaultdict):
         Returns:
             This character object. Convenient for chaining.
         """
-        if key in STRING_KEYS:
+        if key in self.STRING_TAGS:
             self[key] += value
         else:
             self[key].append(value)
@@ -379,7 +389,7 @@ class Character(defaultdict):
                 for group, ranks in values.items():
                     for item in ranks:
                         new_char.append_rank(group, func(item))
-            elif attr in STRING_KEYS:
+            elif attr in self.STRING_TAGS:
                 new_char.append(attr, func(values))
             else:
                 for item in values:
@@ -399,53 +409,66 @@ class Character(defaultdict):
 
         appearance
         """
-        lines = [self['description'], "\n"]
+        lines = [self['description'], '']
 
         def tags_for_all(attrname):
+            """Add a tag for every value in attrname"""
             lines.extend(["@{} {}".format(attrname, val) for val in self[attrname]])
 
-        def buffered_tags(attrname):
+        def buffered(attrname, fn):
+            """Insert a newline before running fn, but only if attrname exists"""
             if attrname in self:
-                lines.append("\n")
-                tags_for_all(attrname)
+                lines.append("")
+                fn(attrname)
 
         def add_flag(attrname):
+            """Add a bare tag, with no value, as long as attrname exists"""
             if attrname in self:
                 lines.append("@{}".format(attrname))
 
-        def group_with_ranks(tagname):
-            for group in self[tagname]:
-                line.append("@group {}".format(group))
-                for rank in self['rank']['group']:
-                    line.append("@rank {}".format(group))
+        def tags_or_flag(attrname):
+            """Add tags or a flag for attrname, whichever is more appropriate."""
+            if attrname in self:
+                if len(self[attrname]):
+                    tags_for_all(attrname)
+                else:
+                    add_flag(attrname)
 
         add_flag('skip')
-        # add @type or compound type
-        #   use compound type if possible, otherwise type followed by subtype tags
-        tags_for_all('faketype')
 
         first_name = self.get_first('name')
         path = self.get('path')
         if first_name and first_name not in path:
-            lines.append("@{} {}".format('realname', first_name))
-        lines.extend(["@{} {}".format(attrname, val) for val in self.get_remaining('name')])
+            lines.append("@realname {}".format(first_name))
+        lines.extend(["@name {}".format(val) for val in self.get_remaining('name')])
+
+        if self.type_key == 'changeling':
+            if 'seeming' in self and 'kith' in self:
+                lines.append("@changeling {} {}".format(self.get_first('seeming'), self.get_first('kith')))
+            else:
+                lines.append("@type Changeling")
+                if 'seeming' in self:
+                    lines.append("@seeming {}").format(self.get_first('seeming'))
+                if 'kith' in self:
+                    lines.append("@kith {}").format(self.get_first('kith'))
+        else:
+            lines.append("@type {}".format(self.get_first('type')))
+
+        tags_for_all('faketype')
 
         tags_for_all('title')
-        tags_for_all('foreign')
+        tags_or_flag('foreign')
         add_flag('wanderer')
-        group_with_ranks('motley')
-        group_with_ranks('court')
-        group_with_ranks('entitlement')
+        for tagname in self.GROUP_TAGS:
+            for groupname in self[tagname]:
+                lines.append("@{} {}".format(tagname, groupname))
+                lines.extend(["@rank {}".format(rank) for rank in self['rank'][groupname]])
 
-        # TODO: add newline
-        group_with_ranks('group')
+        buffered('dead', tags_or_flag)
+        buffered('appearance', tags_for_all)
+        buffered('mask', tags_for_all)
+        buffered('mien', tags_for_all)
 
-        buffered_tags('dead')
-        buffered_tags('appearance')
-        buffered_tags('mask')
-        buffered_tags('mien')
-
-        # TODO: add newline
         tags_for_all('hide')
         tags_for_all('hidegroup')
         tags_for_all('hideranks')

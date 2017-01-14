@@ -13,12 +13,6 @@ from .util import Character
 VALID_EXTENSIONS = ('.nwod', '.dnd3', '.dfrpg')
 """tuple: file extensions that should be parsed"""
 
-GROUP_TAGS = (
-    'group',                          # universal
-    'court', 'motley', 'entitlement'  # changeling
-)
-"""tuple: Group-like tags. These all accept an accompanying `rank` tag."""
-
 def get_characters(search_paths=None, ignore_paths=None):
     """
     Get data from character files
@@ -167,7 +161,7 @@ def parse_character(char_file_path: str) -> Character:
                     continue
 
                 # handle rank logic for group tags
-                if tag in GROUP_TAGS:
+                if tag in Character.GROUP_TAGS:
                     last_group = value
                 if tag == 'rank':
                     if last_group:
