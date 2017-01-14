@@ -36,8 +36,8 @@
     <property name="title">
      <string>Fi&amp;le</string>
     </property>
-    <addaction name="separator"/>
     <addaction name="actionOpenCampaign"/>
+    <addaction name="separator"/>
     <addaction name="actionQuit"/>
    </widget>
    <widget class="QMenu" name="menuSettings">
@@ -89,7 +89,7 @@
   </action>
   <action name="actionUserSettings">
    <property name="text">
-    <string>&amp;User</string>
+    <string>&amp;User Settings</string>
    </property>
    <property name="toolTip">
     <string>Open user settings</string>
@@ -109,7 +109,7 @@
   </action>
   <action name="actionCampaignSettings">
    <property name="text">
-    <string>&amp;Campaign</string>
+    <string>&amp;Campaign Settings</string>
    </property>
    <property name="toolTip">
     <string>Open campaign settings</string>
@@ -126,11 +126,11 @@
    <property name="toolTip">
     <string>Reload settings</string>
    </property>
-   <property name="shortcut">
-    <string>F5</string>
-   </property>
   </action>
   <action name="actionInit">
+   <property name="icon">
+    <iconset theme="journal-new"/>
+   </property>
    <property name="text">
     <string>&amp;Set Up Campaign...</string>
    </property>
