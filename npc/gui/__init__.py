@@ -67,6 +67,11 @@ class MainWindow(Ui_MainWindow):
         self.setupUi(window)
         self.force_titles()
 
+        self.recentCampaignActions = [QtWidgets.QAction(self.menuOpen_Recent_Campaign, visible=False, triggered=self.open_recent_campaign) for i in range(5)]
+        for act in self.recentCampaignActions:
+            self.menuOpen_Recent_Campaign.addAction(act)
+        self._update_recent_campaigns()
+
         # about dialog
         self.about_dialog = QtWidgets.QDialog(self.window)
         AboutDialog(self.about_dialog)
@@ -99,6 +104,24 @@ class MainWindow(Ui_MainWindow):
             parent = self.window
         errorbox = QtWidgets.QMessageBox.warning(parent, title, message, QtWidgets.QMessageBox.Ok)
 
+    def _update_recent_campaigns(self):
+        settings = QtCore.QSettings('Aurule', 'NPC')
+        campaigns = settings.value('recentCampaigns/paths', [])
+        campaign_titles = settings.value('recentCampaigns/titles', [])
+
+        num_recent_campaigns = min(len(campaigns), 5)
+
+        for i in range(num_recent_campaigns):
+            text = "&{} {}".format(i+1, campaign_titles[i])
+            self.recentCampaignActions[i].setText(text)
+            self.recentCampaignActions[i].setData(campaigns[i])
+            self.recentCampaignActions[i].setVisible(True)
+
+        for action in self.recentCampaignActions[num_recent_campaigns:]:
+            action.setVisible(False)
+
+        self.menuOpen_Recent_Campaign.setEnabled(num_recent_campaigns > 0)
+
     def force_titles(self):
         _translate = QtCore.QCoreApplication.translate
         self.menuFile.setTitle(_translate("MainWindow", "&File"))
@@ -112,6 +135,11 @@ class MainWindow(Ui_MainWindow):
         if campaign_dir:
             self.set_campaign_root(campaign_dir)
 
+    def open_recent_campaign(self):
+        action = self.window.sender()
+        if action:
+            self.set_campaign_root(action.data())
+
     def set_campaign_root(self, root_dir):
         try:
             chdir(root_dir)
@@ -120,6 +148,25 @@ class MainWindow(Ui_MainWindow):
             return
         self.campaign_root = root_dir
         self.run_reload_settings()
+
+        settings = QtCore.QSettings('Aurule', 'NPC')
+        campaigns = settings.value('recentCampaigns/paths', [])
+        campaign_titles = settings.value('recentCampaigns/titles', [])
+
+        try:
+            campaigns.remove(root_dir)
+            campaign_titles.remove(root_dir)
+        except ValueError:
+            pass
+
+        campaigns.insert(0, root_dir)
+        campaign_titles.insert(0, self.prefs.get('campaign'))
+        del campaigns[5:]
+        del campaign_titles[5:]
+
+        settings.setValue('recentCampaigns/paths', campaigns)
+        settings.setValue('recentCampaigns/titles', campaign_titles)
+        self._update_recent_campaigns()
 
     @contextmanager
     def safe_command(self, command):

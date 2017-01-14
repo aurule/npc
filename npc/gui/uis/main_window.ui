@@ -36,7 +36,13 @@
     <property name="title">
      <string>Fi&amp;le</string>
     </property>
+    <widget class="QMenu" name="menuOpen_Recent_Campaign">
+     <property name="title">
+      <string>Open &amp;Recent Campaign</string>
+     </property>
+    </widget>
     <addaction name="actionOpenCampaign"/>
+    <addaction name="menuOpen_Recent_Campaign"/>
     <addaction name="separator"/>
     <addaction name="actionQuit"/>
    </widget>
