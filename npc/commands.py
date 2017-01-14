@@ -58,102 +58,122 @@ def create_changeling(name, seeming, kith, *,
     )
 
     # build minimal Character
-    temp_char = Character()
-    temp_char.append('type', 'changeling') \
-             .append('seeming', seeming)   \
-             .append('kith', kith)
+    temp_char = _minimal_character(
+        ctype='changeling',
+        groups=groups,
+        dead=dead,
+        foreign=foreign,
+        prefs=prefs)
+    temp_char.append('seeming', seeming.title())
+    temp_char.append('kith', kith.title())
     if court:
         temp_char.append('court', court.title())
     if motley:
         temp_char.append('motley', motley)
-    if groups:
-        temp_char['group'] = groups
-    if dead:
-        temp_char.append('dead', dead)
-    if foreign:
-        temp_char.append('foreign', foreign)
 
-    # get path for the new file
-    target_path = create_path_from_character(temp_char, prefs=prefs)
+    def insert_sk_data(data):
+        """Insert seeming and kith in the advantages block of a template"""
+        sk_data = prefs.get('changeling')
+        seeming_name = temp_char.get_first('seeming')
+        seeming_key = seeming.lower()
+        if seeming_key in sk_data['seemings']:
+            seeming_notes = "{}; {}".format(sk_data['blessings'][seeming_key], sk_data['curses'][seeming_key])
+            data = seeming_re.sub(
+                r"\g<1>Seeming\g<2>{} ({})".format(seeming_name, seeming_notes),
+                data
+            )
+        kith_name = temp_char.get_first('kith')
+        kith_key = kith.lower()
+        if kith_key in sk_data['kiths']:
+            kith_notes = sk_data['blessings'][kith_key]
+            data = kith_re.sub(
+                r"\g<1>Kith\g<2>{} ({})".format(kith_name, kith_notes),
+                data
+            )
+        return data
 
-    filename = name + '.nwod'
-    target_path = path.join(target_path, filename)
-    if path.exists(target_path):
-        return Result(False, errmsg="Character '{}' already exists!".format(name), errcode=1)
+    return _cp_template_for_char(name, temp_char, prefs, fn=insert_sk_data)
 
-    # Create tags
-    seeming_name = seeming.title()
-    kith_name = kith.title()
-    tags = ['@changeling {} {}'.format(seeming_name, kith_name)]
-    if motley:
-        tags.append('@motley {}'.format(motley))
-    if court:
-        tags.append('@court {}'.format(court.title()))
-    tags.extend(_make_std_tags(groups=groups, dead=dead, foreign=foreign))
-
-    header = prefs.get('template_header') + "\n".join(tags) + '\n\n'
-
-    # Copy template data
-    template_path = prefs.get('templates.changeling')
-    try:
-        with open(template_path, 'r') as template:
-            data = header + template.read()
-    except IOError as err:
-        return Result(False, errmsg=err.strerror + " ({})".format(template_path), errcode=4)
-
-    # insert seeming and kith in the advantages block
-    sk_data = prefs.get('changeling')
-    seeming_key = seeming.lower()
-    if seeming_key in sk_data['seemings']:
-        seeming_notes = "{}; {}".format(sk_data['blessings'][seeming_key], sk_data['curses'][seeming_key])
-        data = seeming_re.sub(
-            r"\g<1>Seeming\g<2>{} ({})".format(seeming_name, seeming_notes),
-            data
-        )
-    kith_key = kith.lower()
-    if kith_key in sk_data['kiths']:
-        kith_notes = sk_data['blessings'][kith_key]
-        data = kith_re.sub(
-            r"\g<1>Kith\g<2>{} ({})".format(kith_name, kith_notes),
-            data
-        )
-
-    # Save the new character
-    try:
-        with open(target_path, 'w') as target_file:
-            target_file.write(data)
-    except IOError as err:
-        return Result(False, errmsg=err.strerror + " ({})".format(target_path), errcode=4)
-
-    return Result(True, openable=[target_path])
-
-def _make_std_tags(groups=None, dead=False, foreign=""):
+def _minimal_character(ctype, groups, dead, foreign, prefs):
     """
-    Create standard tags that apply to all character types.
+    Create a minimal character object
 
     Args:
+        ctype (str): Character type
         groups (list): One or more names of groups the character belongs to.
-            Used to derive path.
         dead (bool|str): Whether to add the @dead tag. Pass False to exclude it
             (the default), an empty string to inlcude it with no details given,
             and a non-empty string to include the tag along with the contents of
             the argument.
         foreign (bool): Details of non-standard residence. Leave empty to
             exclude the @foreign tag.
+        prefs (Settings): Settings object
 
     Returns:
-        List of strings containing group, dead, and foreign tags.
+        Character object
     """
-    if groups is None:
-        groups = []
+    temp_char = Character()
+    temp_char.append('description', prefs.get('template_header'))
+    temp_char.append('type', ctype)
+    if groups:
+        temp_char['group'] = groups
+    if dead is not False:
+        temp_char.append('dead', dead)
+    if foreign is not False:
+        temp_char.append('foreign', foreign)
 
-    tags = ["@group {}".format(g) for g in groups]
-    if dead != False:
-        dead_details = " {}".format(dead) if len(dead) else ""
-        tags.append("@dead{}".format(dead_details))
-    if foreign:
-        tags.append("@foreign {}".format(foreign))
-    return tags
+    return temp_char
+
+def _cp_template_for_char(name, character, prefs, fn=None):
+    """
+    Copy the template for a character
+
+    Copies the configured template file for `character` and optionally modifies
+    the template's body using `fn`.
+
+    Args:
+        name (str): Character name
+        character (Character): Character that needs a template
+        prefs (Settings): Settings object used to find the template
+        fn (callable): Optional function that is called before the new file is
+            saved. It must accept a single string argument which will contain
+            the template contents.
+
+    Returns:
+        Result object. Openable will contain the path to the new character file.
+    """
+    # get template path
+    template_path = prefs.get('templates.{}'.format(character.get_first('type')))
+
+    # get path for the new file
+    target_path = create_path_from_character(character, prefs=prefs)
+
+    filename = name + path.splitext(template_path)[1]
+    target_path = path.join(target_path, filename)
+    if path.exists(target_path):
+        return Result(False, errmsg="Character '{}' already exists!".format(name), errcode=1)
+
+    # Add tags
+    header = character.build_header() + '\n\n'
+
+    # Copy template
+    try:
+        with open(template_path, 'r') as template_data:
+            data = header + template_data.read()
+    except IOError as err:
+        return Result(False, errmsg=err.strerror + " ({})".format(template), errcode=4)
+
+    if callable(fn):
+        data = fn(data)
+
+    # Write the new file
+    try:
+        with open(target_path, 'w') as char_file:
+            char_file.write(data)
+    except IOError as err:
+        return Result(False, errmsg=err.strerror + " ({})".format(target_path), errcode=4)
+
+    return Result(True, openable=[target_path])
 
 def create_simple(name, ctype, *, dead=False, foreign=False, **kwargs):
     """
@@ -186,44 +206,14 @@ def create_simple(name, ctype, *, dead=False, foreign=False, **kwargs):
         return Result(False, errmsg="Unrecognized template '{}'".format(ctype), errcode=7)
 
     # build minimal character
-    temp_char = Character()
-    temp_char.append('type', ctype)
-    if groups:
-        temp_char['group'] = groups
-    if dead:
-        temp_char.append('dead', dead)
-    if foreign:
-        temp_char.append('foreign', foreign)
+    temp_char = _minimal_character(
+        ctype=ctype,
+        groups=groups,
+        dead=dead,
+        foreign=foreign,
+        prefs=prefs)
 
-    # get path for the new file
-    target_path = create_path_from_character(temp_char, prefs=prefs)
-
-    filename = name + '.nwod'
-    target_path = path.join(target_path, filename)
-    if path.exists(target_path):
-        return Result(False, errmsg="Character '{}' already exists!".format(name), errcode=1)
-
-    # Add tags
-    typetag = ctype.title()
-    tags = ['@type {}'.format(typetag)] + _make_std_tags(groups=groups, dead=dead, foreign=foreign)
-    header = prefs.get('template_header') + "\n".join(tags) + '\n\n'
-
-    # Copy template
-    template = prefs.get('templates.{}'.format(ctype))
-    try:
-        with open(template, 'r') as template_data:
-            data = header + template_data.read()
-    except IOError as err:
-        return Result(False, errmsg=err.strerror + " ({})".format(template), errcode=4)
-
-    # Write the new file
-    try:
-        with open(target_path, 'w') as char_file:
-            char_file.write(data)
-    except IOError as err:
-        return Result(False, errmsg=err.strerror + " ({})".format(target_path), errcode=4)
-
-    return Result(True, openable=[target_path])
+    return _cp_template_for_char(name, temp_char, prefs)
 
 def session(**kwargs):
     """
