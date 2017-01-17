@@ -106,15 +106,18 @@ class MainWindow(Ui_MainWindow):
 
     def _update_recent_campaigns(self):
         settings = QtCore.QSettings('Aurule', 'NPC')
-        campaigns = settings.value('recentCampaigns/paths', [])
+        campaign_paths = settings.value('recentCampaigns/paths', [])
         campaign_titles = settings.value('recentCampaigns/titles', [])
 
-        num_recent_campaigns = min(len(campaigns), 5)
+        num_recent_campaigns = min(len(campaign_paths), 5)
 
         for i in range(num_recent_campaigns):
-            text = "&{} {}".format(i+1, campaign_titles[i])
+            text = "&{num}. {title} ({path})".format(
+                                        num=i+1,
+                                        title=campaign_titles[i],
+                                        path=campaign_paths[i])
             self.recentCampaignActions[i].setText(text)
-            self.recentCampaignActions[i].setData(campaigns[i])
+            self.recentCampaignActions[i].setData(campaign_paths[i])
             self.recentCampaignActions[i].setVisible(True)
 
         for action in self.recentCampaignActions[num_recent_campaigns:]:
