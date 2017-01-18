@@ -41,6 +41,7 @@
       <string>&amp;Recent Campaigns</string>
      </property>
     </widget>
+    <addaction name="actionNew_Character"/>
     <addaction name="actionOpenCampaign"/>
     <addaction name="menuOpen_Recent_Campaign"/>
     <addaction name="separator"/>
@@ -143,6 +144,17 @@
    </property>
    <property name="toolTip">
     <string>Set up required folders in this campaign</string>
+   </property>
+  </action>
+  <action name="actionNew_Character">
+   <property name="icon">
+    <iconset theme="list-add-user"/>
+   </property>
+   <property name="text">
+    <string>&amp;New Character...</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+N</string>
    </property>
   </action>
  </widget>

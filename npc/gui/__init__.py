@@ -2,6 +2,8 @@
 Package for handling the NPC windowed interface
 """
 
+import pprint
+
 import sys
 from contextlib import contextmanager
 from os import chdir, path, getcwd
@@ -79,6 +81,7 @@ class MainWindow(Ui_MainWindow):
 
         # init dialog
         self.init_dialog = InitDialog(self.window)
+        self.new_character_dialog = NewCharacterDialog(self.window)
 
         # commands setup
         self.actionOpenCampaign.triggered.connect(self.open_campaign)
@@ -86,6 +89,7 @@ class MainWindow(Ui_MainWindow):
         self.actionCampaignSettings.triggered.connect(self.run_campaign_settings)
         self.actionReloadSettings.triggered.connect(self.run_reload_settings)
         self.actionInit.triggered.connect(self.run_init)
+        self.actionNew_Character.triggered.connect(self.run_new_character)
 
         # quit menu entry
         self.actionQuit.triggered.connect(self.quit)
@@ -226,6 +230,14 @@ class MainWindow(Ui_MainWindow):
             with self.safe_command(commands.init) as command:
                 command(**values)
 
+
+    def run_new_character(self):
+        self.new_character_dialog.reset(self.prefs)
+
+        if self.new_character_dialog.run():
+            values = self.new_character_dialog.get_values()
+            pprint.pprint(values)
+
     def quit(self):
         QtCore.QCoreApplication.instance().quit()
 
@@ -273,4 +285,28 @@ class InitDialog(QtWidgets.QDialog, Ui_InitDialog):
 
     def run(self):
         result = self.exec_()
+        return result == self.Accepted
+
+class NewCharacterDialog(QtWidgets.QDialog, Ui_NewCharacterDialog):
+    def __init__(self, parent):
+        QtWidgets.QDialog.__init__(self, parent)
+        Ui_NewCharacterDialog.__init__(self)
+
+        self.setupUi(self)
+
+    def reset(self, prefs):
+        self.typeSelect.clear()
+        type_keys = prefs.get("type_paths", {}).keys()
+        for type_key in sorted(type_keys):
+            item = self.typeSelect.addItem(type_key.title(), userData=type_key)
+
+    def set_values(self):
+        pass
+
+    def get_values(self):
+        pass
+
+    def run(self):
+        result = self.exec_()
+        self.characterName.setFocus()
         return result == self.Accepted

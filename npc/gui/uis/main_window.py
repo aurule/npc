@@ -58,6 +58,11 @@ class Ui_MainWindow(object):
         icon = QtGui.QIcon.fromTheme("journal-new")
         self.actionInit.setIcon(icon)
         self.actionInit.setObjectName("actionInit")
+        self.actionNew_Character = QtWidgets.QAction(MainWindow)
+        icon = QtGui.QIcon.fromTheme("list-add-user")
+        self.actionNew_Character.setIcon(icon)
+        self.actionNew_Character.setObjectName("actionNew_Character")
+        self.menuFile.addAction(self.actionNew_Character)
         self.menuFile.addAction(self.actionOpenCampaign)
         self.menuFile.addAction(self.menuOpen_Recent_Campaign.menuAction())
         self.menuFile.addSeparator()
@@ -96,4 +101,6 @@ class Ui_MainWindow(object):
         self.actionReloadSettings.setToolTip(_translate("MainWindow", "Reload settings"))
         self.actionInit.setText(_translate("MainWindow", "&Set Up Campaign..."))
         self.actionInit.setToolTip(_translate("MainWindow", "Set up required folders in this campaign"))
+        self.actionNew_Character.setText(_translate("MainWindow", "&New Character..."))
+        self.actionNew_Character.setShortcut(_translate("MainWindow", "Ctrl+N"))
 
