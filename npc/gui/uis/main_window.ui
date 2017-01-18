@@ -38,7 +38,7 @@
     </property>
     <widget class="QMenu" name="menuOpen_Recent_Campaign">
      <property name="title">
-      <string>Open &amp;Recent Campaign</string>
+      <string>&amp;Recent Campaigns</string>
      </property>
     </widget>
     <addaction name="actionOpenCampaign"/>
@@ -135,7 +135,8 @@
   </action>
   <action name="actionInit">
    <property name="icon">
-    <iconset theme="journal-new"/>
+    <iconset theme="journal-new">
+     <normaloff>.</normaloff>.</iconset>
    </property>
    <property name="text">
     <string>&amp;Set Up Campaign...</string>

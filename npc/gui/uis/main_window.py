@@ -79,7 +79,7 @@ class Ui_MainWindow(object):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "NPC"))
         self.menuFile.setTitle(_translate("MainWindow", "Fi&le"))
-        self.menuOpen_Recent_Campaign.setTitle(_translate("MainWindow", "Open &Recent Campaign"))
+        self.menuOpen_Recent_Campaign.setTitle(_translate("MainWindow", "&Recent Campaigns"))
         self.menuSettings.setTitle(_translate("MainWindow", "Setti&ngs"))
         self.menuHelp.setTitle(_translate("MainWindow", "&Help"))
         self.menuTools.setTitle(_translate("MainWindow", "&Tools"))
