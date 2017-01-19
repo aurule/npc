@@ -250,12 +250,14 @@ class Character(defaultdict):
         except IndexError:
             return default
 
-    def get_remaining(self, key):
+    def get_remaining(self, key, default=None):
         """
         Get all non-first elements from the named key.
 
         Args:
             key (str): Name of the key
+            default (any): Value to return if the key is not present or has no
+                values
 
         Returns:
             A slice of the key's array including all elements but the first.
@@ -267,7 +269,13 @@ class Character(defaultdict):
         if key in self.STRING_TAGS:
             return self[key]
 
-        return self[key][1:]
+        if default is None:
+            default = []
+
+        try:
+            return self[key][1:]
+        except IndexError:
+            return default
 
     def append(self, key, value):
         """
@@ -409,7 +417,7 @@ class Character(defaultdict):
 
         appearance
         """
-        lines = [self['description'], '']
+        lines = []
 
         def tags_for_all(attrname):
             """Add a tag for every value in attrname"""
@@ -473,4 +481,4 @@ class Character(defaultdict):
         tags_for_all('hidegroup')
         tags_for_all('hideranks')
 
-        return "\n".join(lines)
+        return self['description'] + "\n".join(lines)

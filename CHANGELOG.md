@@ -26,6 +26,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
     - Very in-progress.
 * `npc.commands.reorg` had its `dry` flag renamed to `dryrun` to match the flag on `npc.commands.init`
 * The `path` item in Character objects now has the same special handling as `description`
+* `Character.get_remaining` now accepts a `default` argument
 
 ### Removed
 * `npc.main` has gone away
