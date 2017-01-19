@@ -77,6 +77,8 @@ def start(argv):
 
         result = args.func(*serial_args, **full_args)
     except AttributeError as err:
+        if args.debug:
+            raise
         util.error(err)
         parser.print_help()
         return 6
