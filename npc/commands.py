@@ -114,7 +114,7 @@ def _minimal_character(ctype, groups, dead, foreign, prefs):
     """
     temp_char = Character()
     temp_char.append('description', prefs.get('template_header'))
-    temp_char.append('type', ctype)
+    temp_char.append('type', ctype.title())
     if groups:
         temp_char['group'] = groups
     if dead is not False:
@@ -143,7 +143,9 @@ def _cp_template_for_char(name, character, prefs, fn=None):
         Result object. Openable will contain the path to the new character file.
     """
     # get template path
-    template_path = prefs.get('templates.{}'.format(character.get_first('type')))
+    template_path = prefs.get('templates.{}'.format(character.type_key))
+    if not template_path:
+        return Result(False, errmsg="Could not find template {}".format(character.type_key), errcode=7)
 
     # get path for the new file
     target_path = create_path_from_character(character, prefs=prefs)
