@@ -58,3 +58,14 @@ def test_append_rank():
     char = npc.Character()
     char.append_rank("Knights of the Round Table", "Dancer")
     assert char["rank"]["Knights of the Round Table"] == ["Dancer"]
+
+# tests to do:
+# valid
+# typekey
+# get first, and with string tags
+# get remaining, and with string tags
+# validation
+# changeling validation
+# has items
+# copy and alter
+# build header
