@@ -9,10 +9,6 @@ def prefs():
     """Creates a non-singleton Settings object."""
     return npc.settings.Settings()
 
-@pytest.fixture(scope="module")
-def argparser():
-    return npc.cli._make_parser()
-
 class Campaign:
     def __init__(self, tmpdir, chardir):
         self.basedir = tmpdir
