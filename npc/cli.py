@@ -80,7 +80,6 @@ def start(argv):
         if args.debug:
             raise
         util.error(err)
-        parser.print_help()
         return 6
 
     # handle errors
@@ -88,13 +87,14 @@ def start(argv):
         util.error(result)
         return result.errcode
 
-    # print any messages that were returned
-    if result.printable and not args.batch:
-        print("\n".join(result.printable))
+    if not args.batch:
+        # print any messages that were returned
+        if result.printable:
+            print("\n".join(result.printable))
 
-    # open the resulting files, if allowed
-    if result.openable and not args.batch:
-        run([prefs.get("editor")] + result.openable)
+        # open the resulting files, if allowed
+        if result.openable:
+            run([prefs.get("editor")] + result.openable)
 
     return 0
 
