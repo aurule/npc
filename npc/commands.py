@@ -85,7 +85,7 @@ def create_changeling(name, seeming, kith, *,
             )
         kith_name = temp_char.get_first('kith')
         kith_key = kith.lower()
-        if kith_key in prefs.get('changeling.kiths'):
+        if kith_key in prefs.get('changeling.kiths.{}'.format(seeming_key)):
             kith_notes = prefs.get("changeling.blessings.{}".format(kith_key))
             data = kith_re.sub(
                 r"\g<1>Kith\g<2>{} ({})".format(kith_name, kith_notes),

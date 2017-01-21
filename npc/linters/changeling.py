@@ -77,7 +77,7 @@ def lint(character, fix=False, *, strict=False, sk_data=None):
 
     # Check that kith tag exists and is valid
     for kith_name in character['kith']:
-        if kith_name.lower() not in sk_data['kiths']:
+        if kith_name.lower() not in sk_data['kiths'].values():
             problems.append("Unrecognized @kith '{}'".format(kith_name))
 
     # Max of one entitlement
@@ -223,7 +223,7 @@ def lint(character, fix=False, *, strict=False, sk_data=None):
             # tags and stats match. iterate through each kith and make sure the notes are right
             for match in list(kith_matches):
                 kith_tag = match.group('kith').lower()
-                if not kith_tag in sk_data['kiths']:
+                if not kith_tag in sk_data['kiths'][seeming_tag]:
                     continue
 
                 loaded_kith_notes = match.group('notes')

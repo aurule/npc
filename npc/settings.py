@@ -272,7 +272,8 @@ def lint_changeling_settings(prefs):
     blessing_keys = set(prefs.get('changeling.blessings', {}).keys())
     curse_keys = set(prefs.get('changeling.curses', {}).keys())
     seemings = set(prefs.get('changeling.seemings', []))
-    kiths = set(prefs.get('changeling.kiths', []))
+    idx_kiths = prefs.get('changeling.kiths', {})
+    kiths = set(util.flatten(idx_kiths.values()))
 
     ok_result = (blessing_keys.issuperset(seemings) and
                  curse_keys.issuperset(seemings) and
