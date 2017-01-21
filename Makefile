@@ -1,5 +1,6 @@
 .SUFFIXES: .ui .py
-UI_FILES=$(wildcard npc/gui/uis/*.ui)
+rwildcard=$(wildcard $1$2)$(foreach d,$(wildcard $1*),$(call rwildcard,$d/,$2))
+UI_FILES=$(call rwildcard,npc/gui/uis/,*.ui)
 PY_FILES=$(UI_FILES:.ui=.py)
 
 .ui.py:
