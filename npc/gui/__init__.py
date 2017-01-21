@@ -362,13 +362,48 @@ class NewCharacterDialog(QtWidgets.QDialog, Ui_NewCharacterDialog):
         QtWidgets.QDialog.__init__(self, parent)
         Ui_NewCharacterDialog.__init__(self)
 
+        self.type_specific_widgets = []
+        self.current_vbox_height_offset = 0
+
         self.setupUi(self)
+
+        self.typeSelect.currentIndexChanged.connect(self.update_type_specific_controls)
 
     def reset(self, prefs):
         self.typeSelect.clear()
         type_keys = prefs.get("type_paths", {}).keys()
         for type_key in sorted(type_keys):
             item = self.typeSelect.addItem(type_key.title(), userData=type_key)
+
+    def update_type_specific_controls(self, index):
+        for widget in self.type_specific_widgets:
+            self.infoForm.labelForField(widget).deleteLater()
+            widget.deleteLater()
+        self.type_specific_widgets = []
+
+        new_vbox_height_offset = 0
+        type_key = self.typeSelect.itemData(index)
+        if type_key == 'changeling':
+            seeming_select = QtWidgets.QComboBox(self)
+            self.infoForm.insertRow(2, '&Seeming', seeming_select)
+            self.type_specific_widgets.append(seeming_select)
+
+            kith_select = QtWidgets.QComboBox(self)
+            self.infoForm.insertRow(3, '&Kith', kith_select)
+            self.type_specific_widgets.append(kith_select)
+
+            courtInput = QtWidgets.QLineEdit(self)
+            self.infoForm.insertRow(4, '&Court', courtInput)
+            self.type_specific_widgets.append(courtInput)
+
+            new_vbox_height_offset = 70
+
+        self.verticalLayoutWidget.resize(
+            self.verticalLayoutWidget.width(),
+            self.verticalLayoutWidget.height() - self.current_vbox_height_offset + new_vbox_height_offset)
+        self.current_vbox_height_offset = new_vbox_height_offset
+
+        self.adjustSize()
 
     def set_values(self):
         pass
@@ -377,6 +412,6 @@ class NewCharacterDialog(QtWidgets.QDialog, Ui_NewCharacterDialog):
         pass
 
     def run(self):
-        result = self.exec_()
         self.characterName.setFocus()
+        result = self.exec_()
         return result == self.Accepted
