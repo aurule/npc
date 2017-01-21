@@ -151,8 +151,6 @@ class Result:
     def __str__(self):
         if self.success:
             return "Success"
-        else:
-            return self.errmsg
         return self.errmsg
 
     def __bool__(self):
