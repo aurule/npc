@@ -365,8 +365,18 @@ class NewCharacterDialog(QtWidgets.QDialog, Ui_NewCharacterDialog):
         self.prefs = prefs
         self.type_specific_widgets = []
         self.current_vbox_height_offset = 0
+        self.values = {
+            "command": commands.create_simple,
+            "name": "",
+            "ctype": "",
+            "dead": False,
+            "foreign": False,
+            "groups": []
+        }
 
         self.setupUi(self)
+
+        self.typeSelect.currentTextChanged.connect(lambda text: self.values["ctype"] = text)
 
         self.typeSelect.currentIndexChanged.connect(self.update_type_specific_controls)
         type_keys = self.prefs.get("type_paths", {}).keys()
@@ -413,9 +423,6 @@ class NewCharacterDialog(QtWidgets.QDialog, Ui_NewCharacterDialog):
         self.current_vbox_height_offset = new_vbox_height_offset
 
         self.adjustSize()
-
-    def get_values(self):
-        pass
 
     def run(self):
         self.characterName.setFocus()
