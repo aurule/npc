@@ -204,13 +204,14 @@ def create_simple(name, ctype, *, dead=False, foreign=False, **kwargs):
     """
     prefs = kwargs.get('prefs', settings.InternalSettings())
     groups = kwargs.get('groups', [])
+    ctype = ctype.lower()
 
     if ctype not in prefs.get('templates'):
         return Result(False, errmsg="Unrecognized template '{}'".format(ctype), errcode=7)
 
     # build minimal character
     temp_char = _minimal_character(
-        ctype=ctype,
+        ctype=ctype.title(),
         groups=groups,
         dead=dead,
         foreign=foreign,
