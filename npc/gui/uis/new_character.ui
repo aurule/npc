@@ -193,8 +193,6 @@
     </item>
    </layout>
   </widget>
-  <zorder>verticalLayoutWidget</zorder>
-  <zorder>deceasedText</zorder>
  </widget>
  <tabstops>
   <tabstop>typeSelect</tabstop>

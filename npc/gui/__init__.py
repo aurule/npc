@@ -2,8 +2,6 @@
 Package for handling the NPC windowed interface
 """
 
-import pprint
-
 import sys
 from contextlib import contextmanager
 from os import chdir, path, getcwd
@@ -216,11 +214,35 @@ class MainWindow(Ui_MainWindow):
         Args:
             command (callable): The command to run. Any AttributeError raised by
             the command will be suppressed.
+
+        Yields:
+            The command passed
         """
         try:
             yield command
         except AttributeError as err:
             self._show_error('Command failed', err)
+
+    @contextmanager
+    def dialog(self, dialog_class, *args, **kwargs):
+        """
+        Create and clean up after a dialog window class
+
+        When leaving the context, the dialog is deleted to
+        prevent memory problems in QT.
+
+        Args:
+            dialog_class (Class): The dialog class to create
+            *args, **kwargs: Passed directly to the constructor
+
+        Yields:
+            An instance created from dialog_class
+        """
+        try:
+            dlg = dialog_class(*args, **kwargs)
+            yield dlg
+        finally:
+            dlg.deleteLater()
 
     def run_user_settings(self):
         """Run the user settings command"""
@@ -228,7 +250,7 @@ class MainWindow(Ui_MainWindow):
             result = command('user', show_defaults=True, prefs=self.prefs)
 
             if not result.success:
-                self._show_error('Could not open user settings', result)
+                self._show_error('Could not open user settings', result.errmsg)
                 return
 
             run([self.prefs.get("editor")] + result.openable)
@@ -239,7 +261,7 @@ class MainWindow(Ui_MainWindow):
             result = command('campaign', show_defaults=True, prefs=self.prefs)
 
             if not result.success:
-                self._show_error('Could not open campaign settings', result)
+                self._show_error('Could not open campaign settings', result.errmsg)
                 return
 
             run([self.prefs.get("editor")] + result.openable)
@@ -275,13 +297,20 @@ class MainWindow(Ui_MainWindow):
                 command(**values)
 
     def run_new_character(self):
-        new_character_dialog = NewCharacterDialog(self.window, self.prefs)
+        with self.dialog(NewCharacterDialog, self.window, self.prefs) as new_character_dialog:
+            if not new_character_dialog.run():
+                return
 
-        if new_character_dialog.run():
-            values = new_character_dialog.get_values()
-            pprint.pprint(values)
+            values = new_character_dialog.values
+            cmd = values.pop("command")
+            with self.safe_command(cmd) as command:
+                serial_args = [values.pop(k) for k in values.get('serialize', [])]
 
-        new_character_dialog.deleteLater()
+                result = command(*serial_args, **values)
+                if not result.success:
+                    self._show_error("Could not create character", result.errmsg)
+                    return
+            new_character_dialog.deleteLater()
 
     def quit(self):
         QtCore.QCoreApplication.instance().quit()
@@ -371,17 +400,39 @@ class NewCharacterDialog(QtWidgets.QDialog, Ui_NewCharacterDialog):
             "ctype": "",
             "dead": False,
             "foreign": False,
-            "groups": []
+            "groups": [],
+            "serialize": ['name', 'ctype']
         }
 
         self.setupUi(self)
 
-        self.typeSelect.currentTextChanged.connect(lambda text: self.values["ctype"] = text)
+        self.typeSelect.currentTextChanged.connect(lambda text: self.set_value("ctype", text))
+        self.characterName.textChanged.connect(lambda text: self.set_value("name", text))
+        self.groupName.textChanged.connect(lambda text: self.set_value("groups", [text]))
+        self.foreignBox.toggled.connect(self.set_foreign)
+        self.foreignText.textChanged.connect(self.set_foreign)
+        self.deceasedBox.toggled.connect(self.set_deceased)
+        self.deceasedText.textChanged.connect(self.set_deceased)
 
         self.typeSelect.currentIndexChanged.connect(self.update_type_specific_controls)
         type_keys = self.prefs.get("type_paths", {}).keys()
         for type_key in sorted(type_keys):
             item = self.typeSelect.addItem(type_key.title(), userData=type_key)
+
+    def set_value(self, key, value):
+        self.values[key] = value
+
+    def set_foreign(self, _):
+        if self.foreignBox.isChecked():
+            self.set_value("foreign", self.foreignText.text())
+        else:
+            self.set_value("foreign", False)
+
+    def set_deceased(self, _=None):
+        if self.deceasedBox.isChecked():
+            self.set_value("dead", self.deceasedText.toPlainText())
+        else:
+            self.set_value("dead", False)
 
     def update_type_specific_controls(self, index):
         for widget in self.type_specific_widgets:
@@ -398,22 +449,29 @@ class NewCharacterDialog(QtWidgets.QDialog, Ui_NewCharacterDialog):
         type_key = self.typeSelect.itemData(index)
         if type_key == 'changeling':
             seeming_select = QtWidgets.QComboBox(self)
-            for seeming in self.prefs.get('changeling.seemings'):
-                seeming_select.addItem(seeming.title(), userData=[kith.title() for kith in self.prefs.get('changeling.kiths.{}'.format(seeming))])
             new_vbox_height_offset += new_row(2, '&Seeming', seeming_select)
-
             kith_select = QtWidgets.QComboBox(self)
             new_vbox_height_offset += new_row(3, '&Kith', kith_select)
+            courtInput = QtWidgets.QLineEdit(self)
+            new_vbox_height_offset += new_row(4, '&Court', courtInput)
 
             def update_kiths(index=0):
                 kith_select.clear()
                 kith_select.addItems(seeming_select.currentData())
 
             seeming_select.currentIndexChanged.connect(update_kiths)
-            update_kiths()
+            seeming_select.currentTextChanged.connect(lambda text: self.set_value('seeming', text))
+            kith_select.currentTextChanged.connect(lambda text: self.set_value('kith', text))
+            courtInput.textChanged.connect(lambda text: self.set_value("court", text))
 
-            courtInput = QtWidgets.QLineEdit(self)
-            new_vbox_height_offset += new_row(4, '&Court', courtInput)
+            for seeming in self.prefs.get('changeling.seemings'):
+                seeming_select.addItem(seeming.title(), userData=[kith.title() for kith in self.prefs.get('changeling.kiths.{}'.format(seeming))])
+
+            self.set_value("command", commands.create_changeling)
+            self.set_value("serialize", ['name', 'seeming', 'kith'])
+        else:
+            self.set_value("command", commands.create_simple)
+            self.set_value("serialize", ['name', 'ctype'])
 
         new_vbox_height_offset += len(self.type_specific_widgets)*6
 
@@ -427,4 +485,4 @@ class NewCharacterDialog(QtWidgets.QDialog, Ui_NewCharacterDialog):
     def run(self):
         self.characterName.setFocus()
         result = self.exec_()
-        return result == self.Accepted
+        return result == self.Accepted and self.values['name']
