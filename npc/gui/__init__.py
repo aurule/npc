@@ -87,7 +87,6 @@ class MainWindow(Ui_MainWindow):
 
         # init dialog
         self.init_dialog = InitDialog(self.window)
-        self.new_character_dialog = NewCharacterDialog(self.window)
 
         # commands setup
         self.actionOpenCampaign.triggered.connect(self.open_campaign)
@@ -275,13 +274,14 @@ class MainWindow(Ui_MainWindow):
             with self.safe_command(commands.init) as command:
                 command(**values)
 
-
     def run_new_character(self):
-        self.new_character_dialog.reset(self.prefs)
+        new_character_dialog = NewCharacterDialog(self.window, self.prefs)
 
-        if self.new_character_dialog.run():
-            values = self.new_character_dialog.get_values()
+        if new_character_dialog.run():
+            values = new_character_dialog.get_values()
             pprint.pprint(values)
+
+        new_character_dialog.deleteLater()
 
     def quit(self):
         QtCore.QCoreApplication.instance().quit()
@@ -358,20 +358,18 @@ class InitDialog(QtWidgets.QDialog, Ui_InitDialog):
         return result == self.Accepted
 
 class NewCharacterDialog(QtWidgets.QDialog, Ui_NewCharacterDialog):
-    def __init__(self, parent):
+    def __init__(self, parent, prefs):
         QtWidgets.QDialog.__init__(self, parent)
         Ui_NewCharacterDialog.__init__(self)
 
+        self.prefs = prefs
         self.type_specific_widgets = []
         self.current_vbox_height_offset = 0
 
         self.setupUi(self)
 
         self.typeSelect.currentIndexChanged.connect(self.update_type_specific_controls)
-
-    def reset(self, prefs):
-        self.typeSelect.clear()
-        type_keys = prefs.get("type_paths", {}).keys()
+        type_keys = self.prefs.get("type_paths", {}).keys()
         for type_key in sorted(type_keys):
             item = self.typeSelect.addItem(type_key.title(), userData=type_key)
 
@@ -381,22 +379,33 @@ class NewCharacterDialog(QtWidgets.QDialog, Ui_NewCharacterDialog):
             widget.deleteLater()
         self.type_specific_widgets = []
 
+        def new_row(index, title, widget):
+            self.infoForm.insertRow(index, title, widget)
+            self.type_specific_widgets.append(widget)
+            return widget.height()
+
         new_vbox_height_offset = 0
         type_key = self.typeSelect.itemData(index)
         if type_key == 'changeling':
             seeming_select = QtWidgets.QComboBox(self)
-            self.infoForm.insertRow(2, '&Seeming', seeming_select)
-            self.type_specific_widgets.append(seeming_select)
+            for seeming in self.prefs.get('changeling.seemings'):
+                seeming_select.addItem(seeming.title(), userData=[kith.title() for kith in self.prefs.get('changeling.kiths.{}'.format(seeming))])
+            new_vbox_height_offset += new_row(2, '&Seeming', seeming_select)
 
             kith_select = QtWidgets.QComboBox(self)
-            self.infoForm.insertRow(3, '&Kith', kith_select)
-            self.type_specific_widgets.append(kith_select)
+            new_vbox_height_offset += new_row(3, '&Kith', kith_select)
+
+            def update_kiths(index=0):
+                kith_select.clear()
+                kith_select.addItems(seeming_select.currentData())
+
+            seeming_select.currentIndexChanged.connect(update_kiths)
+            update_kiths()
 
             courtInput = QtWidgets.QLineEdit(self)
-            self.infoForm.insertRow(4, '&Court', courtInput)
-            self.type_specific_widgets.append(courtInput)
+            new_vbox_height_offset += new_row(4, '&Court', courtInput)
 
-            new_vbox_height_offset = 70
+        new_vbox_height_offset += len(self.type_specific_widgets)*6
 
         self.verticalLayoutWidget.resize(
             self.verticalLayoutWidget.width(),
@@ -404,9 +413,6 @@ class NewCharacterDialog(QtWidgets.QDialog, Ui_NewCharacterDialog):
         self.current_vbox_height_offset = new_vbox_height_offset
 
         self.adjustSize()
-
-    def set_values(self):
-        pass
 
     def get_values(self):
         pass
