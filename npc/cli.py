@@ -68,12 +68,7 @@ def start(argv):
 
     # run the command
     try:
-        if 'serialize' in full_args:
-            serial_args = [full_args[k] for k in full_args['serialize']]
-            for k in full_args['serialize']:
-                full_args.pop(k)
-        else:
-            serial_args = []
+        serial_args = [full_args.pop(k) for k in full_args.get('serialize', [])]
 
         result = args.func(*serial_args, **full_args)
     except AttributeError as err:
