@@ -73,19 +73,20 @@ def create_changeling(name, seeming, kith, *,
 
     def insert_sk_data(data):
         """Insert seeming and kith in the advantages block of a template"""
-        sk_data = prefs.get('changeling')
         seeming_name = temp_char.get_first('seeming')
         seeming_key = seeming.lower()
-        if seeming_key in sk_data['seemings']:
-            seeming_notes = "{}; {}".format(sk_data['blessings'][seeming_key], sk_data['curses'][seeming_key])
+        if seeming_key in prefs.get('changeling.seemings'):
+            seeming_notes = "{}; {}".format(
+                prefs.get("changeling.blessings.{}".format(seeming_key)),
+                prefs.get("changeling.curses.{}".format(seeming_key)))
             data = seeming_re.sub(
                 r"\g<1>Seeming\g<2>{} ({})".format(seeming_name, seeming_notes),
                 data
             )
         kith_name = temp_char.get_first('kith')
         kith_key = kith.lower()
-        if kith_key in sk_data['kiths']:
-            kith_notes = sk_data['blessings'][kith_key]
+        if kith_key in prefs.get('changeling.kiths'):
+            kith_notes = prefs.get("changeling.blessings.{}".format(kith_key))
             data = kith_re.sub(
                 r"\g<1>Kith\g<2>{} ({})".format(kith_name, kith_notes),
                 data
