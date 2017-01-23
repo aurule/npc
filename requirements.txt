@@ -1,0 +1,4 @@
+mako>=1.0.0
+markdown>=2.6.0
+pyqt5==5.7.1
+pytest>=2.8.5

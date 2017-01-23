@@ -42,7 +42,7 @@ NPC requires at least:
 * [Python Markdown](http://pythonhosted.org/Markdown/index.html) 2.6.0
 * [PyQt5](https://riverbankcomputing.com/software/pyqt/intro) 5.7.1
 
-All packages can be installed with pip.
+All packages can be installed with `pip -r requirements.txt`. This will also install pytest, which is required for the test suite.
 
 ## Installation
 
