@@ -29,3 +29,11 @@ def test_support_paths(prefs):
     override_path = fixture_dir('settings', 'settings-paths.json')
     prefs.load_more(override_path)
     assert prefs.get('support.testpath') == fixture_dir('settings', 'nothing.json')
+
+def test_changeling_linting(prefs):
+    override_path = fixture_dir('settings', 'settings-changeling-mismatch.json')
+    prefs.load_more(override_path)
+    errors = "\n".join(npc.settings.lint_changeling_settings(prefs))
+    assert "bad seeming" in errors
+    assert "bad kith" in errors
+
