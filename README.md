@@ -1,3 +1,7 @@
+# NPC - A GM Campaign Management Tool
+
+[![GitHub version](https://badge.fury.io/gh/aurule%2Fnpc.svg)](https://badge.fury.io/gh/aurule%2Fnpc)
+
 <!-- MarkdownTOC autolink="true" bracket="round" depth=2 -->
 
 - [About](#about)
