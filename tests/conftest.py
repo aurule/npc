@@ -30,14 +30,17 @@ class Campaign:
         """Get the fully qualified path to the given filename"""
         return str(self.basedir.join(filename))
 
-    def populate_from_fixture_dir(self, fixture_path):
-        """Copy the files and folders from a fixture directory into the campaign
+    def populate_from_fixture_dir(self, *fixture_path):
+        """
+        Copy the files and folders from a fixture directory into the campaign
         root.
 
-        The path given should be relative to the npc/tests/fixtures directory in
-        this package. It will be run through `fixture_dir` first.
+        Args:
+            *fixture_path (str): Path elements to combine. All should be under
+                the npc/tests/fixtures directory in this package. It will be run
+                through `util.fixture_dir` first.
         """
-        srcpath = fixture_dir(fixture_path)
+        srcpath = fixture_dir(*fixture_path)
         dir_util.copy_tree(srcpath, str(self.basedir))
 
 @pytest.fixture

@@ -7,7 +7,7 @@ def test_creation(prefs):
     assert prefs is not None
 
 def test_override(prefs):
-    override_path = fixture_dir(['settings/settings-vim.json'])
+    override_path = fixture_dir('settings/settings-vim.json')
     old_editor = prefs.get('editor')
     prefs.load_more(override_path)
     assert prefs.get('editor') != old_editor
@@ -26,6 +26,6 @@ def test_get_typed_settings_path(prefs, settings_type):
 
 def test_support_paths(prefs):
     """Paths loaded from additional files should be expanded relative to that file"""
-    override_path = fixture_dir(['settings/settings-paths.json'])
+    override_path = fixture_dir('settings/settings-paths.json')
     prefs.load_more(override_path)
-    assert prefs.get('support.testpath') == fixture_dir(['settings/nothing.json'])
+    assert prefs.get('support.testpath') == fixture_dir('settings/nothing.json')

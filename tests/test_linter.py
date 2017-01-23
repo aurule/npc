@@ -6,7 +6,7 @@ from tests.util import fixture_dir
 @pytest.fixture
 def lint_output(capsys):
     def do_lint(charname, strict=False):
-        search = fixture_dir(['linter', 'characters', 'Humans', charname])
+        search = fixture_dir('linter', 'characters', 'Humans', charname)
         npc.commands.lint(search, strict=strict)
         output, _ = capsys.readouterr()
         return output
@@ -25,7 +25,7 @@ class TestChangeling:
     @pytest.fixture
     def lint_output(self, capsys):
         def do_lint(charname, strict=False):
-            search = fixture_dir(['linter', 'characters', 'Changelings', charname])
+            search = fixture_dir('linter', 'characters', 'Changelings', charname)
             npc.commands.lint(search, strict=strict)
             output, _ = capsys.readouterr()
             return output
@@ -86,7 +86,7 @@ class TestHuman:
     @pytest.fixture
     def lint_output(self, capsys):
         def do_lint(charname, strict=False):
-            search = fixture_dir(['linter', 'characters', 'Humans', charname])
+            search = fixture_dir('linter', 'characters', 'Humans', charname)
             npc.commands.lint(search, strict=strict)
             output, _ = capsys.readouterr()
             return output

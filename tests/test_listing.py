@@ -6,23 +6,23 @@ import re
 
 @pytest.fixture
 def list_json_output(tmpdir, prefs):
-    def make_list(search_parts, outformat='json', metadata=None, prefs=prefs, title=None):
+    def make_list(*search_parts, outformat='json', metadata=None, prefs=prefs, title=None):
         outfile = tmpdir.join("output.json")
-        search = fixture_dir(['listing'] + search_parts)
+        search = fixture_dir('listing', *search_parts)
         npc.commands.listing(search, fmt=outformat, metadata=metadata, outfile=str(outfile), prefs=prefs, title=title)
         return json.load(outfile)
     return make_list
 
 @pytest.mark.parametrize('outopt', [None, '-'])
 def test_output_no_file(capsys, outopt):
-    search = fixture_dir(['listing', 'valid-json'])
+    search = fixture_dir('listing', 'valid-json')
     npc.commands.listing(search, outfile=outopt)
     output, _ = capsys.readouterr()
     assert output
 
 def test_output_to_file(tmpdir):
     outfile = tmpdir.join("output.json")
-    search = fixture_dir(['listing', 'valid-json'])
+    search = fixture_dir('listing', 'valid-json')
     npc.commands.listing(search, outfile=str(outfile))
     assert outfile.read()
 
@@ -30,7 +30,7 @@ def test_list_valid_json(list_json_output):
     """Ensure the 'json' output format yields valid JSON"""
 
      # no assert needed: the json module raises exceptions when parsing fails.
-    list_json_output(['valid-json'])
+    list_json_output('valid-json')
 
 class TestBehavior:
     """Tests the behavior of certain special tags and directives"""
@@ -38,13 +38,13 @@ class TestBehavior:
     def test_skip(self, list_json_output):
         """Characters with the @skip tag should be omitted from the output"""
 
-        listing = list_json_output(['skip'])
+        listing = list_json_output('skip')
         assert len(listing) == 1
 
     def test_faketype(self, list_json_output):
         """The value of @faketype should replace the value of @type"""
 
-        listing = list_json_output(['faketype'])
+        listing = list_json_output('faketype')
         for c in listing:
             assert len(c['type']) == 1
             assert c['type'][0] == 'Human'
@@ -52,19 +52,19 @@ class TestBehavior:
     def test_hide(self, list_json_output):
         """The fields named in @hide should not appear"""
 
-        listing = list_json_output(['hide'])
+        listing = list_json_output('hide')
         assert 'foreign' not in listing[0]
 
     def test_hide_group(self, list_json_output):
         """The groups named in @hidegroup should not appear"""
 
-        listing = list_json_output(['hidegroup'])
+        listing = list_json_output('hidegroup')
         assert 'Lawbros' not in listing[0]['group']
 
     def test_hide_ranks(self, list_json_output):
         """The ranks for the groups named in @hiderank should not appear"""
 
-        listing = list_json_output(['hideranks'])
+        listing = list_json_output('hideranks')
         assert 'Big Corporation Place Thing' not in listing[0]['rank']
 
 class TestMetadata:
@@ -75,7 +75,7 @@ class TestMetadata:
         """The json output should include an object with metadata keys when the
         metadata arg is supplied, regardless of its value."""
 
-        listing = list_json_output(['valid-json'], metadata=metaformat)
+        listing = list_json_output('valid-json', metadata=metaformat)
         for c in listing:
             if 'meta' in c:
                 assert c['meta'] == True
@@ -87,7 +87,7 @@ class TestMetadata:
         the markdown output."""
 
         outfile = tmpdir.join("output.md")
-        search = fixture_dir(['listing', 'valid-json'])
+        search = fixture_dir('listing', 'valid-json')
         npc.commands.listing(search, fmt='markdown', metadata='mmd', outfile=str(outfile))
         assert 'Title: NPC Listing' in outfile.read()
 
@@ -97,7 +97,7 @@ class TestMetadata:
         matter being prepended to markdown output."""
 
         outfile = tmpdir.join("output.md")
-        search = fixture_dir(['listing', 'valid-json'])
+        search = fixture_dir('listing', 'valid-json')
         npc.commands.listing(search, fmt='markdown', metadata=metaformat, outfile=str(outfile))
         match = re.match('(?sm)\s*---(.*)---\s*', outfile.read())
         assert match is not None
@@ -105,8 +105,8 @@ class TestMetadata:
 
     def test_extra_json_metadata(self, list_json_output, prefs):
         """The extra json metdata should be included for the json output type."""
-        prefs.load_more(fixture_dir(['listing', 'settings-metadata.json']))
-        listing = list_json_output(['valid-json'], metadata='json', prefs=prefs)
+        prefs.load_more(fixture_dir('listing', 'settings-metadata.json'))
+        listing = list_json_output('valid-json', metadata='json', prefs=prefs)
         for c in listing:
             if 'meta' in c:
                 assert c['test'] == 'yes'
@@ -118,8 +118,8 @@ class TestMetadata:
         metadata for the markdown type from the imported settings."""
 
         outfile = tmpdir.join("output.md")
-        prefs.load_more(fixture_dir(['listing', 'settings-metadata.json']))
-        search = fixture_dir(['listing', 'valid-json'])
+        prefs.load_more(fixture_dir('listing', 'settings-metadata.json'))
+        search = fixture_dir('listing', 'valid-json')
         npc.commands.listing(search, fmt='markdown', metadata=metaformat, outfile=str(outfile), prefs=prefs)
         assert 'test-type: markdown' in outfile.read().lower()
 
@@ -130,18 +130,18 @@ class TestMetadata:
         The json output type ignores the format argument entirely, which is not
         tested.
         """
-        search = fixture_dir(['listing', 'valid-json'])
+        search = fixture_dir('listing', 'valid-json')
         result = npc.commands.listing(search, fmt='md', metadata='json')
         assert not result.success
 
     def test_unknown_metadata_arg(self):
         """Unrecognized metadata options should result in an error"""
-        search = fixture_dir(['listing', 'valid-json'])
+        search = fixture_dir('listing', 'valid-json')
         result = npc.commands.listing(search, fmt='md', metadata='asdf')
         assert not result.success
 
     def test_custom_title(self, list_json_output):
-        listing = list_json_output(['valid-json'], metadata=True, title="I'm a test list")
+        listing = list_json_output('valid-json', metadata=True, title="I'm a test list")
         for part in listing:
             if 'meta' in part:
                 assert part['title'] == "I'm a test list"

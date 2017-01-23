@@ -13,7 +13,7 @@ import os
     os.path.join('Humans', 'Alpha Mann.nwod'), # not in a type folder
 ])
 def test_move_by_type(campaign, new_path):
-    campaign.populate_from_fixture_dir(['reorg', 'by_type'])
+    campaign.populate_from_fixture_dir('reorg', 'by_type')
     result = npc.commands.reorg('Characters')
     assert result.success
     character = campaign.get_character(new_path)
@@ -28,7 +28,7 @@ def test_move_by_group(campaign, new_path):
     """Reorg should move non-changeling characters to nested group directories
     under their type directory."""
 
-    campaign.populate_from_fixture_dir(['reorg', 'by_group'])
+    campaign.populate_from_fixture_dir('reorg', 'by_group')
     npc.commands.reorg('Characters')
     character = campaign.get_character(new_path)
     assert character.check()
@@ -41,7 +41,7 @@ def test_move_by_group(campaign, new_path):
 def test_move_by_foreign(campaign, new_path):
     """Reorg should move foreigners to Foreign under their type or group."""
 
-    campaign.populate_from_fixture_dir(['reorg', 'by_foreign'])
+    campaign.populate_from_fixture_dir('reorg', 'by_foreign')
     npc.commands.reorg('Characters')
     character = campaign.get_character(new_path)
     assert character.check()
@@ -49,14 +49,14 @@ def test_move_by_foreign(campaign, new_path):
 def test_partial_tree(campaign):
     """Should not choke when ideal dirs don't exist"""
 
-    campaign.populate_from_fixture_dir(['reorg', 'partial_tree'])
+    campaign.populate_from_fixture_dir('reorg', 'partial_tree')
     result = npc.commands.reorg('Characters')
     assert result.success
     character = campaign.get_character(os.path.join('Humans', 'JJ.nwod'))
     assert character.check()
 
 def test_dry_run(campaign):
-    campaign.populate_from_fixture_dir(['reorg', 'by_type'])
+    campaign.populate_from_fixture_dir('reorg', 'by_type')
     npc.commands.reorg('Characters', dryrun=True)
     character = campaign.get_character('Alpha Mann.nwod')
     assert character.check()
@@ -65,7 +65,7 @@ class TestPurge:
     def test_removes_directories(self, campaign):
         """Removes empty directories with purge option"""
 
-        campaign.populate_from_fixture_dir(['reorg', 'purge_removes'])
+        campaign.populate_from_fixture_dir('reorg', 'purge_removes')
         result = npc.commands.reorg('Characters', purge=True)
         assert result.success
         fetches_folder = campaign.get_character(os.path.join('Fetches'))
@@ -74,7 +74,7 @@ class TestPurge:
     def test_preserves_directories(self, campaign):
         """Does not remove empty directories without purge option"""
 
-        campaign.populate_from_fixture_dir(['reorg', 'no_purge_preserves'])
+        campaign.populate_from_fixture_dir('reorg', 'no_purge_preserves')
         result = npc.commands.reorg('Characters')
         assert result.success
         humans_folder = campaign.get_character(os.path.join('Humans'))
@@ -88,13 +88,13 @@ class TestChangeling:
         os.path.join('Changelings', 'Winter', 'Wanda Winter.nwod'),
     ])
     def test_move_by_court(self, campaign, new_path):
-        campaign.populate_from_fixture_dir(['reorg', 'changeling_courts'])
+        campaign.populate_from_fixture_dir('reorg', 'changeling_courts')
         npc.commands.reorg('Characters')
         character = campaign.get_character(new_path)
         assert character.check()
 
     def test_move_courtless(self, campaign):
-        campaign.populate_from_fixture_dir(['reorg', 'changeling_courtless'])
+        campaign.populate_from_fixture_dir('reorg', 'changeling_courtless')
         npc.commands.reorg('Characters')
         character = campaign.get_character(os.path.join('Changelings', 'Courtless', 'Connie Courtless.nwod'),)
         assert character.check()
@@ -107,7 +107,7 @@ class TestChangeling:
         """Changeling characters should be moved to nested group directories
         within their type and court."""
 
-        campaign.populate_from_fixture_dir(['reorg', 'changeling_group'])
+        campaign.populate_from_fixture_dir('reorg', 'changeling_group')
         npc.commands.reorg('Characters')
         character = campaign.get_character(new_path)
         assert character.check()
