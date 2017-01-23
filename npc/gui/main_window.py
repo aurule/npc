@@ -131,6 +131,9 @@ class MainWindow(Ui_MainWindow):
         Load a given campaign directory
 
         This handles all the work of actually loading a campaign.
+
+        Args:
+            root_dir (str): Root directory of the campaign folder to load
         """
         try:
             chdir(root_dir)
@@ -185,7 +188,7 @@ class MainWindow(Ui_MainWindow):
         prevent memory problems in QT.
 
         Args:
-            dialog_class (Class): The dialog class to create
+            dialog_class (Class): The dialog class to instantiate
             *args, **kwargs: Passed directly to the constructor
 
         Yields:
@@ -250,6 +253,7 @@ class MainWindow(Ui_MainWindow):
                     command(**values)
 
     def run_new_character(self):
+        """Run the new character command"""
         with self.dialog(NewCharacterDialog, self.window, self.prefs) as new_character_dialog:
             if not new_character_dialog.run():
                 return
@@ -266,10 +270,12 @@ class MainWindow(Ui_MainWindow):
             new_character_dialog.deleteLater()
 
     def quit(self):
+        """Quite the application"""
         QtCore.QCoreApplication.instance().quit()
 
 class AboutDialog(Ui_AboutDialog):
-    """Create the About dialog"""
+    """The static About dialog"""
+
     def __init__(self, dialog):
         Ui_AboutDialog.__init__(self)
         self.setupUi(dialog)
