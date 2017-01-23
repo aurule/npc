@@ -12,6 +12,8 @@ import npc
 from npc import commands, settings
 
 from .uis import *
+from .new_character import NewCharacterDialog
+from .init_dialog import InitDialog
 
 def start(argv):
     """Main entry point for the GUI"""
@@ -82,9 +84,6 @@ class MainWindow(Ui_MainWindow):
         self.about_dialog = QtWidgets.QDialog(self.window)
         AboutDialog(self.about_dialog)
         self.actionAbout.triggered.connect(self.about_dialog.open)
-
-        # init dialog
-        self.init_dialog = InitDialog(self.window)
 
         # commands setup
         self.actionOpenCampaign.triggered.connect(self.open_campaign)
@@ -285,16 +284,16 @@ class MainWindow(Ui_MainWindow):
 
     def run_init(self):
         """Run the init command with inputs from its dialog"""
-        self.init_dialog.reset()
-        if path.exists(self.prefs.get_settings_path('campaign')):
-            self.init_dialog.set_campaign_name(self.prefs.get('campaign'), enabled=False)
-        else:
-            self.init_dialog.set_campaign_name(path.basename(getcwd()))
+        with self.dialog(InitDialog, self.window, self.prefs) as init_dialog:
+            if path.exists(self.prefs.get_settings_path('campaign')):
+                init_dialog.set_campaign_name(self.prefs.get('campaign'), enabled=False)
+            else:
+                init_dialog.set_campaign_name(path.basename(getcwd()))
 
-        if self.init_dialog.run():
-            values = self.init_dialog.get_values()
-            with self.safe_command(commands.init) as command:
-                command(**values)
+            if init_dialog.run():
+                values = init_dialog.values
+                with self.safe_command(commands.init) as command:
+                    command(**values)
 
     def run_new_character(self):
         with self.dialog(NewCharacterDialog, self.window, self.prefs) as new_character_dialog:
@@ -321,168 +320,3 @@ class AboutDialog(Ui_AboutDialog):
         Ui_AboutDialog.__init__(self)
         self.setupUi(dialog)
         self.labelVersion.setText("Version {0}".format(npc.VERSION))
-
-class InitDialog(QtWidgets.QDialog, Ui_InitDialog):
-    """Show inputs for the campaign init dialog"""
-    def __init__(self, parent):
-        QtWidgets.QDialog.__init__(self, parent)
-        Ui_InitDialog.__init__(self)
-
-        self.setupUi(self)
-
-        self.checkBoxCreateTypes.stateChanged.connect(self.update_dirlist)
-
-    @contextmanager
-    def safe_command(self, command):
-        """
-        Helper to prevent useless AttributeErrors from commands
-
-        Args:
-            command (callable): The command to run. Any AttributeError raised by
-            the command will be suppressed.
-        """
-        try:
-            yield command
-        except AttributeError as err:
-            pass
-
-    def update_dirlist(self):
-        """Update the preview of directories to create"""
-        values = self.get_values()
-        with self.safe_command(commands.init) as command:
-            result = command(dryrun=True, **values)
-            self.initFoldersToCreate.setText("\n".join(sorted(result.changes)))
-
-    def reset(self):
-        """Reset the dialog inputs to their default state"""
-        self.checkBoxCreateTypes.setChecked(False)
-        self.initCampaignTitle.setText("")
-
-    def set_campaign_name(self, new_name, enabled=True):
-        """
-        Set the default campaign name and whether it can be edited
-
-        Args:
-
-        """
-        self.initCampaignTitle.setText(new_name)
-        self.initCampaignTitle.setEnabled(enabled)
-
-    def get_values(self):
-        """Get structured data from the inputs"""
-        return {
-            "create_types": self.checkBoxCreateTypes.isChecked(),
-            "campaign_name": self.initCampaignTitle.text()}
-
-    def run(self):
-        """
-        Show the dialog
-
-        Returns:
-            True if the OK button was pressed, False if not. Use the get_values
-            method to retrieve the user's inputs.
-        """
-
-        result = self.exec_()
-        return result == self.Accepted
-
-class NewCharacterDialog(QtWidgets.QDialog, Ui_NewCharacterDialog):
-    def __init__(self, parent, prefs):
-        QtWidgets.QDialog.__init__(self, parent)
-        Ui_NewCharacterDialog.__init__(self)
-
-        self.prefs = prefs
-        self.type_specific_widgets = []
-        self.current_vbox_height_offset = 0
-        self.values = {
-            "command": commands.create_simple,
-            "name": "",
-            "ctype": "",
-            "dead": False,
-            "foreign": False,
-            "groups": [],
-            "serialize": ['name', 'ctype']
-        }
-
-        self.setupUi(self)
-
-        self.typeSelect.currentTextChanged.connect(lambda text: self.set_value("ctype", text))
-        self.characterName.textChanged.connect(lambda text: self.set_value("name", text))
-        self.groupName.textChanged.connect(lambda text: self.set_value("groups", [text]))
-        self.foreignBox.toggled.connect(self.set_foreign)
-        self.foreignText.textChanged.connect(self.set_foreign)
-        self.deceasedBox.toggled.connect(self.set_deceased)
-        self.deceasedText.textChanged.connect(self.set_deceased)
-
-        self.typeSelect.currentIndexChanged.connect(self.update_type_specific_controls)
-        type_keys = self.prefs.get("type_paths", {}).keys()
-        for type_key in sorted(type_keys):
-            item = self.typeSelect.addItem(type_key.title(), userData=type_key)
-
-    def set_value(self, key, value):
-        self.values[key] = value
-
-    def set_foreign(self, _):
-        if self.foreignBox.isChecked():
-            self.set_value("foreign", self.foreignText.text())
-        else:
-            self.set_value("foreign", False)
-
-    def set_deceased(self, _=None):
-        if self.deceasedBox.isChecked():
-            self.set_value("dead", self.deceasedText.toPlainText())
-        else:
-            self.set_value("dead", False)
-
-    def update_type_specific_controls(self, index):
-        for widget in self.type_specific_widgets:
-            self.infoForm.labelForField(widget).deleteLater()
-            widget.deleteLater()
-        self.type_specific_widgets = []
-
-        def new_row(index, title, widget):
-            self.infoForm.insertRow(index, title, widget)
-            self.type_specific_widgets.append(widget)
-            return widget.height()
-
-        new_vbox_height_offset = 0
-        type_key = self.typeSelect.itemData(index)
-        if type_key == 'changeling':
-            seeming_select = QtWidgets.QComboBox(self)
-            new_vbox_height_offset += new_row(2, '&Seeming', seeming_select)
-            kith_select = QtWidgets.QComboBox(self)
-            new_vbox_height_offset += new_row(3, '&Kith', kith_select)
-            courtInput = QtWidgets.QLineEdit(self)
-            new_vbox_height_offset += new_row(4, '&Court', courtInput)
-
-            def update_kiths(index=0):
-                kith_select.clear()
-                kith_select.addItems(seeming_select.currentData())
-
-            seeming_select.currentIndexChanged.connect(update_kiths)
-            seeming_select.currentTextChanged.connect(lambda text: self.set_value('seeming', text))
-            kith_select.currentTextChanged.connect(lambda text: self.set_value('kith', text))
-            courtInput.textChanged.connect(lambda text: self.set_value("court", text))
-
-            for seeming in self.prefs.get('changeling.seemings'):
-                seeming_select.addItem(seeming.title(), userData=[kith.title() for kith in self.prefs.get('changeling.kiths.{}'.format(seeming))])
-
-            self.set_value("command", commands.create_changeling)
-            self.set_value("serialize", ['name', 'seeming', 'kith'])
-        else:
-            self.set_value("command", commands.create_simple)
-            self.set_value("serialize", ['name', 'ctype'])
-
-        new_vbox_height_offset += len(self.type_specific_widgets)*6
-
-        self.verticalLayoutWidget.resize(
-            self.verticalLayoutWidget.width(),
-            self.verticalLayoutWidget.height() - self.current_vbox_height_offset + new_vbox_height_offset)
-        self.current_vbox_height_offset = new_vbox_height_offset
-
-        self.adjustSize()
-
-    def run(self):
-        self.characterName.setFocus()
-        result = self.exec_()
-        return result == self.Accepted and self.values['name']
