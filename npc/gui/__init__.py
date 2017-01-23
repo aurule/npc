@@ -208,11 +208,11 @@ class MainWindow(Ui_MainWindow):
     @contextmanager
     def safe_command(self, command):
         """
-        Helper to prevent useless AttributeErrors from commands
+        Helper to show error dialog for AttributeErrors from commands
 
         Args:
-            command (callable): The command to run. Any AttributeError raised by
-            the command will be suppressed.
+            command (callable): The command to run. Any AttributeError will
+                result in an error dialog being shown
 
         Yields:
             The command passed
