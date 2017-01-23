@@ -238,8 +238,8 @@ class MainWindow(Ui_MainWindow):
         Yields:
             An instance created from dialog_class
         """
+        dlg = dialog_class(*args, **kwargs)
         try:
-            dlg = dialog_class(*args, **kwargs)
             yield dlg
         finally:
             dlg.deleteLater()
