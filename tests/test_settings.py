@@ -37,3 +37,12 @@ def test_changeling_linting(prefs):
     assert "bad seeming" in errors
     assert "bad kith" in errors
 
+# tests to do:
+# get metadata
+#   campaign is get("campaign")
+#   title is "metadata.title"
+#   created is formatted using "metadata.timestamp"
+#   npc is npc.VERSION
+#   for formats markdown, json, and html:
+#       "additional_keys.all" are included
+#       "additional_keys.{}" are included
