@@ -5,8 +5,17 @@ from npc import commands
 from .uis.init_dialog import Ui_InitDialog
 
 class InitDialog(QtWidgets.QDialog, Ui_InitDialog):
-    """Show inputs for the campaign init dialog"""
+    """The campaign init dialog"""
+
     def __init__(self, parent, prefs):
+        """
+        Create the dialog
+
+        args:
+            parent (QtWindow): Parent for the dialog
+            prefs (Settings): Settings object to use for commands
+        """
+
         QtWidgets.QDialog.__init__(self, parent)
         Ui_InitDialog.__init__(self)
 
@@ -65,8 +74,8 @@ class InitDialog(QtWidgets.QDialog, Ui_InitDialog):
         Show the dialog
 
         Returns:
-            True if the OK button was pressed, False if not. Use the get_values
-            method to retrieve the user's inputs.
+            True if the OK button was pressed, False if not. Use the values
+            variable to retrieve the user's inputs.
         """
 
         result = self.exec_()
