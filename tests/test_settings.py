@@ -1,6 +1,7 @@
 import pytest
 import npc
 import os
+from datetime import datetime
 from tests.util import fixture_dir
 
 def test_creation(prefs):
@@ -37,12 +38,38 @@ def test_changeling_linting(prefs):
     assert "bad seeming" in errors
     assert "bad kith" in errors
 
-# tests to do:
-# get metadata
-#   campaign is get("campaign")
-#   title is "metadata.title"
-#   created is formatted using "metadata.timestamp"
-#   npc is npc.VERSION
-#   for formats markdown, json, and html:
-#       "additional_keys.all" are included
-#       "additional_keys.{}" are included
+class TestMetadata:
+    """Tests the correctness of the metadata hash"""
+
+    @pytest.fixture
+    def get_metadata(self, prefs):
+        def do_meta(meta_format=None):
+            override_path = fixture_dir('settings', 'settings-metadata.json')
+            prefs.load_more(override_path)
+            if not meta_format:
+                meta_format = prefs.get("report_format")
+            return prefs.get_metadata(meta_format)
+        return do_meta
+
+    def test_title(self, get_metadata):
+        metadata = get_metadata()
+        assert metadata["title"] == "List of Tests"
+
+    def test_campaign(self, get_metadata):
+        metadata = get_metadata()
+        assert metadata["campaign"] == "Totally Recalled"
+
+    def test_timestamp(self, get_metadata):
+        reference_timestamp = datetime.now().strftime("%A %d %B")
+        metadata = get_metadata()
+        assert metadata["created"] == reference_timestamp
+
+    def test_version(self, get_metadata):
+        metadata = get_metadata()
+        assert metadata["npc"] == npc.VERSION
+
+    @pytest.mark.parametrize('meta_format', ['markdown', 'json', 'html'])
+    def test_additional_keys(self, get_metadata, meta_format):
+        metadata = get_metadata(meta_format)
+        assert metadata["test"] == "very yes"
+        assert metadata["format"] == meta_format
