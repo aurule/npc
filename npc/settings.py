@@ -11,6 +11,7 @@ from collections import OrderedDict
 
 import npc
 from npc import util
+from .__version__ import __version__
 
 class Settings:
     """
@@ -240,7 +241,7 @@ class Settings:
             title=self.get('metadata.title'),
             campaign=self.get('campaign'),
             created=datetime.now().strftime(self.get('metadata.timestamp')),
-            npc=npc.VERSION,
+            npc=__version__,
             **self.get('metadata.additional_keys.all'),
             **self.get('metadata.additional_keys.{}'.format(target_format))
         )

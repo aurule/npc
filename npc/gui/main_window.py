@@ -5,6 +5,7 @@ from subprocess import run
 
 import npc
 from npc import commands
+from npc.__version__ import __version__
 
 from .new_character import NewCharacterDialog
 from .init_dialog import InitDialog
@@ -279,4 +280,4 @@ class AboutDialog(Ui_AboutDialog):
     def __init__(self, dialog):
         Ui_AboutDialog.__init__(self)
         self.setupUi(dialog)
-        self.labelVersion.setText("Version {0}".format(npc.VERSION))
+        self.labelVersion.setText("Version {0}".format(__version__))

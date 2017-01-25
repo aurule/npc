@@ -12,6 +12,7 @@ from subprocess import run
 import npc
 from npc import commands, util, settings
 from npc import gui as gui_core
+from .__version__ import __version__
 
 def start(argv):
     """
@@ -119,7 +120,7 @@ def _make_parser():
     parser.add_argument('-b', '--batch', action='store_true', default=False, help="Do not open any newly created files")
     parser.add_argument('--campaign', default='auto', help="Use the campaign files in a different directory", metavar='DIR')
     parser.add_argument('--debug', action='store_true', default=False, help="Show all error messages, not just important ones")
-    parser.add_argument('--version', action='version', version=npc.VERSION)
+    parser.add_argument('--version', action='version', version=__version__)
     subparsers = parser.add_subparsers(title='Subcommands', description="Commands that can be run on the current campaign. See `%(prog)s <command> -h` to get help with individual commands.")
 
     # Subcommand to create the basic directories
