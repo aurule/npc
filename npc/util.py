@@ -417,15 +417,11 @@ class Character(defaultdict):
 
     def build_header(self):
         """
-        description
+        Build a large string of tag data
 
-        type or compound type
-        special groups
-        groups
-        dead
-        foreign
-
-        appearance
+        Returns:
+            A string containing tags that when parsed will recreate the data in
+            this character object.
         """
         lines = []
 
