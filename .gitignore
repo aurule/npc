@@ -61,3 +61,6 @@ target/
 
 # pyenv local version file
 .python-version
+
+# venv directory
+.venv
