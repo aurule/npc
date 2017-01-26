@@ -66,7 +66,7 @@ class TestMetadata:
 
     def test_version(self, get_metadata):
         metadata = get_metadata()
-        assert metadata["npc"] == npc.VERSION
+        assert metadata["npc"] == npc.__version__.__version__
 
     @pytest.mark.parametrize('meta_format', ['markdown', 'json', 'html'])
     def test_additional_keys(self, get_metadata, meta_format):
