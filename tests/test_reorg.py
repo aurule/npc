@@ -2,11 +2,6 @@ import npc
 import pytest
 import os
 
-# tests
-# moves changelings to right court dir, when given
-# moves changelings to Courtless dir, when court not given
-# moves changeling to nested groups dir under type/court, when given
-
 @pytest.mark.parametrize('new_path', [
     os.path.join('Fetches', 'Foermer Loover.nwod'), # in the wrong type folder
     os.path.join('Goblins', 'Natwick Hardingle.nwod'), # already in the right folder
