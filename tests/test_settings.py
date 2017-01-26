@@ -38,6 +38,11 @@ def test_changeling_linting(prefs):
     assert "bad seeming" in errors
     assert "bad kith" in errors
 
+def test_singleton_settings():
+    prefs1 = npc.settings.InternalSettings()
+    prefs2 = npc.settings.InternalSettings()
+    assert prefs1 is prefs2
+
 class TestMetadata:
     """Tests the correctness of the metadata hash"""
 

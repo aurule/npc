@@ -7,7 +7,6 @@ from tests.util import fixture_dir
 # error prints arbitrary message to stderr
 # flatten(['some text', 5, ['yet more']]) should yield ['some text', 5, 'yet more']
 # find campaign root returns folder containing .npc or current directory if not found
-# new class using Singleton yields the same object when created again:
 
 def test_open_files(prefs):
     override_path = fixture_dir('util', 'open_files', 'settings-echo.json')

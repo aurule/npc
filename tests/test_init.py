@@ -30,4 +30,3 @@ def test_init_dryrun(prefs, campaign):
     npc.commands.init(dryrun=True, prefs=prefs)
     for k, path in prefs.get('type_paths').items():
         assert not os.path.exists(os.path.join(prefs.get('paths.characters'), path))
-
