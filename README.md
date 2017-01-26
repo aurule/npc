@@ -60,9 +60,13 @@ The functionality of NPC is split among a few sub-commands. Each one encompasses
 
 These global options must be passed *before* the name of the subcommand. They affect the overall behavior of NPC:
 
-* `--batch`: By default, NPC will open whatever files are relevant to the subcommand. The `--batch` switch prevents that from happening.
 * `--campaign`: By default, NPC derives the campaign path from the current directory when it is run. It does this by walking backward until it finds the `.npc/` campaign config directory, or hits root. In the latter case, it just uses the current directory. The `--campaign` argument overrides this behavior and explicitly sets the campaign directory.
+* `--version`: Show the version string and exit immediately. When this option is present, everything else is ignored.
+
+These common options are available for every command:
+
 * `--debug`: Forces NPC to show every error that occurs, even when those errors are harmless. Useful for figuring out settings problems.
+* `--batch`: By default, NPC will open whatever files are relevant to the subcommand. The `--batch` switch prevents that from happening.
 
 ## Set Up Directories
 
