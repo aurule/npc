@@ -7,6 +7,7 @@ import json
 import sys
 from os import getcwd, path
 from collections import defaultdict
+from subprocess import run
 
 def load_json(filename):
     """
@@ -104,6 +105,19 @@ def find_campaign_root():
         if old_base == base:
             return current_dir
     return base
+
+def open_files(*files, prefs=None):
+    """
+    Open a list of files with the configured editor
+
+    Args:
+        files (str): List of file paths to open
+        prefs (Settings): Settings object to supply the editor name
+
+    Returns:
+        CompletedProcess object as per subprocess.run
+    """
+    return run(args=[prefs.get("editor"), *files])
 
 class Singleton(type):
     """

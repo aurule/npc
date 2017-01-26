@@ -1,10 +1,9 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 from contextlib import contextmanager
 from os import chdir, path, getcwd
-from subprocess import run
 
 import npc
-from npc import commands
+from npc import commands, util
 from npc.__version__ import __version__
 
 from .new_character import NewCharacterDialog
@@ -210,7 +209,7 @@ class MainWindow(Ui_MainWindow):
                 self._show_error('Could not open user settings', result.errmsg)
                 return
 
-            run([self.prefs.get("editor")] + result.openable)
+            util.open_files(result.openable, prefs=self.prefs)
 
     def run_campaign_settings(self):
         """Run the campaign settings command"""
@@ -221,7 +220,7 @@ class MainWindow(Ui_MainWindow):
                 self._show_error('Could not open campaign settings', result.errmsg)
                 return
 
-            run([self.prefs.get("editor")] + result.openable)
+            util.open_files(result.openable, prefs=self.prefs)
 
     def run_reload_settings(self):
         """Reparse and lint the settings"""

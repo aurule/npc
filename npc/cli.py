@@ -6,7 +6,6 @@ Provides the cli method for interpreting commandline arguments.
 
 import argparse
 from os import chdir, getcwd, path
-from subprocess import run
 
 # local packages
 import npc
@@ -90,7 +89,7 @@ def start(argv):
 
         # open the resulting files, if allowed
         if result.openable:
-            run([prefs.get("editor")] + result.openable)
+            util.open_files(result.openable, prefs=prefs)
 
     return 0
 
