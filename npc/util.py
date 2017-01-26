@@ -251,8 +251,8 @@ class Character(defaultdict):
             The first value in the named key's array. Usually a string. Returns
             default if the key is not present or has no values.
 
-            The "description" key is not an array, so this method will return the
-            entire description.
+            The "description" and "path" keys are not arrays, so this method
+            will return the entire value.
         """
         if key in self.STRING_TAGS:
             return self[key]
@@ -272,11 +272,11 @@ class Character(defaultdict):
                 values
 
         Returns:
-            A slice of the key's array including all elements but the first.
+            A slice of the key's array including all elements except the first.
             May be empty.
 
-            The "description" key is not an array, so this method will return the
-            entire description.
+            The "description" and "path" keys are not arrays, so this method
+            will return the entire value.
         """
         if key in self.STRING_TAGS:
             return self[key]
