@@ -22,32 +22,6 @@ class TestCreation:
         assert char["name"] == ["nope"]
         assert char["profession"] == ["tailor"]
 
-class TestGetFirst:
-    def test_normal(self):
-        char = npc.Character(name=["hello", "goodbye"])
-        assert char.get_first("name") == "hello"
-
-    def test_desc(self):
-        char = npc.Character(description="Fee Fie Foe Fum")
-        assert char.get_first("description") == "Fee Fie Foe Fum"
-
-    def test_not_present(self):
-        char = npc.Character()
-        assert char.get_first("nope") == None
-
-class TestGetRemaining:
-    def test_normal(self):
-        char = npc.Character(name=["hello", "goodbye"])
-        assert char.get_remaining("name") == ["goodbye"]
-
-    def test_desc(self):
-        char = npc.Character(description="Fee Fie Foe Fum")
-        assert char.get_remaining("description") == "Fee Fie Foe Fum"
-
-    def test_not_present(self):
-        char = npc.Character()
-        assert char.get_remaining("nope") == []
-
 class TestAppend:
     def test_normal(self):
         char = npc.Character()
