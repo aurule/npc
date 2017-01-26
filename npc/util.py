@@ -262,14 +262,12 @@ class Character(defaultdict):
         except IndexError:
             return default
 
-    def get_remaining(self, key, default=None):
+    def get_remaining(self, key):
         """
         Get all non-first elements from the named key.
 
         Args:
             key (str): Name of the key
-            default (any): Value to return if the key is not present or has no
-                values
 
         Returns:
             A slice of the key's array including all elements except the first.
@@ -281,13 +279,7 @@ class Character(defaultdict):
         if key in self.STRING_TAGS:
             return self[key]
 
-        if default is None:
-            default = []
-
-        try:
-            return self[key][1:]
-        except IndexError:
-            return default
+        return self[key][1:]
 
     def append(self, key, value):
         """

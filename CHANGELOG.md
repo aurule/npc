@@ -29,6 +29,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 * `Character.get_remaining` now accepts a `default` argument
 * The changeling settings format now requires that kith names are grouped by seeming
 * The `--batch` and `--debug` options in the CLI now live under each command. This means they must go after the command name instead of in front of it.
+* `Character.get_remaining` no longer accepts a `default` argument. If the named tag is not present, it will always return an empty list.
 
 ### Removed
 * `npc.main` has gone away
