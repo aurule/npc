@@ -374,10 +374,16 @@ class Character(defaultdict):
             key (str): The key to check
             threshold (int): The number of values that must be in key
 
+        Raises:
+            OutOfBoundsError if threshold is below 1
+
         Returns:
             True if key is present and has at least as many values in its list
             as threshold. False if not.
         """
+        if threshold < 1:
+            raise OutOfBoundsError
+
         return len(self[key]) >= threshold
 
     def copy_and_alter(self, func):
@@ -486,3 +492,6 @@ class Character(defaultdict):
         tags_for_all('hideranks')
 
         return self['description'] + "\n".join(lines)
+
+class OutOfBoundsError(ValueError):
+    """Raise when a function input is outside of permitted bounds"""
