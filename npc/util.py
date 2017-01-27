@@ -156,7 +156,7 @@ class Result:
     def __init__(self, success, **kwargs):
         super(Result, self).__init__()
         self.success = success
-        self.openable = kwargs.get('openable')
+        self.openable = kwargs.get('openable', [])
         self.errcode = kwargs.get('errcode', 0)
         self.errmsg = kwargs.get('errmsg', '')
         self.printable = kwargs.get('printable', [])
