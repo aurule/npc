@@ -32,6 +32,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 * `Character.get_remaining` no longer accepts a `default` argument. If the named tag is not present, it will always return an empty list.
 * `Character.has_items` will raise an `OutOfBoundsError` if `threshold` is less than 1
 * The Character class was moved to its own file
+* Character.valid is now False when the object is created
 
 ### Removed
 * `npc.main` has gone away

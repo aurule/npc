@@ -49,7 +49,7 @@ class Character(defaultdict):
         if attributes is not None:
             self.update(attributes)
         self.update(kwargs)
-        self.problems = []
+        self.problems = ['Not validated']
 
     @property
     def valid(self):
