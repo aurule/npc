@@ -160,9 +160,9 @@ class Character(defaultdict):
         self.problems = []
         if not self['description'].strip():
             self.problems.append("Missing description")
-        if not self.get_first('type'):
+        if not self.has_items('type'):
             self.problems.append("Missing type")
-        if not self.get_first('name'):
+        if not self.has_items('name'):
             self.problems.append("Missing name")
 
         if self.type_key == "changeling":
@@ -188,13 +188,13 @@ class Character(defaultdict):
         Returns:
             None
         """
-        if not self.get_first('seeming'):
+        if not self.has_items('seeming'):
             self.problems.append("Missing seeming")
-        if not self.get_first('kith'):
+        if not self.has_items('kith'):
             self.problems.append("Missing kith")
-        if len(self['court']) > 1:
+        if self.has_items('court', 2):
             self.problems.append("Multiple courts: {}".format(', '.join(self['court'])))
-        if len(self['motley']) > 1:
+        if self.has_items('motley', 2):
             self.problems.append("Multiple motleys: {}".format(', '.join(self['motley'])))
 
     def has_items(self, key, threshold=1):
