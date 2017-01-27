@@ -166,7 +166,7 @@ class Character(defaultdict):
             self.problems.append("Missing name")
 
         if self.type_key == "changeling":
-            self._validate_changeling()
+            self._validate_changeling(strict=strict)
 
         return len(self.problems) == 0
 

@@ -36,6 +36,9 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 ### Removed
 * `npc.main` has gone away
 
+### Fixed
+* `Character.validate` correctly propagates the `strict` param to type-specific validators
+
 ## 1.2.5 - 2017-01-27
 ### Added
 * The readme now has a version badge
