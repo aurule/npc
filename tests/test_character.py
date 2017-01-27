@@ -164,11 +164,11 @@ class TestChangelingValidation:
 
 class TestValid:
     def test_not_validated(self):
-        char = npc.Character(type=['human'], description='hi there', name='dude')
+        char = npc.Character(type=['human'], description='hi there', name=['dude'])
         assert not char.valid
 
     def test_validated(self):
-        char = npc.Character(type=['human'], description='hi there', name='dude')
+        char = npc.Character(type=['human'], description='hi there', name=['dude'])
         char.validate()
         assert char.valid
 
