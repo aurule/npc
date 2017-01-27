@@ -17,7 +17,8 @@ import itertools
 
 # local packages
 from . import formatters, linters, parser, settings
-from .util import Result, Character, flatten
+from .util import Result, flatten
+from .character import Character
 
 def create_changeling(name, seeming, kith, *,
                       court=None, motley=None, dead=False, foreign=False, **kwargs):

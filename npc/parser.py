@@ -8,7 +8,7 @@ parse a single file, use parse_character instead.
 import re
 import itertools
 from os import path, walk
-from .util import Character
+from .character import Character
 
 VALID_EXTENSIONS = ('.nwod', '.dnd3', '.dfrpg')
 """tuple: file extensions that should be parsed"""
