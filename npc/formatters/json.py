@@ -6,7 +6,8 @@ the actual output. At most, they add some keys to the data first.
 """
 
 import json
-from .. import util
+import npc
+from npc.util import Result
 
 def listing(characters, outstream, *, include_metadata=False, metadata=None, **kwargs):
     """
@@ -37,8 +38,8 @@ def listing(characters, outstream, *, include_metadata=False, metadata=None, **k
     try:
         json.dump(characters, outstream)
     except TypeError as err:
-        return util.Result(False, errmsg=err, errcode=9)
-    return util.Result(True)
+        return Result(False, errmsg=err, errcode=9)
+    return Result(True)
 
 def report(tables, outstream, **kwargs):
     """
@@ -54,6 +55,6 @@ def report(tables, outstream, **kwargs):
     try:
         json.dump(tables, outstream)
     except TypeError as err:
-        return util.Result(False, errmsg=err, errcode=9)
-    return util.Result(True)
+        return Result(False, errmsg=err, errcode=9)
+    return Result(True)
 

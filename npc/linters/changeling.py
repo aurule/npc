@@ -7,7 +7,8 @@ only public entry point is the lint function.
 
 import re
 from . import nwod
-from .. import util
+import npc
+from npc.util import flatten
 
 REPLACEABLE = ('x', 'y')
 """Standard placeholder values for seeming and kith"""
@@ -306,7 +307,7 @@ def _get_mantle(data):
 
     std_matches = std_mantle_re.finditer(data)
     alt_matches = alt_mantle_re.finditer(data)
-    return [m.group('court') for m in util.flatten([std_matches, alt_matches])]
+    return [m.group('court') for m in flatten([std_matches, alt_matches])]
 
 def _get_goodwill(data):
     std_goodwill_re = re.compile(
@@ -320,7 +321,7 @@ def _get_goodwill(data):
 
     std_matches = std_goodwill_re.finditer(data)
     alt_matches = alt_goodwill_re.finditer(data)
-    return [m.group('court') for m in util.flatten([std_matches, alt_matches])]
+    return [m.group('court') for m in flatten([std_matches, alt_matches])]
 
 def _get_unseen_sense(data):
     merit_re = re.compile(

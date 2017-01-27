@@ -7,7 +7,6 @@ public entry point is the lint function.
 
 import re
 from . import nwod
-from .. import util
 
 def lint(character, fix=False, *, strict=False):
     """
