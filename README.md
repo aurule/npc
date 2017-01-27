@@ -306,4 +306,4 @@ Since both seemings and kiths share the same blessings and curses dictionaries, 
 
 ## Running Tests
 
-Go to the root project directory and run `python -m pytest`.
+Go to the root project directory and run `python -m pytest` or `make test`.
