@@ -57,7 +57,7 @@ def error(*args, **kwargs):
     Print an error message to stderr.
 
     Args:
-        Same as print()
+        Same as print(). The `file` param is prepopulated with sys.stderr.
     """
     print(*args, file=sys.stderr, **kwargs)
 
