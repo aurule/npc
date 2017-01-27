@@ -120,8 +120,62 @@ class TestCopyAndAlter:
         new_char = char.copy_and_alter(self.titleize)
         assert new_char.get('rank') == {'restaurant': ['Chef', 'Newb']}
 
+class TestBasicValidation:
+    def test_blank_description(self):
+        char = npc.Character(description='')
+        char.validate()
+        assert 'Missing description' in char.problems
+
+    def test_whitespace_description(self):
+        char = npc.Character(description=' \t')
+        char.validate()
+        assert 'Missing description' in char.problems
+
+    def test_no_type(self):
+        char = npc.Character(type=[])
+        char.validate()
+        assert 'Missing type' in char.problems
+
+    def test_no_type(self):
+        char = npc.Character(name=[])
+        char.validate()
+        assert 'Missing name' in char.problems
+
+class TestChangelingValidation:
+    def test_no_seeming(self):
+        char = npc.Character(type=['changeling'], seeming=[])
+        char.validate()
+        assert 'Missing seeming' in char.problems
+
+    def test_no_kith(self):
+        char = npc.Character(type=['changeling'], kith=[])
+        char.validate()
+        assert 'Missing kith' in char.problems
+
+    def test_many_courts(self):
+        char = npc.Character(type=['changeling'], court=['summer', 'winter'])
+        char.validate()
+        assert 'Multiple courts: summer, winter' in char.problems
+
+    def test_many_motleys(self):
+        char = npc.Character(type=['changeling'], motley=['summer', 'winter'])
+        char.validate()
+        assert 'Multiple motleys: summer, winter' in char.problems
+
+class TestValid:
+    def test_not_validated(self):
+        char = npc.Character(type=['human'], description='hi there', name='dude')
+        assert not char.valid
+
+    def test_validated(self):
+        char = npc.Character(type=['human'], description='hi there', name='dude')
+        char.validate()
+        assert char.valid
+
+    def test_with_errors(self):
+        char = npc.Character()
+        char.validate()
+        assert not char.valid
+
 # tests to do:
-# validation
-# changeling validation
-# valid
 # build header
