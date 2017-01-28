@@ -78,6 +78,3 @@ class TestMetadata:
         metadata = get_metadata(meta_format)
         assert metadata["test"] == "very yes"
         assert metadata["format"] == meta_format
-
-# tests to do:
-# changeling errors
