@@ -1,37 +1,60 @@
-import npc
-from npc.util import Result
+import json
 import pytest
+
+import npc
+from npc import util
+
 from tests.util import fixture_dir
 
-# tests to do
-# json loading ignores comments
-# error prints arbitrary message to stderr
-# flatten(['some text', 5, ['yet more']]) should yield ['some text', 5, 'yet more']
-# find campaign root returns folder containing .npc or current directory if not found
+class TestJsonLoading:
+    def test_ignore_comments(self):
+        filepath = fixture_dir('util', 'load_json', 'commented.json')
+        loaded = util.load_json(filepath)
+        assert "freedom" in loaded["data"]
 
-# json loading
-#   ignores comments // and /*..*/
-#   on bad syntax, reports a nice error string in err.nicemsg
-#   if cannot load, includes nice error string in err.nicemsg
-#
-# error prints to stderr
-#
-# flatten handles mixed iterable types: flatten(['some text', 5, ['yet more']]) should yield ['some text', 5, 'yet more']
-#
-# find_campaign_root returns folder containing .npc or current directory if not found
+    def test_bad_syntax(self):
+        filepath = fixture_dir('util', 'load_json', 'bad_syntax.json')
+        with pytest.raises(json.decoder.JSONDecodeError) as err:
+            loaded = util.load_json(filepath)
+        assert "Bad syntax" in err.value.nicemsg
+
+def test_error_printer(capsys):
+    util.error("Catchphrase!")
+    out, err = capsys.readouterr()
+    assert out == ""
+    assert err == "Catchphrase!\n"
+
+def test_flatten():
+    nested = ['some text', 5, ['yet more']]
+    flatted = ['some text', 5, 'yet more']
+    assert [x for x in util.flatten(nested)] == flatted
+
+class TestFindCampaignRoot:
+    def test_with_npc_dir(self, campaign):
+        campaign.populate_from_fixture_dir('util', 'campaign_root', 'initialized')
+        assert util.find_campaign_root() == campaign.basedir
+
+    def test_no_npc_dir(self, campaign):
+        campaign.populate_from_fixture_dir('util', 'campaign_root', 'empty')
+        assert util.find_campaign_root() == campaign.basedir
 
 def test_open_files(prefs):
     override_path = fixture_dir('util', 'open_files', 'settings-echo.json')
     prefs.load_more(override_path)
-    result = npc.util.open_files('not a real path', 'seriously, no', prefs=prefs)
+    result = util.open_files('not a real path', 'seriously, no', prefs=prefs)
     assert 'not a real path' in result.args
     assert 'seriously, no' in result.args
 
 class TestResult:
     def test_str_success(self):
-        result = Result(True)
-        assert str(Result) == "Success"
+        result = util.Result(True)
+        assert str(result) == "Success"
 
-# Result
-#   __str__ gives "Success" or self.errmsg
-#   __bool__ gives self.success
+    def test_str_failure(self):
+        result = util.Result(False, errmsg="There's a problem or something")
+        assert str(result) == "There's a problem or something"
+
+    @pytest.mark.parametrize('val', [True, False])
+    def test_bool(self, val):
+        result = util.Result(val)
+        assert bool(result) == val
