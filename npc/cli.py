@@ -89,7 +89,7 @@ def start(argv):
 
         # open the resulting files, if allowed
         if result.openable:
-            util.open_files(result.openable, prefs=prefs)
+            util.open_files(*result.openable, prefs=prefs)
 
     return 0
 
