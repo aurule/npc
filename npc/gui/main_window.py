@@ -3,7 +3,7 @@ from contextlib import contextmanager
 from os import chdir, path, getcwd
 
 import npc
-from npc import commands, util
+from npc import commands, util, settings
 from npc.__version__ import __version__
 
 from .new_character import NewCharacterDialog
