@@ -92,8 +92,6 @@ class Ui_NewCharacterDialog(object):
         self.buttonBox.setStandardButtons(QtWidgets.QDialogButtonBox.Cancel|QtWidgets.QDialogButtonBox.Ok)
         self.buttonBox.setObjectName("buttonBox")
         self.verticalLayout.addWidget(self.buttonBox)
-        self.verticalLayoutWidget.raise_()
-        self.deceasedText.raise_()
         self.typeLabel.setBuddy(self.typeSelect)
         self.nameLine.setBuddy(self.characterName)
         self.groupLabel.setBuddy(self.groupName)
