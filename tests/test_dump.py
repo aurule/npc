@@ -27,7 +27,7 @@ def test_sort(list_json_output):
     sorted_data = npc.commands._sort_chars(raw_data)
     dump_data = list_json_output(sort=True)
     it = iter(sorted_data)
-    with pytest.raises(StopIteration) as e:
+    with pytest.raises(StopIteration):
         i = next(it)
         for x in dump_data:
             if x == i:

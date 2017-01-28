@@ -86,7 +86,7 @@ class TestHasItems:
 
     def test_bad_threshold(self):
         char = npc.Character()
-        with pytest.raises(npc.util.OutOfBoundsError) as ex:
+        with pytest.raises(npc.util.OutOfBoundsError):
             char.has_items('things', 0)
 
 class TestCopyAndAlter:
