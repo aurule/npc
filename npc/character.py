@@ -32,13 +32,16 @@ class Character(defaultdict):
     DATA_FLAGS = ('foreign', 'dead')
     """tuple (str): Flags that can accept an optional value"""
 
+    ADDON_TAGS = ('rank',)
+    """tuple (str): Tags whose value relates to a previous tag"""
+
     TAGS = (
-        'name', 'rank', 'type', 'faketype', 'title', 'appearance', 'hide', 'hidegroup', 'hideranks', # universal
-        'seeming', 'kith', 'mask', 'mien')                                           # changeling
+        'name', 'type', 'faketype', 'title', 'appearance', 'hide', 'hidegroup', 'hideranks', # universal
+        'seeming', 'kith', 'mask', 'mien')                                                   # changeling
     """tuple (str): Tags that must have a value. Shortcuts, like @changeling,
         are expanded during parsing and do not appear literally."""
 
-    KNOWN_TAGS = STRING_FIELDS + GROUP_TAGS + BARE_FLAGS + DATA_FLAGS + TAGS
+    KNOWN_TAGS = STRING_FIELDS + GROUP_TAGS + BARE_FLAGS + DATA_FLAGS + ADDON_TAGS + TAGS
     """tuple (str): All recognized tags. Other, unrecognized tags are fine to
         add and will be ignored by methods that don't know how to handle them."""
 
@@ -147,6 +150,8 @@ class Character(defaultdict):
         """
         if key in self.STRING_FIELDS:
             self[key] += value
+        elif value is None:
+            self[key]
         else:
             self[key].append(value)
 
@@ -232,7 +237,7 @@ class Character(defaultdict):
         if self.type_key == "changeling":
             self._validate_changeling(strict=strict)
 
-        return len(self.problems) == 0
+        return self.valid
 
     def _validate_changeling(self, strict=False):
         """
@@ -337,7 +342,7 @@ class Character(defaultdict):
         def tags_or_flag(attrname):
             """Add tags or a flag for attrname, whichever is more appropriate."""
             if attrname in self:
-                if len(self[attrname]):
+                if self.has_items(attrname):
                     tags_for_all(attrname)
                 else:
                     add_flag(attrname)
@@ -356,9 +361,9 @@ class Character(defaultdict):
             else:
                 lines.append("@type Changeling")
                 if 'seeming' in self:
-                    lines.append("@seeming {}").format(self.get_first('seeming'))
+                    lines.append("@seeming {}".format(self.get_first('seeming')))
                 if 'kith' in self:
-                    lines.append("@kith {}").format(self.get_first('kith'))
+                    lines.append("@kith {}".format(self.get_first('kith')))
         else:
             lines.append("@type {}".format(self.get_first('type')))
 

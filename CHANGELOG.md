@@ -35,6 +35,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 * The `npc.util.Character` class was moved to a new module, `npc.character.Character`
 * `npc.character.Character.valid` is now False when the object is created
 * Character type is now required to have a non-whitespace value
+* Passing None to `Character.append` will add the named tag with no data, so it acts as a flag
 
 ### Removed
 * `npc.main` has gone away
