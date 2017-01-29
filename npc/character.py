@@ -166,6 +166,35 @@ class Character(defaultdict):
         self['rank'][group].append(value)
         return self
 
+    def validate_tag_present_and_filled(self, tag: str):
+        """
+        Validate that a tag has a non-whitespace value
+
+        Tests that the given tag has at least one value and that its first value
+        contains non-whitespace characters.
+
+        Adds a string to the problems list if validation fails.
+
+        Args:
+            tag (str): Tag name to check
+        """
+        if not self.has_items(tag):
+            self.problems.append('Missing {}'.format(tag))
+        elif not self.get_first(tag).strip():
+            self.problems.append('Empty {}'.format(tag))
+
+    def validate_tag_appears_once(self, tag: str):
+        """
+        Validate that a tag has a single value
+
+        Adds a string to the problems list if validation fails.
+
+        Args:
+            tag (str): Tag name to check
+        """
+        if self.has_items(tag, 2):
+            self.problems.append("Multiple {}s: {}".format(tag, ', '.join(self[tag])))
+
     def validate(self, strict=False):
         """
         Validate the presence of a few required elements: description and type.
@@ -183,23 +212,17 @@ class Character(defaultdict):
         Returns:
             True if this Character has no validation problems, false if not.
         """
+
         self.problems = []
         if not self['description'].strip():
             self.problems.append("Missing description")
 
-        if not self.has_items('type'):
-            self.problems.append("Missing type")
-        elif not self.get_first('type').strip():
-            self.problems.append("Empty type")
+        self.validate_tag_present_and_filled('type')
 
         if strict:
-            if self.has_items('type', 2):
-                self.problems.append("Too many types")
+            self.validate_tag_appears_once('type')
 
-        if not self.has_items('name'):
-            self.problems.append("Missing name")
-        elif not self.get_first('name').strip():
-            self.problems.append("Empty name")
+        self.validate_tag_present_and_filled('name')
 
         if strict:
             unknown_tags = [tag for tag in set(self.keys()) - set(self.KNOWN_TAGS)]
@@ -215,31 +238,27 @@ class Character(defaultdict):
         """
         Validate the basic elements of a changeling file
 
+        Validations:
+            * Seeming is present
+            * Kith is present
+            * Zero or one court is present
+            * Zero or one motley is present
+            * Zero or one entitlement is present
+
         Args:
             strict (bool): Whether to report non-critical errors and omissions
-
-        The following must be true:
-            * seeming is present
-            * kith is present
-            * zero or one court is present
-            * zero or one motley is present
-            * zero or one entitlement is present
 
         Any errors are added to the problems list.
 
         Returns:
             None
         """
-        if not self.has_items('seeming'):
-            self.problems.append("Missing seeming")
-        if not self.has_items('kith'):
-            self.problems.append("Missing kith")
-        if self.has_items('court', 2):
-            self.problems.append("Multiple courts: {}".format(', '.join(self['court'])))
-        if self.has_items('motley', 2):
-            self.problems.append("Multiple motleys: {}".format(', '.join(self['motley'])))
-        if self.has_items('entitlement', 2):
-            self.problems.append("Multiple entitlements: {}".format(', '.join(self['entitlement'])))
+
+        self.validate_tag_present_and_filled('seeming')
+        self.validate_tag_present_and_filled('kith')
+        self.validate_tag_appears_once('court')
+        self.validate_tag_appears_once('motley')
+        self.validate_tag_appears_once('entitlement')
 
     def has_items(self, key, threshold=1):
         """

@@ -34,6 +34,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 * `Character.has_items` will raise an `OutOfBoundsError` if `threshold` is less than 1
 * The `npc.util.Character` class was moved to a new module, `npc.character.Character`
 * `npc.character.Character.valid` is now False when the object is created
+* Character type is now required to have a non-whitespace value
 
 ### Removed
 * `npc.main` has gone away

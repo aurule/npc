@@ -149,7 +149,7 @@ class TestBasicValidation:
     def test_multiple_types(self):
         char = npc.Character(type=['dog', 'cat'])
         char.validate(strict=True)
-        assert "Too many types" in char.problems
+        assert "Multiple types: dog, cat" in char.problems
 
     def test_unknown_tags(self):
         """Unrecognized tags should be errors with strict validation"""
@@ -160,19 +160,22 @@ class TestBasicValidation:
 class TestChangelingValidation:
     """Tests the changeling-specific validations"""
 
-    def test_no_seeming(self):
-        char = npc.Character(type=['changeling'], seeming=[])
+    required_tags = ('seeming', 'kith')
+    @pytest.mark.parametrize('tag', required_tags)
+    def test_required_tag_presence(self, tag):
+        char = npc.Character(type=['changeling'], **{tag: []})
         char.validate()
-        assert 'Missing seeming' in char.problems
+        assert 'Missing {}'.format(tag) in char.problems
 
-    def test_no_kith(self):
-        char = npc.Character(type=['changeling'], kith=[])
+    @pytest.mark.parametrize('tag', required_tags)
+    def test_required_tag_whitespace(self, tag):
+        char = npc.Character(type=['changeling'], **{tag: [' \t']})
         char.validate()
-        assert 'Missing kith' in char.problems
+        assert 'Empty {}'.format(tag) in char.problems
 
     only_one = [
         ('court', ['summer', 'winter']),
-        ('motley', ['hannover', 'hillbillies']),
+        ('motley', ['townies', 'hillbillies']),
         ('entitlement', ['honorable knights', 'dishonorable knights'])
     ]
     @pytest.mark.parametrize('key, values', only_one)
