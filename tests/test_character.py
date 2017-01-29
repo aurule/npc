@@ -18,7 +18,7 @@ class TestCreation:
         assert char["name"] == ["hello"]
 
     def test_both(self):
-        char = npc.Character(attributes={"name": ["hello"], "profession": ["tailor"]}, name=["nope"])
+        char = npc.Character({"name": ["hello"], "profession": ["tailor"]}, name=["nope"])
         assert char["name"] == ["nope"]
         assert char["profession"] == ["tailor"]
 
