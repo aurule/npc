@@ -5,23 +5,42 @@ class Character(defaultdict):
     """
     Object to hold and access data for a single character
 
-    Basically a dictionary with some helper methods. When accessed like a dict,
-    missing keys will return an empty array instead of throwing an exception.
-    The "description" and "path" keys are special: they will always contain a
-    string.
+    Can be accessed like a dictionary where missing keys will return an empty
+    array instead of throwing an exception. The "description" and "path" keys
+    are special: they will always contain a string.
+
+    While values can be accessed directly, it's better practice to use the
+    getter and setter methods that are provided, since they automatically
+    preserve the internal structure of the dict.
+    """
+
+    STRING_FIELDS = ('description', 'path')
+    """
+    tuple (Str): String-only data. These are stored as plain strings and do not
+        come from a tag.
     """
 
     GROUP_TAGS = (
         'court', 'motley', 'entitlement', # changeling
-        'group'                           # universal
-    )
-    """tuple (str): Group-like tags. These all accept an accompanying `rank` tag."""
+        'group')                          # universal
+    """tuple (str): Group-like tags. These all accept an accompanying `rank`
+        tag."""
 
-    STRING_TAGS = ('description', 'path')
-    """
-    tuple (Str): String-only data. These are stored as plain strings and do not, in
-        fact, come from a tag at all.
-    """
+    BARE_FLAGS = ('wanderer', 'skip')
+    """tuple (str): Flags whose value is ignored"""
+
+    DATA_FLAGS = ('foreign', 'dead')
+    """tuple (str): Flags that can accept an optional value"""
+
+    TAGS = (
+        'type', 'faketype', 'title', 'appearance', 'hide', 'hidegroup', 'hideranks', # universal
+        'seeming', 'kith', 'mask', 'mien')                                           # changeling
+    """tuple (str): Tags that must have a value. Shortcuts, like @changeling,
+        are expanded during parsing and do not appear literally."""
+
+    KNOWN_TAGS = STRING_FIELDS + GROUP_TAGS + BARE_FLAGS + DATA_FLAGS + TAGS
+    """tuple (str): All recognized tags. Other, unrecognized tags are fine to
+        add and will be ignored by methods that don't know how to handle them."""
 
     def __init__(self, attributes=None, **kwargs):
         """
@@ -42,7 +61,7 @@ class Character(defaultdict):
                 the `attributes` arg.
         """
         super().__init__(list)
-        for key in self.STRING_TAGS:
+        for key in self.STRING_FIELDS:
             self[key] = ''
         self['rank'] = defaultdict(list)
 
@@ -85,7 +104,7 @@ class Character(defaultdict):
             The "description" and "path" keys are not arrays, so this method
             will return the entire value.
         """
-        if key in self.STRING_TAGS:
+        if key in self.STRING_FIELDS:
             return self[key]
 
         try:
@@ -107,7 +126,7 @@ class Character(defaultdict):
             The "description" and "path" keys are not arrays, so this method
             will return the entire value.
         """
-        if key in self.STRING_TAGS:
+        if key in self.STRING_FIELDS:
             return self[key]
 
         return self[key][1:]
@@ -126,7 +145,7 @@ class Character(defaultdict):
         Returns:
             This character object. Convenient for chaining.
         """
-        if key in self.STRING_TAGS:
+        if key in self.STRING_FIELDS:
             self[key] += value
         else:
             self[key].append(value)
@@ -241,7 +260,7 @@ class Character(defaultdict):
                 for group, ranks in values.items():
                     for item in ranks:
                         new_char.append_rank(group, func(item))
-            elif attr in self.STRING_TAGS:
+            elif attr in self.STRING_FIELDS:
                 new_char.append(attr, func(values))
             else:
                 for item in values:

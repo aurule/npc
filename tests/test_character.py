@@ -48,7 +48,7 @@ class TestGetFirst:
         char = npc.Character(name=["hello", "goodbye"])
         assert char.get_first('name') == 'hello'
 
-    @pytest.mark.parametrize('keyname', npc.Character.STRING_TAGS)
+    @pytest.mark.parametrize('keyname', npc.Character.STRING_FIELDS)
     def test_string_tags(self, keyname):
         char = npc.Character()
         char.append(keyname, "hello")
@@ -65,7 +65,7 @@ class TestGetRemaining:
         char = npc.Character(name=["hello", "goodbye"])
         assert char.get_remaining('name') == ['goodbye']
 
-    @pytest.mark.parametrize('keyname', npc.Character.STRING_TAGS)
+    @pytest.mark.parametrize('keyname', npc.Character.STRING_FIELDS)
     def test_string_tags(self, keyname):
         char = npc.Character()
         char.append(keyname, "hello")
@@ -106,8 +106,8 @@ class TestCopyAndAlter:
         new_char = char.copy_and_alter(self.titleize)
         assert new_char.get('hands') == ['Raised', 'Jazzy']
 
-    @pytest.mark.parametrize('keyname', npc.Character.STRING_TAGS)
-    def test_string(self, keyname):
+    @pytest.mark.parametrize('keyname', npc.Character.STRING_FIELDS)
+    def test_string_fields(self, keyname):
         char = npc.Character()
         char.append(keyname, 'hello hello')
         new_char = char.copy_and_alter(self.titleize)
