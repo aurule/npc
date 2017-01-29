@@ -182,6 +182,7 @@ class Character(defaultdict):
             * kith is present
             * zero or one court is present
             * zero or one motley is present
+            * zero or one entitlement is present
 
         Any errors are added to the problems list.
 
@@ -196,6 +197,8 @@ class Character(defaultdict):
             self.problems.append("Multiple courts: {}".format(', '.join(self['court'])))
         if self.has_items('motley', 2):
             self.problems.append("Multiple motleys: {}".format(', '.join(self['motley'])))
+        if self.has_items('entitlement', 2):
+            self.problems.append("Multiple entitlements: {}".format(', '.join(self['entitlement'])))
 
     def has_items(self, key, threshold=1):
         """

@@ -152,15 +152,16 @@ class TestChangelingValidation:
         char.validate()
         assert 'Missing kith' in char.problems
 
-    def test_many_courts(self):
-        char = npc.Character(type=['changeling'], court=['summer', 'winter'])
+    only_one = [
+        ('court', ['summer', 'winter']),
+        ('motley', ['hannover', 'hillbillies']),
+        ('entitlement', ['honorable knights', 'dishonorable knights'])
+    ]
+    @pytest.mark.parametrize('key, values', only_one)
+    def test_many_courts(self, key, values):
+        char = npc.Character(type=['changeling'], **{key: values})
         char.validate()
-        assert 'Multiple courts: summer, winter' in char.problems
-
-    def test_many_motleys(self):
-        char = npc.Character(type=['changeling'], motley=['summer', 'winter'])
-        char.validate()
-        assert 'Multiple motleys: summer, winter' in char.problems
+        assert 'Multiple {key}s: {vals}'.format(key=key, vals=", ".join(values)) in char.problems
 
 class TestValid:
     def test_not_validated(self):
