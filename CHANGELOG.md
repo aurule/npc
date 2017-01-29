@@ -6,7 +6,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ## [Unreleased]
 ### Added
-* UI based on PyQt5
+* GUI based on PyQt5
 * Makefile to automate uic builds and tests
 * New `campaign_name` setting
 * `npc.commands.init` now sets the `campaign_name` when creating the campaign settings file
@@ -18,6 +18,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 * New `plot_ext` setting for the default file extension of the first plot file in a new campaign
 * Better documentation of default settings
 * New method `npc.util.Character.build_header` to create tags from a Character object
+* More validations on `npc.character.Character` objects
 
 ### Changed
 * The CLI interface now lives in npc.cli
@@ -31,8 +32,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 * The `--batch` and `--debug` options in the CLI now live under each command. This means they must go after the command name instead of in front of it.
 * `Character.get_remaining` no longer accepts a `default` argument. If the named tag is not present, it will always return an empty list.
 * `Character.has_items` will raise an `OutOfBoundsError` if `threshold` is less than 1
-* The Character class was moved to its own file
-* Character.valid is now False when the object is created
+* The `npc.util.Character` class was moved to a new module, `npc.character.Character`
+* `npc.character.Character.valid` is now False when the object is created
 
 ### Removed
 * `npc.main` has gone away
