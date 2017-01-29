@@ -168,12 +168,12 @@ class TestChangelingValidation:
         assert 'Multiple {key}s: {vals}'.format(key=key, vals=", ".join(values)) in char.problems
 
 class TestValid:
-    def test_not_validated(self):
+    """Tests for the correctness of the `valid` getter"""
+
+    def test_initial_state(self):
+        """Character should be invalid before first call to validate()"""
         char = npc.Character(type=['human'], description='hi there', name=['dude'])
         assert not char.valid
-
-    def test_validated(self):
-        char = npc.Character(type=['human'], description='hi there', name=['dude'])
         char.validate()
         assert char.valid
 
