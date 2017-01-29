@@ -93,13 +93,13 @@ class TestCopyAndAlter:
     def titleize(self, text):
         return text.title()
 
-    def test_single(self):
+    def test_custom_single(self):
         char = npc.Character()
         char.append('snoot', 'booped')
         new_char = char.copy_and_alter(self.titleize)
         assert new_char.get('snoot') == ['Booped']
 
-    def test_multiple(self):
+    def test_custom_multiple(self):
         char = npc.Character()
         char.append('hands', 'raised')
         char.append('hands', 'jazzy')
@@ -121,6 +121,8 @@ class TestCopyAndAlter:
         assert new_char.get('rank') == {'restaurant': ['Chef', 'Newb']}
 
 class TestBasicValidation:
+    """Tests universal validations"""
+
     def test_blank_description(self):
         char = npc.Character(description='')
         char.validate()
@@ -142,6 +144,8 @@ class TestBasicValidation:
         assert 'Missing name' in char.problems
 
 class TestChangelingValidation:
+    """Tests the changeling-specific validations"""
+
     def test_no_seeming(self):
         char = npc.Character(type=['changeling'], seeming=[])
         char.validate()
