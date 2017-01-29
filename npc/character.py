@@ -33,7 +33,7 @@ class Character(defaultdict):
     """tuple (str): Flags that can accept an optional value"""
 
     TAGS = (
-        'type', 'faketype', 'title', 'appearance', 'hide', 'hidegroup', 'hideranks', # universal
+        'name', 'rank', 'type', 'faketype', 'title', 'appearance', 'hide', 'hidegroup', 'hideranks', # universal
         'seeming', 'kith', 'mask', 'mien')                                           # changeling
     """tuple (str): Tags that must have a value. Shortcuts, like @changeling,
         are expanded during parsing and do not appear literally."""
