@@ -170,6 +170,13 @@ class Character(defaultdict):
         """
         Validate the presence of a few required elements: description and type.
 
+        Validations:
+            * Description have non-whitespace text
+            * Type must have a non-whitespace value
+            * (strict) Type cannot have more than one value
+            * Name must have a non-whitespace value
+            * (strict) Tags not in KNOWN_TAGS cannot be present
+
         Args:
             strict (bool): Whether to report non-critical errors and omissions
 
@@ -179,10 +186,25 @@ class Character(defaultdict):
         self.problems = []
         if not self['description'].strip():
             self.problems.append("Missing description")
+
         if not self.has_items('type'):
             self.problems.append("Missing type")
+        elif not self.get_first('type').strip():
+            self.problems.append("Empty type")
+
+        if strict:
+            if self.has_items('type', 2):
+                self.problems.append("Too many types")
+
         if not self.has_items('name'):
             self.problems.append("Missing name")
+        elif not self.get_first('name').strip():
+            self.problems.append("Empty name")
+
+        if strict:
+            unknown_tags = [tag for tag in set(self.keys()) - set(self.KNOWN_TAGS)]
+            if unknown_tags:
+                self.problems.append("Unrecognized tags: {}".format(', '.join(unknown_tags)))
 
         if self.type_key == "changeling":
             self._validate_changeling(strict=strict)

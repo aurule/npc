@@ -133,15 +133,29 @@ class TestBasicValidation:
         char.validate()
         assert 'Missing description' in char.problems
 
-    def test_no_type(self):
-        char = npc.Character(type=[])
+    required_tags = ('type', 'name')
+    @pytest.mark.parametrize('tag', required_tags)
+    def test_required_tag_presence(self, tag):
+        char = npc.Character(**{tag: []})
         char.validate()
-        assert 'Missing type' in char.problems
+        assert 'Missing {}'.format(tag) in char.problems
 
-    def test_no_type(self):
-        char = npc.Character(name=[])
+    @pytest.mark.parametrize('tag', required_tags)
+    def test_required_tag_whitespace(self, tag):
+        char = npc.Character(**{tag: [' \t']})
         char.validate()
-        assert 'Missing name' in char.problems
+        assert 'Empty {}'.format(tag) in char.problems
+
+    def test_multiple_types(self):
+        char = npc.Character(type=['dog', 'cat'])
+        char.validate(strict=True)
+        assert "Too many types" in char.problems
+
+    def test_unknown_tags(self):
+        """Unrecognized tags should be errors with strict validation"""
+        char = npc.Character(head=['attached', 'bald'])
+        char.validate(strict=True)
+        assert 'Unrecognized tags: head' in char.problems
 
 class TestChangelingValidation:
     """Tests the changeling-specific validations"""
