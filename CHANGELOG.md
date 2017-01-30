@@ -36,6 +36,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 * `npc.character.Character.valid` is now False when the object is created
 * Character type is now required to have a non-whitespace value
 * Passing None to `Character.append` will add the named tag with no data, so it acts as a flag
+* Methods in `Character` will no longer add empty elements when called on non-existing fields
 
 ### Removed
 * `npc.main` has gone away
