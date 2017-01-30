@@ -566,7 +566,9 @@ def _prune_chars(characters):
     """
     Alter character records for output.
 
-    This applies behavior from directives and certain tags:
+    Warning: This method will modify the objects in `characters`.
+
+    Applies behavior from directives and certain tags:
 
     * skip: remove the character from the list
     * hide: remove the named fields from the character
