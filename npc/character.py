@@ -107,6 +107,9 @@ class Character(defaultdict):
             The "description" and "path" keys are not arrays, so this method
             will return the entire value.
         """
+        if key not in self:
+            return default
+
         if key in self.STRING_FIELDS:
             return self[key]
 
@@ -129,6 +132,9 @@ class Character(defaultdict):
             The "description" and "path" keys are not arrays, so this method
             will return the entire value.
         """
+        if key not in self:
+            return default
+
         if key in self.STRING_FIELDS:
             return self[key]
 
@@ -326,7 +332,7 @@ class Character(defaultdict):
 
         def tags_for_all(attrname):
             """Add a tag for every value in attrname"""
-            lines.extend(["@{} {}".format(attrname, val) for val in self[attrname]])
+            lines.extend(["@{} {}".format(attrname, val) for val in self.get(attrname, [])])
 
         def buffered(attrname, fn):
             """Insert a newline before running fn, but only if attrname exists"""
@@ -375,7 +381,8 @@ class Character(defaultdict):
         for tagname in self.GROUP_TAGS:
             for groupname in self[tagname]:
                 lines.append("@{} {}".format(tagname, groupname))
-                lines.extend(["@rank {}".format(rank) for rank in self['rank'][groupname]])
+                if groupname in self['rank']:
+                    lines.extend(["@rank {}".format(rank) for rank in self['rank'][groupname]])
 
         buffered('dead', tags_or_flag)
         buffered('appearance', tags_for_all)
