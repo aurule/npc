@@ -318,6 +318,8 @@ def reorg(*search, ignore=None, purge=False, verbose=False, dryrun=False, **kwar
     Character files are moved so that their path matches the ideal path as
     closely as possible. No new directories are created.
 
+    This function ignores tags not found in Character.KNOWN_TAGS.
+
     Args:
         search (list): Paths to search for character files. Items can be strings
             or lists of strings.
@@ -383,6 +385,8 @@ def create_path_from_character(character: Character, *, target_path=None, **kwar
     The path is created underneath target_path. It only includes directories
     which already exist.
 
+    This function ignores tags not found in Character.KNOWN_TAGS.
+
     Args:
         character: Parsed character data
         target_path (str): Base path for character files
@@ -434,6 +438,8 @@ def _add_path_if_exists(base, potential):
 def listing(*search, ignore=None, fmt=None, metadata=None, title=None, outfile=None, **kwargs):
     """
     Generate a listing of NPCs.
+
+    The default listing templates ignore tags not found in Character.KNOWN_TAGS.
 
     Args:
         search (list): Paths to search for character files. Items can be strings
@@ -569,7 +575,7 @@ def _prune_chars(characters):
     """
     Alter character records for output.
 
-    Warning: This method will modify the objects in `characters`.
+    Warning: This function will modify the objects in `characters`.
 
     Applies behavior from directives and certain tags:
 
@@ -622,7 +628,7 @@ def _smart_open(filename=None, binary=False):
     """
     Open a named file or stdout as appropriate.
 
-    This method is designed to be used in a `with` block.
+    This function is designed to be used in a `with` block.
 
     Args:
         filename (str|None): Name of the file path to open. None and '-' mean
@@ -633,7 +639,7 @@ def _smart_open(filename=None, binary=False):
     Yields:
         File-like object.
 
-        When filename is None or the dash character ('-'), this method will
+        When filename is None or the dash character ('-'), this function will
         yield sys.stdout. When filename is a path, it will yield the open file
         for writing.
 
@@ -697,9 +703,11 @@ def lint(*search, ignore=None, fix=False, strict=False, **kwargs):
     """
     Check character files for completeness and correctness.
 
-    This method checks that every character file has a few required tags, and
+    This function checks that every character file has a few required tags, and
     applies extra checking for some character types. See util.Character.validate
     for details.
+
+    This function ignores tags not found in Character.KNOWN_TAGS.
 
     Args:
         search (list): Paths to search for character files. Items can be strings
