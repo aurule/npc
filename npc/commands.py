@@ -514,10 +514,10 @@ def _sort_chars(characters, order=None):
     Sort a list of Characters.
 
     Args:
-        characters (list): Characters to sort. Defaults to "last".
-        order (str): The order in which the characters should be sorted.
+        characters (list): Characters to sort.
+        order (str|None): The order in which the characters should be sorted.
             Unrecognized sort orders are ignored. Supported orders are:
-            * "last" - sort by last-most name
+            * "last" - sort by last-most name (default)
             * "first" - sort by first name
 
     Returns:
@@ -525,15 +525,18 @@ def _sort_chars(characters, order=None):
     """
     def last_name(character):
         """Get the character's last-most name"""
-        return character.get_first('name').split(' ')[-1]
+        return character.get_first('name', '').split(' ')[-1]
 
     def first_name(character):
         """Get the character's first name"""
-        return character.get_first('name').split(' ')[0]
+        return character.get_first('name', '').split(' ')[0]
 
-    if not order or order == "last":
+    if order is None:
+        order = "last"
+
+    if order == "last":
         return sorted(characters, key=last_name)
-    if order == "first":
+    elif order == "first":
         return sorted(characters, key=first_name)
     return characters
 
@@ -550,11 +553,11 @@ def _get_sectioner(order):
     """
     def first_letter_last_name(character):
         """Get the first letter of the character's last-most name"""
-        return character.get_first('name').split(' ')[-1][0]
+        return character.get_first('name', '').split(' ')[-1][0]
 
     def first_letter_first_name(character):
         """Get the first letter of the character's first name"""
-        return character.get_first('name').split(' ')[0][0]
+        return character.get_first('name', '').split(' ')[0][0]
 
     if order == 'first':
         return first_letter_first_name
