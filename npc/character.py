@@ -133,7 +133,7 @@ class Character(defaultdict):
             will return the entire value.
         """
         if key not in self:
-            return default
+            return []
 
         if key in self.STRING_FIELDS:
             return self[key]
