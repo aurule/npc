@@ -897,3 +897,55 @@ def report(*tags, search=None, ignore=None, fmt=None, outfile=None, **kwargs):
     openable = [outfile] if outfile and outfile != '-' else None
 
     return Result(True, openable=openable)
+
+def find(*rules, search=None, ignore=None, **kwargs):
+    """
+    Find characters in the campaign that match certain rules
+
+    Searches for character objects in the campaign that match the given
+    rules. To search an arbitrary list of Character objects, use
+    find_characters.
+
+    Args:
+        rules (str): One or more strings that describe which characters to
+            find. Passed directly to find_characters.
+        search (list): Paths to search for character files. Items can be strings
+            or lists of strings.
+        ignore (list): Paths to ignore
+        prefs (Settings): Settings object to use. Uses internal settings by
+            default.
+
+    Returns:
+        Result object. Openable will contain a list of file paths to the
+        matching Character objects.
+    """
+    prefs = kwargs.get('prefs', settings.InternalSettings())
+
+    if not ignore:
+        ignore = []
+    ignore.extend(prefs.get('paths.ignore'))
+    if not fmt or fmt == 'default':
+        fmt = prefs.get('report_format')
+
+    # use a list so we can iterate more than once
+    characters = list(parser.get_characters(flatten(search), ignore))
+
+    openable = find_characters(*rules, characters=characters)
+
+def find_characters(*rules, characters):
+    """
+    Finds characters that match the given rules
+
+    Args:
+        rules (str): One or more strings that describe which characters to find.
+            Rules take the format `tag:text`. If `tag` is not given, `text` will
+            be matched against each character's name. A character matches a rule
+            when that character has at least one value for `tag` which matches
+            or contains `text`. Multiple rules are tested sequentially from left
+            to right.
+        characters (list): List of Character objects to search
+
+    Returns:
+        List of character objects that match all of the rules.
+    """
+    pass
