@@ -89,6 +89,8 @@ def start(argv):
 
         # open the resulting files, if allowed
         if result.openable:
+            if args.verbose:
+                print("Opening:", "\n".join(openable))
             util.open_files(*result.openable, prefs=prefs)
 
     return 0
