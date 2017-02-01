@@ -82,9 +82,26 @@ class TestHasItems:
             char.has_items('things', 0)
 
 class TestTagContains:
-    # TODO
-    # key not exist: False
-    # key is string field, compare straight
-    # key is 'rank', compare ranks for all groups
-    # key is normal, compare all entries for that key
-    pass
+    def test_no_tag(self):
+        char = npc.Character()
+        assert not char.tag_contains('status', 'baller')
+
+    @pytest.mark.parametrize('keyname', npc.Character.STRING_FIELDS)
+    def test_string_tags(self, keyname):
+        char = npc.Character()
+        char.append(keyname, "hello friend")
+        assert char.tag_contains(keyname, 'friend')
+
+    def test_rank(self):
+        char = npc.Character()
+        char.append_rank('fools', 'juggler')
+        char.append_rank('fools', 'tumbler')
+        char.append_rank('mafia', 'juggular')
+        assert char.tag_contains('rank', 'tumbler')
+
+    def test_tag(self):
+        char = npc.Character()
+        char.append('status', 'alive')
+        char.append('status', 'happy')
+        char.append('status', 'secretly plotting the downfall of his enemies')
+        assert char.tag_contains('status', 'downfall')
