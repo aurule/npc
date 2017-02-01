@@ -204,7 +204,7 @@ def _make_parser():
 
     # Find characters by tag contents
     parser_find = subparsers.add_parser('find', parents=[common_options, paths_parser], help="Find characters by their tags")
-    parser_find.add_argument('rules', nargs="+", help="Rules to search by. Format for each is tag:text.")
+    parser_find.add_argument('rules', nargs="+", help="Rules to search by. Format for each is tag:text. Negate with tag:!text.")
     parser_find.add_argument('-d', '--dryrun', action="store_true", default=False, help="Show the files that would be opened, but don't open anything", dest="dryrun")
     parser_find.set_defaults(func=commands.find, serialize=['rules'])
 

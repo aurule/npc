@@ -965,7 +965,15 @@ def find_characters(rules, characters):
     """
 
     rule = rules.pop(0)
-    parts = rule.split(":", 1)
+
+    if ":!" in rule:
+        sep = ":!"
+        mod = lambda x: not x
+    else:
+        sep = ":"
+        mod = lambda x: x
+
+    parts = rule.split(sep, 1)
 
     if len(parts) == 2:
         tag = parts[0].strip().casefold()
@@ -983,7 +991,7 @@ def find_characters(rules, characters):
         tag = 'name'
         text = parts[0].strip().casefold()
 
-    filtered_chars = [char for char in characters if char.tag_contains(tag, text)]
+    filtered_chars = [char for char in characters if mod(char.tag_contains(tag, text))]
 
     if not rules:
         return filtered_chars
