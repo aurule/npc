@@ -1,5 +1,5 @@
 from collections import defaultdict
-from .util import OutOfBoundsError
+from .util import OutOfBoundsError, flatten
 
 class Character(defaultdict):
     """
@@ -139,6 +139,37 @@ class Character(defaultdict):
             return self[key]
 
         return self[key][1:]
+
+    def tag_contains(self, key, value):
+        """
+        See if the entries for key contain value
+
+        The search is case-insensitive. If key is "rank", then
+        all rank entries will be tested, regardless of group.
+
+        Args:
+            key (str): The key whose entries should be searched
+            value (str): The value to search for
+
+        Returns:
+            True if key has an entry that contains value, False if not.
+        """
+        if key not in self:
+            return False
+
+        if key in self.STRING_FIELDS:
+            return value in self[key].casefold()
+
+        if key == 'rank':
+            searchme = flatten([self['rank'][g] for g in self['rank']])
+        else:
+            searchme = self[key]
+
+        for searchval in searchme:
+            if value in searchval.casefold():
+                return True
+
+        return False
 
     def append(self, key, value):
         """

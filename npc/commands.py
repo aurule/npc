@@ -912,6 +912,8 @@ def find(*rules, search=None, ignore=None, **kwargs):
         search (list): Paths to search for character files. Items can be strings
             or lists of strings.
         ignore (list): Paths to ignore
+        dryrun (bool): Whether to print the character file paths instead of
+            opening them
         prefs (Settings): Settings object to use. Uses internal settings by
             default.
 
@@ -920,32 +922,70 @@ def find(*rules, search=None, ignore=None, **kwargs):
         matching Character objects.
     """
     prefs = kwargs.get('prefs', settings.InternalSettings())
+    dryrun = kwargs.get('dryrun', False)
 
     if not ignore:
         ignore = []
     ignore.extend(prefs.get('paths.ignore'))
-    if not fmt or fmt == 'default':
-        fmt = prefs.get('report_format')
+
+    rules = list(flatten(rules))
 
     # use a list so we can iterate more than once
     characters = list(parser.get_characters(flatten(search), ignore))
 
-    openable = find_characters(*rules, characters=characters)
+    filtered_chars = find_characters(rules, characters=characters)
 
-def find_characters(*rules, characters):
+    paths = [char.get('path') for char in filtered_chars]
+
+    if dryrun:
+        openable = []
+        printable = paths
+    else:
+        openable = paths
+        printable = []
+
+    return Result(True, openable=openable, printable=printable)
+
+def find_characters(rules, characters):
     """
     Finds characters that match the given rules
 
     Args:
-        rules (str): One or more strings that describe which characters to find.
-            Rules take the format `tag:text`. If `tag` is not given, `text` will
-            be matched against each character's name. A character matches a rule
-            when that character has at least one value for `tag` which matches
-            or contains `text`. Multiple rules are tested sequentially from left
-            to right.
+        rules (list): One or more strings that describe which characters to
+            find. Rules take the format `tag:text`. If `tag` is not given,
+            `text` will be matched against each character's name. A character
+            matches a rule when that character has at least one value for `tag`
+            which matches or contains `text`. Multiple rules are tested
+            sequentially from left to right. All tags and texts are
+            case-insensitive.
         characters (list): List of Character objects to search
 
     Returns:
         List of character objects that match all of the rules.
     """
-    pass
+
+    rule = rules.pop(0)
+    parts = rule.split(":", 1)
+
+    if len(parts) == 2:
+        tag = parts[0].strip().casefold()
+
+        if not tag:
+            # default to name tag
+            tag = 'name'
+
+        # expand abbreviations
+        if tag == 'desc':
+            tag = 'description'
+
+        text = parts[1].strip().casefold()
+    elif len(parts) == 1:
+        tag = 'name'
+        text = parts[0].strip().casefold()
+
+    filtered_chars = [char for char in characters if char.tag_contains(tag, text)]
+
+    if not rules:
+        return filtered_chars
+    else:
+        return find_characters(rules, filtered_chars)

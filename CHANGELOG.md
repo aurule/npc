@@ -19,6 +19,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 * Better documentation of default settings
 * New method `npc.util.Character.build_header` to create tags from a Character object
 * More validations on `npc.character.Character` objects
+* New method `Character.tag_contains` returns whether the entries for a tag contain a value
+* New command `npc find` and corresponding methods to find characters by their tag contents
 
 ### Changed
 * The CLI interface now lives in npc.cli

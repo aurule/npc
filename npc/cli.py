@@ -196,12 +196,16 @@ def _make_parser():
     parser_settings.set_defaults(func=commands.open_settings, serialize=['location'])
 
     # Report on character tags
-    parser_report = subparsers.add_parser('report', parents=[common_options], help="Create a report of the values for one or more tags")
+    parser_report = subparsers.add_parser('report', parents=[common_options, paths_parser], help="Create a report of the values for one or more tags")
     parser_report.add_argument('tags', nargs="+", help="Tag names to analyze")
-    parser_report.add_argument('--search', nargs="*", default=None, help="Paths to search. Individual files are added verbatim and directories are searched recursively.", metavar="PATH")
-    parser_report.add_argument('--ignore', nargs="*", default=None, help="Paths to skip when searching for character files", metavar="PATH")
     parser_report.add_argument('-t', '--format', choices=['json', 'htm', 'html', 'md', 'markdown'], default='default', help="Format to use for the tables. Defaults to the table format in settings", dest="fmt")
     parser_report.add_argument('-o', '--outfile', nargs="?", const='-', default=None, help="File where the listing will be saved")
     parser_report.set_defaults(func=commands.report, serialize=['tags'])
+
+    # Find characters by tag contents
+    parser_find = subparsers.add_parser('find', parents=[common_options, paths_parser], help="Find characters by their tags")
+    parser_find.add_argument('rules', nargs="+", help="Rules to search by. Format for each is tag:text.")
+    parser_find.add_argument('-d', '--dryrun', action="store_true", default=False, help="Show the files that would be opened, but don't open anything", dest="dryrun")
+    parser_find.set_defaults(func=commands.find, serialize=['rules'])
 
     return parser

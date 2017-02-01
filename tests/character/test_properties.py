@@ -80,3 +80,11 @@ class TestHasItems:
         char = npc.Character()
         with pytest.raises(npc.util.OutOfBoundsError):
             char.has_items('things', 0)
+
+class TestTagContains:
+    # TODO
+    # key not exist: False
+    # key is string field, compare straight
+    # key is 'rank', compare ranks for all groups
+    # key is normal, compare all entries for that key
+    pass
