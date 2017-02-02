@@ -728,6 +728,7 @@ def lint(*search, ignore=None, fix=False, strict=False, **kwargs):
     ignore.extend(prefs.get('paths.ignore'))
 
     openable = []
+    printable = []
 
     # check each character
     characters = parser.get_characters(flatten(search), ignore)
@@ -739,13 +740,13 @@ def lint(*search, ignore=None, fix=False, strict=False, **kwargs):
         if not character.valid:
             openable.append(character['path'])
             if len(character.problems) > 1:
-                print("File '{}':".format(character['path']))
+                printable.append("File '{}':".format(character['path']))
                 for detail in character.problems:
-                    print("    {}".format(detail))
+                    printable.append("    {}".format(detail))
             else:
-                print("{} in '{}'".format(character.problems[0], character['path']))
+                printable.append("{} in '{}'".format(character.problems[0], character['path']))
 
-    return Result(True, openable=openable)
+    return Result(True, openable=openable, printable=printable)
 
 def init(create_types=False, create_all=False, **kwargs):
     """

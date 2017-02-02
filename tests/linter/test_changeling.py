@@ -6,12 +6,11 @@ import os
 from tests.util import fixture_dir
 
 @pytest.fixture
-def lint_output(capsys):
+def lint_output():
     def do_lint(charname, strict=False):
         search = fixture_dir('linter', 'characters', 'Changelings', charname)
-        npc.commands.lint(search, strict=strict)
-        output, _ = capsys.readouterr()
-        return output
+        result = npc.commands.lint(search, strict=strict)
+        return "\n".join(result.printable)
     return do_lint
 
 @pytest.mark.parametrize('charname', ['No Kith.nwod', 'No Kith Also.nwod'])

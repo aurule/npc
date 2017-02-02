@@ -6,12 +6,11 @@ import os
 from tests.util import fixture_dir
 
 @pytest.fixture
-def lint_output(capsys):
+def lint_output():
     def do_lint(charname, strict=False):
         search = fixture_dir('linter', 'characters', 'Humans', charname)
-        npc.commands.lint(search, strict=strict)
-        output, _ = capsys.readouterr()
-        return output
+        result = npc.commands.lint(search, strict=strict)
+        return "\n".join(result.printable)
     return do_lint
 
 def test_virtue(lint_output):
