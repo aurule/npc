@@ -100,7 +100,8 @@ def _make_parser():
     Returns:
         Complete argparser object
     """
-    # This parser stores options shared by all character creation commands. It is never exposed directly.
+    # This parser stores options shared by all character creation commands. It
+    # is never exposed directly.
     character_parser = argparse.ArgumentParser(add_help=False)
     character_parser.add_argument('name', help="Character name", metavar='name')
     character_parser.add_argument('-g', '--groups', default=None, nargs="*", help='Name of a group that counts the character as a member', metavar='group')
@@ -118,7 +119,8 @@ def _make_parser():
     common_options.add_argument('-b', '--batch', action='store_true', default=False, help="Do not open any newly created files")
     common_options.add_argument('--debug', action='store_true', default=False, help="Show all error messages, not just important ones")
 
-    # This is the main parser which handles program-wide options. These should be kept sparse.
+    # This is the main parser which handles program-wide options. These should
+    # be kept sparse.
     parser = argparse.ArgumentParser(description='GM helper script to manage game files')
     parser.add_argument('--campaign', default='auto', help="Use the campaign files in a different directory", metavar='DIR')
     parser.add_argument('--version', action='version', version=__version__)
@@ -143,7 +145,8 @@ def _make_parser():
     parser_generic.add_argument('ctype', metavar='template', help="Template to use. Must be configured in settings")
     parser_generic.set_defaults(func=commands.create_simple)
 
-    # These parsers are just named subcommand entry points to create simple characters
+    # These parsers are just named subcommand entry points to create simple
+    # characters
     parser_human = subparsers.add_parser('human', aliases=['h'], parents=[common_options, character_parser], help="Create a new human character. Alias for `npc new human`")
     parser_human.set_defaults(func=commands.create_simple, ctype="human")
     parser_fetch = subparsers.add_parser('fetch', parents=[common_options, character_parser], help="Create a new fetch character. Alias for `npc new fetch`")

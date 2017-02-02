@@ -223,16 +223,19 @@ class Settings:
         """
         Get the metadata hash for a given output format
 
-        Merges default keys with the keys in "all" and finally the keys in the named format.
+        Merges default keys with the keys in "all" and finally the keys in the
+        named format.
 
         Default keys:
             title: Configured metadata title
             campaign: Configured name of the campaign
-            created: Timestamp when the metadata was fetched, formatted as per settings
+            created: Timestamp when the metadata was fetched, formatted as per
+                settings
             npc: Version of NPC which created this metadata
 
         Args:
-            target_format (str): Format identifier. Must appear in the settings files.
+            target_format (str): Format identifier. Must appear in the settings
+                files.
 
         Returns:
             Dict of metadata keys and values.

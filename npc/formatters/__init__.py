@@ -23,7 +23,10 @@ CANONICAL_FORMATS = {
     "html": "html",
     "json": "json"
 }
-"""dict: mapping of accepted format names and abbreviations to their canonical format name keys"""
+"""
+dict: mapping of accepted format names and abbreviations to their canonical
+format name keys
+"""
 
 def get_listing_formatter(format_name):
     """
