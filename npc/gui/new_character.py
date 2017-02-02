@@ -132,10 +132,10 @@ class NewCharacterDialog(QtWidgets.QDialog, Ui_NewCharacterDialog):
             for seeming in self.prefs.get('changeling.seemings'):
                 seeming_select.addItem(seeming.title(), userData=[kith.title() for kith in self.prefs.get('changeling.kiths.{}'.format(seeming))])
 
-            self.set_value("command", commands.create_changeling)
+            self.set_value("command", commands.create_character.changeling)
             self.set_value("serialize", ['name', 'seeming', 'kith'])
         else:
-            self.set_value("command", commands.create_simple)
+            self.set_value("command", commands.create_character.standard)
             self.set_value("serialize", ['name', 'ctype'])
 
         new_vbox_height_offset += len(self.type_specific_widgets)*6

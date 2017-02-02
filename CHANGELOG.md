@@ -55,6 +55,9 @@ The CLI has a new `find` command which makes it easy to get character files base
     - `init` command sets the `campaign_name` when creating the campaign settings file
     - `reorg` command had its `dry` flag renamed to `dryrun` to match the flag on `npc.commands.init`
     - Refactored `reorg`, `lint`, and `init` commands to use `Result.printable` instead of directly printing output
+    - Reorganized commands:
+        + `listing` is now in its own module as `listing.make_list`
+        + `create_changeling` and `create_simple` now share a module as `create_character.changeling` and `create_character.standard`
 
 ### Removed
 

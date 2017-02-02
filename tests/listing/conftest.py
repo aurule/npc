@@ -9,6 +9,6 @@ def list_json_output(tmpdir_factory, prefs):
         tmpdir = tmpdir_factory.mktemp('list')
         outfile = tmpdir.join("output.json")
         search = fixture_dir('listing', *search_parts)
-        npc.commands.listing(search, fmt=outformat, metadata=metadata, outfile=str(outfile), prefs=prefs, title=title)
+        npc.commands.listing.make_list(search, fmt=outformat, metadata=metadata, outfile=str(outfile), prefs=prefs, title=title)
         return json.load(outfile)
     return make_list

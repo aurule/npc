@@ -23,7 +23,7 @@ def test_md_mmd_metadata(tmpdir):
 
     outfile = tmpdir.join("output.md")
     search = fixture_dir('listing', 'valid-json')
-    npc.commands.listing(search, fmt='markdown', metadata='mmd', outfile=str(outfile))
+    npc.commands.listing.make_list(search, fmt='markdown', metadata='mmd', outfile=str(outfile))
     assert 'Title: NPC Listing' in outfile.read()
 
 @pytest.mark.parametrize('metaformat', ['yfm', 'yaml'])
@@ -33,7 +33,7 @@ def test_md_yfm_metadata(metaformat, tmpdir):
 
     outfile = tmpdir.join("output.md")
     search = fixture_dir('listing', 'valid-json')
-    npc.commands.listing(search, fmt='markdown', metadata=metaformat, outfile=str(outfile))
+    npc.commands.listing.make_list(search, fmt='markdown', metadata=metaformat, outfile=str(outfile))
     match = re.match(r'(?sm)\s*---(.*)---\s*', outfile.read())
     assert match is not None
     assert 'title: NPC Listing' in match.group(1)
@@ -55,7 +55,7 @@ def test_extra_md_metadata(prefs, metaformat, tmpdir):
     outfile = tmpdir.join("output.md")
     prefs.load_more(fixture_dir('listing', 'settings-metadata.json'))
     search = fixture_dir('listing', 'valid-json')
-    npc.commands.listing(search, fmt='markdown', metadata=metaformat, outfile=str(outfile), prefs=prefs)
+    npc.commands.listing.make_list(search, fmt='markdown', metadata=metaformat, outfile=str(outfile), prefs=prefs)
     assert 'test-type: markdown' in outfile.read().lower()
 
 def test_invalid_metadata_arg():
@@ -66,13 +66,13 @@ def test_invalid_metadata_arg():
     tested.
     """
     search = fixture_dir('listing', 'valid-json')
-    result = npc.commands.listing(search, fmt='md', metadata='json')
+    result = npc.commands.listing.make_list(search, fmt='md', metadata='json')
     assert not result.success
 
 def test_unknown_metadata_arg():
     """Unrecognized metadata options should result in an error"""
     search = fixture_dir('listing', 'valid-json')
-    result = npc.commands.listing(search, fmt='md', metadata='asdf')
+    result = npc.commands.listing.make_list(search, fmt='md', metadata='asdf')
     assert not result.success
 
 def test_custom_title(list_json_output):

@@ -1,5 +1,5 @@
 """
-Individual command functions and their helpers
+Package for command functions and their helpers
 
 These functions handle the real work of NPC. They can be called on their own
 without going through the CLI.
@@ -7,218 +7,17 @@ without going through the CLI.
 
 import re
 import json
-import sys
 from collections import Counter
-from contextlib import contextmanager
-from datetime import datetime
-from os import path, walk, makedirs, rmdir, scandir, getcwd
+from os import path, makedirs, rmdir, scandir, getcwd
 from shutil import copy as shcopy, move as shmove
 import itertools
 
-# local packages
-from . import formatters, linters, parser, settings
-from .util import Result, flatten
-from .character import Character
+import npc
+from npc import formatters, linters, parser, settings
+from npc.util import Result, flatten
+from npc.character import Character
 
-def create_changeling(name, seeming, kith, *,
-                      court=None, motley=None, dead=False, foreign=False, **kwargs):
-    """
-    Create a Changeling character.
-
-    Args:
-        name (str): Base file name
-        seeming (str): Name of the character's Seeming. Added to the file with
-            notes.
-        kith (str): Name of the character's Kith. Added to the file with notes.
-        court (str|none): Name of the character's Court. Used to derive path.
-        motley (str|none): Name of the character's Motley.
-        dead (bool|str): Whether to add the @dead tag. Pass False to exclude it
-            (the default), an empty string to inlcude it with no details given,
-            and a non-empty string to include the tag along with the contents of
-            the argument.
-        foreign (bool): Details of non-standard residence. Leave empty to
-            exclude the @foreign tag.
-        groups (list): One or more names of groups the character belongs to.
-            Used to derive path.
-        prefs (Settings): Settings object to use. Uses internal settings by
-            default.
-
-    Returns:
-        Result object. Openable will contain the path to the new character file.
-    """
-    prefs = kwargs.get('prefs', settings.InternalSettings())
-    groups = kwargs.get('groups', [])
-
-    seeming_re = re.compile(
-        r'^(\s+)seeming(\s+)\w+$',
-        re.MULTILINE | re.IGNORECASE
-    )
-    kith_re = re.compile(
-        r'^(\s+)kith(\s+)\w+$',
-        re.MULTILINE | re.IGNORECASE
-    )
-
-    # build minimal Character
-    temp_char = _minimal_character(
-        ctype='changeling',
-        groups=groups,
-        dead=dead,
-        foreign=foreign,
-        prefs=prefs)
-    temp_char.append('seeming', seeming.title())
-    temp_char.append('kith', kith.title())
-    if court:
-        temp_char.append('court', court.title())
-    if motley:
-        temp_char.append('motley', motley)
-
-    def insert_sk_data(data):
-        """Insert seeming and kith in the advantages block of a template"""
-        seeming_name = temp_char.get_first('seeming')
-        seeming_key = seeming.lower()
-        if seeming_key in prefs.get('changeling.seemings'):
-            seeming_notes = "{}; {}".format(
-                prefs.get("changeling.blessings.{}".format(seeming_key)),
-                prefs.get("changeling.curses.{}".format(seeming_key)))
-            data = seeming_re.sub(
-                r"\g<1>Seeming\g<2>{} ({})".format(seeming_name, seeming_notes),
-                data
-            )
-        kith_name = temp_char.get_first('kith')
-        kith_key = kith.lower()
-        if kith_key in prefs.get('changeling.kiths.{}'.format(seeming_key)):
-            kith_notes = prefs.get("changeling.blessings.{}".format(kith_key))
-            data = kith_re.sub(
-                r"\g<1>Kith\g<2>{} ({})".format(kith_name, kith_notes),
-                data
-            )
-        return data
-
-    return _cp_template_for_char(name, temp_char, prefs, fn=insert_sk_data)
-
-def _minimal_character(ctype, groups, dead, foreign, prefs):
-    """
-    Create a minimal character object
-
-    Args:
-        ctype (str): Character type
-        groups (list): One or more names of groups the character belongs to.
-        dead (bool|str): Whether to add the @dead tag. Pass False to exclude it
-            (the default), an empty string to inlcude it with no details given,
-            and a non-empty string to include the tag along with the contents of
-            the argument.
-        foreign (bool): Details of non-standard residence. Leave empty to
-            exclude the @foreign tag.
-        prefs (Settings): Settings object
-
-    Returns:
-        Character object
-    """
-    temp_char = Character()
-    temp_char.append('description', prefs.get('template_header'))
-    temp_char.append('type', ctype.title())
-    if groups:
-        temp_char['group'] = groups
-    if dead is not False:
-        temp_char.append('dead', dead)
-    if foreign is not False:
-        temp_char.append('foreign', foreign)
-
-    return temp_char
-
-def _cp_template_for_char(name, character, prefs, fn=None):
-    """
-    Copy the template for a character
-
-    Copies the configured template file for `character` and optionally modifies
-    the template's body using `fn`.
-
-    Args:
-        name (str): Character name
-        character (Character): Character that needs a template
-        prefs (Settings): Settings object used to find the template
-        fn (callable): Optional function that is called before the new file is
-            saved. It must accept a single string argument which will contain
-            the template contents.
-
-    Returns:
-        Result object. Openable will contain the path to the new character file.
-    """
-    # get template path
-    template_path = prefs.get('templates.{}'.format(character.type_key))
-    if not template_path:
-        return Result(False, errmsg="Could not find template {}".format(character.type_key), errcode=7)
-
-    # get path for the new file
-    target_path = create_path_from_character(character, prefs=prefs)
-
-    filename = name + path.splitext(template_path)[1]
-    target_path = path.join(target_path, filename)
-    if path.exists(target_path):
-        return Result(False, errmsg="Character '{}' already exists!".format(name), errcode=1)
-
-    # Add tags
-    header = character.build_header() + '\n\n'
-
-    # Copy template
-    try:
-        with open(template_path, 'r') as template_data:
-            data = header + template_data.read()
-    except IOError as err:
-        return Result(False, errmsg=err.strerror + " ({})".format(template), errcode=4)
-
-    if callable(fn):
-        data = fn(data)
-
-    # Write the new file
-    try:
-        with open(target_path, 'w') as char_file:
-            char_file.write(data)
-    except IOError as err:
-        return Result(False, errmsg=err.strerror + " ({})".format(target_path), errcode=4)
-
-    return Result(True, openable=[target_path])
-
-def create_simple(name, ctype, *, dead=False, foreign=False, **kwargs):
-    """
-    Create a character without extra processing.
-
-    Simple characters don't have any unique tags or file annotations. Everything
-    is based on their type.
-
-    Args:
-        name (str): Base file name. Format is "<character name> - <brief note>".
-        ctype (str): Character type. Must have a template configured in prefs.
-        dead (bool|str): Whether to add the @dead tag. Pass False to exclude it
-            (the default), an empty string to inlcude it with no details given,
-            and a non-empty string to include the tag along with the contents of
-            the argument.
-        foreign (bool): Details of non-standard residence. Leave empty to
-            exclude the @foreign tag.
-        groups (list): One or more names of groups the character belongs to.
-            Used to derive path.
-        prefs (Settings): Settings object to use. Uses internal settings by
-            default.
-
-    Returns:
-        Result object. Openable will contain the new character file.
-    """
-    prefs = kwargs.get('prefs', settings.InternalSettings())
-    groups = kwargs.get('groups', [])
-    ctype = ctype.lower()
-
-    if ctype not in prefs.get('templates'):
-        return Result(False, errmsg="Unrecognized template '{}'".format(ctype), errcode=7)
-
-    # build minimal character
-    temp_char = _minimal_character(
-        ctype=ctype.title(),
-        groups=groups,
-        dead=dead,
-        foreign=foreign,
-        prefs=prefs)
-
-    return _cp_template_for_char(name, temp_char, prefs)
+from . import create_character, listing, util
 
 def session(**kwargs):
     """
@@ -348,7 +147,7 @@ def reorg(*search, ignore=None, purge=False, verbose=False, dryrun=False, **kwar
         return Result(False, errmsg="Cannot access '{}'".format(base_path), errcode=4)
 
     for parsed_character in parser.get_characters(flatten(search), ignore):
-        new_path = create_path_from_character(parsed_character, target_path=base_path)
+        new_path = util.create_path_from_character(parsed_character, target_path=base_path)
         if new_path != path.dirname(parsed_character['path']):
             if verbose:
                 changelog.append("Moving {} to {}".format(parsed_character['path'], new_path))
@@ -356,304 +155,13 @@ def reorg(*search, ignore=None, purge=False, verbose=False, dryrun=False, **kwar
                 shmove(parsed_character['path'], new_path)
 
     if purge:
-        for empty_path in find_empty_dirs(base_path):
+        for empty_path in util.find_empty_dirs(base_path):
             if verbose:
                 changelog.append("Removing empty directory {}".format(empty_path))
             if not dryrun:
                 rmdir(empty_path)
 
     return Result(True, printable=changelog)
-
-def find_empty_dirs(root):
-    """
-    Find empty directories under root
-
-    Args:
-        root (str): Starting path to search
-
-    Yields:
-        Path of empty directories under `root`
-    """
-    for dirpath, dirs, files in walk(root):
-        if not dirs and not files:
-            yield dirpath
-
-def create_path_from_character(character: Character, *, target_path=None, **kwargs):
-    """
-    Determine the best file path for a character.
-
-    The path is created underneath target_path. It only includes directories
-    which already exist.
-
-    This function ignores tags not found in Character.KNOWN_TAGS.
-
-    Args:
-        character: Parsed character data
-        target_path (str): Base path for character files
-        prefs (Settings): Settings object to use. Uses internal settings by
-            default.
-
-    Returns:
-        Constructed file path based on the character data.
-    """
-    prefs = kwargs.get('prefs', settings.InternalSettings())
-
-    if not target_path:
-        target_path = prefs.get('paths.characters')
-
-    # add type-based directory if we can
-    ctype = character.type_key
-    if ctype:
-        target_path = _add_path_if_exists(target_path, prefs.get('type_paths.{}'.format(ctype), '.'))
-    else:
-        ctype = 'none'
-
-    # handle type-specific considerations
-    if ctype == 'changeling':
-        # changelings use court first, then groups
-        if 'court' in character:
-            for court_name in character['court']:
-                target_path = _add_path_if_exists(target_path, court_name)
-        else:
-            target_path = _add_path_if_exists(target_path, 'Courtless')
-
-    # foreigners get a special folder
-    if 'foreign' in character or 'wanderer' in character:
-        target_path = _add_path_if_exists(target_path, 'Foreign')
-
-    # everyone uses groups in their path
-    if 'group' in character:
-        for group_name in character['group']:
-            target_path = _add_path_if_exists(target_path, group_name)
-
-    return target_path
-
-def _add_path_if_exists(base, potential):
-    """Add a directory to the base path if that directory exists."""
-    test_path = path.join(base, potential)
-    if path.exists(test_path):
-        return test_path
-    return base
-
-def listing(*search, ignore=None, fmt=None, metadata=None, title=None, outfile=None, **kwargs):
-    """
-    Generate a listing of NPCs.
-
-    The default listing templates ignore tags not found in Character.KNOWN_TAGS.
-
-    Args:
-        search (list): Paths to search for character files. Items can be strings
-            or lists of strings.
-        ignore (list): Paths to ignore
-        fmt (str): Format of the output. Supported types are 'markdown', 'md',
-            'htm', 'html', and 'json'. Pass 'default' or None to get format from
-            settings.
-        metadata (str|None): Whether to include metadata in the output and what
-            kind of metadata to use. Pass 'default' to use the format configured
-            in Settings.
-
-            The markdown format allows either 'mmd' (MultiMarkdown) or
-            'yfm'/'yaml' (Yaml Front Matter) metadata.
-
-            The json format only allows one form of metadata, so pass any truthy
-            value to include the metadata keys.
-        title (str|None): The title to put in the metadata, if included.
-            Overrides the title from settings.
-        outfile (string|None): Filename to put the listed data. None and "-"
-            print to stdout.
-        sort (string|None): Sort order for characters. Defaults to the value of
-            "list_sort" in settings.
-        prefs (Settings): Settings object to use. Uses internal settings by
-            default.
-
-    Returns:
-        Result object. Openable will contain the output file if given.
-    """
-    prefs = kwargs.get('prefs', settings.InternalSettings())
-    if not ignore:
-        ignore = []
-    ignore.extend(prefs.get('paths.ignore'))
-    sort_order = kwargs.get('sort', prefs.get('list_sort'))
-
-    characters = _sort_chars(
-        _prune_chars(parser.get_characters(flatten(search), ignore)),
-        order=sort_order)
-
-    if fmt == "default" or not fmt:
-        fmt = prefs.get('list_format')
-    out_type = formatters.get_canonical_format_name(fmt)
-
-    dumper = formatters.get_listing_formatter(out_type)
-    if not dumper:
-        return Result(False, errmsg="Cannot create output of format '{}'".format(out_type), errcode=5)
-
-    if metadata == 'default' and out_type != 'json':
-        # Ensure 'default' metadata type gets replaced with the right default
-        # metadata format. Irrelevant for json format.
-        metadata_type = prefs.get('metadata.default_format.{}'.format(out_type))
-    else:
-        metadata_type = metadata
-
-    meta = prefs.get_metadata(out_type)
-    if title:
-        meta['title'] = title
-
-    with _smart_open(outfile, binary=(out_type in formatters.BINARY_TYPES)) as outstream:
-        response = dumper(
-            characters,
-            outstream,
-            include_metadata=metadata_type,
-            metadata=meta,
-            prefs=prefs,
-            sectioner=_get_sectioner(sort_order))
-
-    # pass errors straight through
-    if not response.success:
-        return response
-
-    openable = [outfile] if outfile and outfile != '-' else None
-
-    return Result(True, openable=openable)
-
-def _sort_chars(characters, order=None):
-    """
-    Sort a list of Characters.
-
-    Args:
-        characters (list): Characters to sort.
-        order (str|None): The order in which the characters should be sorted.
-            Unrecognized sort orders are ignored. Supported orders are:
-            * "last" - sort by last-most name (default)
-            * "first" - sort by first name
-
-    Returns:
-        List of characters ordered as requested.
-    """
-    def last_name(character):
-        """Get the character's last-most name"""
-        return character.get_first('name', '').split(' ')[-1]
-
-    def first_name(character):
-        """Get the character's first name"""
-        return character.get_first('name', '').split(' ')[0]
-
-    if order is None:
-        order = "last"
-
-    if order == "last":
-        return sorted(characters, key=last_name)
-    elif order == "first":
-        return sorted(characters, key=first_name)
-    return characters
-
-def _get_sectioner(order):
-    """
-    Get a sectioning function
-
-    Args:
-        order (str): Name of the order that defines the sections. One of "last"
-            or "first"
-
-    Returns:
-        A sectioning function, or None if the order was not recognized
-    """
-    def first_letter_last_name(character):
-        """Get the first letter of the character's last-most name"""
-        return character.get_first('name', '').split(' ')[-1][0]
-
-    def first_letter_first_name(character):
-        """Get the first letter of the character's first name"""
-        return character.get_first('name', '').split(' ')[0][0]
-
-    if order == 'first':
-        return first_letter_first_name
-    if order == 'last':
-        return first_letter_last_name
-    return None
-
-def _prune_chars(characters):
-    """
-    Alter character records for output.
-
-    Warning: This function will modify the objects in `characters`.
-
-    Applies behavior from directives and certain tags:
-
-    * skip: remove the character from the list
-    * hide: remove the named fields from the character
-    * hidegroup: remove the named group from the character
-    * hideranks: remove the character's ranks in the named group
-    * faketype: replace the character's type with a new string
-
-    It also inserts a placeholder type if one was not specified.
-
-    Args:
-        characters (list): List of Character objects
-
-    Yields:
-        Modified Character objects
-    """
-
-    for char in characters:
-        # skip if asked
-        if 'skip' in char:
-            continue
-
-        # remove named fields
-        for fieldname in char['hide']:
-            if fieldname in char:
-                del char[fieldname]
-
-        # remove named groups
-        for groupname in char['hidegroup']:
-            char['group'].remove(groupname)
-
-        # remove all ranks for named groups
-        for groupname in char['hideranks']:
-            if groupname in char['rank']:
-                del char['rank'][groupname]
-
-        # use fake types if present
-        if 'faketype' in char:
-            char['type'] = char['faketype']
-
-        # Use a placeholder for unknown type
-        if 'type' not in char:
-            char['type'] = 'Unknown'
-
-        yield char
-
-@contextmanager
-def _smart_open(filename=None, binary=False):
-    """
-    Open a named file or stdout as appropriate.
-
-    This function is designed to be used in a `with` block.
-
-    Args:
-        filename (str|None): Name of the file path to open. None and '-' mean
-            stdout.
-        binary (bool): If opening a file, whether to open it in bytes mode. If
-            opening stdout, whether to get its buffer.
-
-    Yields:
-        File-like object.
-
-        When filename is None or the dash character ('-'), this function will
-        yield sys.stdout. When filename is a path, it will yield the open file
-        for writing.
-
-    """
-    if filename and filename != '-':
-        stream = open(filename, 'wb') if binary else open(filename, 'w')
-    else:
-        stream = sys.stdout.buffer if binary else sys.stdout
-
-    try:
-        yield stream
-    finally:
-        if stream is not sys.stdout:
-            stream.close()
 
 def dump(*search, ignore=None, sort=False, metadata=False, outfile=None, **kwargs):
     """
@@ -682,7 +190,7 @@ def dump(*search, ignore=None, sort=False, metadata=False, outfile=None, **kwarg
 
     characters = parser.get_characters(flatten(search), ignore)
     if sort:
-        characters = _sort_chars(characters)
+        characters = util.sort_chars(characters)
 
     # make some json
     if metadata:
@@ -692,7 +200,7 @@ def dump(*search, ignore=None, sort=False, metadata=False, outfile=None, **kwarg
         }
         characters = itertools.chain([meta], characters)
 
-    with _smart_open(outfile) as outstream:
+    with util.smart_open(outfile) as outstream:
         json.dump([c for c in characters], outstream)
 
     openable = [outfile] if outfile and outfile != '-' else None
@@ -888,7 +396,7 @@ def report(*tags, search=None, ignore=None, fmt=None, outfile=None, **kwargs):
     outputter = formatters.get_report_formatter(fmt)
     if not outputter:
         return Result(False, errmsg="Cannot create output of format '{}'".format(fmt), errcode=5)
-    with _smart_open(outfile, binary=(fmt in formatters.BINARY_TYPES)) as outstream:
+    with util.smart_open(outfile, binary=(fmt in formatters.BINARY_TYPES)) as outstream:
         response = outputter(table_data, outstream=outstream, prefs=prefs)
 
     # pass errors straight through

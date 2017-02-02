@@ -3,32 +3,32 @@ import pytest
 import os
 
 def test_missing_template(campaign):
-    result = npc.commands.create_simple('noname', 'notfound')
+    result = npc.commands.create_character.standard('noname', 'notfound')
     assert not result.success
     assert result.errcode == 7
 
 @pytest.mark.parametrize('chartype', ['human', 'fetch', 'goblin'])
 def test_creates_character(campaign, chartype):
-    result = npc.commands.create_simple('testmann', chartype)
+    result = npc.commands.create_character.standard('testmann', chartype)
     character = campaign.get_character('testmann.nwod')
     assert result.success
     assert character.check()
     assert campaign.get_absolute(result.openable[0]) == str(character)
 
 def test_duplicate_character(campaign):
-    npc.commands.create_simple('testmann', 'human')
-    result = npc.commands.create_simple('testmann', 'human')
+    npc.commands.create_character.standard('testmann', 'human')
+    result = npc.commands.create_character.standard('testmann', 'human')
     assert not result.success
     assert result.errcode == 1
 
 def test_adds_group_tags(campaign):
-    npc.commands.create_simple('testmann', 'human', groups=['fork', 'spoon'])
+    npc.commands.create_character.standard('testmann', 'human', groups=['fork', 'spoon'])
     data = campaign.get_character_data('testmann.nwod')
     assert data['group'] == ['fork', 'spoon']
 
 def test_adds_foreign_tag(campaign):
     """With just --foreign, add the tag and no notes"""
-    npc.commands.create_simple('testmann', 'human', foreign="Lives on the moon, with Steve")
+    npc.commands.create_character.standard('testmann', 'human', foreign="Lives on the moon, with Steve")
     data = campaign.get_character_data('testmann.nwod')
     assert data['foreign'] == ['Lives on the moon, with Steve']
 
@@ -37,18 +37,18 @@ class TestDead:
 
     def test_no_dead_tag(self, campaign):
         """Characters shouldn't be dead without the command"""
-        npc.commands.create_simple('testmann', 'human')
+        npc.commands.create_character.standard('testmann', 'human')
         data = campaign.get_character_data('testmann.nwod')
         assert 'dead' not in data
 
     def test_bare_dead_tag(self, campaign):
         """With just --dead, add the tag and no notes"""
-        npc.commands.create_simple('testmann', 'human', dead='')
+        npc.commands.create_character.standard('testmann', 'human', dead='')
         data = campaign.get_character_data('testmann.nwod')
         assert data['dead'] == ['']
 
     def test_dead_tag_with_notes(self, campaign):
         """With just --dead, add the tag and no notes"""
-        npc.commands.create_simple('testmann', 'human', dead='Died in a tragic toast accident')
+        npc.commands.create_character.standard('testmann', 'human', dead='Died in a tragic toast accident')
         data = campaign.get_character_data('testmann.nwod')
         assert data['dead'] == ['Died in a tragic toast accident']

@@ -143,16 +143,16 @@ def _make_parser():
     # Create generic character
     parser_generic = subparsers.add_parser('new', parents=[common_options, character_parser], help="Create a new character from the named template")
     parser_generic.add_argument('ctype', metavar='template', help="Template to use. Must be configured in settings")
-    parser_generic.set_defaults(func=commands.create_simple)
+    parser_generic.set_defaults(func=commands.create_character.standard)
 
     # These parsers are just named subcommand entry points to create simple
     # characters
     parser_human = subparsers.add_parser('human', aliases=['h'], parents=[common_options, character_parser], help="Create a new human character. Alias for `npc new human`")
-    parser_human.set_defaults(func=commands.create_simple, ctype="human")
+    parser_human.set_defaults(func=commands.create_character.standard, ctype="human")
     parser_fetch = subparsers.add_parser('fetch', parents=[common_options, character_parser], help="Create a new fetch character. Alias for `npc new fetch`")
-    parser_fetch.set_defaults(func=commands.create_simple, ctype="fetch")
+    parser_fetch.set_defaults(func=commands.create_character.standard, ctype="fetch")
     parser_goblin = subparsers.add_parser('goblin', parents=[common_options, character_parser], help="Create a new goblin character. Alias for `npc new goblin`")
-    parser_goblin.set_defaults(func=commands.create_simple, ctype="goblin")
+    parser_goblin.set_defaults(func=commands.create_character.standard, ctype="goblin")
 
     # Subcommand for making changelings, with their unique options
     parser_changeling = subparsers.add_parser('changeling', aliases=['c'], parents=[common_options, character_parser], help="Create a new changeling character")
@@ -160,7 +160,7 @@ def _make_parser():
     parser_changeling.add_argument('kith', help="The character's Kith", metavar='kith')
     parser_changeling.add_argument('-c', '--court', help="The character's Court", metavar='court')
     parser_changeling.add_argument('-m', '--motley', help="The character's Motley", metavar='motley')
-    parser_changeling.set_defaults(func=commands.create_changeling, serialize=['name', 'seeming', 'kith'])
+    parser_changeling.set_defaults(func=commands.create_character.changeling, serialize=['name', 'seeming', 'kith'])
 
     # Subcommand for linting characer files
     parser_lint = subparsers.add_parser('lint', parents=[common_options, paths_parser], help="Check the character files for minimum completeness")
@@ -175,7 +175,7 @@ def _make_parser():
     parser_list.add_argument('--title', help="Title to show in the metadata. Overrides the title in settings.", metavar="TITLE")
     parser_list.add_argument('-o', '--outfile', nargs="?", const='-', default=None, help="File where the listing will be saved")
     parser_list.add_argument('--sort', choices=['first', 'last'], default='last', help="The sort order for characters. Defaults to 'last'.")
-    parser_list.set_defaults(func=commands.listing)
+    parser_list.set_defaults(func=commands.listing.make_list)
 
     # Dump raw character data
     parser_dump = subparsers.add_parser('dump', parents=[common_options, paths_parser], help="Export raw json data of all characters")
