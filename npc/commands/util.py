@@ -80,7 +80,7 @@ def find_empty_dirs(root):
         if not dirs and not files:
             yield dirpath
 
-def sort_chars(characters, order=None):
+def sort_characters(characters, order=None):
     """
     Sort a list of Characters.
 

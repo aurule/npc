@@ -47,7 +47,7 @@ def make_list(*search, ignore=None, fmt=None, metadata=None, title=None, outfile
     ignore.extend(prefs.get('paths.ignore'))
     sort_order = kwargs.get('sort', prefs.get('list_sort'))
 
-    characters = util.sort_chars(
+    characters = util.sort_characters(
         _prune_chars(parser.get_characters(flatten(search), ignore)),
         order=sort_order)
 
