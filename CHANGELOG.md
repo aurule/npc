@@ -39,7 +39,7 @@ The CLI has a new `find` command which makes it easy to get character files base
 ### Changed
 
 * Settings
-    - [BREAKING] The changeling settings format now requires that kith names are grouped by seeming
+    - The changeling settings format now requires that kith names are grouped by seeming
     - Improved formatting for results from the changeling settings linter
     - Metadata blocks now contain the NPC version number
 * CLI
@@ -52,6 +52,7 @@ The CLI has a new `find` command which makes it easy to get character files base
     - `valid` is now False until `validate` is called
     - `type` is now required to have a non-whitespace value
 * Commands
+    - Commands now live in their own package and some have been renamed
     - `init` command sets the `campaign_name` when creating the campaign settings file
     - `reorg` command had its `dry` flag renamed to `dryrun` to match the flag on `npc.commands.init`
     - Refactored `reorg`, `lint`, and `init` commands to use `Result.printable` instead of directly printing output
