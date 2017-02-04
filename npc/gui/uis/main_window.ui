@@ -2,17 +2,15 @@
 <ui version="4.0">
  <class>MainWindow</class>
  <widget class="QMainWindow" name="MainWindow">
-  <property name="geometry">
-   <rect>
-    <x>0</x>
-    <y>0</y>
-    <width>384</width>
-    <height>392</height>
-   </rect>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
   </property>
   <property name="minimumSize">
    <size>
-    <width>384</width>
+    <width>417</width>
     <height>392</height>
    </size>
   </property>
@@ -20,55 +18,51 @@
    <string>NPC</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <widget class="QWidget" name="verticalLayoutWidget">
-    <property name="geometry">
-     <rect>
-      <x>0</x>
-      <y>0</y>
-      <width>381</width>
-      <height>331</height>
-     </rect>
-    </property>
-    <layout class="QVBoxLayout" name="verticalLayout">
-     <property name="topMargin">
-      <number>6</number>
-     </property>
-     <item>
-      <layout class="QHBoxLayout" name="horizontalLayout_2">
-       <item>
-        <widget class="QLineEdit" name="characterSearch">
-         <property name="placeholderText">
-          <string>Search for characters...</string>
-         </property>
-         <property name="clearButtonEnabled">
-          <bool>true</bool>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QPushButton" name="searchButton">
-         <property name="text">
-          <string>Search</string>
-         </property>
-         <property name="icon">
-          <iconset theme="search"/>
-         </property>
-        </widget>
-       </item>
-      </layout>
-     </item>
-     <item>
-      <widget class="QTableView" name="tableView"/>
-     </item>
-    </layout>
-   </widget>
+   <layout class="QGridLayout" name="gridLayout">
+    <item row="0" column="0">
+     <layout class="QVBoxLayout" name="verticalLayout">
+      <property name="sizeConstraint">
+       <enum>QLayout::SetMinimumSize</enum>
+      </property>
+      <item>
+       <widget class="QLineEdit" name="characterSearch">
+        <property name="placeholderText">
+         <string>Search for characters</string>
+        </property>
+        <property name="clearButtonEnabled">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QTableView" name="characterTableView">
+        <property name="alternatingRowColors">
+         <bool>true</bool>
+        </property>
+        <property name="selectionBehavior">
+         <enum>QAbstractItemView::SelectRows</enum>
+        </property>
+        <property name="showGrid">
+         <bool>false</bool>
+        </property>
+        <attribute name="horizontalHeaderStretchLastSection">
+         <bool>true</bool>
+        </attribute>
+        <attribute name="verticalHeaderVisible">
+         <bool>false</bool>
+        </attribute>
+       </widget>
+      </item>
+     </layout>
+    </item>
+   </layout>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>384</width>
+     <width>417</width>
      <height>30</height>
     </rect>
    </property>

@@ -27,12 +27,12 @@ class MainWindow(Ui_MainWindow):
         # main window setup
         self.window = window
         self.setupUi(window)
+        self.setup_main_widgets()
         self.force_titles()
 
-        self.recentCampaignActions = [QtWidgets.QAction(self.menuOpen_Recent_Campaign, visible=False, triggered=self.open_recent_campaign) for i in range(5)]
-        for act in self.recentCampaignActions:
-            self.menuOpen_Recent_Campaign.addAction(act)
-        self._update_recent_campaigns()
+        # populate menus and table
+        self.update_recent_campaigns()
+        self.update_table()
 
         # about dialog
         self.about_dialog = QtWidgets.QDialog(self.window)
@@ -50,21 +50,38 @@ class MainWindow(Ui_MainWindow):
         # quit menu entry
         self.actionQuit.triggered.connect(self.quit)
 
-    def _show_error(self, title, message, parent=None):
-        """
-        Helper to show a modal error window
+    def setup_main_widgets(self):
+        """Connect the main window widgets together"""
+        self.timer = QtCore.QTimer()
+        self.timer.setSingleShot(True)
+        self.timer.setInterval(350)
+        self.timer.timeout.connect(self.update_table)
+        self.characterSearch.textEdited.connect(self.timer.start)
 
-        Args:
-            title (str): Title for the error window
-            message (str): Message text to display
-            parent (object): Parent window for the modal. This window will be
-                disabled while the modal is visible. Defaults to the main window.
-        """
-        if not parent:
-            parent = self.window
-        errorbox = QtWidgets.QMessageBox.warning(parent, title, message, QtWidgets.QMessageBox.Ok)
+        self.character_table_model = CharacterTableModel(self)
+        self.characterTableView.setModel(self.character_table_model)
 
-    def _update_recent_campaigns(self):
+        self.open_character_shortcut = QtWidgets.QShortcut(
+            QtGui.QKeySequence("Return"),
+            self.characterTableView,
+            context=QtCore.Qt.WidgetWithChildrenShortcut)
+        self.open_character_shortcut.activated.connect(self.open_multiple_characters)
+
+        self.characterCount = QtWidgets.QLabel()
+        self.window.statusBar().addWidget(self.characterCount)
+        self.characterTableView.doubleClicked.connect(self.open_character)
+
+        self.focus_search_shortcut = QtWidgets.QShortcut(
+            QtGui.QKeySequence("Ctrl+L"),
+            self.window,
+            context=QtCore.Qt.WindowShortcut)
+        self.focus_search_shortcut.activated.connect(self.characterSearch.setFocus)
+
+        self.recentCampaignActions = [QtWidgets.QAction(self.menuOpen_Recent_Campaign, visible=False, triggered=self.open_recent_campaign) for i in range(5)]
+        for act in self.recentCampaignActions:
+            self.menuOpen_Recent_Campaign.addAction(act)
+
+    def update_recent_campaigns(self):
         """
         Update the recent campaigns list
 
@@ -90,6 +107,46 @@ class MainWindow(Ui_MainWindow):
             action.setVisible(False)
 
         self.menuOpen_Recent_Campaign.setEnabled(num_recent_campaigns > 0)
+
+    def _show_error(self, title, message, parent=None):
+        """
+        Helper to show a modal error window
+
+        Args:
+            title (str): Title for the error window
+            message (str): Message text to display
+            parent (object): Parent window for the modal. This window will be
+                disabled while the modal is visible. Defaults to the main window.
+        """
+        if not parent:
+            parent = self.window
+        errorbox = QtWidgets.QMessageBox.warning(parent, title, message, QtWidgets.QMessageBox.Ok)
+
+    def update_table(self):
+        """Update the characters table using search results"""
+        search_rules = self.characterSearch.text().split(';')
+        all_characters = list(npc.parser.get_characters())
+        filtered_characters = npc.commands.find_characters(search_rules, all_characters)
+
+        self.character_table_model.update_data(filtered_characters)
+        self.characterTableView.resizeColumnsToContents()
+
+        if len(all_characters) == len(filtered_characters):
+            status_text = "{} characters".format(len(all_characters))
+        else:
+            status_text = "{} of {} characters".format(len(filtered_characters), len(all_characters))
+        self.characterCount.setText(status_text)
+
+    def open_character(self, index):
+        """Open a character based on its index in the table"""
+        char = self.character_table_model.characters[index.row()]
+        util.open_files(char.get('path'), prefs=self.prefs)
+
+    def open_multiple_characters(self):
+        """Open multiple characters from the index selection"""
+        indexes = self.characterTableView.selectedIndexes()
+        characters = [self.character_table_model.characters[i.row()].get('path') for i in indexes]
+        util.open_files(*characters, prefs=self.prefs)
 
     def force_titles(self):
         """
@@ -160,7 +217,8 @@ class MainWindow(Ui_MainWindow):
 
         settings.setValue('recentCampaigns/paths', campaigns)
         settings.setValue('recentCampaigns/titles', campaign_titles)
-        self._update_recent_campaigns()
+        self.update_recent_campaigns()
+        self.update_table()
 
     @contextmanager
     def safe_command(self, command):
@@ -209,7 +267,7 @@ class MainWindow(Ui_MainWindow):
                 self._show_error('Could not open user settings', result.errmsg)
                 return
 
-            util.open_files(result.openable, prefs=self.prefs)
+            util.open_files(*result.openable, prefs=self.prefs)
 
     def run_campaign_settings(self):
         """Run the campaign settings command"""
@@ -220,7 +278,7 @@ class MainWindow(Ui_MainWindow):
                 self._show_error('Could not open campaign settings', result.errmsg)
                 return
 
-            util.open_files(result.openable, prefs=self.prefs)
+            util.open_files(*result.openable, prefs=self.prefs)
 
     def run_reload_settings(self):
         """Reparse and lint the settings"""
@@ -280,3 +338,51 @@ class AboutDialog(Ui_AboutDialog):
         Ui_AboutDialog.__init__(self)
         self.setupUi(dialog)
         self.labelVersion.setText("Version {0}".format(__version__))
+
+class CharacterTableModel(QtCore.QAbstractTableModel):
+    """Model for character data"""
+    def __init__(self, parent=None):
+        super(CharacterTableModel, self).__init__()
+        self.characters = []
+        self.column_header_tags = [
+            "name",
+            "type"
+        ]
+        self.column_header_names =[
+            "Name",
+            "Type"
+        ]
+
+    def update_data(self, new_chars):
+        """
+        Update the table with new data
+
+        Args:
+            new_chars (list): List of character objects to show in the table
+        """
+        self.beginResetModel()
+        self.characters = new_chars
+        self.endResetModel()
+
+    def rowCount(self, parent=QtCore.QModelIndex()):
+        """Get the number of rows in the table"""
+        return len(self.characters)
+
+    def columnCount(self, parent=QtCore.QModelIndex()):
+        """Get the number of columns in the table"""
+        return len(self.column_header_tags)
+
+    def data(self, index, role=QtCore.Qt.DisplayRole):
+        """Get the data to show in a table cell"""
+        if role == QtCore.Qt.DisplayRole:
+            tag = self.column_header_tags[index.column()]
+            return self.characters[index.row()].get_first(tag)
+        else:
+            return QtCore.QVariant()
+
+    def headerData(self, section, orientation, role=QtCore.Qt.DisplayRole):
+        """Get header titles"""
+        if orientation == QtCore.Qt.Horizontal and role == QtCore.Qt.DisplayRole:
+            return self.column_header_names[section]
+        else:
+            return QtCore.QVariant()

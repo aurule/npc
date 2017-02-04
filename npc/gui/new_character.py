@@ -25,7 +25,7 @@ class NewCharacterDialog(QtWidgets.QDialog, Ui_NewCharacterDialog):
         self.type_specific_widgets = []
         self.current_vbox_height_offset = 0
         self.values = {
-            "command": commands.create_simple,
+            "command": commands.create_character.standard,
             "name": "",
             "ctype": "",
             "dead": False,
