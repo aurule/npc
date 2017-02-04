@@ -432,12 +432,15 @@ def find(*rules, search=None, ignore=None, **kwargs):
     """
     prefs = kwargs.get('prefs', settings.InternalSettings())
     dryrun = kwargs.get('dryrun', False)
+    if search is None:
+        search = []
 
     if not ignore:
         ignore = []
     ignore.extend(prefs.get('paths.ignore'))
 
     rules = list(flatten(rules))
+    print(rules)
 
     # use a list so we can iterate more than once
     characters = list(parser.get_characters(flatten(search), ignore))
