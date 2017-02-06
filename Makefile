@@ -29,3 +29,9 @@ uninstall:
 	rm -f $(DESTDIR)$(PREFIX)/bin/npc-gui
 	rm -f $(DESTDIR)$(PREFIX)/bin/npc
 	rm -rf $(DESTDIR)$(PREFIX)/share/npc
+
+.PHONY: clean
+clean:
+	find . -name '*.pyc' -delete
+	find . -name '__pycache__' -type d | xargs rm -fr
+	find . -name '.cache' -type d | xargs rm -fr
