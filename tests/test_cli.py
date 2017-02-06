@@ -7,7 +7,7 @@ from distutils import dir_util
 @pytest.fixture
 def run():
     def do_run(*args):
-        newargs = ["python", "npc.py", *args]
+        newargs = ["python3", "npc.py", *args]
         return subprocess.run(newargs, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     return do_run
 

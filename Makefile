@@ -9,4 +9,4 @@ PY_FILES=$(UI_FILES:.ui=.py)
 uis: $(PY_FILES)
 
 test:
-	python -m pytest
+	python3 -m pytest
