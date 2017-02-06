@@ -169,7 +169,7 @@ class MainWindow(Ui_MainWindow):
         campaign_dir = QtWidgets.QFileDialog.getExistingDirectory(
             self.window,
             'Open Campaign',
-            self.campaign_root)
+            str(QtCore.QStandardPaths.StandardLocation(QtCore.QStandardPaths.DocumentsLocation)))
         if campaign_dir:
             self.set_campaign_root(campaign_dir)
 
