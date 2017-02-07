@@ -50,9 +50,9 @@ All packages can be installed with `pip -r requirements.txt`. This will also ins
 
 ## Installation
 
-First, simply clone the NPC repo into the desired install directory. Then make symlink npc.py to somewhere in your path:
+First, simply clone the NPC repo into the desired install directory. Then make symlink npc.py to somewhere in your path: `ln -s ~/bin/npc npc.py`.
 
-`ln -s ~/bin/npc npc.py`
+If you want to install NPC to the system, run `make install`. To remove it, `make uninstall`. To see the available make targets, run `make list`.
 
 # Usage
 
