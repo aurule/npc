@@ -297,6 +297,17 @@ class MainWindow(Ui_MainWindow):
         self.prefs = new_prefs
         self.window.setWindowTitle("NPC - {}".format(self.prefs.get('campaign')))
 
+    def run_new_session(self):
+        """Run the session command"""
+        with self.safe_command(commands.session) as command:
+            result = command('user', prefs=self.prefs)
+
+            if not result.success:
+                self._show_error('Could not create session files', result.errmsg)
+                return
+
+            util.open_files(*result.openable, prefs=self.prefs)
+
     def run_init(self):
         """Run the init command with inputs from its dialog"""
         with self.dialog(InitDialog, self.window, self.prefs) as init_dialog:
