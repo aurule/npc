@@ -44,7 +44,7 @@ def _parse_path(start_path, ignore_paths=None, include_bare=False):
         ignore_paths (list): Paths to exclude. Assumed to be normalized, as from
             os.path.normpath.
         include_bare (bool): Whether to attempt to parse files without an
-            extension in addition to .nwod files.
+            extension in addition to recognized files.
 
     Returns:
         List of Characters generated from every parseable character file within
