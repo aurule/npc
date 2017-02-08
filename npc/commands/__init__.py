@@ -440,7 +440,6 @@ def find(*rules, search=None, ignore=None, **kwargs):
     ignore.extend(prefs.get('paths.ignore'))
 
     rules = list(flatten(rules))
-    print(rules)
 
     # use a list so we can iterate more than once
     characters = list(parser.get_characters(flatten(search), ignore))
