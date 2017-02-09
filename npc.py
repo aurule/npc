@@ -8,4 +8,4 @@ import sys
 import npc
 
 if __name__ == '__main__':
-    npc.start_cli(sys.argv[1:])
+    npc.cli.start(sys.argv[1:])
