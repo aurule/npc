@@ -197,7 +197,7 @@ def _cp_template_for_char(name, character, prefs, fn=None):
         with open(template_path, 'r') as template_data:
             data = header + template_data.read()
     except IOError as err:
-        return Result(False, errmsg=err.strerror + " ({})".format(template), errcode=4)
+        return Result(False, errmsg=err.strerror + " ({})".format(template_path), errcode=4)
 
     if callable(fn):
         data = fn(data)
