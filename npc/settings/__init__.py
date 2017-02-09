@@ -11,7 +11,6 @@ from collections import OrderedDict
 
 import npc
 from npc import util
-from .__version__ import __version__
 
 class Settings:
     """
@@ -35,15 +34,6 @@ class Settings:
             directly. Instead, use the get() method.
     """
 
-    install_base = path.dirname(path.realpath(__file__))
-
-    default_settings_path = path.join(install_base, 'support/')
-    user_settings_path = path.expanduser('~/.config/npc/')
-    campaign_settings_path = '.npc/'
-
-    settings_files = ['settings.json', 'settings-changeling.json']
-    settings_paths = [default_settings_path, user_settings_path, campaign_settings_path]
-
     def __init__(self, verbose=False):
         """
         Loads all settings files.
@@ -62,11 +52,23 @@ class Settings:
                 `support/settings.json` should never be found, but will still
                 be reported.
         """
+
+        self.module_base = path.dirname(path.realpath(__file__))
+        self.install_base = path.dirname(self.module_base)
+
+        self.default_settings_path = self.module_base
+        self.user_settings_path = path.expanduser('~/.config/npc/')
+        self.campaign_settings_path = '.npc/'
+
+        self.settings_files = ['settings.json', 'settings-changeling.json']
+        self.settings_paths = [self.default_settings_path, self.user_settings_path, self.campaign_settings_path]
+
         self.verbose = verbose
         self.data = util.load_json(path.join(self.default_settings_path, 'settings-default.json'))
 
         # massage template names into real paths
         self.data['templates'] = self._expand_filenames(base_path=self.install_base, data=self.data['templates'])
+        print(self.data['templates'])
 
         # merge additional settings files
         for settings_path in self.settings_paths:
@@ -244,7 +246,7 @@ class Settings:
             title=self.get('metadata.title'),
             campaign=self.get('campaign'),
             created=datetime.now().strftime(self.get('metadata.timestamp')),
-            npc=__version__,
+            npc=npc.__version__.__version__,
             **self.get('metadata.additional_keys.all'),
             **self.get('metadata.additional_keys.{}'.format(target_format))
         )
