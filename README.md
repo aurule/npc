@@ -50,9 +50,13 @@ All packages can be installed with `pip -r requirements.txt`. This will also ins
 
 ## Installation
 
-First, simply clone the NPC repo into the desired install directory. Then make symlink npc.py to somewhere in your path: `ln -s ~/bin/npc npc.py`.
+There are currently two ways to install npc and one trap.
 
-If you want to install NPC to the system, run `make install`. To remove it, `make uninstall`. To see the available make targets, run `make list`.
+The recommended way is to download the latest release tarball or clone the repo, then install the required packages above, and finally run `make install`. To uninstall, run `make uninstall`.
+
+The other way to install npc is to download or clone, install the required packages, and symlink npc.py and/or npc-gui.py to somewhere in your path, like `~/bin`.
+
+The trap is to download or clone, then run pip. While npc has a setup.py file, *it does not work*. It is only present as part of the packaging toolchain and cannot be used on its own.
 
 # Usage
 
