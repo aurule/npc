@@ -5,15 +5,14 @@ Provides the cli method for interpreting commandline arguments.
 """
 
 import argparse
+import sys
 from os import chdir, getcwd, path
 
 # local packages
-import npc
-from npc import commands, util, settings
-from npc import gui as gui_core
+from . import commands, util, settings
 from .__version__ import __version__
 
-def start(argv):
+def start(argv=None):
     """
     Run the command-line interface
 
@@ -27,6 +26,8 @@ def start(argv):
 
     # create parser and parse args
     parser = _make_parser()
+    if not argv:
+        argv = sys.argv[1:]
     args = parser.parse_args(argv)
 
     # change to the proper campaign directory if needed

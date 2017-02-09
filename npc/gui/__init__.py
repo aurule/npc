@@ -10,13 +10,16 @@ from npc import settings
 
 from .main_window import MainWindow
 
-def start(argv):
+def start(argv=None):
     """Main entry point for the GUI"""
 
     try:
         prefs = settings.Settings()
     except OSError as err:
         startup_error(err.strerror)
+
+    if not argv:
+        argv = sys.argv[1:]
 
     changeling_errors = settings.lint_changeling_settings(prefs)
     if changeling_errors:
