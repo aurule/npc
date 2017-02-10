@@ -68,7 +68,6 @@ class Settings:
 
         # massage template names into real paths
         self.data['templates'] = self._expand_filenames(base_path=self.install_base, data=self.data['templates'])
-        print(self.data['templates'])
 
         # merge additional settings files
         for settings_path in self.settings_paths:
