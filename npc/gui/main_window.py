@@ -46,6 +46,7 @@ class MainWindow(Ui_MainWindow):
         self.actionReloadSettings.triggered.connect(self.run_reload_settings)
         self.actionInit.triggered.connect(self.run_init)
         self.actionNew_Character.triggered.connect(self.run_new_character)
+        self.actionNew_Session.triggered.connect(self.run_new_session)
 
         # quit menu entry
         self.actionQuit.triggered.connect(self.quit)
@@ -300,7 +301,7 @@ class MainWindow(Ui_MainWindow):
     def run_new_session(self):
         """Run the session command"""
         with self.safe_command(commands.session) as command:
-            result = command('user', prefs=self.prefs)
+            result = command(prefs=self.prefs)
 
             if not result.success:
                 self._show_error('Could not create session files', result.errmsg)

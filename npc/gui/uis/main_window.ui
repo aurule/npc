@@ -2,6 +2,14 @@
 <ui version="4.0">
  <class>MainWindow</class>
  <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>417</width>
+    <height>392</height>
+   </rect>
+  </property>
   <property name="sizePolicy">
    <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
     <horstretch>0</horstretch>
@@ -79,6 +87,7 @@
      </property>
     </widget>
     <addaction name="actionNew_Character"/>
+    <addaction name="actionNew_Session"/>
     <addaction name="actionOpenCampaign"/>
     <addaction name="menuOpen_Recent_Campaign"/>
     <addaction name="separator"/>
@@ -193,6 +202,20 @@
    </property>
    <property name="shortcut">
     <string>Ctrl+N</string>
+   </property>
+  </action>
+  <action name="actionNew_Session">
+   <property name="icon">
+    <iconset theme="document-new"/>
+   </property>
+   <property name="text">
+    <string>New Session</string>
+   </property>
+   <property name="toolTip">
+    <string>Create files for a new game session</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Shift+N</string>
    </property>
   </action>
  </widget>

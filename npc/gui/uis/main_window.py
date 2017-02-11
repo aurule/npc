@@ -11,6 +11,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
+        MainWindow.resize(417, 392)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Preferred)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
@@ -84,7 +85,12 @@ class Ui_MainWindow(object):
         icon = QtGui.QIcon.fromTheme("list-add-user")
         self.actionNew_Character.setIcon(icon)
         self.actionNew_Character.setObjectName("actionNew_Character")
+        self.actionNew_Session = QtWidgets.QAction(MainWindow)
+        icon = QtGui.QIcon.fromTheme("document-new")
+        self.actionNew_Session.setIcon(icon)
+        self.actionNew_Session.setObjectName("actionNew_Session")
         self.menuFile.addAction(self.actionNew_Character)
+        self.menuFile.addAction(self.actionNew_Session)
         self.menuFile.addAction(self.actionOpenCampaign)
         self.menuFile.addAction(self.menuOpen_Recent_Campaign.menuAction())
         self.menuFile.addSeparator()
@@ -126,4 +132,7 @@ class Ui_MainWindow(object):
         self.actionInit.setToolTip(_translate("MainWindow", "Set up required folders in this campaign"))
         self.actionNew_Character.setText(_translate("MainWindow", "&New Character..."))
         self.actionNew_Character.setShortcut(_translate("MainWindow", "Ctrl+N"))
+        self.actionNew_Session.setText(_translate("MainWindow", "New Session"))
+        self.actionNew_Session.setToolTip(_translate("MainWindow", "Create files for a new game session"))
+        self.actionNew_Session.setShortcut(_translate("MainWindow", "Ctrl+Shift+N"))
 
