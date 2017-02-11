@@ -140,12 +140,10 @@ class NewCharacterDialog(QtWidgets.QDialog, Ui_NewCharacterDialog):
 
         new_vbox_height_offset += len(self.type_specific_widgets)*6
 
-        self.verticalLayoutWidget.resize(
-            self.verticalLayoutWidget.width(),
-            self.verticalLayoutWidget.height() - self.current_vbox_height_offset + new_vbox_height_offset)
+        self.resize(
+            self.width(),
+            self.height() - self.current_vbox_height_offset + new_vbox_height_offset)
         self.current_vbox_height_offset = new_vbox_height_offset
-
-        self.adjustSize()
 
     def run(self):
         """
