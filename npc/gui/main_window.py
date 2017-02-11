@@ -30,8 +30,13 @@ class MainWindow(Ui_MainWindow):
         self.setup_main_widgets()
         self.force_titles()
 
-        # populate menus and table
+        # populate menus
         self.update_recent_campaigns()
+
+        # Set up table
+        self.table_header = self.characterTableView.horizontalHeader()
+        self.table_header.setSectionResizeMode(0, QtWidgets.QHeaderView.Stretch)
+        self.table_header.setSectionResizeMode(1, QtWidgets.QHeaderView.ResizeToContents)
         self.update_table()
 
         # about dialog

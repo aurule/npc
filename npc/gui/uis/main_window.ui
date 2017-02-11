@@ -39,6 +39,11 @@
     </item>
     <item>
      <widget class="QTableView" name="characterTableView">
+      <property name="styleSheet">
+       <string notr="true">QTableView::item {
+  padding: 0 6px;
+}</string>
+      </property>
       <property name="alternatingRowColors">
        <bool>true</bool>
       </property>
@@ -48,9 +53,6 @@
       <property name="showGrid">
        <bool>false</bool>
       </property>
-      <attribute name="horizontalHeaderStretchLastSection">
-       <bool>true</bool>
-      </attribute>
       <attribute name="verticalHeaderVisible">
        <bool>false</bool>
       </attribute>

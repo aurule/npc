@@ -27,11 +27,13 @@ class Ui_MainWindow(object):
         self.characterSearch.setObjectName("characterSearch")
         self.verticalLayout.addWidget(self.characterSearch)
         self.characterTableView = QtWidgets.QTableView(self.centralwidget)
+        self.characterTableView.setStyleSheet("QTableView::item {\n"
+"  padding: 0 6px;\n"
+"}")
         self.characterTableView.setAlternatingRowColors(True)
         self.characterTableView.setSelectionBehavior(QtWidgets.QAbstractItemView.SelectRows)
         self.characterTableView.setShowGrid(False)
         self.characterTableView.setObjectName("characterTableView")
-        self.characterTableView.horizontalHeader().setStretchLastSection(True)
         self.characterTableView.verticalHeader().setVisible(False)
         self.verticalLayout.addWidget(self.characterTableView)
         MainWindow.setCentralWidget(self.centralwidget)
