@@ -12,6 +12,7 @@
     - [Create Session Files](#create-session-files)
     - [Create a Character](#create-a-character)
     - [Lint Character Files](#lint-character-files)
+    - [Find Characters](#find-characters)
     - [Make an NPC Listing](#make-an-npc-listing)
     - [Dump Raw NPC Data](#dump-raw-npc-data)
     - [Reorganize Character Files](#reorganize-character-files)
@@ -196,6 +197,16 @@ If `strict` is true, Changelings are also checked for the following:
 
 * The Mantle merit is present for the same court as the `@court` tag.
 * The Unseen Sense merit must not be present.
+
+## Find Characters
+
+The `find` command locates and opens characters by searching for text in their tags. The search is not case sensitive, so `npc find type:animal` will open every character with `@type Animal` and `@type animal`. You can search multiple tags by specifying multiple rules, like `npc find type:changeling "group: some gang"` to find changeling characters in the group Some Gang. Only characters that match all rules will be opened. To find characters who do *not* have certain text in a tag, use `:!`, like `npc find type:!human` to find all non-humans.
+
+Options:
+
+* `--search`: Only look in these files and directories. Defaults to the base characters path.
+* `--ignore`: Ignore these files and directories. By default, nothing is ignored. Added to the default ignore paths from settings
+* `--dryrun`: Display the paths to the character files, but do not open them.
 
 ## Make an NPC Listing
 
