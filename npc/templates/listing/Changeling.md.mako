@@ -30,6 +30,9 @@ ${character.get_first('type')}\
 % endif
 % if character.has_items('court'):
 , ${character.get_first('court')} Court${make_ranks((character.get_first('court')))}\
+% else
+, Courtless
+% endif
 % endif
 \
 <%
