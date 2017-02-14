@@ -60,6 +60,7 @@ The CLI has a new `find` command which makes it easy to get character files base
         + `listing` is now in its own module as `listing.make_list`
         + `create_changeling` and `create_simple` now share a module as `create_character.changeling` and `create_character.standard`
     - Courtless status is shown in html and markdown character listings
+    - Character paths will try to add a directory matching the first `@foreign` tag, if present
 
 ### Removed
 

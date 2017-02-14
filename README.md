@@ -120,8 +120,9 @@ Simple characters all use the same rules for determining the destination path. L
 These are the directories that are appended, in order:
 
 1. Type path, like `Humans/`
-2. If the [@foreign](https://github.com/aurule/npc/wiki/Character-Sheet-Format#foreign-location) or @wanderer tag is present, `Foreign/`
-3. First listed group name, if given (like `Police/`)
+2. If the [@foreign](https://github.com/aurule/npc/wiki/Character-Sheet-Format#foreign-location) or [@wanderer](https://github.com/aurule/npc/wiki/Character-Sheet-Format#wanderer) tag is present, `Foreign/`
+3. First listed foreign location, if present
+4. First listed group name, if given (like `Police/`)
     * Other group names are also tried in order.
 
 Here are some examples:
