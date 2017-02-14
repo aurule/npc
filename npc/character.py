@@ -409,6 +409,7 @@ class Character(defaultdict):
         tags_for_all('title')
         tags_or_flag('foreign')
         add_flag('wanderer')
+        tags_for_all('freehold')
         for tagname in self.GROUP_TAGS:
             for groupname in self[tagname]:
                 lines.append("@{} {}".format(tagname, groupname))

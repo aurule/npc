@@ -61,6 +61,10 @@ def create_path_from_character(character: Character, *, target_path=None, **kwar
     if 'foreign' in character:
         target_path = _add_path_if_exists(target_path, character.get_first('foreign'))
 
+    # freeholds use their own folders
+    if 'freehold' in character:
+        target_path = _add_path_if_exists(target_path, character.get_first('freehold'))
+
     # everyone uses groups in their path
     if 'group' in character:
         for group_name in character['group']:

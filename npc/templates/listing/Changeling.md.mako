@@ -33,6 +33,8 @@ ${character.get_first('type')}\
 % else
 , Courtless
 % endif
+% if character.has_items('freehold'):
+ (${character.get_first('freehold')})
 % endif
 \
 <%

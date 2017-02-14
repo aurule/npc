@@ -35,6 +35,8 @@ The CLI has a new `find` command which makes it easy to get character files base
     - More validations
     - New method `tag_contains` to determine whether the entries for a tag contain a value
 * Greatly improved test coverage
+* New `@freehold` tag for changeling characters
+* Freehold is shown in listings, if provided
 
 ### Changed
 
@@ -60,6 +62,7 @@ The CLI has a new `find` command which makes it easy to get character files base
         + `listing` is now in its own module as `listing.make_list`
         + `create_changeling` and `create_simple` now share a module as `create_character.changeling` and `create_character.standard`
     - Courtless status is shown in html and markdown character listings
+    - First freehold is used when creating a character path
     - Character paths will try to add a directory matching the first `@foreign` tag, if present
 
 ### Removed
