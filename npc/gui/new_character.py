@@ -114,10 +114,16 @@ class NewCharacterDialog(QtWidgets.QDialog, Ui_NewCharacterDialog):
         if type_key == 'changeling':
             seeming_select = QtWidgets.QComboBox(self)
             new_vbox_height_offset += new_row(2, '&Seeming', seeming_select)
+            self.setTabOrder(self.characterName, seeming_select)
+
             kith_select = QtWidgets.QComboBox(self)
             new_vbox_height_offset += new_row(3, '&Kith', kith_select)
+            self.setTabOrder(seeming_select, kith_select)
+
             courtInput = QtWidgets.QLineEdit(self)
             new_vbox_height_offset += new_row(4, '&Court', courtInput)
+            self.setTabOrder(kith_select, courtInput)
+            self.setTabOrder(courtInput, self.groupName)
 
             def update_kiths(_=0):
                 """Update the kith options from the selected seeming"""
@@ -134,9 +140,11 @@ class NewCharacterDialog(QtWidgets.QDialog, Ui_NewCharacterDialog):
 
             self.set_value("command", commands.create_character.changeling)
             self.set_value("serialize", ['name', 'seeming', 'kith'])
+
         else:
             self.set_value("command", commands.create_character.standard)
             self.set_value("serialize", ['name', 'ctype'])
+            self.setTabOrder(self.characterName, self.groupName)
 
         new_vbox_height_offset += len(self.type_specific_widgets)*6
 
