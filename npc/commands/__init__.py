@@ -379,6 +379,8 @@ def report(*tags, search=None, ignore=None, fmt=None, outfile=None, **kwargs):
     """
     prefs = kwargs.get('prefs', settings.InternalSettings())
 
+    if not search:
+        search = ['.']
     if not ignore:
         ignore = []
     ignore.extend(prefs.get('paths.ignore'))
