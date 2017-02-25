@@ -51,13 +51,13 @@ All packages can be installed with `pip -r requirements.txt`.
 
 ## Installation
 
-There are currently two ways to install npc and one trap.
+NPC can be installed in a few ways.
 
-The recommended way is to download the latest release tarball or clone the repo, then install the required packages above, and finally run `make install`. To uninstall, run `make uninstall`.
+The recommended way is to download the debian package for the latest release and install it as normal.
 
-The other way to install npc is to download or clone, install the required packages, and symlink npc.py and/or npc-gui.py to somewhere in your path, like `~/bin`.
+If you're using a different system, download the latest release tarball and unpack it (or clone the repo). Install the required packages above in the most appropriate way for your system, then run `make install` to symlink the launcher scripts. To uninstall the binaries, run `make uninstall`. If you'd rather handle the symlinks yourself, link the scripts `npc.py` and `npc-gui.py` to somewhere in your path, like `~/bin`.
 
-The trap is to download or clone, then run pip. While npc has a setup.py file, *it does not work*. It is only present as part of the packaging toolchain and cannot be used on its own.
+Finally, you can download or clone, then run `pip install .`. This installs npc like any other python package, including launcher scripts.
 
 # Usage
 
