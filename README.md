@@ -12,6 +12,7 @@
     - [Create Session Files](#create-session-files)
     - [Create a Character](#create-a-character)
     - [Lint Character Files](#lint-character-files)
+    - [Find Characters](#find-characters)
     - [Make an NPC Listing](#make-an-npc-listing)
     - [Dump Raw NPC Data](#dump-raw-npc-data)
     - [Reorganize Character Files](#reorganize-character-files)
@@ -44,12 +45,19 @@ NPC requires at least:
 * Python 3.5.0
 * [Mako](http://www.makotemplates.org/) 1.0.0
 * [Python Markdown](http://pythonhosted.org/Markdown/index.html) 2.6.0
+* [PyQt5](https://riverbankcomputing.com/software/pyqt/intro) 5.7.1
+
+All packages can be installed with `pip -r requirements.txt`.
 
 ## Installation
 
-First, simply clone the NPC repo into the desired install directory. Then make symlink npc.py to somewhere in your path:
+NPC can be installed in a few ways.
 
-`ln -s ~/bin/npc npc.py`
+The recommended way is to download the debian package for the latest release and install it as normal.
+
+If you're using a different system, download the latest release tarball and unpack it (or clone the repo). Install the required packages above in the most appropriate way for your system, then run `make install` to symlink the launcher scripts. To uninstall the binaries, run `make uninstall`. If you'd rather handle the symlinks yourself, link the scripts `npc.py` and `npc-gui.py` to somewhere in your path, like `~/bin`.
+
+Finally, you can download or clone, then run `pip install .`. This installs npc like any other python package, including launcher scripts.
 
 # Usage
 
@@ -57,9 +65,13 @@ The functionality of NPC is split among a few sub-commands. Each one encompasses
 
 These global options must be passed *before* the name of the subcommand. They affect the overall behavior of NPC:
 
-* `--batch`: By default, NPC will open whatever files are relevant to the subcommand. The `--batch` switch prevents that from happening.
 * `--campaign`: By default, NPC derives the campaign path from the current directory when it is run. It does this by walking backward until it finds the `.npc/` campaign config directory, or hits root. In the latter case, it just uses the current directory. The `--campaign` argument overrides this behavior and explicitly sets the campaign directory.
+* `--version`: Show the version string and exit immediately. When this option is present, everything else is ignored.
+
+These common options are available for every command:
+
 * `--debug`: Forces NPC to show every error that occurs, even when those errors are harmless. Useful for figuring out settings problems.
+* `--batch`: By default, NPC will open whatever files are relevant to the subcommand. The `--batch` switch prevents that from happening.
 
 ## Set Up Directories
 
@@ -108,8 +120,10 @@ Simple characters all use the same rules for determining the destination path. L
 These are the directories that are appended, in order:
 
 1. Type path, like `Humans/`
-2. If the [@foreign](https://github.com/aurule/npc/wiki/Character-Sheet-Format#foreign-location) or @wanderer tag is present, `Foreign/`
-3. First listed group name, if given (like `Police/`)
+2. If the [@foreign](https://github.com/aurule/npc/wiki/Character-Sheet-Format#foreign-location) or [@wanderer](https://github.com/aurule/npc/wiki/Character-Sheet-Format#wanderer) tag is present, `Foreign/`
+3. First listed foreign location, if present
+4. First listed freehold name, if present
+5. First listed group name, if given (like `Police/`)
     * Other group names are also tried in order.
 
 Here are some examples:
@@ -185,6 +199,16 @@ If `strict` is true, Changelings are also checked for the following:
 
 * The Mantle merit is present for the same court as the `@court` tag.
 * The Unseen Sense merit must not be present.
+
+## Find Characters
+
+The `find` command locates and opens characters by searching for text in their tags. The search is not case sensitive, so `npc find type:animal` will open every character with `@type Animal` and `@type animal`. You can search multiple tags by specifying multiple rules, like `npc find type:changeling "group: some gang"` to find changeling characters in the group Some Gang. Only characters that match all rules will be opened. To find characters who do *not* have certain text in a tag, use `:!`, like `npc find type:!human` to find all non-humans.
+
+Options:
+
+* `--search`: Only look in these files and directories. Defaults to the base characters path.
+* `--ignore`: Ignore these files and directories. By default, nothing is ignored. Added to the default ignore paths from settings
+* `--dryrun`: Display the paths to the character files, but do not open them.
 
 ## Make an NPC Listing
 
@@ -295,8 +319,12 @@ Since both seemings and kiths share the same blessings and curses dictionaries, 
 
 ## Requirements
 
-* pytest 2.8.5
+* [pytest](http://doc.pytest.org/en/latest/) 2.8.5
+* [pytest-qt](https://pytest-qt.readthedocs.io/en/latest/) 2.1.0
+* [stdeb](https://pypi.python.org/pypi/stdeb) 0.8.5 - optional: only for building debian packages
+
+These can all be installed with `pip -r requirements-dev.txt`.
 
 ## Running Tests
 
-Go to the root project directory and run `python -m pytest`.
+Go to the root project directory and run `python -m pytest` or `make test`.

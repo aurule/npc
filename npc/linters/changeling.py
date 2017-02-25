@@ -7,7 +7,8 @@ only public entry point is the lint function.
 
 import re
 from . import nwod
-from .. import util
+import npc
+from npc.util import flatten
 
 REPLACEABLE = ('x', 'y')
 """Standard placeholder values for seeming and kith"""
@@ -18,17 +19,25 @@ SEEMING_REGEX = r'^(?P<name>\s+seeming\s+)(?P<seeming>{})[ \t]*(?P<notes>\(.*\))
 KITH_REGEX = r'^(?P<name>\s+kith\s+)(?P<kith>{})[ \t]*(?P<notes>\(.*\))?$'
 """Regex to match a kith line"""
 
-STANDARD_MANTLE_REGEX = r'^\s+mantle\s+\((?P<court>[a-zA-Z ]+)\)' # matches `Mantle (name)`
+STANDARD_MANTLE_REGEX = r'^\s+mantle\s+\((?P<court>[a-zA-Z ]+)\)'
 """Regex to match the standard way of writing the mantle merit: Mantle (court)."""
 
-ALT_MANTLE_REGEX = r'^\s+(?P<court>[a-zA-Z]+) (?:court )?mantle' # matches `name Court Mantle` and `name Mantle`
-"""Regex to match alternate ways of writing the mantle merit: court Court Mantle, or court Mantle."""
+ALT_MANTLE_REGEX = r'^\s+(?P<court>[a-zA-Z]+) (?:court )?mantle'
+"""
+Regex to match alternate ways of writing the mantle merit: `court Court Mantle`,
+or `court Mantle`.
+"""
 
-STANDARD_GOODWILL_REGEX = r'^\s+(?:court )?goodwill\s+\((?P<court>[a-zA-Z ]+)\)' # matches `Mantle (name)`
-"""Regex to match the standard way of writing the mantle merit: Mantle (court)."""
+STANDARD_GOODWILL_REGEX = r'^\s+(?:court )?goodwill\s+\((?P<court>[a-zA-Z ]+)\)'
+"""
+Regex to match the standard way of writing the mantle merit: Goodwill (court).
+"""
 
-ALT_GOODWILL_REGEX = r'^\s+(?P<court>[a-zA-Z]+) (?:court )?goodwill' # matches `name Court Mantle` and `name Mantle`
-"""Regex to match alternate ways of writing the mantle merit: court Court Mantle, or court Mantle."""
+ALT_GOODWILL_REGEX = r'^\s+(?P<court>[a-zA-Z]+) (?:court )?goodwill'
+"""
+Regex to match alternate ways of writing the goodwill merit:
+`court Court Goodwill`, or `court Goodwill`.
+"""
 
 UNSEEN_SENSE_REGEX = r'^\s+Unseen Sense\s+\((?P<thing>[\w\s]+)\)'
 
@@ -77,7 +86,7 @@ def lint(character, fix=False, *, strict=False, sk_data=None):
 
     # Check that kith tag exists and is valid
     for kith_name in character['kith']:
-        if kith_name.lower() not in sk_data['kiths']:
+        if kith_name.lower() not in sk_data['kiths'].values():
             problems.append("Unrecognized @kith '{}'".format(kith_name))
 
     # Max of one entitlement
@@ -161,8 +170,8 @@ def lint(character, fix=False, *, strict=False, sk_data=None):
                 else:
                     problems[-1] += ' (placeholder; can fix)'
         else:
-            # Tags and stats match. Iterate through each seeming and make sure the notes are
-            # right.
+            # Tags and stats match. Iterate through each seeming and make sure
+            # the notes are right.
             for match in list(seeming_matches):
                 seeming_tag = match.group('seeming').lower()
                 if not seeming_tag in sk_data['seemings']:
@@ -220,10 +229,11 @@ def lint(character, fix=False, *, strict=False, sk_data=None):
                 else:
                     problems[-1] += ' (placeholder; can fix)'
         else:
-            # tags and stats match. iterate through each kith and make sure the notes are right
+            # tags and stats match. iterate through each kith and make sure the
+            # notes are right
             for match in list(kith_matches):
                 kith_tag = match.group('kith').lower()
-                if not kith_tag in sk_data['kiths']:
+                if not kith_tag in sk_data['kiths'][seeming_tag]:
                     continue
 
                 loaded_kith_notes = match.group('notes')
@@ -306,7 +316,7 @@ def _get_mantle(data):
 
     std_matches = std_mantle_re.finditer(data)
     alt_matches = alt_mantle_re.finditer(data)
-    return [m.group('court') for m in util.flatten([std_matches, alt_matches])]
+    return [m.group('court') for m in flatten([std_matches, alt_matches])]
 
 def _get_goodwill(data):
     std_goodwill_re = re.compile(
@@ -320,7 +330,7 @@ def _get_goodwill(data):
 
     std_matches = std_goodwill_re.finditer(data)
     alt_matches = alt_goodwill_re.finditer(data)
-    return [m.group('court') for m in util.flatten([std_matches, alt_matches])]
+    return [m.group('court') for m in flatten([std_matches, alt_matches])]
 
 def _get_unseen_sense(data):
     merit_re = re.compile(

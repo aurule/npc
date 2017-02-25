@@ -4,7 +4,10 @@ Markdown formatter for creating a page of characters.
 
 import tempfile
 from mako.template import Template
-from .. import util, settings
+
+import npc
+from npc import settings
+from npc.util import Result
 
 def listing(characters, outstream, *, include_metadata=None, metadata=None, **kwargs):
     """
@@ -37,7 +40,7 @@ def listing(characters, outstream, *, include_metadata=None, metadata=None, **kw
         # load and render template
         header_file = prefs.get("templates.listing.header.markdown.{}".format(include_metadata))
         if not header_file:
-            return util.Result(
+            return Result(
                 False,
                 errmsg="Unrecognized metadata format option '{}'".format(include_metadata),
                 errcode=6)
@@ -56,7 +59,7 @@ def listing(characters, outstream, *, include_metadata=None, metadata=None, **kw
                 body_file = _prefs_get("templates.listing.character.markdown.default")
             body_template = Template(filename=body_file, module_directory=tempdir)
             _out_write(body_template.render(character=char))
-    return util.Result(True)
+    return Result(True)
 
 def report(tables, outstream, **kwargs):
     """
@@ -76,4 +79,4 @@ def report(tables, outstream, **kwargs):
         for key, table in tables.items():
             outstream.write(table_template.render(data=table, tag=key))
 
-    return util.Result(True)
+    return Result(True)

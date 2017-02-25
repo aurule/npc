@@ -1,0 +1,5 @@
+@type Human
+@group Gangbros
+@group Lawbros
+
+@hidegroup Lawbros

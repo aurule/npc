@@ -1,0 +1,21 @@
+{
+    "campaign": "Totally Recalled",
+    "metadata": {
+        "title": "List of Tests",
+        "timestamp": "%A %d %B",
+        "additional_keys": {
+            "all": {
+                "test": "very yes"
+            },
+            "markdown": {
+                "format": "markdown"
+            },
+            "json": {
+                "format": "json"
+            },
+            "html": {
+                "format": "html"
+            }
+        }
+    }
+}

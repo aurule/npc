@@ -8,16 +8,10 @@ parse a single file, use parse_character instead.
 import re
 import itertools
 from os import path, walk
-from .util import Character
+from .character import Character
 
 VALID_EXTENSIONS = ('.nwod', '.dnd3', '.dfrpg')
 """tuple: file extensions that should be parsed"""
-
-GROUP_TAGS = (
-    'group',                          # universal
-    'court', 'motley', 'entitlement'  # changeling
-)
-"""tuple: Group-like tags. These all accept an accompanying `rank` tag."""
 
 def get_characters(search_paths=None, ignore_paths=None):
     """
@@ -50,7 +44,7 @@ def _parse_path(start_path, ignore_paths=None, include_bare=False):
         ignore_paths (list): Paths to exclude. Assumed to be normalized, as from
             os.path.normpath.
         include_bare (bool): Whether to attempt to parse files without an
-            extension in addition to .nwod files.
+            extension in addition to recognized files.
 
     Returns:
         List of Characters generated from every parseable character file within
@@ -167,7 +161,7 @@ def parse_character(char_file_path: str) -> Character:
                     continue
 
                 # handle rank logic for group tags
-                if tag in GROUP_TAGS:
+                if tag in Character.GROUP_TAGS:
                     last_group = value
                 if tag == 'rank':
                     if last_group:

@@ -2,5 +2,5 @@
 Package for reading and manipulating campaign information.
 """
 
-from .main import cli, find_campaign_root
-from .util import Character
+from . import cli, gui, commands, settings, __version__
+from .character import Character

@@ -23,7 +23,10 @@ CANONICAL_FORMATS = {
     "html": "html",
     "json": "json"
 }
-"""dict: mapping of accepted format names and abbreviations to their canonical format name keys"""
+"""
+dict: mapping of accepted format names and abbreviations to their canonical
+format name keys
+"""
 
 def get_listing_formatter(format_name):
     """
@@ -58,10 +61,10 @@ def get_report_formatter(format_name):
         is not.
     """
     format_name = get_canonical_format_name(format_name)
-    if format_name == 'html':
-        return html.report
     if format_name == 'markdown':
         return markdown.report
+    if format_name == 'html':
+        return html.report
     if format_name == 'json':
         return json.report
 

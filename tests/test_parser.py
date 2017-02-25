@@ -4,7 +4,7 @@ import os
 from tests.util import fixture_dir
 
 def test_remove_filename_comments():
-    parseables = fixture_dir(['parsing', 'characters', 'Fetches'])
+    parseables = fixture_dir('parsing', 'characters', 'Fetches')
     characters = list(npc.parser.get_characters(search_paths=[parseables]))
     assert characters[0]['name'][0] == 'macho mannersson'
 
@@ -12,30 +12,30 @@ class TestInclusion:
     """Tests which files are included in the parsed data"""
 
     def test_ignore_dir(self):
-        parseables = fixture_dir(['parsing', 'characters'])
-        ignore_me = fixture_dir(['parsing', 'characters', 'Fetches'])
+        parseables = fixture_dir('parsing', 'characters')
+        ignore_me = fixture_dir('parsing', 'characters', 'Fetches')
         characters = npc.parser.get_characters(search_paths=[parseables], ignore_paths=[ignore_me])
         for c in characters:
             assert c.get_first('type') != 'Fetch'
 
     def test_ignore_file(self):
-        parseables = fixture_dir(['parsing', 'characters'])
-        ignore_me = fixture_dir(['parsing', 'characters', 'Changelings', 'Kabana Matansa.nwod'])
+        parseables = fixture_dir('parsing', 'characters')
+        ignore_me = fixture_dir('parsing', 'characters', 'Changelings', 'Kabana Matansa.nwod')
         characters = npc.parser.get_characters(search_paths=[parseables], ignore_paths=[ignore_me])
         for c in characters:
             assert 'Kabana Matansa' not in c['name']
 
     def test_conflict_dir(self):
         """Ignore a directory when it is in both the search and ignore lists"""
-        parseables = fixture_dir(['parsing', 'characters'])
-        ignore_me = fixture_dir(['parsing', 'characters'])
+        parseables = fixture_dir('parsing', 'characters')
+        ignore_me = fixture_dir('parsing', 'characters')
         characters = npc.parser.get_characters(search_paths=[parseables], ignore_paths=[ignore_me])
         assert not len(list(characters))
 
     def test_conflict_file(self, ):
         """Always parse a file when it is in the search and ignore lists"""
-        parseables = fixture_dir(['parsing', 'characters', 'Changelings', 'Kabana Matansa.nwod'])
-        ignore_me = fixture_dir(['parsing', 'characters', 'Changelings', 'Kabana Matansa.nwod'])
+        parseables = fixture_dir('parsing', 'characters', 'Changelings', 'Kabana Matansa.nwod')
+        ignore_me = fixture_dir('parsing', 'characters', 'Changelings', 'Kabana Matansa.nwod')
         characters = npc.parser.get_characters(search_paths=[parseables], ignore_paths=[ignore_me])
         assert len(list(characters)) == 1
 
@@ -48,7 +48,7 @@ class TestTags:
     @pytest.fixture
     def character(self):
         def make_character(filename):
-            parseables = fixture_dir(['parsing', 'tags', filename])
+            parseables = fixture_dir('parsing', 'tags', filename)
             characters = list(npc.parser.get_characters(search_paths=[parseables]))
             return characters[0]
         return make_character
@@ -100,7 +100,7 @@ class TestNames:
     @pytest.fixture
     def character(self):
         def make_character(filename):
-            parseables = fixture_dir(['parsing', 'names', filename])
+            parseables = fixture_dir('parsing', 'names', filename)
             characters = list(npc.parser.get_characters(search_paths=[parseables]))
             return characters[0]
         return make_character
