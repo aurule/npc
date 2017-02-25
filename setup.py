@@ -26,19 +26,25 @@ setup(
     ],
     keywords="npc tabletop gaming gm campaign",
     packages=find_packages(exclude=['tests']),
-    install_requires=[
-        "Mako>=1.0.6",
-        "Markdown>=2.6.7",
+    install_require=[
+        "Mako>=1.0.0",
+        "Markdown>=2.6.0",
         "PyQt5>=5.7.1"
     ],
     extras_require={
         "test": [
-            "pytest>=3.0.6",
+            "pytest>=2.8.5",
             "pytest-qt>=2.1.0"
         ]
     },
     package_data={
-        'npc.settings': ['settings-default.json', 'settings-changeling.json']
+        'npc': [
+            'settings/*.json',
+            'templates/*.nwod',
+            'templates/*.mako',
+            'templates/*.md',
+            'templates/listing/*.mako'
+        ]
     },
     entry_points={
         'console_scripts': [

@@ -321,6 +321,7 @@ Since both seemings and kiths share the same blessings and curses dictionaries, 
 
 * [pytest](http://doc.pytest.org/en/latest/) 2.8.5
 * [pytest-qt](https://pytest-qt.readthedocs.io/en/latest/) 2.1.0
+* [stdeb](https://pypi.python.org/pypi/stdeb) 0.8.5 - optional: only for building debian packages
 
 ## Running Tests
 
