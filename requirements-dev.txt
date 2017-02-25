@@ -3,4 +3,7 @@ Markdown==2.6.7
 MarkupSafe==0.23
 py==1.4.32
 PyQt5==5.7.1
+pytest==3.0.6
+pytest-qt==2.1.0
 sip==4.19
+stdeb==0.8.6

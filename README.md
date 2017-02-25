@@ -47,7 +47,7 @@ NPC requires at least:
 * [Python Markdown](http://pythonhosted.org/Markdown/index.html) 2.6.0
 * [PyQt5](https://riverbankcomputing.com/software/pyqt/intro) 5.7.1
 
-All packages can be installed with `pip -r requirements.txt`. This will also install the testing packages.
+All packages can be installed with `pip -r requirements.txt`.
 
 ## Installation
 
@@ -322,6 +322,8 @@ Since both seemings and kiths share the same blessings and curses dictionaries, 
 * [pytest](http://doc.pytest.org/en/latest/) 2.8.5
 * [pytest-qt](https://pytest-qt.readthedocs.io/en/latest/) 2.1.0
 * [stdeb](https://pypi.python.org/pypi/stdeb) 0.8.5 - optional: only for building debian packages
+
+These can all be installed with `pip -r requirements-dev.txt`.
 
 ## Running Tests
 
