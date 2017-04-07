@@ -202,7 +202,7 @@ If `strict` is true, Changelings are also checked for the following:
 
 ## Find Characters
 
-The `find` command locates and opens characters by searching for text in their tags. The search is not case sensitive, so `npc find type:animal` will open every character with `@type Animal` and `@type animal`. You can search multiple tags by specifying multiple rules, like `npc find type:changeling "group: some gang"` to find changeling characters in the group Some Gang. Only characters that match all rules will be opened. To find characters who do *not* have certain text in a tag, use `:!`, like `npc find type:!human` to find all non-humans.
+The `find` command locates and opens characters by searching for text in their tags. The search is not case sensitive, so `npc find type:animal` will open every character with `@type Animal` and `@type animal`. You can search multiple tags by specifying multiple rules, like `npc find type:changeling "group: some gang"` to find changeling characters in the group Some Gang. Only characters that match all rules will be opened. To find characters who do *not* have certain text in a tag, use `~:`, like `npc find type~:human` to find all non-humans.
 
 Options:
 

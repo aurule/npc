@@ -21,7 +21,7 @@ def test_negation():
     char1 = npc.Character(court=['winter'])
     char2 = npc.Character()
     char3 = npc.Character(court=['summer'])
-    res = npc.commands.find_characters(["court:!winter"], [char1, char2, char3])
+    res = npc.commands.find_characters(["court~:winter"], [char1, char2, char3])
     assert char1 not in res
     assert char2 in res
     assert char3 in res

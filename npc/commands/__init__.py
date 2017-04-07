@@ -479,8 +479,8 @@ def find_characters(rules, characters):
 
     rule = rules.pop(0)
 
-    if ":!" in rule:
-        sep = ":!"
+    if "~:" in rule:
+        sep = "~:"
         mod = lambda x: not x
     else:
         sep = ":"
