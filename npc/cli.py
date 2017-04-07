@@ -104,7 +104,6 @@ def _make_parser():
     # This parser stores options shared by all character creation commands. It
     # is never exposed directly.
     character_parser = argparse.ArgumentParser(add_help=False)
-    character_parser.add_argument('name', help="Character name", metavar='name')
     character_parser.add_argument('-g', '--groups', default=None, nargs="*", help='Name of a group that counts the character as a member', metavar='group')
     character_parser.add_argument('--dead', default=False, const='', nargs='?', help='Mark that the character has died, with optional notes', metavar='notes')
     character_parser.add_argument('--foreign', default=False, help="Mark that the character is foreign to the main campaign setting, with optional notes on where they're from", metavar='location')
@@ -144,15 +143,19 @@ def _make_parser():
     # Create generic character
     parser_generic = subparsers.add_parser('new', parents=[common_options, character_parser], help="Create a new character from the named template")
     parser_generic.add_argument('ctype', metavar='template', help="Template to use. Must be configured in settings")
+    parser_generic.add_argument('name', help="Character name", metavar='name')
     parser_generic.set_defaults(func=commands.create_character.standard)
 
     # These parsers are just named subcommand entry points to create simple
     # characters
     parser_human = subparsers.add_parser('human', aliases=['h'], parents=[common_options, character_parser], help="Create a new human character. Alias for `npc new human`")
+    parser_human.add_argument('name', help="Character name", metavar='name')
     parser_human.set_defaults(func=commands.create_character.standard, ctype="human")
     parser_fetch = subparsers.add_parser('fetch', parents=[common_options, character_parser], help="Create a new fetch character. Alias for `npc new fetch`")
+    parser_fetch.add_argument('name', help="Character name", metavar='name')
     parser_fetch.set_defaults(func=commands.create_character.standard, ctype="fetch")
     parser_goblin = subparsers.add_parser('goblin', parents=[common_options, character_parser], help="Create a new goblin character. Alias for `npc new goblin`")
+    parser_goblin.add_argument('name', help="Character name", metavar='name')
     parser_goblin.set_defaults(func=commands.create_character.standard, ctype="goblin")
 
     # Subcommand for making changelings, with their unique options
