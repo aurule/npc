@@ -43,4 +43,4 @@ list:
 
 .PHONY: deb
 deb:
-	python setup.py --command-packages=stdeb.command bdist_deb
+	python3 setup.py --command-packages=stdeb.command bdist_deb
