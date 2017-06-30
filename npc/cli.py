@@ -160,6 +160,7 @@ def _make_parser():
 
     # Subcommand for making changelings, with their unique options
     parser_changeling = subparsers.add_parser('changeling', aliases=['c'], parents=[common_options, character_parser], help="Create a new changeling character")
+    parser_changeling.add_argument('name', help="Character name", metavar='name')
     parser_changeling.add_argument('seeming', help="The character's Seeming", metavar='seeming')
     parser_changeling.add_argument('kith', help="The character's Kith", metavar='kith')
     parser_changeling.add_argument('-c', '--court', help="The character's Court", metavar='court')
