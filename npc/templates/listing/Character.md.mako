@@ -33,6 +33,7 @@ ${', '.join(["{} Motley{}".format(m, make_ranks(m)) for m in character['motley']
 % endif
 \
 % if character.has_items('group', 2):
+
 ${', '.join(["{}{}".format(g, make_ranks(g)) for g in character.get_remaining('group')])}\
 % endif
 
