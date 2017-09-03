@@ -1,22 +1,46 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+import io
+import os
+import sys
+from shutil import rmtree
+
 from setuptools import setup, find_packages
-from codecs import open
-from os import path
 
-with open('npc/__version__.py') as ver:
-    exec(ver.read())
+# Package meta-data.
+NAME = 'npc'
+DESCRIPTION = "Game master's tool to manage characters and game files"
+URL = 'https://github.com/aurule/npc'
+EMAIL = 'pmandrews@gmail.com'
+AUTHOR = 'Peter Andrews'
 
-here = path.abspath(path.dirname(__file__))
-with open(path.join(here, 'README.md'), encoding='utf-8') as f:
-    long_description = f.read()
+# What packages are required for this module to be executed?
+REQUIRED = [
+    'mako', 'markdown', 'pyqt5'
+]
+
+# ------------------------------------------------
+
+here = os.path.abspath(os.path.dirname(__file__))
+
+# Import the README and use it as the long-description.
+# Note: this will only work if 'README.md' is present in your MANIFEST.in file!
+with io.open(os.path.join(here, 'README.md'), encoding='utf-8') as f:
+    long_description = '\n' + f.read()
+
+about = {}
+with io.open('npc/__version__.py') as f:
+    exec(f.read(), about)
 
 setup(
-    name='npc',
-    version=__version__,
-    description="Game master's tool to manage characters and other campaign files",
+    name=NAME,
+    version=about["__version__"],
+    description=DESCRIPTION,
     long_description=long_description,
-    url="https://github.com/aurule/npc",
-    author="Peter Andrews",
-    author_email="pmandrews@gmail.com",
+    url=URL,
+    author=AUTHOR,
+    author_email=EMAIL,
     license="MIT",
     classifiers=[
         'Development Status :: 5 - Production/Stable',
@@ -26,12 +50,12 @@ setup(
     ],
     keywords="npc tabletop gaming gm campaign",
     packages=find_packages(exclude=['tests']),
-    install_require=[
+    install_requires=[
         "Mako>=1.0.0",
         "Markdown>=2.6.0",
         "PyQt5>=5.7.1"
     ],
-    extras_require={
+    extras_requires={
         "test": [
             "pytest>=2.8.5",
             "pytest-qt>=2.1.0"
