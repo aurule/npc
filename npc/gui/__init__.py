@@ -2,6 +2,7 @@
 Package for handling the NPC windowed interface
 """
 
+import argparse
 import sys
 from PyQt5 import QtCore, QtGui, QtWidgets
 
@@ -13,13 +14,15 @@ from .main_window import MainWindow
 def start(argv=None):
     """Main entry point for the GUI"""
 
+    parser = _make_parser()
+    if not argv:
+        argv = sys.argv[1:]
+    args = parser.parse_args(argv)
+
     try:
         prefs = settings.Settings()
     except OSError as err:
         startup_error(err.strerror)
-
-    if not argv:
-        argv = sys.argv[1:]
 
     changeling_errors = settings.lint_changeling_settings(prefs)
     if changeling_errors:
@@ -29,7 +32,7 @@ def start(argv=None):
     app = QtWidgets.QApplication(argv)
     window = QtWidgets.QMainWindow()
 
-    prog = MainWindow(window, prefs)
+    prog = MainWindow(window, prefs, campaign=args.campaign)
 
     window.show()
     sys.exit(app.exec_())
@@ -54,3 +57,19 @@ def startup_error(message):
 
 def _translate(*args, **kwargs):
     QtCore.QCoreApplication.translate(*args, **kwargs)
+
+def _make_parser():
+    """
+    Construct the arguments parser
+
+    Returns:
+        Complete argparser object
+    """
+
+    parser = argparse.ArgumentParser(description='GM helper script to manage game files - GUI')
+    parser.add_argument('--campaign', default=None, help="Use the campaign files in a different directory", metavar='DIR')
+    parser.add_argument('--version', action='version', version=npc.__version__)
+    parser.set_defaults(debug=False)
+
+    return parser
+

@@ -5,6 +5,11 @@ This file documents the changes made in each release. I didn't start maintaining
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/) (mostly).
 
 ## 1.3.1 [Unreleased]
+
+### Added
+
+* New `campaign` option to the GUI that allows it to start in a given campaign directory
+
 ## 1.3.0
 
 ### Highlights

@@ -18,7 +18,7 @@ class MainWindow(Ui_MainWindow):
     This class handles all the management of the campaign, including showing
     dialogs and running commands.
     """
-    def __init__(self, window, prefs):
+    def __init__(self, window, prefs, campaign=None):
         Ui_MainWindow.__init__(self)
 
         self.prefs = prefs
@@ -55,6 +55,9 @@ class MainWindow(Ui_MainWindow):
 
         # quit menu entry
         self.actionQuit.triggered.connect(self.quit)
+
+        if campaign is not None:
+            self.set_campaign_root(campaign)
 
     def setup_main_widgets(self):
         """Connect the main window widgets together"""
