@@ -102,6 +102,7 @@ All characters support the following options:
 * `-g`, `--group`: Name of one or more groups that the character belongs to.
 * `--dead`: Indicates that the character is dead, with optional notes about it.
 * `--foreign`: Indicates that the character is foreign to the main campaign setting, with notes about where they are.
+* `--location`: Describes where the character lives within the main campaign setting.
 
 ### Simple Characters
 
@@ -121,9 +122,10 @@ These are the directories that are appended, in order:
 
 1. Type path, like `Humans/`
 2. If the [@foreign](https://github.com/aurule/npc/wiki/Character-Sheet-Format#foreign-location) or [@wanderer](https://github.com/aurule/npc/wiki/Character-Sheet-Format#wanderer) tag is present, `Foreign/`
-3. First listed foreign location, if present
-4. First listed freehold name, if present
-5. First listed group name, if given (like `Police/`)
+3. First listed foreign place, if present
+4. First listed location, if present
+5. First listed freehold name, if present
+6. First listed group name, if given (like `Police/`)
     * Other group names are also tried in order.
 
 Here are some examples:
