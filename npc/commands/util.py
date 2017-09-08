@@ -14,7 +14,7 @@ def create_path_from_character(character: Character, *, target_path=None, **kwar
     Determine the best file path for a character.
 
     The path is created underneath target_path. It only includes directories
-    which already exist.
+    which already exist. It's used by character creation, linting, and reorg.
 
     This function ignores tags not found in Character.KNOWN_TAGS.
 
