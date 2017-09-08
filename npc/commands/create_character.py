@@ -25,8 +25,10 @@ def standard(name, ctype, *, dead=False, foreign=False, **kwargs):
             (the default), an empty string to inlcude it with no details given,
             and a non-empty string to include the tag along with the contents of
             the argument.
-        foreign (bool): Details of non-standard residence. Leave empty to
+        foreign (bool|str): Details of non-standard residence. Leave empty to
             exclude the @foreign tag.
+        location (str): Details about where the character lives. Leave empty to
+            exclude the @location tag.
         groups (list): One or more names of groups the character belongs to.
             Used to derive path.
         prefs (Settings): Settings object to use. Uses internal settings by
@@ -37,6 +39,7 @@ def standard(name, ctype, *, dead=False, foreign=False, **kwargs):
     """
     prefs = kwargs.get('prefs', settings.InternalSettings())
     groups = kwargs.get('groups', [])
+    location = kwargs.get('location', False)
     ctype = ctype.lower()
 
     if ctype not in prefs.get('templates'):
@@ -48,6 +51,7 @@ def standard(name, ctype, *, dead=False, foreign=False, **kwargs):
         groups=groups,
         dead=dead,
         foreign=foreign,
+        location=location,
         prefs=prefs)
 
     return _cp_template_for_char(name, temp_char, prefs)
@@ -68,8 +72,10 @@ def changeling(name, seeming, kith, *,
             (the default), an empty string to inlcude it with no details given,
             and a non-empty string to include the tag along with the contents of
             the argument.
-        foreign (bool): Details of non-standard residence. Leave empty to
+        foreign (bool|str): Details of non-standard residence. Leave empty to
             exclude the @foreign tag.
+        location (str): Details about where the character lives. Leave empty to
+            exclude the @location tag.
         groups (list): One or more names of groups the character belongs to.
             Used to derive path.
         prefs (Settings): Settings object to use. Uses internal settings by
@@ -80,6 +86,7 @@ def changeling(name, seeming, kith, *,
     """
     prefs = kwargs.get('prefs', settings.InternalSettings())
     groups = kwargs.get('groups', [])
+    location = kwargs.get('location', None)
 
     seeming_re = re.compile(
         r'^(\s+)seeming(\s+)\w+$',
@@ -96,6 +103,7 @@ def changeling(name, seeming, kith, *,
         groups=groups,
         dead=dead,
         foreign=foreign,
+        location=location,
         prefs=prefs)
     temp_char.append('seeming', seeming.title())
     temp_char.append('kith', kith.title())
@@ -128,7 +136,7 @@ def changeling(name, seeming, kith, *,
 
     return _cp_template_for_char(name, temp_char, prefs, fn=_insert_sk_data)
 
-def _minimal_character(ctype, groups, dead, foreign, prefs):
+def _minimal_character(ctype, groups, dead, foreign, location, prefs):
     """
     Create a minimal character object
 
@@ -139,8 +147,10 @@ def _minimal_character(ctype, groups, dead, foreign, prefs):
             (the default), an empty string to inlcude it with no details given,
             and a non-empty string to include the tag along with the contents of
             the argument.
-        foreign (bool): Details of non-standard residence. Leave empty to
+        foreign (bool|str): Details of non-standard residence. Leave empty to
             exclude the @foreign tag.
+        location (str): Details about where the character lives. Leave empty to
+            exclude the @location tag.
         prefs (Settings): Settings object
 
     Returns:
@@ -155,6 +165,8 @@ def _minimal_character(ctype, groups, dead, foreign, prefs):
         temp_char.append('dead', dead)
     if foreign is not False:
         temp_char.append('foreign', foreign)
+    if location is not False:
+        temp_char.append('location', location)
 
     return temp_char
 

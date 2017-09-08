@@ -32,6 +32,11 @@ def test_adds_filled_foreign_tag(campaign):
     data = campaign.get_character_data('testmann.nwod')
     assert data['foreign'] == ['Lives on the moon, with Steve']
 
+def test_adds_location_tag(campaign):
+    npc.commands.create_character.standard('testmann', 'human', location="Sea of Tranquility")
+    data = campaign.get_character_data('testmann.nwod')
+    assert data['location'] == ['Sea of Tranquility']
+
 class TestDead:
     """Test permutations of the --dead arg"""
 
