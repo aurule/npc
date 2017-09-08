@@ -408,6 +408,7 @@ class Character(defaultdict):
 
         tags_for_all('title')
         tags_or_flag('foreign')
+        tags_for_all('location')
         add_flag('wanderer')
         tags_for_all('freehold')
         for tagname in self.GROUP_TAGS:
