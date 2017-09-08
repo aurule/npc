@@ -9,8 +9,8 @@ import sys
 from os import chdir, getcwd, path
 
 # local packages
-from . import commands, util, settings
-from .__version__ import __version__
+from npc import commands, util, settings
+from npc.__version__ import __version__
 
 def start(argv=None):
     """

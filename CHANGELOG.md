@@ -11,6 +11,10 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 * New `campaign` option to the GUI that allows it to start in a given campaign directory
 * New `location` tag for specifying a non-foreign character location
 
+### Changed
+
+* Refactor cli file layout
+
 ## 1.3.0
 
 ### Highlights
