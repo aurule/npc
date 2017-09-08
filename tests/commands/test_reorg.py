@@ -41,6 +41,19 @@ def test_move_by_foreign(campaign, new_path):
     character = campaign.get_character(new_path)
     assert character.check()
 
+@pytest.mark.parametrize('new_path', [
+    os.path.join('Humans', 'Chicago', 'Manny Mafioso.nwod'),
+    os.path.join('Humans', 'Mafia', 'Mafia Mann.nwod'),
+    os.path.join('Humans', 'Police', 'Popo Panckett.nwod'),
+])
+def test_move_by_location(campaign, new_path):
+    """Reorg should move characters with a location to a matching folder under their type or group."""
+
+    campaign.populate_from_fixture_dir('reorg', 'by_location')
+    npc.commands.reorg('Characters')
+    character = campaign.get_character(new_path)
+    assert character.check()
+
 def test_partial_tree(campaign):
     """Should not choke when ideal dirs don't exist"""
 
