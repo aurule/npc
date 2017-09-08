@@ -26,8 +26,8 @@ def test_adds_group_tags(campaign):
     data = campaign.get_character_data('testmann.nwod')
     assert data['group'] == ['fork', 'spoon']
 
-def test_adds_foreign_tag(campaign):
-    """With just --foreign, add the tag and no notes"""
+def test_adds_filled_foreign_tag(campaign):
+    """With just --foreign, add the tag with notes"""
     npc.commands.create_character.standard('testmann', 'human', foreign="Lives on the moon, with Steve")
     data = campaign.get_character_data('testmann.nwod')
     assert data['foreign'] == ['Lives on the moon, with Steve']
