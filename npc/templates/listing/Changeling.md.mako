@@ -19,8 +19,8 @@ ${', '.join(character['title'])}
 % endif
 \
 ${character.get_first('type')}\
-% if character.has_items('foreign'):
- in ${' and '.join(character['foreign'])}\
+% if character.has_items('foreign') or character.has_items('location'):
+ in ${' and '.join(character['foreign'] + character['location'])}\
 % endif
 % if 'wanderer' in character:
 , Wanderer\
