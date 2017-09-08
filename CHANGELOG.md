@@ -10,6 +10,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 * New `campaign` option to the GUI that allows it to start in a given campaign directory
 * New `location` tag for specifying a non-foreign character location
+* List command and helpers now support a progress bar callback
+* CLI list output now shows a fancy progress bar
 
 ### Changed
 

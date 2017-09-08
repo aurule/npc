@@ -11,6 +11,7 @@ from os import chdir, getcwd, path
 # local packages
 from npc import commands, util, settings
 from npc.__version__ import __version__
+from . import progress_bar
 
 def start(argv=None):
     """
@@ -181,7 +182,7 @@ def _make_parser():
     parser_list.add_argument('--title', help="Title to show in the metadata. Overrides the title in settings.", metavar="TITLE")
     parser_list.add_argument('-o', '--outfile', nargs="?", const='-', default=None, help="File where the listing will be saved")
     parser_list.add_argument('--sort', choices=['first', 'last'], default='last', help="The sort order for characters. Defaults to 'last'.")
-    parser_list.set_defaults(func=commands.listing.make_list)
+    parser_list.set_defaults(func=commands.listing.make_list, progress=_update_progress_bar)
 
     # Dump raw character data
     parser_dump = subparsers.add_parser('dump', parents=[common_options, paths_parser], help="Export raw json data of all characters")
@@ -218,3 +219,7 @@ def _make_parser():
     parser_find.set_defaults(func=commands.find, serialize=['rules'])
 
     return parser
+
+def _update_progress_bar(index, total):
+    """Update the textual progressbar"""
+    progress_bar.bar(index, total, prefix='Generating:')
