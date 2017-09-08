@@ -58,7 +58,7 @@ def create_path_from_character(character: Character, *, target_path=None, **kwar
     # foreigners get a special folder
     if 'foreign' in character or 'wanderer' in character:
         target_path = _add_path_if_exists(target_path, 'Foreign')
-    if 'foreign' in character:
+    if character.has_items('foreign'):
         target_path = _add_path_if_exists(target_path, character.get_first('foreign'))
 
     # freeholds use their own folders
