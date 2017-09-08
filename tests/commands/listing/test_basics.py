@@ -1,5 +1,6 @@
 import npc
 import pytest
+import sys
 from tests.util import fixture_dir
 
 @pytest.mark.parametrize('outopt', [None, '-'])
@@ -20,3 +21,12 @@ def test_list_valid_json(list_json_output):
 
      # no assert needed: the json module raises exceptions when parsing fails.
     list_json_output('valid-json')
+
+def test_progress_callback(tmpdir, capsys):
+    """The progress callback should be called for every character"""
+
+    outfile = tmpdir.join("output.md")
+    search = fixture_dir('listing', 'valid-json')
+    npc.commands.listing.make_list(search, fmt='markdown', outfile=str(outfile), progress=lambda i, t: print("{} of {}".format(i, t), file=sys.stderr))
+    _, errtext = capsys.readouterr()
+    assert "0 of 3\n1 of 3\n2 of 3\n3 of 3\n" == errtext

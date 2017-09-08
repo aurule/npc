@@ -24,6 +24,9 @@ def listing(characters, outstream, *, include_metadata=None, metadata=None, **kw
             overwrite the generated values for those keys.
         prefs (Settings): Settings object. Used to get the location of template
             files.
+        progress (function): Callback function to track the progress of
+            generating a listing. Must accept the current count and total count.
+            Should print to stderr.
 
     Returns:
         A util.Result object. Openable will not be set.
@@ -31,6 +34,7 @@ def listing(characters, outstream, *, include_metadata=None, metadata=None, **kw
     prefs = kwargs.get('prefs', settings.InternalSettings())
     if not metadata:
         metadata = {}
+    update_progress = kwargs.get('progress', lambda i, t: False)
 
     if include_metadata:
         # coerce to canonical form
@@ -53,12 +57,16 @@ def listing(characters, outstream, *, include_metadata=None, metadata=None, **kw
         _prefs_get = prefs.get
         _out_write = outstream.write
 
-        for char in characters:
+        total = len(characters)
+        update_progress(0, total)
+        for index, char in enumerate(characters):
             body_file = _prefs_get("templates.listing.character.markdown.{}".format(char.type_key))
             if not body_file:
                 body_file = _prefs_get("templates.listing.character.markdown.default")
             body_template = Template(filename=body_file, module_directory=tempdir)
             _out_write(body_template.render(character=char))
+            update_progress(index + 1, total)
+
     return Result(True)
 
 def report(tables, outstream, **kwargs):

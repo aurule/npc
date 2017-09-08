@@ -37,6 +37,9 @@ def make_list(*search, ignore=None, fmt=None, metadata=None, title=None, outfile
             "list_sort" in settings.
         prefs (Settings): Settings object to use. Uses internal settings by
             default.
+        progress (function): Callback function to track the progress of
+            generating a listing. Must accept the current count and total count.
+            Should print to stderr. Not used by all formatters.
 
     Returns:
         Result object. Openable will contain the output file if given.
@@ -46,6 +49,7 @@ def make_list(*search, ignore=None, fmt=None, metadata=None, title=None, outfile
         ignore = []
     ignore.extend(prefs.get('paths.ignore'))
     sort_order = kwargs.get('sort', prefs.get('list_sort'))
+    update_progress = kwargs.get('progress', lambda i, t: False)
 
     characters = util.sort_characters(
         _prune_chars(parser.get_characters(flatten(search), ignore)),
@@ -77,7 +81,8 @@ def make_list(*search, ignore=None, fmt=None, metadata=None, title=None, outfile
             include_metadata=metadata_type,
             metadata=meta,
             prefs=prefs,
-            sectioner=_get_sectioner(sort_order))
+            sectioner=_get_sectioner(sort_order),
+            progress=update_progress)
 
     # pass errors straight through
     if not response.success:

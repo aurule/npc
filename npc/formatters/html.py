@@ -32,6 +32,9 @@ def listing(characters, outstream, *, include_metadata=None, metadata=None, part
         sectioner (function): Function that returns a section heading for each
             character. When its return value changes, the section template is
             rendered with the new title. Omit to suppress sections.
+        progress (function): Callback function to track the progress of
+            generating a listing. Must accept the current count and total count.
+            Should print to stderr.
 
     Returns:
         A util.Result object. Openable will not be set.
@@ -41,6 +44,7 @@ def listing(characters, outstream, *, include_metadata=None, metadata=None, part
     if not metadata:
         metadata = {}
     sectioner = kwargs.get('sectioner', lambda c: '')
+    update_progress = kwargs.get('progress', lambda i, t: False)
 
     encoding_options = {
         'output_encoding': encoding,
@@ -75,7 +79,9 @@ def listing(characters, outstream, *, include_metadata=None, metadata=None, part
         section_template = Template(
             filename=_prefs_get("templates.listing.section.html"),
             module_directory=tempdir, **encoding_options)
-        for char in characters:
+        total = len(characters)
+        update_progress(0, total)
+        for index, char in enumerate(characters):
             if sectioner(char) != section_title:
                 section_title = sectioner(char)
                 _out_write(
@@ -90,6 +96,8 @@ def listing(characters, outstream, *, include_metadata=None, metadata=None, part
                     character=char.copy_and_alter(html.escape),
                     mdconv=_clean_conv().convert
                     ))
+            update_progress(index + 1, total)
+
     if not partial:
         footer_template = Template(filename=prefs.get("templates.listing.footer.html"), **encoding_options)
         outstream.write(footer_template.render())
