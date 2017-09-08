@@ -41,10 +41,8 @@ def create_path_from_character(character: Character, *, target_path=None, **kwar
 
     # add type-based directory if we can
     ctype = character.type_key
-    if ctype:
+    if ctype is not None:
         target_path = _add_path_if_exists(target_path, prefs.get('type_paths.{}'.format(ctype), '.'))
-    else:
-        ctype = 'none'
 
     # handle type-specific considerations
     if ctype == 'changeling':
