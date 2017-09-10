@@ -201,6 +201,7 @@ class MainWindow(Ui_MainWindow):
         Args:
             root_dir (str): Root directory of the campaign folder to load
         """
+        root_dir = path.expanduser(root_dir)
         try:
             chdir(root_dir)
         except:
