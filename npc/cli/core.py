@@ -222,4 +222,4 @@ def _make_parser():
 
 def _update_progress_bar(index, total):
     """Update the textual progressbar"""
-    progress_bar.bar(index, total, prefix='Generating:')
+    progress_bar.bar(index, total, prefix='Generating:', length=50)
