@@ -29,7 +29,7 @@
 %endif
 %if character.has_items('court'):
 , ${character.get_first('court')} Court${make_ranks(character.get_first('court'))}\
-%else
+%else:
 , Courtless
 %endif
 %if character.has_items('freehold'):
