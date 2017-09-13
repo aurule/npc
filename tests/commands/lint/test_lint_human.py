@@ -10,7 +10,7 @@ def lint_output():
     def do_lint(charname, strict=False):
         search = fixture_dir('linter', 'characters', 'Humans', charname)
         result = npc.commands.lint(search, strict=strict)
-        return "\n".join(result.printable)
+        return "\n".join(result.printables)
     return do_lint
 
 def test_virtue(lint_output):

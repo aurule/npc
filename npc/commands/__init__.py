@@ -161,7 +161,7 @@ def reorg(*search, ignore=None, purge=False, verbose=False, dryrun=False, **kwar
             if not dryrun:
                 rmdir(empty_path)
 
-    return Result(True, printable=changelog)
+    return Result(True, printables=changelog)
 
 def dump(*search, ignore=None, sort=False, metadata=False, outfile=None, **kwargs):
     """
@@ -254,7 +254,7 @@ def lint(*search, ignore=None, fix=False, strict=False, **kwargs):
             else:
                 printable.append("{} in '{}'".format(character.problems[0], character['path']))
 
-    return Result(True, openable=openable, printable=printable)
+    return Result(True, openable=openable, printables=printable)
 
 def init(create_types=False, create_all=False, **kwargs):
     """
@@ -270,10 +270,10 @@ def init(create_types=False, create_all=False, **kwargs):
         campaign_name (str): Name of the campaign. Defaults to the name of the
             current directory.
         dryrun (bool): Do not create anything. This adds a string of changes
-            that would be made to the returned Result object's printable
+            that would be made to the returned Result object's printables
             variable.
-        verbose (bool): Detail all changes made in the Result object's printable
-            variable.
+        verbose (bool): Detail all changes made in the Result object's
+            printables variable.
         prefs (Settings): Settings object to use. Uses internal settings by
             default.
 
@@ -312,7 +312,7 @@ def init(create_types=False, create_all=False, **kwargs):
         for _, type_path in prefs.get('type_paths').items():
             new_dir(path.join(cbase, type_path))
 
-    return Result(True, printable=changelog)
+    return Result(True, printables=changelog)
 
 def open_settings(location, show_defaults=False, settings_type=None, **kwargs):
     """
@@ -452,10 +452,10 @@ def find(*rules, search=None, ignore=None, **kwargs):
 
     if dryrun:
         openable = []
-        printable = paths
+        printables = paths
     else:
         openable = paths
-        printable = []
+        printables = []
 
     return Result(True, openable=openable, printable=printable)
 

@@ -86,8 +86,8 @@ def start(argv=None):
 
     if not args.batch:
         # print any messages that were returned
-        if result.printable:
-            print("\n".join(result.printable))
+        if result.printables:
+            print("\n".join(result.printables))
 
         # open the resulting files, if allowed
         if result.openable:
