@@ -28,7 +28,7 @@ class Result:
             leave blank.
     """
     def __init__(self, success, **kwargs):
-        super(Result, self).__init__()
+        super().__init__()
         self.success = success
         self.openable = kwargs.get('openable', [])
         self.errcode = kwargs.get('errcode', 0)
