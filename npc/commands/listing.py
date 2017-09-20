@@ -3,7 +3,7 @@ Module for creating a list of characters
 """
 
 from npc import settings, parser, formatters
-from npc.util import Result, flatten
+from npc.util import Result, flatten, result
 
 from . import util
 
@@ -90,7 +90,7 @@ def make_list(*search, ignore=None, fmt=None, metadata=None, title=None, outfile
 
     openable = [outfile] if outfile and outfile != '-' else None
 
-    return Result(True, openable=openable)
+    return result.Success(openable=openable)
 
 def _prune_chars(characters):
     """

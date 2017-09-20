@@ -6,7 +6,7 @@ import re
 from os import path
 
 from npc import settings
-from npc.util import Result
+from npc.util import Result, result
 from npc.character import Character
 
 from .util import create_path_from_character
@@ -221,4 +221,4 @@ def _cp_template_for_char(name, character, prefs, fn=None):
     except IOError as err:
         return Result(False, errmsg=err.strerror + " ({})".format(target_path), errcode=4)
 
-    return Result(True, openable=[target_path])
+    return result.Success(openable=[target_path])

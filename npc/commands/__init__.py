@@ -14,7 +14,7 @@ import itertools
 
 import npc
 from npc import formatters, linters, parser, settings
-from npc.util import Result, flatten
+from npc.util import Result, flatten, result
 from npc.character import Character
 
 from . import create_character, listing, util
@@ -108,7 +108,7 @@ def session(**kwargs):
             new_plot.write(' ')
         openable.append(new_plot_path)
 
-    return Result(True, openable=openable)
+    return result.Success(openable=openable)
 
 def reorg(*search, ignore=None, purge=False, verbose=False, dryrun=False, **kwargs):
     """
@@ -161,7 +161,7 @@ def reorg(*search, ignore=None, purge=False, verbose=False, dryrun=False, **kwar
             if not dryrun:
                 rmdir(empty_path)
 
-    return Result(True, printables=changelog)
+    return result.Success(printables=changelog)
 
 def dump(*search, ignore=None, sort=False, metadata=False, outfile=None, **kwargs):
     """
@@ -205,7 +205,7 @@ def dump(*search, ignore=None, sort=False, metadata=False, outfile=None, **kwarg
 
     openable = [outfile] if outfile and outfile != '-' else None
 
-    return Result(True, openable=openable)
+    return result.Success(openable=openable)
 
 def lint(*search, ignore=None, fix=False, strict=False, **kwargs):
     """
@@ -254,7 +254,7 @@ def lint(*search, ignore=None, fix=False, strict=False, **kwargs):
             else:
                 printable.append("{} in '{}'".format(character.problems[0], character['path']))
 
-    return Result(True, openable=openable, printables=printable)
+    return result.Success(openable=openable, printables=printable)
 
 def init(create_types=False, create_all=False, **kwargs):
     """
@@ -312,7 +312,7 @@ def init(create_types=False, create_all=False, **kwargs):
         for _, type_path in prefs.get('type_paths').items():
             new_dir(path.join(cbase, type_path))
 
-    return Result(True, printables=changelog)
+    return result.Success(printables=changelog)
 
 def open_settings(location, show_defaults=False, settings_type=None, **kwargs):
     """
@@ -351,7 +351,7 @@ def open_settings(location, show_defaults=False, settings_type=None, **kwargs):
         openable = [prefs.get_settings_path('default', settings_type), target_path]
     else:
         openable = [target_path]
-    return Result(True, openable=openable)
+    return result.Success(openable=openable)
 
 def report(*tags, search=None, ignore=None, fmt=None, outfile=None, **kwargs):
     """
@@ -407,7 +407,7 @@ def report(*tags, search=None, ignore=None, fmt=None, outfile=None, **kwargs):
 
     openable = [outfile] if outfile and outfile != '-' else None
 
-    return Result(True, openable=openable)
+    return result.Success(openable=openable)
 
 def find(*rules, search=None, ignore=None, **kwargs):
     """
@@ -457,7 +457,7 @@ def find(*rules, search=None, ignore=None, **kwargs):
         openable = paths
         printables = []
 
-    return Result(True, openable=openable, printable=printable)
+    return result.Success(openable=openable, printable=printable)
 
 def find_characters(rules, characters):
     """
