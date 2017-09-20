@@ -7,7 +7,7 @@ from mako.template import Template
 
 import npc
 from npc import settings
-from npc.util import Result
+from npc.util import Result, result
 
 def listing(characters, outstream, *, include_metadata=None, metadata=None, **kwargs):
     """
@@ -67,7 +67,7 @@ def listing(characters, outstream, *, include_metadata=None, metadata=None, **kw
             _out_write(body_template.render(character=char))
             update_progress(index + 1, total)
 
-    return Result(True)
+    return result.Success()
 
 def report(tables, outstream, **kwargs):
     """
@@ -87,4 +87,4 @@ def report(tables, outstream, **kwargs):
         for key, table in tables.items():
             outstream.write(table_template.render(data=table, tag=key))
 
-    return Result(True)
+    return result.Success()

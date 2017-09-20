@@ -101,7 +101,7 @@ def listing(characters, outstream, *, include_metadata=None, metadata=None, part
     if not partial:
         footer_template = Template(filename=prefs.get("templates.listing.footer.html"), **encoding_options)
         outstream.write(footer_template.render())
-    return util.Result(True)
+    return util.result.Success()
 
 def report(tables, outstream, **kwargs):
     """
@@ -132,4 +132,4 @@ def report(tables, outstream, **kwargs):
         for key, table in tables.items():
             outstream.write(table_template.render(data=table, tag=key))
 
-    return util.Result(True)
+    return util.result.Success()
