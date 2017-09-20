@@ -42,3 +42,15 @@ class Result:
 
     def __bool__(self):
         return self.success
+
+class Success(Result):
+    """Data about the successful fresult of a command"""
+    def __init__(self, **kwargs):
+        super().__init__(True, errcode=0, **kwargs)
+
+    def __str__(self):
+        return "Success"
+
+    def __bool__(self):
+        return True
+
