@@ -44,7 +44,7 @@ class Result:
         return self.success
 
 class Success(Result):
-    """Data about the successful fresult of a command"""
+    """Data about the successful result of a command"""
     def __init__(self, **kwargs):
         super().__init__(True, errcode=0, **kwargs)
 
