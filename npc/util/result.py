@@ -6,6 +6,8 @@ class Result:
     """
     Data about the result of a subcommand
 
+    A more specific result class should be used whenever possible
+
     Attributes:
         success (bool): Whether the subcommand ran correctly
         openable (list): Paths to files which were changed by or are relevant to
@@ -58,7 +60,7 @@ class Failure(Result):
     """
     Data about a generic failure result
 
-    A more specific result class should be used whenever possible
+    A more specific error class should be used whenever possible
     """
     def __init__(self, **kwargs):
         super().__init__(False, **kwargs)
