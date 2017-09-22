@@ -54,3 +54,17 @@ class Success(Result):
     def __bool__(self):
         return True
 
+class Failure(Result):
+    """
+    Data about a generic failure result
+
+    A more specific result class should be used whenever possible
+    """
+    def __init__(self, **kwargs):
+        super().__init__(False, **kwargs)
+
+    def __str__(self):
+        return self.errmsg
+
+    def __bool__(self):
+        return False
