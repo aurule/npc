@@ -9,7 +9,7 @@ import sys
 from npc.character import Character
 from npc import settings
 
-def create_path_from_character(character: Character, *, base_path=None, **kwargs):
+def create_path_from_character(character: Character, *, base_path=None, heirarchy=None, **kwargs):
     """
     Determine the best file path for a character.
 
@@ -32,6 +32,9 @@ def create_path_from_character(character: Character, *, base_path=None, **kwargs
     if not base_path:
         base_path = prefs.get('paths.characters')
     target_path = base_path
+
+    if not heirarchy:
+        heirarchy = prefs.get('paths.heirarchy')
 
     def _add_path_if_exists(base, potential):
         """Add a directory to the base path if that directory exists."""
