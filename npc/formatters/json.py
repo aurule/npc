@@ -38,7 +38,7 @@ def listing(characters, outstream, *, include_metadata=False, metadata=None, **k
     try:
         json.dump(characters, outstream)
     except TypeError as err:
-        return Result(False, errmsg=err, errcode=9)
+        return result.Failure(errmsg=err)
     return result.Success()
 
 def report(tables, outstream, **kwargs):
@@ -55,6 +55,6 @@ def report(tables, outstream, **kwargs):
     try:
         json.dump(tables, outstream)
     except TypeError as err:
-        return Result(False, errmsg=err, errcode=9)
+        return result.Failure(errmsg=err)
     return result.Success()
 
