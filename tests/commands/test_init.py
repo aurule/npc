@@ -5,7 +5,7 @@ import json
 def test_init_bare(prefs, campaign):
     npc.commands.init(prefs=prefs)
     for k, p in prefs.get('paths').items():
-        if k == "ignore":
+        if k in ["ignore", "heirarchy"]:
             continue
         assert os.path.exists(p)
 

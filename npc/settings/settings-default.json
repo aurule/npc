@@ -35,7 +35,7 @@
 
         // The plot path is searched for plot files, and is where new ones will
         // be created.
-        "plot": "Plot"
+        "plot": "Plot",
 
         // The heirarchy describes how to build a path from character tags.
         "heirarchy": ""

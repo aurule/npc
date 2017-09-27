@@ -205,7 +205,7 @@ def init(create_types=False, create_all=False, **kwargs):
             makedirs(path_name, mode=0o775, exist_ok=True)
 
     for key, basic_path in prefs.get('paths').items():
-        if key == "ignore":
+        if key in ["ignore", "heirarchy"]:
             continue
         new_dir(basic_path)
     if not path.exists(prefs.get_settings_path('campaign')):
