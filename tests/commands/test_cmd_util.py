@@ -7,27 +7,27 @@ from tests.util import fixture_dir
 class TestCreatePath:
     def test_no_type(self, tmpdir):
         char = npc.Character(type=['human'])
-        result = util.create_path_from_character(char, target_path=str(tmpdir))
+        result = util.create_path_from_character(char, base_path=str(tmpdir))
         assert result == str(tmpdir)
 
     def test_type(self, tmpdir):
         char = npc.Character(type=['human'])
         tmpdir.mkdir('Humans')
-        result = util.create_path_from_character(char, target_path=str(tmpdir))
+        result = util.create_path_from_character(char, base_path=str(tmpdir))
         assert result == str(tmpdir.join('Humans'))
 
     def test_changeling_court(self, tmpdir):
         char = npc.Character(type=['changeling'], court=['Spring'])
         tmpdir.mkdir('Changelings')
         tmpdir.join('Changelings').mkdir('Spring')
-        result = util.create_path_from_character(char, target_path=str(tmpdir))
+        result = util.create_path_from_character(char, base_path=str(tmpdir))
         assert result == str(tmpdir.join('Changelings', 'Spring'))
 
     def test_changeling_courtless(self, tmpdir):
         char = npc.Character(type=['changeling'])
         tmpdir.mkdir('Changelings')
         tmpdir.join('Changelings').mkdir('Courtless')
-        result = util.create_path_from_character(char, target_path=str(tmpdir))
+        result = util.create_path_from_character(char, base_path=str(tmpdir))
         assert result == str(tmpdir.join('Changelings', 'Courtless'))
 
     @pytest.mark.parametrize('tagname', ('foreign', 'wanderer'))
@@ -35,27 +35,27 @@ class TestCreatePath:
         char = npc.Character()
         char.append(tagname, 'Chicago')
         tmpdir.mkdir('Foreign')
-        result = util.create_path_from_character(char, target_path=str(tmpdir))
+        result = util.create_path_from_character(char, base_path=str(tmpdir))
         assert result == str(tmpdir.join('Foreign'))
 
     def test_nested_groups(self, tmpdir):
         char = npc.Character(group=['group1', 'group2'])
         tmpdir.mkdir('group1')
         tmpdir.join('group1').mkdir('group2')
-        result = util.create_path_from_character(char, target_path=str(tmpdir))
+        result = util.create_path_from_character(char, base_path=str(tmpdir))
         assert result == str(tmpdir.join('group1', 'group2'))
 
     def test_sequential_groups(self, tmpdir):
         char = npc.Character(group=['group1', 'group2'])
         tmpdir.mkdir('group1')
         tmpdir.mkdir('group2')
-        result = util.create_path_from_character(char, target_path=str(tmpdir))
+        result = util.create_path_from_character(char, base_path=str(tmpdir))
         assert result == str(tmpdir.join('group1'))
 
     def test_missing_group_dir(self, tmpdir):
         char = npc.Character(group=['group1', 'group2'])
         tmpdir.mkdir('group2')
-        result = util.create_path_from_character(char, target_path=str(tmpdir))
+        result = util.create_path_from_character(char, base_path=str(tmpdir))
         assert result == str(tmpdir.join('group2'))
 
     def test_precedence(self, tmpdir):
@@ -74,7 +74,7 @@ class TestCreatePath:
         tmpdir.join('Changelings', 'Summer').mkdir('group2')
         tmpdir.join('Changelings').mkdir('group2')
 
-        result = util.create_path_from_character(char, target_path=str(tmpdir))
+        result = util.create_path_from_character(char, base_path=str(tmpdir))
         assert result == str(tmpdir.join('Changelings', 'Summer', 'group2'))
 
 def test_find_empty_dirs(tmpdir):

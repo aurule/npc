@@ -9,18 +9,18 @@ import sys
 from npc.character import Character
 from npc import settings
 
-def create_path_from_character(character: Character, *, target_path=None, **kwargs):
+def create_path_from_character(character: Character, *, base_path=None, **kwargs):
     """
     Determine the best file path for a character.
 
-    The path is created underneath target_path. It only includes directories
+    The path is created underneath base_path. It only includes directories
     which already exist. It's used by character creation, linting, and reorg.
 
     This function ignores tags not found in Character.KNOWN_TAGS.
 
     Args:
         character: Parsed character data
-        target_path (str): Base path for character files
+        base_path (str): Base path for character files
         prefs (Settings): Settings object to use. Uses internal settings by
             default.
 
@@ -29,8 +29,9 @@ def create_path_from_character(character: Character, *, target_path=None, **kwar
     """
     prefs = kwargs.get('prefs', settings.InternalSettings())
 
-    if not target_path:
-        target_path = prefs.get('paths.characters')
+    if not base_path:
+        base_path = prefs.get('paths.characters')
+    target_path = base_path
 
     def _add_path_if_exists(base, potential):
         """Add a directory to the base path if that directory exists."""

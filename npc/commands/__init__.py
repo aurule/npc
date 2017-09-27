@@ -55,7 +55,7 @@ def reorg(*search, ignore=None, purge=False, verbose=False, dryrun=False, **kwar
         return result.FSError(errmsg="Cannot access '{}'".format(base_path))
 
     for parsed_character in parser.get_characters(flatten(search), ignore):
-        new_path = util.create_path_from_character(parsed_character, target_path=base_path)
+        new_path = util.create_path_from_character(parsed_character, base_path=base_path)
         if new_path != path.dirname(parsed_character['path']):
             if verbose:
                 changelog.append("Moving {} to {}".format(parsed_character['path'], new_path))
