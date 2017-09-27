@@ -61,7 +61,7 @@ def make_list(*search, ignore=None, fmt=None, metadata=None, title=None, outfile
 
     dumper = formatters.get_listing_formatter(out_type)
     if not dumper:
-        return Result(False, errmsg="Cannot create output of format '{}'".format(out_type), errcode=5)
+        return result.OptionError(errmsg="Cannot create output of format '{}'".format(out_type))
 
     if metadata == 'default' and out_type != 'json':
         # Ensure 'default' metadata type gets replaced with the right default

@@ -43,7 +43,7 @@ def standard(name, ctype, *, dead=False, foreign=False, **kwargs):
     ctype = ctype.lower()
 
     if ctype not in prefs.get('templates'):
-        return Result(False, errmsg="Unrecognized template '{}'".format(ctype), errcode=7)
+        return result.ConfigError(errmsg="Unrecognized template '{}'".format(ctype))
 
     # build minimal character
     temp_char = _minimal_character(
@@ -191,7 +191,7 @@ def _cp_template_for_char(name, character, prefs, fn=None):
     # get template path
     template_path = prefs.get('templates.{}'.format(character.type_key))
     if not template_path:
-        return Result(False, errmsg="Could not find template {}".format(character.type_key), errcode=7)
+        return result.ConfigError(errmsg="Could not find template {}".format(character.type_key))
 
     # get path for the new file
     target_path = create_path_from_character(character, prefs=prefs)

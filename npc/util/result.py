@@ -64,6 +64,7 @@ class Failure(Result):
     """
     def __init__(self, **kwargs):
         super().__init__(False, **kwargs)
+        self.errcode = 1
 
     def __str__(self):
         return self.errmsg
@@ -78,5 +79,10 @@ class FSError(Failure):
 
 class OptionError(Failure):
     """Data about a failure due to unrecognized options"""
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+
+class ConfigError(Failure):
+    """Data about a failure due to bad or missing configuration data"""
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
