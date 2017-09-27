@@ -114,3 +114,33 @@ def latest(thingtype, **kwargs):
 
 def latest_file_info(target_path, target_regex):
     pass
+    """
+    Get the "latest" file in target_path that matches target_regex
+
+    Args:
+        target_path (str): Path to search for the latest file
+        target_regex (regex): Regex to match against files. Must contain a
+            capture group named 'number'.
+
+    Result:
+        Dict contianing information about the file found that matches the regex
+        and has the largest captured number.
+    """
+    buncha_files = [f.name for f in scandir(target_path) if f.is_file() and target_regex.match(path.splitext(f.name)[0])]
+    try:
+        latest_file = max(buncha_files, key=lambda f: re.split(r'\s', f)[1])
+        (bare_name, bare_ext) = path.splitext(latest_file)
+        file_match = target_regex.match(bare_name)
+        file_number = int(file_match.group('number'))
+    except ValueError:
+        latest_file = ''
+        bare_ext = '.md'
+        file_number = 0
+
+    return {
+        'name': latest_file,
+        'ext': bare_ext,
+        'number': file_number,
+        'path': path.join(target_path, latest_file),
+        'exists': file_number > 0
+    }

@@ -14,6 +14,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 * CLI list output now shows a fancy progress bar
     - Supports integration with other progress bars for the gui
 * Explicit result objects for success state
+* New `latest` command to open the latest plot file, session file, or both
 
 ### Changed
 

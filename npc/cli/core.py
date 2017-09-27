@@ -139,7 +139,12 @@ def _make_parser():
 
     # Session subcommand
     parser_session = subparsers.add_parser('session', parents=[common_options], help="Create files for a new game session")
-    parser_session.set_defaults(func=commands.session)
+    parser_session.set_defaults(func=commands.story.session)
+
+    # Latest plot/session command
+    parser_latest = subparsers.add_parser('latest', parents=[common_options], help="Get the latest plot and/or session files")
+    parser_latest.add_argument('thingtype', nargs='?', default='both', choices=['both', 'session', 'plot'], help="Type of file to open. One of 'plot', 'session', or 'both'. Defualts to 'both'.")
+    parser_latest.set_defaults(func=commands.story.latest, serialize=['thingtype'])
 
     # Create generic character
     parser_generic = subparsers.add_parser('new', parents=[common_options, character_parser], help="Create a new character from the named template")

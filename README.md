@@ -90,6 +90,12 @@ The `session` command creates the files that I need at the very start of a gamin
 
 If anything goes wrong in this process (like malformatted file names) it will yell about it. Everything in a file name after "` - `" is ignored.
 
+## Open Latest Plot and Session Files
+
+The `latest` command opens the most recent plot and/or session file, so that I can easily find it without digging through a crowded folder.
+
+The only option is what kind of file to open. Passing `session` opens the latest session; `plot` opens the latest plot; and `both` opens the latest plot and session together.
+
 ## Create a Character
 
 Most subcommands involve creating a specific type of character. Character files are put into the base characters directory (`Characters/` by default), with further options based on their type, groups, and sometimes other factors.
