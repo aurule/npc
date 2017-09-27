@@ -70,3 +70,8 @@ class Failure(Result):
 
     def __bool__(self):
         return False
+
+class FSError(Failure):
+    """Data about a failure due to external filesystem problems"""
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)

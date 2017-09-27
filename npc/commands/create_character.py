@@ -6,7 +6,7 @@ import re
 from os import path
 
 from npc import settings
-from npc.util import Result, result
+from npc.util import Result, FSError, result
 from npc.character import Character
 
 from .util import create_path_from_character
@@ -209,7 +209,7 @@ def _cp_template_for_char(name, character, prefs, fn=None):
         with open(template_path, 'r') as template_data:
             data = header + template_data.read()
     except IOError as err:
-        return Result(False, errmsg=err.strerror + " ({})".format(template_path), errcode=4)
+        return FSERror(errmsg=err.strerror + " ({})".format(template_path))
 
     if callable(fn):
         data = fn(data)
@@ -219,6 +219,6 @@ def _cp_template_for_char(name, character, prefs, fn=None):
         with open(target_path, 'w') as char_file:
             char_file.write(data)
     except IOError as err:
-        return Result(False, errmsg=err.strerror + " ({})".format(target_path), errcode=4)
+        return FSError(errmsg=err.strerror + " ({})".format(target_path))
 
     return result.Success(openable=[target_path])
