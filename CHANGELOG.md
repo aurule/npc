@@ -19,6 +19,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 * Refactor cli file layout
 * Added more explicit result classes and removed old error codes
+* Refactor session command into story module
 
 ## 1.3.0
 
