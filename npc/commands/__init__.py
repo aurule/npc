@@ -39,7 +39,7 @@ def session(**kwargs):
     session_path = prefs.get('paths.session')
 
     if not (path.exists(plot_path) and path.exists(session_path)):
-        return FSError(errmsg="Cannot access paths '{}' and/or '{}'".format(plot_path, session_path))
+        return result.FSError(errmsg="Cannot access paths '{}' and/or '{}'".format(plot_path, session_path))
 
     plot_re = re.compile(r'(?i)^plot (?P<number>\d+)$')
     session_re = re.compile(r'(?i)^session (?P<number>\d+)$')
@@ -144,7 +144,7 @@ def reorg(*search, ignore=None, purge=False, verbose=False, dryrun=False, **kwar
 
     base_path = prefs.get('paths.characters')
     if not path.exists(base_path):
-        return FSError(errmsg="Cannot access '{}'".format(base_path))
+        return result.FSError(errmsg="Cannot access '{}'".format(base_path))
 
     for parsed_character in parser.get_characters(flatten(search), ignore):
         new_path = util.create_path_from_character(parsed_character, target_path=base_path)
