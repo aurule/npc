@@ -44,10 +44,7 @@ def listing(characters, outstream, *, include_metadata=None, metadata=None, **kw
         # load and render template
         header_file = prefs.get("templates.listing.header.markdown.{}".format(include_metadata))
         if not header_file:
-            return Result(
-                False,
-                errmsg="Unrecognized metadata format option '{}'".format(include_metadata),
-                errcode=6)
+            return result.OptionError(errmsg="Unrecognized metadata format option '{}'".format(include_metadata))
 
         header_template = Template(filename=header_file)
         outstream.write(header_template.render(metadata=metadata))

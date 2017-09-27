@@ -75,3 +75,8 @@ class FSError(Failure):
     """Data about a failure due to external filesystem problems"""
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
+
+class OptionError(Failure):
+    """Data about a failure due to unrecognized options"""
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
