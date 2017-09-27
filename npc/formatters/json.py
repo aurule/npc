@@ -7,7 +7,7 @@ the actual output. At most, they add some keys to the data first.
 
 import json
 import npc
-from npc.util import Result, result
+from npc.util import result
 
 def listing(characters, outstream, *, include_metadata=False, metadata=None, **kwargs):
     """

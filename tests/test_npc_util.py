@@ -47,14 +47,14 @@ def test_open_files(prefs):
 
 class TestResult:
     def test_str_success(self):
-        result = util.Result(True)
+        result = util.result.Result(True)
         assert str(result) == "Success"
 
     def test_str_failure(self):
-        result = util.Result(False, errmsg="There's a problem or something")
+        result = util.result.Result(False, errmsg="There's a problem or something")
         assert str(result) == "There's a problem or something"
 
     @pytest.mark.parametrize('val', [True, False])
     def test_bool(self, val):
-        result = util.Result(val)
+        result = util.result.Result(val)
         assert bool(result) == val

@@ -14,7 +14,7 @@ import itertools
 
 import npc
 from npc import formatters, linters, parser, settings
-from npc.util import Result, flatten, result
+from npc.util import flatten, result
 from npc.character import Character
 
 from . import create_character, listing, util

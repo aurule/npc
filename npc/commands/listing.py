@@ -3,7 +3,7 @@ Module for creating a list of characters
 """
 
 from npc import settings, parser, formatters
-from npc.util import Result, flatten, result
+from npc.util import flatten, result
 
 from . import util
 

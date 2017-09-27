@@ -21,8 +21,7 @@ def start(argv=None):
         argv (list): Arguments from the command invocation
 
     Returns:
-        Return code indicating success or failure type. See `util.Result` for a
-        list of return codes.
+        Integer code of zero for success or non-zero for failure.
     """
 
     # create parser and parse args

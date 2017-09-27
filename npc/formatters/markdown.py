@@ -7,7 +7,7 @@ from mako.template import Template
 
 import npc
 from npc import settings
-from npc.util import Result, result
+from npc.util import result
 
 def listing(characters, outstream, *, include_metadata=None, metadata=None, **kwargs):
     """

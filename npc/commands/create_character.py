@@ -6,7 +6,7 @@ import re
 from os import path
 
 from npc import settings
-from npc.util import Result, result
+from npc.util import result
 from npc.character import Character
 
 from .util import create_path_from_character
@@ -199,7 +199,7 @@ def _cp_template_for_char(name, character, prefs, fn=None):
     filename = name + path.splitext(template_path)[1]
     target_path = path.join(target_path, filename)
     if path.exists(target_path):
-        return Result(False, errmsg="Character '{}' already exists!".format(name), errcode=1)
+        return result.FSError(errmsg="Character '{}' already exists!".format(name))
 
     # Add tags
     header = character.build_header() + '\n\n'
