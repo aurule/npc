@@ -12,11 +12,13 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 * New `location` tag for specifying a non-foreign character location
 * List command and helpers now support a progress bar callback
 * CLI list output now shows a fancy progress bar
+    - Supports integration with other progress bars for the gui
 * Explicit result objects for success state
 
 ### Changed
 
 * Refactor cli file layout
+* Added more explicit result classes and removed old error codes
 
 ## 1.3.0
 
