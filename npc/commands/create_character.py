@@ -42,8 +42,8 @@ def standard(name, ctype, *, dead=False, foreign=False, **kwargs):
     location = kwargs.get('location', False)
     ctype = ctype.lower()
 
-    if ctype not in prefs.get('templates'):
-        return result.ConfigError(errmsg="Unrecognized template '{}'".format(ctype))
+    if not prefs.get("types.{}.sheet_template".format(ctype)):
+        return result.ConfigError(errmsg="Character type '{}' does not have a sheet template".format(ctype))
 
     # build minimal character
     temp_char = _minimal_character(
@@ -157,7 +157,7 @@ def _minimal_character(ctype, groups, dead, foreign, location, prefs):
         Character object
     """
     temp_char = Character()
-    temp_char.append('description', prefs.get('template_header'))
+    temp_char.append('description', prefs.get('character_header'))
     temp_char.append('type', ctype.title())
     if groups:
         temp_char['group'] = groups
@@ -189,7 +189,7 @@ def _cp_template_for_char(name, character, prefs, fn=None):
         Result object. Openable will contain the path to the new character file.
     """
     # get template path
-    template_path = prefs.get('templates.{}'.format(character.type_key))
+    template_path = prefs.get('{}.sheet_template'.format(character.type_key))
     if not template_path:
         return result.ConfigError(errmsg="Could not find template {}".format(character.type_key))
 

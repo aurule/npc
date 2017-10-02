@@ -30,7 +30,7 @@ def create_path_from_character(character: Character, *, base_path=None, heirarch
     prefs = kwargs.get('prefs', settings.InternalSettings())
 
     if not base_path:
-        base_path = prefs.get('paths.characters')
+        base_path = prefs.get('paths.required.characters')
     target_path = base_path
 
     if not heirarchy:
@@ -46,7 +46,7 @@ def create_path_from_character(character: Character, *, base_path=None, heirarch
     # add type-based directory if we can
     ctype = character.type_key
     if ctype is not None:
-        target_path = _add_path_if_exists(target_path, prefs.get('type_paths.{}'.format(ctype), '.'))
+        target_path = _add_path_if_exists(target_path, prefs.get('types.{}.type_path'.format(ctype), '.'))
 
     # handle type-specific considerations
     if ctype == 'changeling':

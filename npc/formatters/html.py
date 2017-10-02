@@ -40,7 +40,7 @@ def listing(characters, outstream, *, include_metadata=None, metadata=None, part
         A util.Result object. Openable will not be set.
     """
     prefs = kwargs.get('prefs', settings.InternalSettings())
-    encoding = kwargs.get('encoding', prefs.get('html_encoding'))
+    encoding = kwargs.get('encoding', prefs.get('listing.html_encoding'))
     if not metadata:
         metadata = {}
     sectioner = kwargs.get('sectioner', lambda c: '')
@@ -54,14 +54,14 @@ def listing(characters, outstream, *, include_metadata=None, metadata=None, part
     if not partial:
         if include_metadata:
             # load and render template
-            header_file = prefs.get("templates.listing.header.html.{}".format(include_metadata))
+            header_file = prefs.get("listing.templates.html.header.{}".format(include_metadata))
             if not header_file:
                 return util.result.OptionError(errmsg="Unrecognized metadata format option '{}'".format(include_metadata))
 
             header_template = Template(filename=header_file, **encoding_options)
             outstream.write(header_template.render(metadata=metadata))
         else:
-            header_template = Template(filename=prefs.get("templates.listing.header.html.plain"), **encoding_options)
+            header_template = Template(filename=prefs.get("listing.templates.html.header.plain"), **encoding_options)
             outstream.write(header_template.render(encoding=encoding))
 
     with tempfile.TemporaryDirectory() as tempdir:
@@ -74,7 +74,7 @@ def listing(characters, outstream, *, include_metadata=None, metadata=None, part
 
         section_title = ''
         section_template = Template(
-            filename=_prefs_get("templates.listing.section.html"),
+            filename=_prefs_get("listing.templates.html.section"),
             module_directory=tempdir, **encoding_options)
         total = len(characters)
         update_progress(0, total)
@@ -84,9 +84,9 @@ def listing(characters, outstream, *, include_metadata=None, metadata=None, part
                 _out_write(
                     section_template.render(
                         title=section_title))
-            body_file = _prefs_get("templates.listing.character.html.{}".format(char.type_key))
+            body_file = _prefs_get("listing.templates.html.character.{}".format(char.type_key))
             if not body_file:
-                body_file = _prefs_get("templates.listing.character.html.default")
+                body_file = _prefs_get("listing.templates.html.character.default")
             body_template = Template(filename=body_file, module_directory=tempdir, **encoding_options)
             _out_write(
                 body_template.render(
@@ -96,7 +96,7 @@ def listing(characters, outstream, *, include_metadata=None, metadata=None, part
             update_progress(index + 1, total)
 
     if not partial:
-        footer_template = Template(filename=prefs.get("templates.listing.footer.html"), **encoding_options)
+        footer_template = Template(filename=prefs.get("listing.templates.html.footer"), **encoding_options)
         outstream.write(footer_template.render())
     return util.result.Success()
 
@@ -113,7 +113,7 @@ def report(tables, outstream, **kwargs):
             value in settings.
     """
     prefs = kwargs.get('prefs', settings.InternalSettings())
-    encoding = kwargs.get('encoding', prefs.get('html_encoding'))
+    encoding = kwargs.get('encoding', prefs.get('report.html_encoding'))
 
     encoding_options = {
         'output_encoding': encoding,
@@ -122,7 +122,7 @@ def report(tables, outstream, **kwargs):
 
     with tempfile.TemporaryDirectory() as tempdir:
         table_template = Template(
-            filename=prefs.get("templates.report.html"),
+            filename=prefs.get("report.templates.html"),
             module_directory=tempdir,
             **encoding_options)
 

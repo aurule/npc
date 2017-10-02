@@ -48,7 +48,7 @@ def make_list(*search, ignore=None, fmt=None, metadata=None, title=None, outfile
     if not ignore:
         ignore = []
     ignore.extend(prefs.get('paths.ignore'))
-    sort_order = kwargs.get('sort', prefs.get('list_sort'))
+    sort_order = kwargs.get('sort', prefs.get('listing.sort_by'))
     update_progress = kwargs.get('progress', lambda i, t: False)
 
     characters = util.sort_characters(
@@ -56,7 +56,7 @@ def make_list(*search, ignore=None, fmt=None, metadata=None, title=None, outfile
         order=sort_order)
 
     if fmt == "default" or not fmt:
-        fmt = prefs.get('list_format')
+        fmt = prefs.get('listing.default_format')
     out_type = formatters.get_canonical_format_name(fmt)
 
     dumper = formatters.get_listing_formatter(out_type)
@@ -66,7 +66,7 @@ def make_list(*search, ignore=None, fmt=None, metadata=None, title=None, outfile
     if metadata == 'default' and out_type != 'json':
         # Ensure 'default' metadata type gets replaced with the right default
         # metadata format. Irrelevant for json format.
-        metadata_type = prefs.get('metadata.default_format.{}'.format(out_type))
+        metadata_type = prefs.get('listing.metadata.{}.default_format'.format(out_type))
     else:
         metadata_type = metadata
 

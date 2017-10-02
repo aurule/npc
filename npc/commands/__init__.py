@@ -204,10 +204,11 @@ def init(create_types=False, create_all=False, **kwargs):
         if not dryrun:
             makedirs(path_name, mode=0o775, exist_ok=True)
 
-    for key, basic_path in prefs.get('paths').items():
-        if key in ["ignore", "heirarchy"]:
+    for key, required_path in prefs.get('patchs.required').items():
+        if key in ["additional_paths"]:
+            # skip additional paths for now, pending implementation
             continue
-        new_dir(basic_path)
+        new_dir(required_path)
     if not path.exists(prefs.get_settings_path('campaign')):
         new_dir('.npc')
         log_change(prefs.get_settings_path('campaign'))
@@ -217,7 +218,7 @@ def init(create_types=False, create_all=False, **kwargs):
 
     if create_types or create_all:
         cbase = prefs.get('paths.characters')
-        for _, type_path in prefs.get('type_paths').items():
+        for type_path in prefs.get_type_paths():
             new_dir(path.join(cbase, type_path))
 
     return result.Success(printables=changelog)
@@ -293,7 +294,7 @@ def report(*tags, search=None, ignore=None, fmt=None, outfile=None, **kwargs):
         ignore = []
     ignore.extend(prefs.get('paths.ignore'))
     if not fmt or fmt == 'default':
-        fmt = prefs.get('report_format')
+        fmt = prefs.get('report.default_format')
 
     # use a list so we can iterate more than once
     characters = list(parser.get_characters(flatten(search), ignore))

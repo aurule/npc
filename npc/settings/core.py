@@ -242,13 +242,24 @@ class Settings:
             Dict of metadata keys and values.
         """
         return OrderedDict(
-            title=self.get('metadata.title'),
-            campaign=self.get('campaign'),
-            created=datetime.now().strftime(self.get('metadata.timestamp')),
+            title=self.get('listing.metadata.title'),
+            campaign=self.get('campaign_name'),
+            created=datetime.now().strftime(self.get('listing.metadata.timestamp')),
             npc=npc.__version__.__version__,
-            **self.get('metadata.additional_keys.all'),
-            **self.get('metadata.additional_keys.{}'.format(target_format))
+            **self.get('listing.metadata.universal.additional_keys'),
+            **self.get('listing.metadata.{}.additional_keys'.format(target_format))
         )
+
+    def get_type_paths(self):
+        """
+        Get all of the folder names for each defined character type.
+
+        Yields:
+            List of configured path names
+        """
+        for _, data in self.get('types').keys():
+            yield data['type_path']
+
 
 class InternalSettings(Settings, metaclass=util.Singleton):
     """
