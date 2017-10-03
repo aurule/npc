@@ -8,6 +8,7 @@ import json
 from os import path
 from datetime import datetime
 from collections import OrderedDict
+from copy import deepcopy
 
 import npc
 from npc import util
@@ -64,10 +65,12 @@ class Settings:
         self.settings_paths = [self.default_settings_path, self.user_settings_path, self.campaign_settings_path]
 
         self.verbose = verbose
-        self.data = util.load_json(path.join(self.default_settings_path, 'settings-default.json'))
+        loaded_data = util.load_json(path.join(self.default_settings_path, 'settings-default.json'))
 
         # massage template names into real paths
-        self.data['templates'] = self._expand_filenames(base_path=self.install_base, data=self.data['templates'])
+        # self.data['templates'] = self._expand_filenames(base_path=self.install_base, data=self.data['templates'])
+
+        self.data = self._expand_templates(base_path=self.install_base, settings_data=loaded_data)
 
         # merge additional settings files
         for settings_path in self.settings_paths:
@@ -80,27 +83,49 @@ class Settings:
                     if self.verbose:
                         util.error(err.strerror, err.filename)
 
-    def _expand_filenames(self, base_path, data):
+    def _expand_templates(self, base_path, settings_data):
         """
-        Recursively expand template filenames into full, canonical paths
-
-        Assumes that every non-dict value is a path string.
+        Expand all known template paths in a settings file
 
         Args:
             base_path (str): Base path for relative pathing
-            data (dict): Dict containing path information, possibly nested
+            settings_data (dict): Full settings data
 
         Returns:
-            Dict with altered paths
+            Dict of settings data with expanded template paths
         """
-        expanded_data = {}
-        for key, value in data.items():
-            if isinstance(value, dict):
-                expanded_data[key] = self._expand_filenames(base_path, value)
-            else:
-                expanded_data[key] = path.join(base_path, path.expanduser(value))
 
-        return expanded_data
+        def expand_filenames(data):
+            """
+            Recursively expand filenames into full, canonical paths
+
+            Assumes that every non-dict value is a path string.
+
+            Args:
+                data (dict): Dict containing path information, possibly nested
+
+            Returns:
+                Nothing. `data` is modified in place.
+            """
+            for key, value in data.items():
+                if isinstance(value, dict):
+                    data[key] = expand_filenames(value)
+                else:
+                    data[key] = path.join(base_path, path.expanduser(value))
+
+        working_data = deepcopy(settings_data)
+
+        # types.*.sheet_template
+        for typekey, type_data in working_data['types'].items():
+            working_data['types'][typekey]['sheet_template'] = path.join(base_path, path.expanduser(working_data['types'][typekey]['sheet_template']))
+        # story.session_template
+        working_data['story']['session_template'] = path.join(base_path, path.expanduser(working_data['story']['session_template']))
+        # report.templates.*
+        expand_filenames(working_data['report']['templates'])
+        # listing.templates.*
+        expand_filenames(working_data['listing']['templates'])
+
+        return working_data
 
     def load_more(self, settings_path):
         """
