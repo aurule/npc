@@ -63,7 +63,7 @@ def start(argv=None):
     try:
         # load default character path if search field is at its default
         if full_args['search'] is None:
-            full_args['search'] = [prefs.get('paths.characters')]
+            full_args['search'] = [prefs.get('paths.required.characters')]
     except KeyError:
         pass
 

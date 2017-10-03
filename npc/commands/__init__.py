@@ -50,7 +50,7 @@ def reorg(*search, ignore=None, purge=False, verbose=False, dryrun=False, **kwar
 
     changelog = []
 
-    base_path = prefs.get('paths.characters')
+    base_path = prefs.get('paths.required.characters')
     if not path.exists(base_path):
         return result.FSError(errmsg="Cannot access '{}'".format(base_path))
 
@@ -204,7 +204,7 @@ def init(create_types=False, create_all=False, **kwargs):
         if not dryrun:
             makedirs(path_name, mode=0o775, exist_ok=True)
 
-    for key, required_path in prefs.get('patchs.required').items():
+    for key, required_path in prefs.get('paths.required').items():
         if key in ["additional_paths"]:
             # skip additional paths for now, pending implementation
             continue
@@ -217,7 +217,7 @@ def init(create_types=False, create_all=False, **kwargs):
                 json.dump({'campaign': campaign_name}, settings_file, indent=4)
 
     if create_types or create_all:
-        cbase = prefs.get('paths.characters')
+        cbase = prefs.get('paths.required.characters')
         for type_path in prefs.get_type_paths():
             new_dir(path.join(cbase, type_path))
 

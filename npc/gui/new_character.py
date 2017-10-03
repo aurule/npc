@@ -45,8 +45,7 @@ class NewCharacterDialog(QtWidgets.QDialog, Ui_NewCharacterDialog):
         self.deceasedText.textChanged.connect(self.set_deceased)
 
         self.typeSelect.currentIndexChanged.connect(self.update_type_specific_controls)
-        type_keys = self.prefs.get("type_paths", {}).keys()
-        for type_key in sorted(type_keys):
+        for type_key in sorted(self.prefs.get_type_keys):
             item = self.typeSelect.addItem(type_key.title(), userData=type_key)
 
     def set_value(self, key, value):

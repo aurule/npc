@@ -42,9 +42,9 @@ def listing(characters, outstream, *, include_metadata=None, metadata=None, **kw
             include_metadata = "yfm"
 
         # load and render template
-        header_file = prefs.get("templates.listing.header.markdown.{}".format(include_metadata))
+        header_file = prefs.get("listing.templates.markdown.header.{}".format(include_metadata))
         if not header_file:
-            return result.OptionError(errmsg="Unrecognized metadata format option '{}'".format(include_metadata))
+            return result.OptionError(errmsg="Unrecognized metadata format '{}'".format(include_metadata))
 
         header_template = Template(filename=header_file)
         outstream.write(header_template.render(metadata=metadata))
@@ -57,9 +57,12 @@ def listing(characters, outstream, *, include_metadata=None, metadata=None, **kw
         total = len(characters)
         update_progress(0, total)
         for index, char in enumerate(characters):
-            body_file = _prefs_get("templates.listing.character.markdown.{}".format(char.type_key))
+            body_file = _prefs_get("listing.templates.markdown.character.{}".format(char.type_key))
             if not body_file:
-                body_file = _prefs_get("templates.listing.character.markdown.default")
+                body_file = _prefs_get("listing.templates.markdown.character.default")
+            if not body_file:
+                return result.ConfigError(errmsg="Cannot find default character template for markdown listing")
+
             body_template = Template(filename=body_file, module_directory=tempdir)
             _out_write(body_template.render(character=char))
             update_progress(index + 1, total)
@@ -79,7 +82,7 @@ def report(tables, outstream, **kwargs):
     prefs = kwargs.get('prefs', settings.InternalSettings())
 
     with tempfile.TemporaryDirectory() as tempdir:
-        table_template = Template(filename=prefs.get("templates.report.markdown"), module_directory=tempdir)
+        table_template = Template(filename=prefs.get("report.templates.markdown"), module_directory=tempdir)
 
         for key, table in tables.items():
             outstream.write(table_template.render(data=table, tag=key))

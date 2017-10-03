@@ -221,7 +221,7 @@ class MainWindow(Ui_MainWindow):
             pass
 
         campaigns.insert(0, root_dir)
-        campaign_titles.insert(0, self.prefs.get('campaign'))
+        campaign_titles.insert(0, self.prefs.get('campaign_name'))
         del campaigns[5:]
         del campaign_titles[5:]
 
@@ -305,7 +305,7 @@ class MainWindow(Ui_MainWindow):
             return
 
         self.prefs = new_prefs
-        self.window.setWindowTitle("NPC - {}".format(self.prefs.get('campaign')))
+        self.window.setWindowTitle("NPC - {}".format(self.prefs.get('campaign_name')))
 
     def run_new_session(self):
         """Run the session command"""
@@ -322,7 +322,7 @@ class MainWindow(Ui_MainWindow):
         """Run the init command with inputs from its dialog"""
         with self.dialog(InitDialog, self.window, self.prefs) as init_dialog:
             if path.exists(self.prefs.get_settings_path('campaign')):
-                init_dialog.set_campaign_name(self.prefs.get('campaign'), enabled=False)
+                init_dialog.set_campaign_name(self.prefs.get('campaign_name'), enabled=False)
             else:
                 init_dialog.set_campaign_name(path.basename(getcwd()))
 
