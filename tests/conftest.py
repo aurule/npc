@@ -50,4 +50,4 @@ def campaign(tmpdir, request, prefs):
     def fin():
         os.chdir(base)
     request.addfinalizer(fin)
-    return Campaign(tmpdir, prefs.get('paths.characters'))
+    return Campaign(tmpdir, prefs.get('paths.required.characters'))
