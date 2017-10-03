@@ -189,7 +189,7 @@ def _cp_template_for_char(name, character, prefs, fn=None):
         Result object. Openable will contain the path to the new character file.
     """
     # get template path
-    template_path = prefs.get('{}.sheet_template'.format(character.type_key))
+    template_path = prefs.get('types.{}.sheet_template'.format(character.type_key))
     if not template_path:
         return result.ConfigError(errmsg="Could not find template {}".format(character.type_key))
 
