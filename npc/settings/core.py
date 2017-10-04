@@ -17,7 +17,7 @@ class Settings:
     """
     Load and store settings
 
-    Default settings are loaded from support/settings-default.json in the
+    Default settings are loaded from settings/settings-default.json in the
     install path. Additional settings are loaded from the paths in
     `settings_paths`.
 
@@ -50,7 +50,7 @@ class Settings:
             verbose (bool): Whether to show additional error messages that are
                 usually ignored. These involve unloadable optional settings
                 files and keys that cannot be found. The file
-                `support/settings.json` should never be found, but will still
+                `settings/settings.json` should never be found, but will still
                 be reported.
         """
 

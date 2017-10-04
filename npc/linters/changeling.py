@@ -70,7 +70,7 @@ def lint(character, fix=False, *, strict=False, sk_data=None):
         fix (bool): Whether to automatically correct certain problems
         strict (bool): Whether to report non-critical errors and omissions
         sk_data (dict): Seeming and kith data, as from the
-            support/settings-changeling.json file.
+            settings/settings-changeling.json file.
 
     Returns:
         List of problem descriptions. If no problems were found, the list will
