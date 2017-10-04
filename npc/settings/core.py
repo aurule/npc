@@ -68,8 +68,6 @@ class Settings:
         loaded_data = util.load_json(path.join(self.default_settings_path, 'settings-default.json'))
 
         # massage template names into real paths
-        # self.data['templates'] = self._expand_filenames(base_path=self.install_base, data=self.data['templates'])
-
         self.data = self._expand_templates(base_path=self.install_base, settings_data=loaded_data)
 
         # merge additional settings files
@@ -96,34 +94,48 @@ class Settings:
         """
 
         def expand_filenames(data):
-            """
-            Recursively expand filenames into full, canonical paths
-
-            Assumes that every non-dict value is a path string.
-
-            Args:
-                data (dict): Dict containing path information, possibly nested
-
-            Returns:
-                Nothing. `data` is modified in place.
-            """
+            outdata = {}
             for key, value in data.items():
+                print(outdata)
                 if isinstance(value, dict):
-                    data[key] = expand_filenames(value)
+                    outdata[key] = expand_filenames(value)
                 else:
-                    data[key] = path.join(base_path, path.expanduser(value))
+                    outdata[key] = path.join(base_path, path.expanduser(value))
+            return outdata
+
+        def get(data, key, default=None):
+            key_parts = key.split('.')
+            current_data = data
+            for k in key_parts:
+                try:
+                    current_data = current_data[k]
+                except (KeyError, TypeError):
+                    return default
+            return current_data
 
         working_data = deepcopy(settings_data)
+        print(get(working_data, 'listing.templates'))
 
         # types.*.sheet_template
-        for typekey, type_data in working_data['types'].items():
-            working_data['types'][typekey]['sheet_template'] = path.join(base_path, path.expanduser(working_data['types'][typekey]['sheet_template']))
+        for typekey, type_data in get(working_data, 'types', {}).items():
+            type_path = get(working_data, "types.{}.sheet_template".format(typekey))
+            if type_path:
+                working_data['types'][typekey]['sheet_template'] = path.join(base_path, path.expanduser(type_path))
+
         # story.session_template
-        working_data['story']['session_template'] = path.join(base_path, path.expanduser(working_data['story']['session_template']))
+        session_path = get(working_data, 'story.session_template')
+        if session_path:
+            working_data['story']['session_template'] = path.join(base_path, path.expanduser(session_path))
+
         # report.templates.*
-        expand_filenames(working_data['report']['templates'])
+        report_templates = get(working_data, 'report.templates')
+        if report_templates:
+            working_data['report']['templates'] = expand_filenames(report_templates)
+
         # listing.templates.*
-        expand_filenames(working_data['listing']['templates'])
+        listing_templates = get(working_data, 'listing.templates')
+        if listing_templates:
+            working_data['listing']['templates'] = expand_filenames(listing_templates)
 
         return working_data
 
@@ -146,10 +158,7 @@ class Settings:
 
         # paths should be evaluated relative to the settings file in settings_path
         absolute_path_base = path.dirname(path.realpath(settings_path))
-        if 'templates' in loaded:
-            loaded['templates'] = self._expand_filenames(absolute_path_base, loaded['templates'])
-        if 'support' in loaded:
-            loaded['support'] = self._expand_filenames(absolute_path_base, loaded['support'])
+        loaded = self._expand_templates(absolute_path_base, loaded)
 
         self.data = self._merge_settings(loaded, self.data)
 
@@ -239,7 +248,7 @@ class Settings:
         for k in key_parts:
             try:
                 current_data = current_data[k]
-            except KeyError:
+            except (KeyError, TypeError):
                 if self.verbose:
                     util.error("Key not found: {}".format(key))
                 return default
@@ -282,7 +291,7 @@ class Settings:
         Yields:
             List of configured path names
         """
-        for _, data in self.get('types').keys():
+        for _, data in self.get('types').items():
             yield data['type_path']
 
 
