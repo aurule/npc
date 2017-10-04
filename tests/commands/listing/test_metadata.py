@@ -55,7 +55,9 @@ def test_extra_md_metadata(prefs, metaformat, tmpdir):
     outfile = tmpdir.join("output.md")
     prefs.load_more(fixture_dir('listing', 'settings-metadata.json'))
     search = fixture_dir('listing', 'valid-json')
-    npc.commands.listing.make_list(search, fmt='markdown', metadata=metaformat, outfile=str(outfile), prefs=prefs)
+    result = npc.commands.listing.make_list(search, fmt='markdown', metadata=metaformat, outfile=str(outfile), prefs=prefs)
+    assert result.errmsg == ''
+    assert result.success == True
     assert 'test-type: markdown' in outfile.read().lower()
 
 def test_invalid_metadata_arg():

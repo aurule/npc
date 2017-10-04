@@ -1,20 +1,28 @@
 {
-    "campaign": "Totally Recalled",
-    "metadata": {
-        "title": "List of Tests",
-        "timestamp": "%A %d %B",
-        "additional_keys": {
-            "all": {
-                "test": "very yes"
+    "campaign_name": "Totally Recalled",
+    "listing": {
+        "metadata": {
+            "title": "List of Tests",
+            "timestamp": "%A %d %B",
+            "universal": {
+                "additional_keys": {
+                    "test": "very yes"
+                }
             },
             "markdown": {
-                "format": "markdown"
+                "additional_keys": {
+                    "format": "markdown"
+                }
             },
             "json": {
-                "format": "json"
+                "additional_keys": {
+                    "format": "json"
+                }
             },
             "html": {
-                "format": "html"
+                "additional_keys": {
+                    "format": "html"
+                }
             }
         }
     }

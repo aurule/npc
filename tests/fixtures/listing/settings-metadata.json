@@ -1,14 +1,20 @@
 {
-    "metadata": {
-        "additional_keys": {
-            "all": {
-                "test": "yes"
-                },
+    "listing": {
+        "metadata": {
+            "universal": {
+                "additional_keys": {
+                    "test": "yes"
+                }
+            },
             "markdown": {
-                "test-type": "markdown"
-                },
+                "additional_keys": {
+                    "test-type": "markdown"
+                }
+            },
             "json": {
-                "test-type": "json"
+                "additional_keys": {
+                    "test-type": "json"
+                }
             }
         }
     }

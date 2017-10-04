@@ -4,20 +4,20 @@ import json
 
 def test_init_bare(prefs, campaign):
     npc.commands.init(prefs=prefs)
-    for k, p in prefs.get('paths').items():
-        if k in ["ignore", "heirarchy"]:
+    for k, p in prefs.get('paths.required').items():
+        if k in ["additional_paths"]:
             continue
         assert os.path.exists(p)
 
 def test_init_types(prefs, campaign):
     npc.commands.init(create_types=True, prefs=prefs)
-    for k, path in prefs.get('type_paths').items():
-        assert os.path.exists(os.path.join(prefs.get('paths.characters'), path))
+    for path in prefs.get_type_paths():
+        assert os.path.exists(os.path.join(prefs.get('paths.required.characters'), path))
 
 def test_init_all(prefs, campaign):
     npc.commands.init(create_all=True, prefs=prefs)
-    for k, path in prefs.get('type_paths').items():
-        assert os.path.exists(os.path.join(prefs.get('paths.characters'), path))
+    for path in prefs.get_type_paths():
+        assert os.path.exists(os.path.join(prefs.get('paths.required.characters'), path))
 
 def test_init_with_name(prefs, campaign):
     npc.commands.init(campaign_name='Super Game', prefs=prefs)
@@ -28,5 +28,5 @@ def test_init_with_name(prefs, campaign):
 
 def test_init_dryrun(prefs, campaign):
     npc.commands.init(dryrun=True, prefs=prefs)
-    for k, path in prefs.get('type_paths').items():
-        assert not os.path.exists(os.path.join(prefs.get('paths.characters'), path))
+    for path in prefs.get_type_paths():
+        assert not os.path.exists(os.path.join(prefs.get('paths.required.characters'), path))

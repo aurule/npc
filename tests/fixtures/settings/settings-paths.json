@@ -1,8 +1,7 @@
 {
-    "templates": {
-        "testfile": "changeling.nwod"
-    },
-    "support": {
-        "testpath": "nothing.json"
+    "types": {
+        "changeling": {
+            "sheet_template": "changeling.nwod"
+        }
     }
 }

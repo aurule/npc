@@ -14,7 +14,11 @@ def test_override(prefs):
     assert prefs.get('editor') != old_editor
 
 def test_nested_get(prefs):
-    assert prefs.get('paths.characters') == 'Characters'
+    assert prefs.get('paths.required.characters') == 'Characters'
+
+def test_nested_null_get(prefs):
+    """A null key in the middle of a path should still just return None"""
+    assert prefs.get('listing.templates.markdown.header.foobar') == None
 
 def test_get_settings_path(prefs):
     assert prefs.get_settings_path('default') == os.path.join(prefs.default_settings_path, 'settings-default.json')
@@ -25,11 +29,11 @@ def test_get_typed_settings_path(prefs, settings_type):
     fetched_path = prefs.get_settings_path('default', settings_type)
     assert fetched_path == os.path.join(prefs.default_settings_path, 'settings-{}.json'.format(settings_type))
 
-def test_support_paths(prefs):
+def test_expanded_paths(prefs):
     """Paths loaded from additional files should be expanded relative to that file"""
     override_path = fixture_dir('settings', 'settings-paths.json')
     prefs.load_more(override_path)
-    assert prefs.get('support.testpath') == fixture_dir('settings', 'nothing.json')
+    assert prefs.get('types.changeling.sheet_template') == fixture_dir('settings', 'changeling.nwod')
 
 def test_changeling_linting(prefs):
     override_path = fixture_dir('settings', 'settings-changeling-mismatch.json')
@@ -51,8 +55,9 @@ class TestMetadata:
         def do_meta(meta_format=None):
             override_path = fixture_dir('settings', 'settings-metadata.json')
             prefs.load_more(override_path)
+            print(prefs.get('listing.metadata'))
             if not meta_format:
-                meta_format = prefs.get("report_format")
+                meta_format = prefs.get("listing.default_format")
             return prefs.get_metadata(meta_format)
         return do_meta
 
