@@ -24,7 +24,7 @@ def test_init_with_name(prefs, campaign):
     assert os.path.exists(prefs.get_settings_path('campaign'))
     with open(prefs.get_settings_path('campaign'), 'r') as settings:
         parsed = json.load(settings)
-        assert parsed['campaign'] == 'Super Game'
+        assert parsed['campaign_name'] == 'Super Game'
 
 def test_init_dryrun(prefs, campaign):
     npc.commands.init(dryrun=True, prefs=prefs)

@@ -214,7 +214,7 @@ def init(create_types=False, create_all=False, **kwargs):
         log_change(prefs.get_settings_path('campaign'))
         if not dryrun:
             with open(prefs.get_settings_path('campaign'), 'a') as settings_file:
-                json.dump({'campaign': campaign_name}, settings_file, indent=4)
+                json.dump({'campaign_name': campaign_name}, settings_file, indent=4)
 
     if create_types or create_all:
         cbase = prefs.get('paths.required.characters')
