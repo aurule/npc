@@ -52,6 +52,8 @@
 
     // Settings for each character type
     "types": {
+
+        // Settings for human characters
         "human": {
 
             // Directory name to use when the path heirarchy includes {type}
@@ -66,6 +68,8 @@
                 "type-groups": ""
             }
         },
+
+        // Settings for changeling characters
         "changeling": {
             "type_path": "Changelings",
             "sheet_template": "templates/Changeling Character Sheet.nwod",
@@ -76,6 +80,8 @@
                 "type-groups": "entitlement"
             }
         },
+
+        // Settings for fetch characters
         "fetch": {
             "type_path": "Fetches",
             "sheet_template": "templates/Fetch Character Sheet.nwod",
@@ -85,6 +91,8 @@
                 "type-political": "",
                 "type-groups": ""
             }
+
+        // Settings for goblin characters
         },
         "goblin": {
             "type_path": "Goblins",
@@ -158,7 +166,8 @@
                 // not used by default for markdown listings.
                 "footer": "",
 
-                // Sections are not added by default for markdown listings
+                // Section header content added between groups of characters.
+                // Sections are not added for markdown listings
                 "section": "",
 
                 // Templates for each character type. The template under "default"
