@@ -206,7 +206,9 @@ def init(create_types=False, create_all=False, **kwargs):
 
     for key, required_path in prefs.get('paths.required').items():
         if key in ["additional_paths"]:
-            # skip additional paths for now, pending implementation
+            # create user-specified dirs
+            for extra_path in required_path:
+                new_dir(extra_path)
             continue
         new_dir(required_path)
     if not path.exists(prefs.get_settings_path('campaign')):

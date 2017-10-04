@@ -17,6 +17,7 @@ This release comes with few enhancements and a big change to the settings file f
     - Supports integration with other progress bars for the gui
 * Explicit result objects for success state
 * New `latest` command to open the latest plot file, session file, or both
+* The `init` command can now create user-specified directories during campaign setup from the `additional_paths` key.
 
 ### Changed
 

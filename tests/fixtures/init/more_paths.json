@@ -1,0 +1,10 @@
+{
+    "paths": {
+        "required": {
+            "additional_paths": [
+                "something",
+                "another/thing"
+            ]
+        }
+    }
+}

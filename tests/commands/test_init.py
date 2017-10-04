@@ -1,12 +1,20 @@
 import npc
 import os
 import json
+from tests.util import fixture_dir
 
 def test_init_bare(prefs, campaign):
     npc.commands.init(prefs=prefs)
     for k, p in prefs.get('paths.required').items():
         if k in ["additional_paths"]:
             continue
+        assert os.path.exists(p)
+
+def test_init_additional_paths(prefs, campaign):
+    override_path = fixture_dir('settings', 'settings-vim.json')
+    prefs.load_more(override_path)
+    npc.commands.init(prefs=prefs)
+    for p in prefs.get('paths.required.additional_paths'):
         assert os.path.exists(p)
 
 def test_init_types(prefs, campaign):
