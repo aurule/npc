@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ## 1.3.1 [Unreleased]
 
+This release comes with few enhancements and a big change to the settings file format. You will need to update your user and campaign settings; the old versions will not work!
+
 ### Added
 
 * New `campaign` option to the GUI that allows it to start in a given campaign directory
