@@ -31,6 +31,29 @@ def create_path_from_character(character: Character, *, base_path=None, heirarch
 
     if not base_path:
         base_path = prefs.get('paths.required.characters')
+
+    # get raw heirarchy
+    # split into pieces on '/'
+    # iterate through pieces
+    #
+    # check for '?' operator
+    #   split on '?'
+    #   translate tag name if needed
+    #   test tag presence
+    #       most tags: has_tag(tag)
+    #       foreign: foreign or wanderer
+    #       type: not 'Unknown'
+    #       *+ranks: any ranks exist
+    #   if character has that tag, insert the literal
+    #   end
+    # translate tag name if needed
+    # if the character has that tag:
+    #   most tags: insert their value
+    #   type: get 'types.type_key.type_path'
+    #   groups: iterate group value in order, trying to add a new path component for each
+    #   groups+ranks: iterate group values, add folder, iterate that group's ranks and add folders
+    #   ranks: ignored and show a warning
+
     target_path = base_path
 
     if not heirarchy:
