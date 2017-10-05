@@ -91,6 +91,13 @@ class Character(defaultdict):
         except AttributeError:
             return None
 
+    @property
+    def foreign(self):
+        """
+        bool: Whether this character has data in its foreign or wanderer tags
+        """
+        return self.has_items('foreign') or self.has_items('wanderer')
+
     def get_first(self, key, default=None):
         """
         Get the first element from the named key.
