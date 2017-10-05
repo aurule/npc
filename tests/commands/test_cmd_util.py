@@ -5,77 +5,109 @@ import pytest
 from tests.util import fixture_dir
 
 class TestCreatePath:
-    def test_no_type(self, tmpdir):
+    def test_literal_component(self, tmpdir):
         char = npc.Character(type=['human'])
-        result = util.create_path_from_character(char, base_path=str(tmpdir))
+        tmpdir.mkdir('Dudes')
+        result = util.create_path_from_character(char, base_path=str(tmpdir), heirarchy='Dudes')
+        assert result == str(tmpdir.join('Dudes'))
+
+    def test_tag_presence_false(self, tmpdir):
+        char = npc.Character(type=['human'])
+        tmpdir.mkdir('Bros')
+        result = util.create_path_from_character(char, base_path=str(tmpdir), heirarchy='{school?Bros}')
         assert result == str(tmpdir)
 
-    def test_type(self, tmpdir):
+    def test_tag_presence_true(self, tmpdir):
+        char = npc.Character(type=['human'], school=['u of bros'])
+        tmpdir.mkdir('Bros')
+        result = util.create_path_from_character(char, base_path=str(tmpdir), heirarchy='{school?Bros}')
+        assert result == str(tmpdir.join('Bros'))
+
+    def test_group_presence_true(self, tmpdir):
+        char = npc.Character(type=['human'], groups=['some frat'])
+        tmpdir.mkdir('Bros')
+        result = util.create_path_from_character(char, base_path=str(tmpdir), heirarchy='{groups?Bros}')
+        assert result == str(tmpdir.join('Bros'))
+
+    def test_foreign_presence_true(self, tmpdir):
+        char = npc.Character(type=['human'], foreign=['over there'])
+        tmpdir.mkdir('Bros')
+        result = util.create_path_from_character(char, base_path=str(tmpdir), heirarchy='{foreign?Bros}')
+        assert result == str(tmpdir.join('Bros'))
+
+    def test_wanderer_presence_true(self, tmpdir):
+        """The foreign? check should include wanderer tag contents"""
+        char = npc.Character(type=['human'], wanderer=[''])
+        tmpdir.mkdir('Bros')
+        result = util.create_path_from_character(char, base_path=str(tmpdir), heirarchy='{foreign?Bros}')
+        assert result == str(tmpdir.join('Bros'))
+
+    def test_type_presence_true(self, tmpdir):
         char = npc.Character(type=['human'])
-        tmpdir.mkdir('Humans')
-        result = util.create_path_from_character(char, base_path=str(tmpdir))
-        assert result == str(tmpdir.join('Humans'))
+        tmpdir.mkdir('Bros')
+        result = util.create_path_from_character(char, base_path=str(tmpdir), heirarchy='{type?Bros}')
+        assert result == str(tmpdir.join('Bros'))
 
-    def test_changeling_court(self, tmpdir):
-        char = npc.Character(type=['changeling'], court=['Spring'])
-        tmpdir.mkdir('Changelings')
-        tmpdir.join('Changelings').mkdir('Spring')
-        result = util.create_path_from_character(char, base_path=str(tmpdir))
-        assert result == str(tmpdir.join('Changelings', 'Spring'))
+    # def test_changeling_court(self, tmpdir):
+    #     char = npc.Character(type=['changeling'], court=['Spring'])
+    #     tmpdir.mkdir('Changelings')
+    #     tmpdir.join('Changelings').mkdir('Spring')
+    #     result = util.create_path_from_character(char, base_path=str(tmpdir))
+    #     assert result == str(tmpdir.join('Changelings', 'Spring'))
 
-    def test_changeling_courtless(self, tmpdir):
-        char = npc.Character(type=['changeling'])
-        tmpdir.mkdir('Changelings')
-        tmpdir.join('Changelings').mkdir('Courtless')
-        result = util.create_path_from_character(char, base_path=str(tmpdir))
-        assert result == str(tmpdir.join('Changelings', 'Courtless'))
+    # def test_changeling_courtless(self, tmpdir):
+    #     char = npc.Character(type=['changeling'])
+    #     tmpdir.mkdir('Changelings')
+    #     tmpdir.join('Changelings').mkdir('Courtless')
+    #     result = util.create_path_from_character(char, base_path=str(tmpdir))
+    #     assert result == str(tmpdir.join('Changelings', 'Courtless'))
 
-    @pytest.mark.parametrize('tagname', ('foreign', 'wanderer'))
-    def test_foreign(self, tmpdir, tagname):
-        char = npc.Character()
-        char.append(tagname, 'Chicago')
-        tmpdir.mkdir('Foreign')
-        result = util.create_path_from_character(char, base_path=str(tmpdir))
-        assert result == str(tmpdir.join('Foreign'))
+    # @pytest.mark.parametrize('tagname', ('foreign', 'wanderer'))
+    # def test_foreign(self, tmpdir, tagname):
+    #     char = npc.Character()
+    #     char.append(tagname, 'Chicago')
+    #     tmpdir.mkdir('Foreign')
+    #     result = util.create_path_from_character(char, base_path=str(tmpdir))
+    #     assert result == str(tmpdir.join('Foreign'))
 
-    def test_nested_groups(self, tmpdir):
-        char = npc.Character(group=['group1', 'group2'])
-        tmpdir.mkdir('group1')
-        tmpdir.join('group1').mkdir('group2')
-        result = util.create_path_from_character(char, base_path=str(tmpdir))
-        assert result == str(tmpdir.join('group1', 'group2'))
+    # def test_nested_groups(self, tmpdir):
+    #     char = npc.Character(group=['group1', 'group2'])
+    #     tmpdir.mkdir('group1')
+    #     tmpdir.join('group1').mkdir('group2')
+    #     result = util.create_path_from_character(char, base_path=str(tmpdir))
+    #     assert result == str(tmpdir.join('group1', 'group2'))
 
-    def test_sequential_groups(self, tmpdir):
-        char = npc.Character(group=['group1', 'group2'])
-        tmpdir.mkdir('group1')
-        tmpdir.mkdir('group2')
-        result = util.create_path_from_character(char, base_path=str(tmpdir))
-        assert result == str(tmpdir.join('group1'))
+    # def test_sequential_groups(self, tmpdir):
+    #     char = npc.Character(group=['group1', 'group2'])
+    #     tmpdir.mkdir('group1')
+    #     tmpdir.mkdir('group2')
+    #     result = util.create_path_from_character(char, base_path=str(tmpdir))
+    #     assert result == str(tmpdir.join('group1'))
 
-    def test_missing_group_dir(self, tmpdir):
-        char = npc.Character(group=['group1', 'group2'])
-        tmpdir.mkdir('group2')
-        result = util.create_path_from_character(char, base_path=str(tmpdir))
-        assert result == str(tmpdir.join('group2'))
+    # def test_missing_group_dir(self, tmpdir):
+    #     char = npc.Character(group=['group1', 'group2'])
+    #     tmpdir.mkdir('group2')
+    #     result = util.create_path_from_character(char, base_path=str(tmpdir))
+    #     assert result == str(tmpdir.join('group2'))
 
-    def test_precedence(self, tmpdir):
-        """Order should be type, changeling court or courtless, foreign, group"""
-        attributes = {
-            "type": ['changeling'],
-            "court": ['Summer'],
-            "foreign": ['Chicago'],
-            'group': ['group1', 'group2']
-        }
-        char = npc.Character(attributes=attributes)
-        tmpdir.mkdir('Changelings')
-        tmpdir.join('Changelings').mkdir('Foreign')
-        tmpdir.join('Changelings', 'Foreign').mkdir('Summer')
-        tmpdir.join('Changelings').mkdir('Summer')
-        tmpdir.join('Changelings', 'Summer').mkdir('group2')
-        tmpdir.join('Changelings').mkdir('group2')
+    # def test_precedence(self, tmpdir):
+    #     """Order should be type, changeling court or courtless, foreign, group"""
+    #     attributes = {
+    #         "type": ['changeling'],
+    #         "court": ['Summer'],
+    #         "foreign": ['Chicago'],
+    #         'group': ['group1', 'group2']
+    #     }
+    #     char = npc.Character(attributes=attributes)
+    #     tmpdir.mkdir('Changelings')
+    #     tmpdir.join('Changelings').mkdir('Foreign')
+    #     tmpdir.join('Changelings', 'Foreign').mkdir('Summer')
+    #     tmpdir.join('Changelings').mkdir('Summer')
+    #     tmpdir.join('Changelings', 'Summer').mkdir('group2')
+    #     tmpdir.join('Changelings').mkdir('group2')
 
-        result = util.create_path_from_character(char, base_path=str(tmpdir))
-        assert result == str(tmpdir.join('Changelings', 'Summer', 'group2'))
+    #     result = util.create_path_from_character(char, base_path=str(tmpdir))
+    #     assert result == str(tmpdir.join('Changelings', 'Summer', 'group2'))
 
 def test_find_empty_dirs(tmpdir):
     tmpdir.mkdir('empty1')

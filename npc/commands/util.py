@@ -31,6 +31,10 @@ def create_path_from_character(character: Character, *, base_path=None, heirarch
 
     if not base_path:
         base_path = prefs.get('paths.required.characters')
+    if not heirarchy:
+        heirarchy = prefs.get('paths.heirarchy')
+
+    target_path = base_path
 
     # get raw heirarchy
     # split into pieces on '/'
@@ -54,11 +58,6 @@ def create_path_from_character(character: Character, *, base_path=None, heirarch
     #   groups+ranks: iterate group values, add folder, iterate that group's ranks and add folders
     #   ranks: ignored and show a warning
 
-    target_path = base_path
-
-    if not heirarchy:
-        heirarchy = prefs.get('paths.heirarchy')
-
     def _add_path_if_exists(base, potential):
         """Add a directory to the base path if that directory exists."""
         test_path = path.join(base, potential)
@@ -66,36 +65,53 @@ def create_path_from_character(character: Character, *, base_path=None, heirarch
             return test_path
         return base
 
-    # add type-based directory if we can
-    ctype = character.type_key
-    if ctype is not None:
-        target_path = _add_path_if_exists(target_path, prefs.get('types.{}.type_path'.format(ctype), '.'))
+    for component in heirarchy.split('/'):
+        if not(component.startswith('{') and component.endswith('}')):
+            # No processing needed. Insert the literal and move on.
+            target_path = _add_path_if_exists(target_path, component)
+            continue
 
-    # handle type-specific considerations
-    if ctype == 'changeling':
-        # changelings use court first, then groups
-        if 'court' in character:
-            for court_name in character['court']:
-                target_path = _add_path_if_exists(target_path, court_name)
-        else:
-            target_path = _add_path_if_exists(target_path, 'Courtless')
+        component = component.strip('{}')
+        if '?' in component:
+            tag_name, literal = component.split('?')
+            if tag_name == 'foreign':
+                # "foreign?" gets special handling to check the wanderer tag as well
+                if character.foreign:
+                    target_path = _add_path_if_exists(target_path, literal)
+            elif character.has_items(tag_name):
+                target_path = _add_path_if_exists(target_path, literal)
+            continue
 
-    # foreigners get a special folder
-    if 'foreign' in character or 'wanderer' in character:
-        target_path = _add_path_if_exists(target_path, 'Foreign')
-    if character.has_items('foreign'):
-        target_path = _add_path_if_exists(target_path, character.get_first('foreign'))
-    if character.has_items('location'):
-        target_path = _add_path_if_exists(target_path, character.get_first('location'))
+    # # add type-based directory if we can
+    # ctype = character.type_key
+    # if ctype is not None:
+    #     target_path = _add_path_if_exists(target_path, prefs.get('types.{}.type_path'.format(ctype), '.'))
 
-    # freeholds use their own folders
-    if 'freehold' in character:
-        target_path = _add_path_if_exists(target_path, character.get_first('freehold'))
+    # # handle type-specific considerations
+    # if ctype == 'changeling':
+    #     # changelings use court first, then groups
+    #     if 'court' in character:
+    #         for court_name in character['court']:
+    #             target_path = _add_path_if_exists(target_path, court_name)
+    #     else:
+    #         target_path = _add_path_if_exists(target_path, 'Courtless')
 
-    # everyone uses groups in their path
-    if 'group' in character:
-        for group_name in character['group']:
-            target_path = _add_path_if_exists(target_path, group_name)
+    # # foreigners get a special folder
+    # if 'foreign' in character or 'wanderer' in character:
+    #     target_path = _add_path_if_exists(target_path, 'Foreign')
+    # if character.has_items('foreign'):
+    #     target_path = _add_path_if_exists(target_path, character.get_first('foreign'))
+    # if character.has_items('location'):
+    #     target_path = _add_path_if_exists(target_path, character.get_first('location'))
+
+    # # freeholds use their own folders
+    # if 'freehold' in character:
+    #     target_path = _add_path_if_exists(target_path, character.get_first('freehold'))
+
+    # # everyone uses groups in their path
+    # if 'group' in character:
+    #     for group_name in character['group']:
+    #         target_path = _add_path_if_exists(target_path, group_name)
 
     return target_path
 
