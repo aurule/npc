@@ -96,7 +96,6 @@ class Settings:
         def expand_filenames(data):
             outdata = {}
             for key, value in data.items():
-                print(outdata)
                 if isinstance(value, dict):
                     outdata[key] = expand_filenames(value)
                 else:
@@ -114,7 +113,6 @@ class Settings:
             return current_data
 
         working_data = deepcopy(settings_data)
-        print(get(working_data, 'listing.templates'))
 
         # types.*.sheet_template
         for typekey, type_data in get(working_data, 'types', {}).items():
