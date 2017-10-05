@@ -48,6 +48,12 @@ class TestCreatePath:
         result = util.create_path_from_character(char, base_path=str(tmpdir), heirarchy='{type?Bros}')
         assert result == str(tmpdir.join('Bros'))
 
+    def test_ranks_presence_true(self, tmpdir):
+        char = npc.Character(type=['human'], ranks={'some frat': ['handstand guy']})
+        tmpdir.mkdir('Bros')
+        result = util.create_path_from_character(char, base_path=str(tmpdir), heirarchy='{ranks?Bros}')
+        assert result == str(tmpdir.join('Bros'))
+
     # def test_changeling_court(self, tmpdir):
     #     char = npc.Character(type=['changeling'], court=['Spring'])
     #     tmpdir.mkdir('Changelings')
