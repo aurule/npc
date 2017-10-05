@@ -23,7 +23,8 @@
         // root.
         "ignore": [],
 
-        // The heirarchy describes how to build a path from character tags.
+        // The heirarchy describes how to build a path from character tags. Each
+        // component must be separated by a '/' character.
         "heirarchy": "",
 
         // Directories which are required for the campaign.
@@ -61,6 +62,10 @@
 
             // Template that's copied into the base character path when creating a new character sheet.
             "sheet_template": "templates/Human Character Sheet.nwod",
+
+            // Translate type-dependent heirarchy path components into the
+            // correct tag for human characters. When no appropriate tag exists,
+            // leave it blank.
             "tag_names": {
                 "type-unit": "",
                 "type-social": "",
