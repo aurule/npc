@@ -58,7 +58,7 @@ def create_path_from_character(character: Character, *, base_path=None, heirarch
     #   groups+ranks: iterate group values, add folder, iterate that group's ranks and add folders
     #   ranks: ignored and show a warning
 
-    def _add_path_if_exists(base, potential):
+    def add_path_if_exists(base, potential):
         """Add a directory to the base path if that directory exists."""
         test_path = path.join(base, potential)
         if path.exists(test_path):
@@ -68,7 +68,7 @@ def create_path_from_character(character: Character, *, base_path=None, heirarch
     for component in heirarchy.split('/'):
         if not(component.startswith('{') and component.endswith('}')):
             # No processing needed. Insert the literal and move on.
-            target_path = _add_path_if_exists(target_path, component)
+            target_path = add_path_if_exists(target_path, component)
             continue
 
         component = component.strip('{}')
@@ -77,9 +77,9 @@ def create_path_from_character(character: Character, *, base_path=None, heirarch
             if tag_name == 'foreign':
                 # "foreign?" gets special handling to check the wanderer tag as well
                 if character.foreign:
-                    target_path = _add_path_if_exists(target_path, literal)
+                    target_path = add_path_if_exists(target_path, literal)
             elif character.has_items(tag_name):
-                target_path = _add_path_if_exists(target_path, literal)
+                target_path = add_path_if_exists(target_path, literal)
             continue
 
     # # add type-based directory if we can
