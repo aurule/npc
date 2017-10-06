@@ -124,4 +124,17 @@ class TestTagInsertion:
         tmpdir.mkdir('First/A')
         result = util.create_path_from_character(char, base_path=str(tmpdir), heirarchy='{groups+ranks}')
         assert result == str(tmpdir.join('First').join('A'))
-        #
+
+    def test_location_exists_with_foreign(self, tmpdir):
+        # location is tried first
+        char = npc.Character(type=['human'], foreign=['way the heck over there'], location=['over here'])
+        tmpdir.mkdir('over here')
+        result = util.create_path_from_character(char, base_path=str(tmpdir), heirarchy='{locations}')
+        assert result == str(tmpdir.join('over here'))
+
+    def test_location_not_exist_and_foreign(self, tmpdir):
+        # foreign is tried second
+        char = npc.Character(type=['human'], foreign=['way the heck over there'], location=['over here'])
+        tmpdir.mkdir('way the heck over there')
+        result = util.create_path_from_character(char, base_path=str(tmpdir), heirarchy='{locations}')
+        assert result == str(tmpdir.join('way the heck over there'))

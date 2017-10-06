@@ -36,29 +36,6 @@ def create_path_from_character(character: Character, *, base_path=None, heirarch
 
     target_path = base_path
 
-    # get raw heirarchy
-    # split into pieces on '/'
-    # iterate through pieces
-    #
-    # check for '?' operator
-    #   split on '?'
-    #   translate tag name if needed
-    #   test tag presence
-    #       most tags: has_tag(tag)
-    #       foreign: foreign or wanderer
-    #       type: not 'Unknown'
-    #       *+ranks: any ranks exist
-    #   if character has that tag, insert the literal
-    #   end
-    # translate tag name if needed
-    # if the character has that tag:
-    #   most tags: insert their value
-    #   type: get 'types.type_key.type_path'
-    #   group: use only the first group
-    #   rank(s): iterate first group's ranks and add folders
-    #   groups: iterate group value in order, trying to add a new path component for each
-    #   groups+ranks: iterate group values, add folder, iterate that group's ranks and add folders
-
     def add_path_if_exists(base, potential):
         """Add a directory to the base path if that directory exists."""
         test_path = path.join(base, potential)
@@ -118,6 +95,10 @@ def create_path_from_character(character: Character, *, base_path=None, heirarch
                 target_path = add_path_if_exists(target_path, group)
                 for rank in character.get_ranks(group):
                     target_path = add_path_if_exists(target_path, rank)
+        elif tag_name == 'locations':
+            # use the first location entry, or foreign entry
+            target_path = add_path_if_exists(target_path, character.get_first('location'))
+            target_path = add_path_if_exists(target_path, character.get_first('foreign'))
         elif character.has_items(tag_name):
             # every other tag gets to use its first value
             target_path = add_path_if_exists(target_path, character.get_first(tag_name))
