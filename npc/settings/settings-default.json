@@ -96,9 +96,9 @@
                 "type-political": "",
                 "type-groups": ""
             }
+        },
 
         // Settings for goblin characters
-        },
         "goblin": {
             "type_path": "Goblins",
             "sheet_template": "templates/Goblin Character Sheet.nwod",
@@ -161,6 +161,7 @@
 
             // Templates for markdown listings
             "markdown": {
+
                 // Each header format needs its own template
                 "header": {
                     "mmd": "templates/listing/Header.mmd.mako",
@@ -200,6 +201,7 @@
 
         // Settings for the generated metadata in character lists.
         "metadata": {
+
             // Default title for character lists.
             "title": "NPC Listing",
 
@@ -209,12 +211,14 @@
 
             // Settings that affect all types of metadata
             "universal": {
+
                 // Additional metadata keys to include in all formats
                 "additional_keys": {}
             },
 
             // Settings that affect metadata in markdown listings
             "markdown": {
+
                 // Default metadata format to use.
                 // The markdown output formatter can add metadata using the
                 // MultiMarkdown and Yaml Front Matter formats. To use
@@ -228,12 +232,14 @@
 
             // Settings that affect metadata in json listings
             "json": {
+
                 // Additional metadata keys to include in json character lists.
                 "additional_keys": {}
             },
 
             // Settings that affect metadata in html listings
             "html": {
+
                 // Additional metadata keys to include in html character lists.
                 "additional_keys": {}
             }
