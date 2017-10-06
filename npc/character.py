@@ -147,6 +147,22 @@ class Character(defaultdict):
 
         return self[key][1:]
 
+    def get_ranks(self, group_name):
+        """
+        Get all ranks for a named group
+
+        Args:
+            group_name (str): Name of the group
+
+        Returns:
+            List of rank names for the group, or an empty list if none are present.
+        """
+
+        try:
+            return self['rank'][group_name]
+        except KeyError:
+            return []
+
     def tag_contains(self, key, value):
         """
         See if the entries for key contain value
