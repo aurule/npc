@@ -96,7 +96,9 @@ def create_path_from_character(character: Character, *, base_path=None, heirarch
             continue
 
         tag_name = translate_by_type(component)
-        if character.has_items(tag_name):
+        if tag_name == 'type':
+            target_path = add_path_if_exists(target_path, prefs.get('types.{}.type_path'.format(character.type_key), ''))
+        elif character.has_items(tag_name):
             target_path = add_path_if_exists(target_path, character.get_first(tag_name))
 
     # # add type-based directory if we can

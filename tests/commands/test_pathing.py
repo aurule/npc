@@ -82,3 +82,9 @@ class TestTagInsertion:
         tmpdir.mkdir('U of Bros')
         result = util.create_path_from_character(char, base_path=str(tmpdir), heirarchy='{school}')
         assert result == str(tmpdir.join('U of Bros'))
+
+    def test_type_tag_value_substitution(self, tmpdir):
+        char = npc.Character(type=['human'])
+        tmpdir.mkdir('Humans')
+        result = util.create_path_from_character(char, base_path=str(tmpdir), heirarchy='{type}')
+        assert result == str(tmpdir.join('Humans'))
