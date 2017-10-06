@@ -88,3 +88,9 @@ class TestTagInsertion:
         tmpdir.mkdir('Humans')
         result = util.create_path_from_character(char, base_path=str(tmpdir), heirarchy='{type}')
         assert result == str(tmpdir.join('Humans'))
+
+    def test_translated_tags(self, tmpdir):
+        char = npc.Character(type=['changeling'], motley=['Kickasso'])
+        tmpdir.mkdir('Kickasso')
+        result = util.create_path_from_character(char, base_path=str(tmpdir), heirarchy='{type-unit}')
+        assert result == str(tmpdir.join('Kickasso'))
