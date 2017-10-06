@@ -55,3 +55,9 @@ def test_ranks_presence_true(tmpdir):
     tmpdir.mkdir('Bros')
     result = util.create_path_from_character(char, base_path=str(tmpdir), heirarchy='{ranks?Bros}')
     assert result == str(tmpdir.join('Bros'))
+
+def test_translated_presence_true(tmpdir):
+    char = npc.Character(type=['changeling'], motley=['Kickasso'])
+    tmpdir.mkdir('Bros')
+    result = util.create_path_from_character(char, base_path=str(tmpdir), heirarchy='{type-unit?Bros}')
+    assert result == str(tmpdir.join('Bros'))

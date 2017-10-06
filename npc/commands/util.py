@@ -65,6 +65,17 @@ def create_path_from_character(character: Character, *, base_path=None, heirarch
             return test_path
         return base
 
+    def translate_by_type(component):
+        """
+        Translate a type-dependent path component into the corresponding tag
+        for the character's type.
+        """
+        return prefs.get(
+            'types.{char_type}.tag_names.{component}'.format(
+                char_type=character.type_key,
+                component=component),
+            component)
+
     for component in heirarchy.split('/'):
         if not(component.startswith('{') and component.endswith('}')):
             # No processing needed. Insert the literal and move on.
@@ -74,6 +85,7 @@ def create_path_from_character(character: Character, *, base_path=None, heirarch
         component = component.strip('{}')
         if '?' in component:
             tag_name, literal = component.split('?')
+            tag_name = translate_by_type(tag_name)
             if tag_name == 'foreign':
                 # "foreign?" gets special handling to check the wanderer tag as well
                 if character.foreign:
