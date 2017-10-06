@@ -161,37 +161,6 @@ def create_path_from_character(character: Character, *, base_path=None, heirarch
             # every other tag gets to use its first value
             target_path = add_path_if_exists(target_path, character.get_first(tag_name, ''))
 
-    # # add type-based directory if we can
-    # ctype = character.type_key
-    # if ctype is not None:
-    #     target_path = _add_path_if_exists(target_path, prefs.get('types.{}.type_path'.format(ctype), '.'))
-
-    # # handle type-specific considerations
-    # if ctype == 'changeling':
-    #     # changelings use court first, then groups
-    #     if 'court' in character:
-    #         for court_name in character['court']:
-    #             target_path = _add_path_if_exists(target_path, court_name)
-    #     else:
-    #         target_path = _add_path_if_exists(target_path, 'Courtless')
-
-    # # foreigners get a special folder
-    # if 'foreign' in character or 'wanderer' in character:
-    #     target_path = _add_path_if_exists(target_path, 'Foreign')
-    # if character.has_items('foreign'):
-    #     target_path = _add_path_if_exists(target_path, character.get_first('foreign'))
-    # if character.has_items('location'):
-    #     target_path = _add_path_if_exists(target_path, character.get_first('location'))
-
-    # # freeholds use their own folders
-    # if 'freehold' in character:
-    #     target_path = _add_path_if_exists(target_path, character.get_first('freehold'))
-
-    # # everyone uses groups in their path
-    # if 'group' in character:
-    #     for group_name in character['group']:
-    #         target_path = _add_path_if_exists(target_path, group_name)
-
     return target_path
 
 def find_empty_dirs(root):
