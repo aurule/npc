@@ -83,6 +83,7 @@ def create_path_from_character(character: Character, *, base_path=None, heirarch
             continue
 
         component = component.strip('{}')
+
         if '?' in component:
             tag_name, literal = component.split('?')
             tag_name = translate_by_type(tag_name)
@@ -93,6 +94,10 @@ def create_path_from_character(character: Character, *, base_path=None, heirarch
             elif character.has_items(tag_name):
                 target_path = add_path_if_exists(target_path, literal)
             continue
+
+        tag_name = translate_by_type(component)
+        if character.has_items(tag_name):
+            target_path = add_path_if_exists(target_path, character.get_first(tag_name))
 
     # # add type-based directory if we can
     # ctype = character.type_key

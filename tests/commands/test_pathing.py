@@ -68,3 +68,17 @@ class TestTagPresence:
         result = util.create_path_from_character(char, base_path=str(tmpdir), heirarchy='{type-unit?Bros}')
         assert result == str(tmpdir.join('Bros'))
 
+class TestTagInsertion:
+    """Test that tag values are inserted"""
+
+    def test_tag_no_value(self, tmpdir):
+        char = npc.Character(type=['human'])
+        tmpdir.mkdir('U of Bros')
+        result = util.create_path_from_character(char, base_path=str(tmpdir), heirarchy='{school}')
+        assert result == str(tmpdir)
+
+    def test_tag_no_value(self, tmpdir):
+        char = npc.Character(type=['human'], school=['U of Bros'])
+        tmpdir.mkdir('U of Bros')
+        result = util.create_path_from_character(char, base_path=str(tmpdir), heirarchy='{school}')
+        assert result == str(tmpdir.join('U of Bros'))
