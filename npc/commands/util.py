@@ -15,17 +15,75 @@ def create_path_from_character(character: Character, *, base_path=None, heirarch
 
     The path is created underneath base_path. It only includes directories
     which already exist. It's used by character creation, linting, and reorg.
-
-    This function ignores tags not found in Character.KNOWN_TAGS.
+    Its behavior is controlled by the heirarchy parameter.
 
     Args:
         character: Parsed character data
         base_path (str): Base path for character files
+        heirarchy (str): Path spec defining which folders to create
         prefs (Settings): Settings object to use. Uses internal settings by
             default.
 
     Returns:
         Constructed file path based on the character data.
+
+    Heirarchy Format
+    ================
+
+    The heirarchy argument is a string made up of one or more path components
+    separated by a '/' character. Each component can either be a collection of
+    characters or a tag substitution. Literal characters are inserted without
+    being changed, as long as that folder already exists:
+
+        create_path_from_character(..., heirarchy="Awesome/Heroes")
+
+    This will attempt to add two folders to the constructed path, "Awesome" and
+    then "Heroes".
+
+    Substitutions are surrounded by {curly braces} and can either name a tag, or
+    be a conditional. Conditionals check whether the character has data for the
+    named tag, then inserts the second part of the substitution literally:
+
+        create_path_from_character(..., heirarchy="{school?Student}")
+
+    This will check if the character has data in its "school" tag, and if it
+    does, attempt to add the "Student" folder to the constructed path.
+
+        create_path_from_character(..., heirarchy="{school}")
+
+    On the other hand, this will attempt to add a folder with the same name as
+    the first value for "school" that the character has. So a character whose
+    first school is "Middleton High" will make the function try to add a folder
+    named "Middleton High" to the path.
+
+    Alorithm summary
+    ================
+
+    * iterate through components of the heirarchy
+    * anything not inside {curly braces} is inserted literally
+    * everything else is interpreted
+    *
+    * conditionals:
+        * check for '?' operator
+        *   translate tag name if needed
+        *   test tag presence
+        *       most tags: has_tag(tag)
+        *       foreign: foreign or wanderer
+        *       type: not 'Unknown'
+        *       *+ranks: any ranks exist
+        *   if character has that tag, insert the literal
+    * tags:
+        * translate tag name if needed
+        * if the character has that tag:
+        *   type: get 'types.type_key.type_path'
+        *   group: use only the first group
+        *   rank(s): iterate first group's ranks and add folders
+        *   groups: iterate group value in order, trying to add a new path
+        *       component for each
+        *   groups+ranks: iterate group values, add folder, iterate that group's
+        *       ranks and add folders
+        *   locations: inserts first location, then first foreign
+        *   all other tags: insert their first value
     """
     prefs = kwargs.get('prefs', settings.InternalSettings())
 
@@ -99,9 +157,9 @@ def create_path_from_character(character: Character, *, base_path=None, heirarch
             # use the first location entry, or foreign entry
             target_path = add_path_if_exists(target_path, character.get_first('location'))
             target_path = add_path_if_exists(target_path, character.get_first('foreign'))
-        elif character.has_items(tag_name):
+        else:
             # every other tag gets to use its first value
-            target_path = add_path_if_exists(target_path, character.get_first(tag_name))
+            target_path = add_path_if_exists(target_path, character.get_first(tag_name, ''))
 
     # # add type-based directory if we can
     # ctype = character.type_key
