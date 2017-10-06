@@ -94,3 +94,17 @@ class TestTagInsertion:
         tmpdir.mkdir('Kickasso')
         result = util.create_path_from_character(char, base_path=str(tmpdir), heirarchy='{type-unit}')
         assert result == str(tmpdir.join('Kickasso'))
+
+    def test_single_group(self, tmpdir):
+        char = npc.Character(type=['human'], group=['First', 'Second'])
+        tmpdir.mkdir('First')
+        tmpdir.mkdir('First/Second')
+        result = util.create_path_from_character(char, base_path=str(tmpdir), heirarchy='{group}')
+        assert result == str(tmpdir.join('First'))
+
+    def test_group_folders(self, tmpdir):
+        char = npc.Character(type=['human'], group=['First', 'Second'])
+        tmpdir.mkdir('First')
+        tmpdir.mkdir('First/Second')
+        result = util.create_path_from_character(char, base_path=str(tmpdir), heirarchy='{groups}')
+        assert result == str(tmpdir.join('First').join('Second'))

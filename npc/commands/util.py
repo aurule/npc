@@ -54,6 +54,7 @@ def create_path_from_character(character: Character, *, base_path=None, heirarch
     # if the character has that tag:
     #   most tags: insert their value
     #   type: get 'types.type_key.type_path'
+    #   group: use only the first group
     #   groups: iterate group value in order, trying to add a new path component for each
     #   groups+ranks: iterate group values, add folder, iterate that group's ranks and add folders
     #   ranks: ignored and show a warning
@@ -97,8 +98,17 @@ def create_path_from_character(character: Character, *, base_path=None, heirarch
 
         tag_name = translate_by_type(component)
         if tag_name == 'type':
+            # get the translated type path for the character's type
             target_path = add_path_if_exists(target_path, prefs.get('types.{}.type_path'.format(character.type_key), ''))
+        elif tag_name == 'group':
+            # get just the first group
+            target_path = add_path_if_exists(target_path, character.get_first('group'))
+        elif tag_name == 'groups':
+            # iterate all group values and try to add each one as a folder
+            for group in character['group']:
+                target_path = add_path_if_exists(target_path, group)
         elif character.has_items(tag_name):
+            # every other tag gets to use its first value
             target_path = add_path_if_exists(target_path, character.get_first(tag_name))
 
     # # add type-based directory if we can
