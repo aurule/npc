@@ -55,9 +55,9 @@ def create_path_from_character(character: Character, *, base_path=None, heirarch
     #   most tags: insert their value
     #   type: get 'types.type_key.type_path'
     #   group: use only the first group
+    #   rank(s): iterate first group's ranks and add folders
     #   groups: iterate group value in order, trying to add a new path component for each
     #   groups+ranks: iterate group values, add folder, iterate that group's ranks and add folders
-    #   ranks: ignored and show a warning
 
     def add_path_if_exists(base, potential):
         """Add a directory to the base path if that directory exists."""
@@ -103,10 +103,21 @@ def create_path_from_character(character: Character, *, base_path=None, heirarch
         elif tag_name == 'group':
             # get just the first group
             target_path = add_path_if_exists(target_path, character.get_first('group'))
+        elif tag_name in ['rank', 'ranks']:
+            # iterate all ranks for the first group and add each one as a folder
+            for rank in character.get_ranks(character.get_first('group')):
+                target_path = add_path_if_exists(target_path, rank)
         elif tag_name == 'groups':
             # iterate all group values and try to add each one as a folder
             for group in character['group']:
                 target_path = add_path_if_exists(target_path, group)
+        elif tag_name == 'groups+ranks':
+            # Iterate all groups, add each as a folder, then iterate all ranks
+            # for that group and add each of those as folders
+            for group in character['group']:
+                target_path = add_path_if_exists(target_path, group)
+                for rank in character.get_ranks(group):
+                    target_path = add_path_if_exists(target_path, rank)
         elif character.has_items(tag_name):
             # every other tag gets to use its first value
             target_path = add_path_if_exists(target_path, character.get_first(tag_name))

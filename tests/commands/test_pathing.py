@@ -102,9 +102,26 @@ class TestTagInsertion:
         result = util.create_path_from_character(char, base_path=str(tmpdir), heirarchy='{group}')
         assert result == str(tmpdir.join('First'))
 
+    def test_group_rank(self, tmpdir):
+        char = npc.Character(type=['human'], group=['First', 'Second'], rank={'First': ['A', 'B']})
+        tmpdir.mkdir('First')
+        tmpdir.mkdir('First/A')
+        tmpdir.mkdir('First/B')
+        result = util.create_path_from_character(char, base_path=str(tmpdir), heirarchy='{group}/{ranks}')
+        assert result == str(tmpdir.join('First').join('A'))
+
     def test_group_folders(self, tmpdir):
         char = npc.Character(type=['human'], group=['First', 'Second'])
         tmpdir.mkdir('First')
         tmpdir.mkdir('First/Second')
         result = util.create_path_from_character(char, base_path=str(tmpdir), heirarchy='{groups}')
         assert result == str(tmpdir.join('First').join('Second'))
+
+    def test_groups_and_ranks(self, tmpdir):
+        char = npc.Character(type=['human'], group=['First', 'Second'], rank={'First': ['A', 'B']})
+        tmpdir.mkdir('First')
+        tmpdir.mkdir('First/Second')
+        tmpdir.mkdir('First/A')
+        result = util.create_path_from_character(char, base_path=str(tmpdir), heirarchy='{groups+ranks}')
+        assert result == str(tmpdir.join('First').join('A'))
+        #
