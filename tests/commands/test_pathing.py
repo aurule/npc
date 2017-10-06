@@ -138,3 +138,9 @@ class TestTagInsertion:
         tmpdir.mkdir('way the heck over there')
         result = util.create_path_from_character(char, base_path=str(tmpdir), heirarchy='{locations}')
         assert result == str(tmpdir.join('way the heck over there'))
+
+    def test_configured_missing_value(self, tmpdir):
+        char = npc.Character(type=['changeling'])
+        tmpdir.mkdir('Courtless')
+        result = util.create_path_from_character(char, base_path=str(tmpdir), heirarchy='{type-social}')
+        assert result == str(tmpdir.join('Courtless'))

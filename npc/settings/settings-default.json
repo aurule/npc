@@ -71,7 +71,12 @@
                 "type-social": "",
                 "type-political": "",
                 "type-groups": ""
-            }
+            },
+
+            // Placeholder values to use when the path requests a tag that
+            // doesn't have data. Omit to have that path component ignored
+            // instead.
+            "missing_values": {}
         },
 
         // Settings for changeling characters
@@ -83,6 +88,10 @@
                 "type-social": "court",
                 "type-political": "freehold",
                 "type-groups": "entitlement"
+            },
+
+            "missing_values": {
+                "court": "Courtless"
             }
         },
 
@@ -95,7 +104,9 @@
                 "type-social": "",
                 "type-political": "",
                 "type-groups": ""
-            }
+            },
+
+            "missing_values": {}
         },
 
         // Settings for goblin characters
@@ -107,7 +118,9 @@
                 "type-social": "",
                 "type-political": "",
                 "type-groups": ""
-            }
+            },
+
+            "missing_values": {}
         }
     },
 

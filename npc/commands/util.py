@@ -159,7 +159,16 @@ def create_path_from_character(character: Character, *, base_path=None, heirarch
             target_path = add_path_if_exists(target_path, character.get_first('foreign'))
         else:
             # every other tag gets to use its first value
-            target_path = add_path_if_exists(target_path, character.get_first(tag_name, ''))
+            missing_value_placeholder = prefs.get(
+                'types.{char_type}.missing_values.{component}'.format(
+                    char_type=character.type_key,
+                    component=tag_name),
+                '')
+            target_path = add_path_if_exists(
+                target_path,
+                character.get_first(
+                    key=tag_name,
+                    default=missing_value_placeholder))
 
     return target_path
 
