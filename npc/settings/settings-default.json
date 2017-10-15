@@ -25,7 +25,7 @@
 
         // The heirarchy describes how to build a path from character tags. Each
         // component must be separated by a '/' character.
-        "heirarchy": "",
+        "heirarchy": "{type}/{type-social}/{type-political}/{type-unit}/{groups}",
 
         // Directories which are required for the campaign.
         // The command `npc init` creates all of these directories. If any of these
@@ -91,6 +91,10 @@
             },
 
             "missing_values": {
+
+                // Changelings without a court tag will be put in the Courtless
+                // folder when court is requested in the path, instead of
+                // placed in the parent folder.
                 "court": "Courtless"
             }
         },
