@@ -112,6 +112,13 @@ def create_path_from_character(character: Character, *, base_path=None, heirarch
                 component=component),
             component)
 
+    def placeholder(component);
+        return prefs.get(
+            'types.{char_type}.missing_values.{component}'.format(
+                char_type=character.type_key,
+                component=ccomponent),
+            '')
+
     for component in heirarchy.split('/'):
         if not(component.startswith('{') and component.endswith('}')):
             # No processing needed. Insert the literal and move on.
@@ -134,7 +141,7 @@ def create_path_from_character(character: Character, *, base_path=None, heirarch
         tag_name = translate_by_type(component)
         if tag_name == 'type':
             # get the translated type path for the character's type
-            target_path = add_path_if_exists(target_path, prefs.get('types.{}.type_path'.format(character.type_key), ''))
+            target_path = add_path_if_exists(target_path, prefs.get('types.{}.type_path'.format(character.type_key), placeholder('type')))
         elif tag_name == 'group':
             # get just the first group
             target_path = add_path_if_exists(target_path, character.get_first('group'))
@@ -155,20 +162,15 @@ def create_path_from_character(character: Character, *, base_path=None, heirarch
                     target_path = add_path_if_exists(target_path, rank)
         elif tag_name == 'locations':
             # use the first location entry, or foreign entry
-            target_path = add_path_if_exists(target_path, character.get_first('location'))
-            target_path = add_path_if_exists(target_path, character.get_first('foreign'))
+            target_path = add_path_if_exists(target_path, character.get_first('location'), placeholder('location'))
+            target_path = add_path_if_exists(target_path, character.get_first('foreign'), placeholder('foreign'))
         else:
             # every other tag gets to use its first value
-            missing_value_placeholder = prefs.get(
-                'types.{char_type}.missing_values.{component}'.format(
-                    char_type=character.type_key,
-                    component=tag_name),
-                '')
             target_path = add_path_if_exists(
                 target_path,
                 character.get_first(
                     key=tag_name,
-                    default=missing_value_placeholder))
+                    default=placeholder(tag_name)))
 
     return target_path
 
