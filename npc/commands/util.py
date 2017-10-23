@@ -9,33 +9,33 @@ import sys
 from npc.character import Character
 from npc import settings
 
-def create_path_from_character(character: Character, *, base_path=None, heirarchy=None, **kwargs):
+def create_path_from_character(character: Character, *, base_path=None, hierarchy=None, **kwargs):
     """
     Determine the best file path for a character.
 
     The path is created underneath base_path. It only includes directories
     which already exist. It's used by character creation, linting, and reorg.
-    Its behavior is controlled by the heirarchy parameter.
+    Its behavior is controlled by the hierarchy parameter.
 
     Args:
         character: Parsed character data
         base_path (str): Base path for character files
-        heirarchy (str): Path spec defining which folders to create
+        hierarchy (str): Path spec defining which folders to create
         prefs (Settings): Settings object to use. Uses internal settings by
             default.
 
     Returns:
         Constructed file path based on the character data.
 
-    Heirarchy Format
+    hierarchy Format
     ================
 
-    The heirarchy argument is a string made up of one or more path components
+    The hierarchy argument is a string made up of one or more path components
     separated by a '/' character. Each component can either be a collection of
     characters or a tag substitution. Literal characters are inserted without
     being changed, as long as that folder already exists:
 
-        create_path_from_character(..., heirarchy="Awesome/Heroes")
+        create_path_from_character(..., hierarchy="Awesome/Heroes")
 
     This will attempt to add two folders to the constructed path, "Awesome" and
     then "Heroes".
@@ -44,12 +44,12 @@ def create_path_from_character(character: Character, *, base_path=None, heirarch
     be a conditional. Conditionals check whether the character has data for the
     named tag, then inserts the second part of the substitution literally:
 
-        create_path_from_character(..., heirarchy="{school?Student}")
+        create_path_from_character(..., hierarchy="{school?Student}")
 
     This will check if the character has data in its "school" tag, and if it
     does, attempt to add the "Student" folder to the constructed path.
 
-        create_path_from_character(..., heirarchy="{school}")
+        create_path_from_character(..., hierarchy="{school}")
 
     On the other hand, this will attempt to add a folder with the same name as
     the first value for "school" that the character has. So a character whose
@@ -59,7 +59,7 @@ def create_path_from_character(character: Character, *, base_path=None, heirarch
     Alorithm summary
     ================
 
-    * iterate through components of the heirarchy
+    * iterate through components of the hierarchy
     * anything not inside {curly braces} is inserted literally
     * everything else is interpreted
     *
@@ -89,8 +89,8 @@ def create_path_from_character(character: Character, *, base_path=None, heirarch
 
     if not base_path:
         base_path = prefs.get('paths.required.characters')
-    if not heirarchy:
-        heirarchy = prefs.get('paths.heirarchy')
+    if not hierarchy:
+        hierarchy = prefs.get('paths.hierarchy')
 
     target_path = base_path
 
@@ -119,7 +119,7 @@ def create_path_from_character(character: Character, *, base_path=None, heirarch
                 component=component),
             '')
 
-    for component in heirarchy.split('/'):
+    for component in hierarchy.split('/'):
         if not(component.startswith('{') and component.endswith('}')):
             # No processing needed. Insert the literal and move on.
             target_path = add_path_if_exists(target_path, component)

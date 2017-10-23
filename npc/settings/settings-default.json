@@ -23,9 +23,9 @@
         // root.
         "ignore": [],
 
-        // The heirarchy describes how to build a path from character tags. Each
+        // The hierarchy describes how to build a path from character tags. Each
         // component must be separated by a '/' character.
-        "heirarchy": "{type}/{type-social}/{type-political}/{type-unit}/{groups}",
+        "hierarchy": "{type}/{type-social}/{type-political}/{type-unit}/{groups}",
 
         // Directories which are required for the campaign.
         // The command `npc init` creates all of these directories. If any of these
@@ -57,13 +57,13 @@
         // Settings for human characters
         "human": {
 
-            // Directory name to use when the path heirarchy includes {type}
+            // Directory name to use when the path hierarchy includes {type}
             "type_path": "Humans",
 
             // Template that's copied into the base character path when creating a new character sheet.
             "sheet_template": "templates/Human Character Sheet.nwod",
 
-            // Translate type-dependent heirarchy path components into the
+            // Translate type-dependent hierarchy path components into the
             // correct tag for human characters. When no appropriate tag exists,
             // leave it blank.
             "tag_names": {
