@@ -112,11 +112,11 @@ def create_path_from_character(character: Character, *, base_path=None, heirarch
                 component=component),
             component)
 
-    def placeholder(component);
+    def placeholder(component):
         return prefs.get(
             'types.{char_type}.missing_values.{component}'.format(
                 char_type=character.type_key,
-                component=ccomponent),
+                component=component),
             '')
 
     for component in heirarchy.split('/'):
