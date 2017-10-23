@@ -162,8 +162,8 @@ def create_path_from_character(character: Character, *, base_path=None, heirarch
                     target_path = add_path_if_exists(target_path, rank)
         elif tag_name == 'locations':
             # use the first location entry, or foreign entry
-            target_path = add_path_if_exists(target_path, character.get_first('location'), placeholder('location'))
-            target_path = add_path_if_exists(target_path, character.get_first('foreign'), placeholder('foreign'))
+            target_path = add_path_if_exists(target_path, character.get_first('location', placeholder('location')))
+            target_path = add_path_if_exists(target_path, character.get_first('foreign', placeholder('foreign')))
         else:
             # every other tag gets to use its first value
             target_path = add_path_if_exists(
