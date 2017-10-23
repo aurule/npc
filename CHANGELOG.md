@@ -29,7 +29,9 @@ This release comes with a few enhancements, including a new way to configure cha
 * Refactor session command into story module
 * Change main settings file to use a different layout. User and campaign settings will need to be updated.
 * Added features to the markdown lister to bring it closer to the html lister's feature set
-    - Section headings are now supported
+    - Section headings are now supported, though not used by default
+    - Footers are supported
+    - The `partial` option is honored
 
 ## 1.3.0
 

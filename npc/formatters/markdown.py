@@ -9,7 +9,7 @@ import npc
 from npc import settings
 from npc.util import result
 
-def listing(characters, outstream, *, include_metadata=None, metadata=None, **kwargs):
+def listing(characters, outstream, *, include_metadata=None, metadata=None, partial=False, **kwargs):
     """
     Create a markdown character listing
 
@@ -22,6 +22,9 @@ def listing(characters, outstream, *, include_metadata=None, metadata=None, **kw
         metadata (dict): Additional metadata to insert. Ignored unless
             include_metadata is set. The keys 'title', and 'created' will
             overwrite the generated values for those keys.
+        partial (bool): Whether to produce partial output by omitting the
+            header and footer. Does not allow metadata to be included, so the
+            include_metadata and metadata args are ignored.
         prefs (Settings): Settings object. Used to get the location of template
             files.
         sectioner (function): Function that returns a section heading for each
@@ -40,18 +43,19 @@ def listing(characters, outstream, *, include_metadata=None, metadata=None, **kw
     sectioner = kwargs.get('sectioner', lambda c: '')
     update_progress = kwargs.get('progress', lambda i, t: False)
 
-    if include_metadata:
-        # coerce to canonical form
-        if include_metadata == "yaml":
-            include_metadata = "yfm"
+    if not partial:
+        if include_metadata:
+            # coerce to canonical form
+            if include_metadata == "yaml":
+                include_metadata = "yfm"
 
-        # load and render template
-        header_file = prefs.get("listing.templates.markdown.header.{}".format(include_metadata))
-        if not header_file:
-            return result.OptionError(errmsg="Unrecognized metadata format '{}'".format(include_metadata))
+            # load and render template
+            header_file = prefs.get("listing.templates.markdown.header.{}".format(include_metadata))
+            if not header_file:
+                return result.OptionError(errmsg="Unrecognized metadata format '{}'".format(include_metadata))
 
-        header_template = Template(filename=header_file)
-        outstream.write(header_template.render(metadata=metadata))
+            header_template = Template(filename=header_file)
+            outstream.write(header_template.render(metadata=metadata))
 
     with tempfile.TemporaryDirectory() as tempdir:
         # directly access certain functions for speed
@@ -80,6 +84,9 @@ def listing(characters, outstream, *, include_metadata=None, metadata=None, **kw
             _out_write(body_template.render(character=char))
             update_progress(index + 1, total)
 
+    if not partial:
+        footer_template = Template(filename=prefs.get("listing.templates.markdown.footer"))
+        outstream.write(footer_template.render())
     return result.Success()
 
 def report(tables, outstream, **kwargs):

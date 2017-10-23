@@ -187,7 +187,7 @@
 
                 // Footer content added to the end of the listing. The footer is
                 // not used by default for markdown listings.
-                "footer": "",
+                "footer": "templates/listing/Footer.md.mako",
 
                 // Section header content added between groups of characters.
                 "section": "templates/listing/Section.md.mako",
