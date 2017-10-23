@@ -28,6 +28,8 @@ This release comes with a few enhancements, including a new way to configure cha
 * Added more explicit result classes and removed old error codes
 * Refactor session command into story module
 * Change main settings file to use a different layout. User and campaign settings will need to be updated.
+* Added features to the markdown lister to bring it closer to the html lister's feature set
+    - Section headings are now supported
 
 ## 1.3.0
 

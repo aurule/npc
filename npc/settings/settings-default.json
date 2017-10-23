@@ -190,8 +190,7 @@
                 "footer": "",
 
                 // Section header content added between groups of characters.
-                // Sections are not added for markdown listings
-                "section": "",
+                "section": "templates/listing/Section.md.mako",
 
                 // Templates for each character type. The template under "default"
                 // will be used whenever a type doesn't have its own template.
