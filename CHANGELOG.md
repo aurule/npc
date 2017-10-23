@@ -6,10 +6,13 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ## 1.3.1 [Unreleased]
 
-This release comes with few enhancements and a big change to the settings file format. You will need to update your user and campaign settings; the old versions will not work!
+The path hierarchy is here! This new setting allows you to configure exactly where your character files are placed based on their tags. See the readme for more details.
+
+This release comes with a few enhancements, including a new way to configure character organization, and a big change to the settings file format. You will need to update your user and campaign settings; the old versions will not work!
 
 ### Added
 
+* New `hierarchy` setting for configuring where character files are placed
 * New `campaign` option to the GUI that allows it to start in a given campaign directory
 * New `location` tag for specifying a non-foreign character location
 * List command and helpers now support a progress bar callback
@@ -21,10 +24,10 @@ This release comes with few enhancements and a big change to the settings file f
 
 ### Changed
 
-* Refactor cli file layout
+* Change cli file layout
 * Added more explicit result classes and removed old error codes
 * Refactor session command into story module
-* Refactor main settings file to use a different layout. User and campaign settings will need to be updated.
+* Change main settings file to use a different layout. User and campaign settings will need to be updated.
 
 ## 1.3.0
 
