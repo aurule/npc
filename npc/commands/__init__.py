@@ -60,7 +60,11 @@ def reorg(*search, ignore=None, purge=False, verbose=False, dryrun=False, **kwar
             if verbose:
                 changelog.append("Moving {} to {}".format(parsed_character['path'], new_path))
             if not dryrun:
-                shmove(parsed_character['path'], new_path)
+                try:
+                    shmove(parsed_character['path'], new_path)
+                except OSError as e:
+                    if verbose:
+                        changelog.append("* dest path already exists; skipping")
 
     if purge:
         for empty_path in util.find_empty_dirs(base_path):
