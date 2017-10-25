@@ -59,8 +59,8 @@ def make_list(*search, ignore=None, fmt=None, metadata=None, title=None, outfile
         fmt = prefs.get('listing.default_format')
     out_type = formatters.get_canonical_format_name(fmt)
 
-    dumper = formatters.get_listing_formatter(out_type)
-    if not dumper:
+    formatter = formatters.get_listing_formatter(out_type)
+    if not formatter:
         return result.OptionError(errmsg="Cannot create output of format '{}'".format(out_type))
 
     if metadata == 'default' and out_type != 'json':
@@ -75,7 +75,7 @@ def make_list(*search, ignore=None, fmt=None, metadata=None, title=None, outfile
         meta['title'] = title
 
     with util.smart_open(outfile, binary=(out_type in formatters.BINARY_TYPES)) as outstream:
-        response = dumper(
+        response = formatter(
             characters,
             outstream,
             include_metadata=metadata_type,

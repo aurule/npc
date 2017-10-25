@@ -310,11 +310,11 @@ def report(*tags, search=None, ignore=None, fmt=None, outfile=None, **kwargs):
     # duplicates.
     table_data = {tag : Counter(flatten([c.get(tag, 'None') for c in characters])) for tag in flatten(tags)}
 
-    outputter = formatters.get_report_formatter(fmt)
-    if not outputter:
+    formatter = formatters.get_report_formatter(fmt)
+    if not formatter:
         return result.OptionError(errmsg="Cannot create output of format '{}'".format(fmt))
     with util.smart_open(outfile, binary=(fmt in formatters.BINARY_TYPES)) as outstream:
-        response = outputter(table_data, outstream=outstream, prefs=prefs)
+        response = formatter(table_data, outstream=outstream, prefs=prefs)
 
     # pass errors straight through
     if not response.success:
