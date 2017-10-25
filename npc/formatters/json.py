@@ -45,6 +45,16 @@ def report(tables, outstream, **kwargs):
     """
     Write a json representation of one or more sets of table data
 
+    Table data format:
+    The tables arg is much more permissive for this formatter than for the other
+    formatters. Since this formatter just dumps that arg as json, it can contain
+    basically anything. For compatability, however, the following format should
+    be followed:
+
+    The tables arg should be a dictionary of collections.Counter objects indexed
+    by the name of the tag whose data is stored in the Counter. The tag name
+    will be titleized and used as the header for that column of the report.
+
     Args:
         tables (dict): One or more objects with table data
         outstream (stream): Output stream

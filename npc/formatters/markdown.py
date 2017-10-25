@@ -93,8 +93,13 @@ def report(tables, outstream, **kwargs):
     """
     Create one or more MultiMarkdown tables
 
+    Table data format:
+    The tables arg must be a dictionary of collections.Counter objects indexed
+    by the name of the tag whose data is stored in the Counter. The tag name
+    will be titleized and used as the header for that column of the report.
+
     Args:
-        tables (dict): Table data to use
+        tables (dict): Table data to use. Tables has a very particular format.
         outstream (stream): Output stream
         prefs (Settings): Settings object. Used to get the location of template
             files.

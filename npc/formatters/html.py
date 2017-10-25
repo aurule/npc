@@ -104,6 +104,11 @@ def report(tables, outstream, **kwargs):
     """
     Create one or more html tables
 
+    Table data format:
+    The tables arg must be a dictionary of collections.Counter objects indexed
+    by the name of the tag whose data is stored in the Counter. The tag name
+    will be titleized and used as the header for that column of the report.
+
     Args:
         tables (dict): Table data to use
         outstream (stream): Output stream
