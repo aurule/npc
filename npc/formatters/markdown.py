@@ -48,6 +48,8 @@ def listing(characters, outstream, *, include_metadata=None, metadata=None, part
             # coerce to canonical form
             if include_metadata == "yaml":
                 include_metadata = "yfm"
+            elif include_metadata == "multimarkdown":
+                include_metadata = 'mmd'
 
             # load and render template
             header_file = prefs.get("listing.templates.markdown.header.{}".format(include_metadata))

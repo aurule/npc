@@ -21,6 +21,7 @@ This release comes with a few enhancements, including a new way to configure cha
 * Explicit result objects for success state
 * New `latest` command to open the latest plot file, session file, or both
 * The `init` command can now create user-specified directories during campaign setup from the `additional_paths` key.
+* Markdown listings now accept "multimarkdown" as a metadata format. It works the same as passing "mmd".
 
 ### Changed
 
