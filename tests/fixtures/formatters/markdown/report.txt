@@ -1,0 +1,5 @@
+| Type  | Characters |
+| ----- | ---------: |
+| human |          2 |
+| elf   |          1 |
+[Characters by Type]
