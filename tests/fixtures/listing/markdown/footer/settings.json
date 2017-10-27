@@ -1,0 +1,9 @@
+{
+    "listing": {
+        "templates": {
+            "markdown": {
+                "footer": "New Footer.md.mako"
+            }
+        }
+    }
+}
