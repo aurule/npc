@@ -76,3 +76,4 @@ class TestPartialOption:
 class TestSectioner:
     # no sections by default: regex "^## .*$" not present
     # sectioner value is inserted
+    pass
