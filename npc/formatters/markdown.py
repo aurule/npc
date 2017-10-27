@@ -9,6 +9,9 @@ import npc
 from npc import settings
 from npc.util import result
 
+SUPPORTED_METADATA_TYPES = ['yaml', 'yfm', 'multimarkdown', 'mmd']
+"""Recognized metadata type names"""
+
 def listing(characters, outstream, *, include_metadata=None, metadata=None, partial=False, **kwargs):
     """
     Create a markdown character listing
