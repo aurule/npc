@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'npc/gui/uis/init.ui'
+# Form implementation generated from reading ui file 'npc/gui/uis/init_dialog.ui'
 #
 # Created by: PyQt5 UI code generator 5.7.1
 #
