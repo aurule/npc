@@ -33,6 +33,7 @@ This release comes with a few enhancements, including a new way to configure cha
     - Section headings are now supported, though not used by default
     - Footers are supported
     - The `partial` option is honored
+* Clarified what the `batch` option actually does
 
 ## 1.3.0
 

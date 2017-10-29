@@ -117,7 +117,7 @@ def _make_parser():
     paths_parser.set_defaults(serialize=['search'])
 
     common_options = argparse.ArgumentParser(add_help=False)
-    common_options.add_argument('-b', '--batch', action='store_true', default=False, help="Do not open any newly created files")
+    common_options.add_argument('-b', '--batch', action='store_true', default=False, help="Do not print any messages or open any files in the editor")
     common_options.add_argument('--debug', action='store_true', default=False, help="Show all error messages, not just important ones")
 
     # This is the main parser which handles program-wide options. These should
