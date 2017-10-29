@@ -1,16 +1,23 @@
-.SUFFIXES: .ui .py
+.SUFFIXES: .ui .py .qrc
 rwildcard = $(wildcard $1$2)$(foreach d,$(wildcard $1*),$(call rwildcard,$d/,$2))
 UI_FILES = $(call rwildcard,npc/gui/uis/,*.ui)
-PY_FILES = $(UI_FILES:.ui=.py)
+COMPILED_UI_FILES = $(UI_FILES:.ui=.py)
+RESOURCE_FILES = $(call rwildcard,npc/gui/uis/,*.qrc)
+COMPILED_RESOURCE_FILES = $(RESOURCE_FILES:%.qrc=%_rc.py)
 
 PREFIX = /usr/local
 
-all: uis
+all: resources uis
 
 .ui.py:
 	pyuic5 $< -o $@
 
-uis: $(PY_FILES)
+%_rc.py : %.qrc
+	pyrcc5 $< -o $@
+
+uis: $(COMPILED_UI_FILES)
+
+resources: $(COMPILED_RESOURCE_FILES)
 
 .PHONY: test
 test:
@@ -36,6 +43,10 @@ clean:
 	find . -name '__pycache__' -type d | xargs rm -fr
 	find . -name '.cache' -type d | xargs rm -fr
 	rm -fr deb_dist dist npc.egg-info
+
+.PHONY: clean-all
+clean-all: clean
+	rm -fr $(COMPILED_UI_FILES) $(COMPILED_RESOURCE_FILES)
 
 .PHONY: list
 list:
