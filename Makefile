@@ -10,7 +10,7 @@ PREFIX = /usr/local
 all: resources uis
 
 .ui.py:
-	pyuic5 $< -o $@
+	pyuic5 $< | sed 's/import \(.*_rc\)/from . import \1/g' > $@
 
 %_rc.py : %.qrc
 	pyrcc5 $< -o $@
