@@ -18,7 +18,7 @@ from npc.character import Character
 
 from . import create_character, listing, util, story
 
-def reorg(*search, ignore=None, purge=False, verbose=False, dryrun=False, **kwargs):
+def reorg(*search, ignore=None, purge=False, verbose=False, **kwargs):
     """
     Move character files into the correct paths.
 
@@ -34,8 +34,6 @@ def reorg(*search, ignore=None, purge=False, verbose=False, dryrun=False, **kwar
         purge (bool): Whether empty directories should be deleted after all
             files have been moved.
         verbose (bool): Whether to print changes as they are made
-        dryrun (bool): Whether to show the changes that would be made, but not
-            enact them.
         prefs (Settings): Settings object to use. Uses internal settings by
             default.
 
@@ -46,7 +44,6 @@ def reorg(*search, ignore=None, purge=False, verbose=False, dryrun=False, **kwar
     if not ignore:
         ignore = []
     ignore.extend(prefs.get('paths.ignore'))
-    verbose = verbose or dryrun
 
     changelog = []
 
@@ -59,19 +56,17 @@ def reorg(*search, ignore=None, purge=False, verbose=False, dryrun=False, **kwar
         if new_path != path.dirname(parsed_character['path']):
             if verbose:
                 changelog.append("Moving {} to {}".format(parsed_character['path'], new_path))
-            if not dryrun:
-                try:
-                    shmove(parsed_character['path'], new_path)
-                except OSError as e:
-                    if verbose:
-                        changelog.append("* dest path already exists; skipping")
+            try:
+                shmove(parsed_character['path'], new_path)
+            except OSError as e:
+                if verbose:
+                    changelog.append("* dest path already exists; skipping")
 
     if purge:
         for empty_path in util.find_empty_dirs(base_path):
             if verbose:
                 changelog.append("Removing empty directory {}".format(empty_path))
-            if not dryrun:
-                rmdir(empty_path)
+            rmdir(empty_path)
 
     return result.Success(printables=changelog)
 
