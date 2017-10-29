@@ -62,8 +62,8 @@ def create_path_from_character(character: Character, *, base_path=None, hierarch
     * iterate through components of the hierarchy
     * anything not inside {curly braces} is inserted literally
     * everything else is interpreted
-    *
-    * conditionals:
+
+    conditionals:
         * check for '?' operator
         *   translate tag name if needed
         *   test tag presence
@@ -72,7 +72,7 @@ def create_path_from_character(character: Character, *, base_path=None, hierarch
         *       type: not 'Unknown'
         *       *+ranks: any ranks exist
         *   if character has that tag, insert the literal
-    * tags:
+    tags:
         * translate tag name if needed
         * if the character has that tag:
         *   type: get 'types.type_key.type_path'

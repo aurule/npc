@@ -10,6 +10,7 @@
 - [Usage](#usage)
     - [Set Up Directories](#set-up-directories)
     - [Create Session Files](#create-session-files)
+    - [Open Latest Plot and Session Files](#open-latest-plot-and-session-files)
     - [Create a Character](#create-a-character)
     - [Lint Character Files](#lint-character-files)
     - [Find Characters](#find-characters)
@@ -120,46 +121,6 @@ The `new` command creates a new simple character using the named type. As long a
 * `fetch`: Create a fetch. Type path is `Fetches/`
 * `goblin`: Create a goblin. Type path is `Goblins/`
 
-#### Destination Path
-
-Simple characters all use the same rules for determining the destination path. Like all characters, they start in `Characters/`. Other directories are then appended, assuming they already exist. If these directories do not exist, they are not created.
-
-These are the directories that are appended, in order:
-
-1. Type path, like `Humans/`
-2. If the [@foreign](https://github.com/aurule/npc/wiki/Character-Sheet-Format#foreign-location) or [@wanderer](https://github.com/aurule/npc/wiki/Character-Sheet-Format#wanderer) tag is present, `Foreign/`
-3. First listed foreign place, if present
-4. First listed location, if present
-5. First listed freehold name, if present
-6. First listed group name, if given (like `Police/`)
-    * Other group names are also tried in order.
-
-Here are some examples:
-
-> The path `Characters/Humans/Police` exists. Running `npc human "Prakash Dupene" -g Police` will start in
-> `Characters/`, and try to find `Humans/`. Since it can, it will then look in `Characters/Humans/` for
-> `Police/`. Finding that directory, and having no more groups to check, it will create the file
-> `Characters/Humans/Police/Prakash Dupene.nwod` and open it.
-
-> With the same path, running `npc human "John Doe" -g "Bulldog Barons"` will also start in `Characters/` and
-> try to find `Humans/`. Since it can, it will then look in `Characters/Humans/` for `Bulldog Barons/`. That
-> directory does not exist, and there are no more groups to try, so it will create `Characters/Humans/John
-> Doe.nwod` and open it.
-
-> With the same path, running `npc human "Hans Fritz" -g "Funkadelic" "Police"` will quickly find
-> `Characters/Humans/`. It will look there for `Funkadelic/`, but that directory does not exist. It will then
-> look in `Characters/Humans/` for `Police/`, and find it. There are no more groups to try, so it will create
-> `Characters/Humans/Police/Hans Fritz.nwod`.
-
-> The path `Characters/Humans/Foreign/Police/` exists. Running
-> `npc human "Frank Bullman" -g Police --foreign Minneapolis` will quickly find `Characters/Humans`. It will
-> look there for `Foreign/` and find it, then look for `Police/` and find it as well. It will create
-> `Characters/Humans/Foreign/Police/Frank Bullman.nwod` and open it.
-
-> With the same path, running `npc human "Norman Dirk" -g Police` will find `Characters/Humans/` and will
-> look for the `Police/` directory. Since it is not there, it will create
-> `Characters/Humans/Norman Dirk.nwod` and open it.
-
 ### Changelings
 
 The `changeling` command has a few more arguments than the simple characters, to deal with changeling-specific attributes. New changeling caracters use the base path `Characters/Changelings/`.
@@ -172,6 +133,38 @@ Options:
 * `--motley`: Name of the changeling's motley, if known. This does not affect the path, but is added to the file as a tag.
 
 Note: The `changeling` command is not the only way to create a changeling character. If you just want to make a new sheet without specifying the seeming or kith, and without using the changeling-specific options, you can do so by running `npc new changeling [name]`.
+
+### Destination Path
+
+All characters are put into a path based on the `hierarchy` key under `paths` in your settings. This hierarchy uses some simple rules to determine where a character will end up, both during creation and during reorganization:
+
+1. Every slash (`/`) character denotes a new directory
+2. Text inside of curly braces (`{}`) is treated as the name of a tag. The *first* value for that tag is fetched from the character and used as the directory name.
+    * There's a special syntax that looks like `{tag?name}` which checks whether the character has that tag and if they do, it looks for a folder with the provided name.
+3. Other text is used as the folder name without being changed
+
+If a folder isn't found, it is skipped.
+
+#### Meta Tags
+
+There are a few "meta-tags" that can be used in place of a tag name. When one of these is found, it gets replaced by a real tag name before being looked up. The replacement is done based on your settings. These are the meta-tags and what they do:
+
+* `type`: This looks up the value for `type_path` in your settings, based on the character's type. So a character with `@type human` will look in `types.human.type_path`.
+* `type-unit`: This is replaced with the tag name for a small grouping appropriate for the character's type. Changelings use the value of `@motley`, werewolves use `@pack`, etc.
+* `type-social`: Replaced with the tag for intermediate groupings of the character's type. Changelings use `@court`.
+* `type-political`: Replaced with the tag for high-level groupings of the character's type. Changelings use `@freehold`.
+* `type-groups`: Replaced with the tag for type-specific prestige groups. Changelings use `@entitlement`.
+
+You can add your own substitutions by adding new keys within `tag_names` for one or more character types.
+
+#### Special Words
+
+There are some special words that can be used instead of a tag name. Each of them gives a certain more complex behavior:
+
+* `rank` or `ranks`: Check each `@rank` value for the first `@group` in order.
+* `groups`: Check all `@group` values in order.
+* `groups+ranks`: Check each `@group` value along with all of its `@rank` values.
+* `locations`: Check the first value of `@location` and then `@foreign`.
 
 ## Lint Character Files
 
