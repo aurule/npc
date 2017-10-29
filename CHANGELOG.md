@@ -36,6 +36,10 @@ This release comes with a few enhancements, including a new way to configure cha
     - The `partial` option is honored
 * Clarified what the `batch` option actually does
 
+### Fixed
+
+* Changeling linter thought every kith was unrecognized
+
 ## 1.3.0
 
 ### Highlights

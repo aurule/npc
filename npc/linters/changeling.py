@@ -85,8 +85,10 @@ def lint(character, fix=False, *, strict=False, sk_data=None):
             problems.append("Unrecognized @seeming '{}'".format(seeming_name))
 
     # Check that kith tag exists and is valid
+    all_kiths = flatten(sk_data['kiths'].values())
     for kith_name in character['kith']:
-        if kith_name.lower() not in sk_data['kiths'].values():
+        if kith_name.lower() not in all_kiths:
+            print(sk_data['kiths'].values())
             problems.append("Unrecognized @kith '{}'".format(kith_name))
 
     # Max of one entitlement

@@ -32,6 +32,9 @@ def test_kith_info_present(lint_output):
 def test_kith_info_correct(lint_output):
     assert "Incorrect notes for Kith" in lint_output('Bad Info.nwod')
 
+def test_unknown_kith(lint_output):
+    assert "Unrecognized @kith" in lint_output('Unknown Kith.nwod')
+
 def test_multiple_courts(lint_output):
     assert "Multiple courts" in lint_output('Many Courts.nwod')
 
