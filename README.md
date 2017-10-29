@@ -175,6 +175,7 @@ Options:
 * `--search`: Only look in these files and directories. Defaults to the base characters path.
 * `--ignore`: Ignore these files and directories. By default, nothing is ignored. Added to the default ignore paths from settings
 * `--fix`: Automatically fix a few problems. Most require manual fixing, though.
+* `--report`: Only list the problems found and do not open the problematic files.
 * `--strict`: Include optional checks.
 
 Every character file is checked for these problems:
