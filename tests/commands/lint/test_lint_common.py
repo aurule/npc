@@ -17,3 +17,9 @@ def test_requires_type(lint_output):
 @pytest.mark.parametrize('charname', ['Gotta Nada.nwod', 'Gotta Type.nwod'])
 def test_requires_description(lint_output, charname):
     assert "Missing description" in lint_output(charname)
+
+def test_report_no_files():
+    """The --report option should suppress files in the output"""
+    search = fixture_dir('linter', 'characters', 'Humans', 'Gotta Nada.nwod')
+    result = npc.commands.lint(search, report=True)
+    assert result.openable == []

@@ -119,7 +119,7 @@ def dump(*search, ignore=None, sort=False, metadata=False, outfile=None, **kwarg
 
     return result.Success(openable=openable)
 
-def lint(*search, ignore=None, fix=False, strict=False, **kwargs):
+def lint(*search, ignore=None, fix=False, strict=False, report=False, **kwargs):
     """
     Check character files for completeness and correctness.
 
@@ -134,7 +134,9 @@ def lint(*search, ignore=None, fix=False, strict=False, **kwargs):
             or lists of strings.
         ignore (list): Paths to ignore
         fix (bool): Whether to automatically fix errors when possible
-        strict (bool): Whether to report non-critical errors and omissions
+        strict (bool): Whether to include non-critical errors and omissions
+        report (bool): Do not include files in the return data, only problem
+            descriptions
         prefs (Settings): Settings object to use. Uses internal settings by
             default.
 
@@ -158,7 +160,8 @@ def lint(*search, ignore=None, fix=False, strict=False, **kwargs):
 
         # Report problems on one line if possible, or as a block if there's more than one
         if not character.valid:
-            openable.append(character['path'])
+            if not report:
+                openable.append(character['path'])
             if len(character.problems) > 1:
                 printable.append("File '{}':".format(character['path']))
                 for detail in character.problems:
