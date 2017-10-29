@@ -18,7 +18,7 @@ from npc.character import Character
 
 from . import create_character, listing, util, story
 
-def reorg(*search, ignore=None, purge=False, verbose=False, **kwargs):
+def reorg(*search, ignore=None, purge=False, verbose=False, commit=False, **kwargs):
     """
     Move character files into the correct paths.
 
@@ -34,6 +34,7 @@ def reorg(*search, ignore=None, purge=False, verbose=False, **kwargs):
         purge (bool): Whether empty directories should be deleted after all
             files have been moved.
         verbose (bool): Whether to print changes as they are made
+        commit (bool): Whether to actually move files around
         prefs (Settings): Settings object to use. Uses internal settings by
             default.
 
@@ -44,6 +45,7 @@ def reorg(*search, ignore=None, purge=False, verbose=False, **kwargs):
     if not ignore:
         ignore = []
     ignore.extend(prefs.get('paths.ignore'))
+    show_changes = verbose or not commit
 
     changelog = []
 
@@ -51,22 +53,28 @@ def reorg(*search, ignore=None, purge=False, verbose=False, **kwargs):
     if not path.exists(base_path):
         return result.FSError(errmsg="Cannot access '{}'".format(base_path))
 
+    if show_changes:
+        changelog.append("Move characters")
     for parsed_character in parser.get_characters(flatten(search), ignore):
         new_path = util.create_path_from_character(parsed_character, base_path=base_path)
-        if new_path != path.dirname(parsed_character['path']):
-            if verbose:
-                changelog.append("Moving {} to {}".format(parsed_character['path'], new_path))
-            try:
-                shmove(parsed_character['path'], new_path)
-            except OSError as e:
-                if verbose:
-                    changelog.append("* dest path already exists; skipping")
+        if path.dirname(new_path) != path.dirname(parsed_character['path']):
+            if show_changes:
+                changelog.append("* Move {} to {}".format(parsed_character['path'], new_path))
+            if commit:
+                try:
+                    shmove(parsed_character['path'], new_path)
+                except OSError as e:
+                    if show_changes:
+                        changelog.append("\t- dest path already exists; skipping")
 
     if purge:
+        if show_changes:
+            changelog.append("Purge empty directories")
         for empty_path in util.find_empty_dirs(base_path):
-            if verbose:
-                changelog.append("Removing empty directory {}".format(empty_path))
-            rmdir(empty_path)
+            if show_changes:
+                changelog.append("* Remove empty directory {}".format(empty_path))
+            if commit:
+                rmdir(empty_path)
 
     return result.Success(printables=changelog)
 

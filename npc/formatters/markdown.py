@@ -60,7 +60,7 @@ def listing(characters, outstream, *, include_metadata=None, metadata=None, part
                 return result.OptionError(errmsg="Unrecognized metadata format '{}'".format(include_metadata))
 
             header_template = Template(filename=header_file)
-            outstream.write(header_template.render(metadata=metadata))
+            outstream.write(header_template.render_unicode(metadata=metadata))
 
     with tempfile.TemporaryDirectory() as tempdir:
         # directly access certain functions for speed
@@ -77,7 +77,7 @@ def listing(characters, outstream, *, include_metadata=None, metadata=None, part
             if sectioner(char) != section_title:
                 section_title = sectioner(char)
                 _out_write(
-                    section_template.render(
+                    section_template.render_unicode(
                         title=section_title))
             body_file = _prefs_get("listing.templates.markdown.character.{}".format(char.type_key))
             if not body_file:
@@ -86,12 +86,12 @@ def listing(characters, outstream, *, include_metadata=None, metadata=None, part
                 return result.ConfigError(errmsg="Cannot find default character template for markdown listing")
 
             body_template = Template(filename=body_file, module_directory=tempdir)
-            _out_write(body_template.render(character=char))
+            _out_write(body_template.render_unicode(character=char))
             update_progress(index + 1, total)
 
     if not partial:
         footer_template = Template(filename=prefs.get("listing.templates.markdown.footer"))
-        outstream.write(footer_template.render())
+        outstream.write(footer_template.render_unicode())
     return result.Success()
 
 def report(tables, outstream, **kwargs):

@@ -33,12 +33,16 @@ This release comes with a few enhancements, including a new way to configure cha
 * Added features to the markdown lister to bring it closer to the html lister's feature set
     - Section headings are now supported, though not used by default
     - Footers are supported
-    - The `partial` option is honored
-* Clarified what the `batch` option actually does
+* Clarified what the `--batch` option actually does
+* The `reorg` command is now safe by default. When run with no options, it will just display the actions that it would take. To actually move files (and optionally delete directories), use the new `--commit` option.
 
 ### Fixed
 
 * Changeling linter thought every kith was unrecognized
+
+### Removed
+
+* The `reorg` command no longer has a `dryrun` option.
 
 ## 1.3.0
 

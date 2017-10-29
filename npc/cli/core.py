@@ -197,10 +197,10 @@ def _make_parser():
     parser_dump.set_defaults(func=commands.dump)
 
     # Reorganize character files subcommand
-    parser_reorg = subparsers.add_parser('reorg', parents=[common_options, paths_parser], help="Move character files to the most appropriate directories")
+    parser_reorg = subparsers.add_parser('reorg', parents=[common_options, paths_parser], help="Move character files to the most appropriate directories. By default, shows changes that would be made, but does not move anything. Use the --commit option once you're satisfied with where the files will end up.")
     parser_reorg.add_argument('-p', '--purge', action="store_true", default=False, help="After moving all files, remove any empty directories within the base characters path")
-    parser_reorg.add_argument('-v', '--verbose', action="store_true", default=False, help="Show the changes that are made")
-    parser_reorg.add_argument('-d', '--dryrun', action="store_true", default=False, help="Show the changes that would be made, but don't change anything", dest="dryrun")
+    parser_reorg.add_argument('-v', '--verbose', action="store_true", default=False, help="Show changes as they are made")
+    parser_reorg.add_argument('--commit', action="store_true", default=False, help="Move the files around")
     parser_reorg.set_defaults(func=commands.reorg)
 
     # Open settings files
