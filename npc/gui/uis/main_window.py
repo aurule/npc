@@ -130,7 +130,8 @@ class Ui_MainWindow(object):
         self.actionInit.setToolTip(_translate("MainWindow", "Set up required folders in this campaign"))
         self.actionNew_Character.setText(_translate("MainWindow", "&New Character..."))
         self.actionNew_Character.setShortcut(_translate("MainWindow", "Ctrl+N"))
-        self.actionNew_Session.setText(_translate("MainWindow", "New Session"))
+        self.actionNew_Session.setText(_translate("MainWindow", "New &Session"))
         self.actionNew_Session.setToolTip(_translate("MainWindow", "Create files for a new game session"))
         self.actionNew_Session.setShortcut(_translate("MainWindow", "Ctrl+Shift+N"))
 
+from . import images_rc

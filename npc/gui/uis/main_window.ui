@@ -201,10 +201,11 @@
   </action>
   <action name="actionNew_Session">
    <property name="icon">
-    <iconset theme="document-new"/>
+    <iconset theme="document-new" resource="images.qrc">
+     <normaloff>:/images/icons/document-new.svg</normaloff>:/images/icons/document-new.svg</iconset>
    </property>
    <property name="text">
-    <string>New Session</string>
+    <string>New &amp;Session</string>
    </property>
    <property name="toolTip">
     <string>Create files for a new game session</string>
@@ -214,6 +215,8 @@
    </property>
   </action>
  </widget>
- <resources/>
+ <resources>
+  <include location="images.qrc"/>
+ </resources>
  <connections/>
 </ui>
