@@ -55,7 +55,6 @@ class TestMetadata:
         def do_meta(meta_format=None):
             override_path = fixture_dir('settings', 'settings-metadata.json')
             prefs.load_more(override_path)
-            print(prefs.get('listing.metadata'))
             if not meta_format:
                 meta_format = prefs.get("listing.default_format")
             return prefs.get_metadata(meta_format)
