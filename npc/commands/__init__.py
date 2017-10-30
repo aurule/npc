@@ -57,7 +57,7 @@ def reorg(*search, ignore=None, purge=False, verbose=False, commit=False, **kwar
         changelog.append("Move characters")
     for parsed_character in parser.get_characters(flatten(search), ignore):
         new_path = util.create_path_from_character(parsed_character, base_path=base_path)
-        if path.dirname(new_path) != path.dirname(parsed_character['path']):
+        if path.normcase(path.normpath(new_path)) != path.normcase(path.normpath(path.dirname(parsed_character['path']))):
             if show_changes:
                 changelog.append("* Move {} to {}".format(parsed_character['path'], new_path))
             if commit:
