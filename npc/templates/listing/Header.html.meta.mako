@@ -2,14 +2,13 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>${metadata['title']}</title>
     % for k, v in metadata.items():
-    <%
-        if k == 'title':
-            continue
-    %>\
-<meta name="${k}" content="${v}" />
+        % if k == 'title':
+    <title>${v}</title>
+        % else:
+    <meta name="${k}" content="${v}" />
+        % endif
     % endfor
-<meta charset="${encoding}">
+    <meta charset="${encoding}">
 </head>
 <body>

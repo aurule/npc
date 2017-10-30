@@ -8,9 +8,12 @@ from markdown import Markdown
 from mako.template import Template
 from .. import util, settings
 
+SUPPORTED_METADATA_TYPES = ['meta']
+"""Recognized metadata type names"""
+
 def listing(characters, outstream, *, include_metadata=None, metadata=None, partial=False, **kwargs):
     """
-    Create a markdown character listing
+    Create an html character listing
 
     Args:
         characters (list): Character info dicts to show
@@ -59,7 +62,7 @@ def listing(characters, outstream, *, include_metadata=None, metadata=None, part
                 return util.result.OptionError(errmsg="Unrecognized metadata format option '{}'".format(include_metadata))
 
             header_template = Template(filename=header_file, **encoding_options)
-            outstream.write(header_template.render(metadata=metadata))
+            outstream.write(header_template.render(encoding=encoding, metadata=metadata))
         else:
             header_template = Template(filename=prefs.get("listing.templates.html.header.plain"), **encoding_options)
             outstream.write(header_template.render(encoding=encoding))
