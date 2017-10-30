@@ -80,3 +80,12 @@ class TestSectioner:
         listing = Listing(sectioner=lambda c: c.get_first('name', '').split(' ')[-1][0])
         assert listing.result
         assert len(listing.sections) == 4
+
+class TestProgressBar:
+    def record_progress(self, num, total):
+        self.progress_num = num
+
+    def test_progress_per_character(self):
+        """The progress meter should be updated once for each character"""
+        listing = Listing(progress=self.record_progress)
+        assert self.progress_num == 4
