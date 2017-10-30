@@ -1,0 +1,19 @@
+<table>
+    <caption>Characters by Type</caption>
+    <thead>
+        <tr>
+            <th>Type</th>
+            <th>Characters</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>human</td>
+            <td>2</td>
+        </tr>
+        <tr>
+            <td>elf</td>
+            <td>1</td>
+        </tr>
+    </tbody>
+</table>
