@@ -22,7 +22,7 @@ resources: $(COMPILED_RESOURCE_FILES)
 
 .PHONY: test
 test:
-	python3 -m pytest
+	python3 -m pytest --cov=npc
 
 .PHONY: install
 install:
