@@ -74,6 +74,14 @@ class TestPartialOption:
         assert "friend" not in listing.output
 
 class TestSectioner:
-    # no sections by default: regex "^## .*$" not present
-    # sectioner value is inserted
-    pass
+    def test_no_default_sections(self):
+        listing = Listing()
+        assert listing.result
+        assert re.search(r'^## .*$', listing.output, re.MULTILINE) is None
+
+    def test_sectioner_is_inserted(self):
+        listing = Listing(sectioner=lambda c: c.get_first('name', '').split(' ')[-1][0])
+        assert listing.result
+        sections = re.findall(r'^## .*$', listing.output, re.MULTILINE)
+        assert sections is not None
+        assert len(sections) == 4
