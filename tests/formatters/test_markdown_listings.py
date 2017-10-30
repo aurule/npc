@@ -6,13 +6,6 @@ import re
 
 from tests.util import fixture_dir
 
-# sectioner
-#   does nothing by default
-#   when present, inserts sections appropriately
-# progress
-#   does nothing by default
-#   called once per character when provided
-
 class Listing:
     CHARACTER_NAMES = ['Tom', 'Matt', 'Paul', 'Vincent']
     CHARACTER_NAME_REGEX = r'^###\s(?P<name>.*)$'
@@ -24,6 +17,10 @@ class Listing:
     @property
     def output(self):
         return self._output.getvalue()
+
+    @property
+    def sections(self):
+        return re.findall(r'^## .*$', self.output, re.MULTILINE)
 
     def build_characters(self, names=None):
         if not names:
@@ -77,11 +74,9 @@ class TestSectioner:
     def test_no_default_sections(self):
         listing = Listing()
         assert listing.result
-        assert re.search(r'^## .*$', listing.output, re.MULTILINE) is None
+        assert len(listing.sections) == 0
 
     def test_sectioner_is_inserted(self):
         listing = Listing(sectioner=lambda c: c.get_first('name', '').split(' ')[-1][0])
         assert listing.result
-        sections = re.findall(r'^## .*$', listing.output, re.MULTILINE)
-        assert sections is not None
-        assert len(sections) == 4
+        assert len(listing.sections) == 4
