@@ -4,6 +4,7 @@ UI_FILES = $(call rwildcard,npc/gui/uis/,*.ui)
 COMPILED_UI_FILES = $(UI_FILES:.ui=.py)
 RESOURCE_FILES = $(call rwildcard,npc/gui/uis/,*.qrc)
 COMPILED_RESOURCE_FILES = $(RESOURCE_FILES:%.qrc=%_rc.py)
+IMAGES = $(call rwildcard,npc/gui/uis/icons,*.svg)
 
 PREFIX = /usr/local
 
@@ -12,7 +13,7 @@ all: resources uis
 .ui.py:
 	pyuic5 $< | sed 's/import \(.*_rc\)/from . import \1/g' > $@
 
-%_rc.py : %.qrc
+%_rc.py : %.qrc $(IMAGES)
 	pyrcc5 $< -o $@
 
 uis: $(COMPILED_UI_FILES)
