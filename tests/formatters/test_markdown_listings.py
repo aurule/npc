@@ -9,6 +9,7 @@ from tests.util import fixture_dir
 class Listing:
     CHARACTER_NAMES = ['Tom', 'Matt', 'Paul', 'Vincent']
     CHARACTER_NAME_REGEX = r'^###\s(?P<name>.*)$'
+    SECTION_REGEX = r'^## .*$'
 
     def __init__(self, **kwargs):
         self._output = io.StringIO()
@@ -20,7 +21,7 @@ class Listing:
 
     @property
     def sections(self):
-        return re.findall(r'^## .*$', self.output, re.MULTILINE)
+        return re.findall(self.SECTION_REGEX, self.output, re.MULTILINE)
 
     def build_characters(self, names=None):
         if not names:
