@@ -98,6 +98,13 @@ class Character(defaultdict):
         """
         return self.has_items('foreign') or self.has_items('wanderer')
 
+    @property
+    def has_path(self):
+        """
+        bool: Whether this character has a path
+        """
+        return 'path' in self and self['path']
+
     def get_first(self, key, default=None):
         """
         Get the first element from the named key.
