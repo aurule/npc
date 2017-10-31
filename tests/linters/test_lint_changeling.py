@@ -53,14 +53,15 @@ def test_goodwill_vs_court(lint_output):
 def test_goodwill_vs_mantle(lint_output):
     assert "Court goodwill listed for court mantle 'Winter'" in lint_output('Goodwill.nwod')
 
-def test_court_no_mantle(lint_output):
-    assert "No mantle for court 'Winter'" in lint_output('No Mantle.nwod', strict=True)
+class TestStrictChangelingLinting:
+    def test_court_no_mantle(self, lint_output):
+        assert "No mantle for court 'Winter'" in lint_output('No Mantle.nwod', strict=True)
 
-def test_unseen_sense(lint_output):
-    assert "Changelings cannot have the Unseen Sense merit" in lint_output('Unseen Sense.nwod', strict=True)
+    def test_unseen_sense(self, lint_output):
+        assert "Changelings cannot have the Unseen Sense merit" in lint_output('Unseen Sense.nwod', strict=True)
 
-def test_virtue(lint_output):
-    assert "Missing virtue" in lint_output('No Virtue.nwod', strict=True)
+    def test_virtue(self, lint_output):
+        assert "Missing virtue" in lint_output('No Virtue.nwod', strict=True)
 
-def test_vice(lint_output):
-    assert "Missing vice" in lint_output('No Vice.nwod', strict=True)
+    def test_vice(self, lint_output):
+        assert "Missing vice" in lint_output('No Vice.nwod', strict=True)
