@@ -3,19 +3,25 @@
 import npc
 import pytest
 import os
+import functools
 from tests.util import fixture_dir
 
-@pytest.fixture
-def lint_output():
-    def do_lint(charname, strict=False):
-        search = fixture_dir('linter', 'characters', 'Humans', charname)
-        result = npc.commands.lint(search, strict=strict)
-        return "\n".join(result.printables)
-    return do_lint
+lint_strict = functools.partial(npc.linters.human.lint, strict=True)
 
-def test_virtue(lint_output):
-    assert "Missing virtue" in lint_output('No Virtue.nwod', strict=True)
+def test_requires_path():
+    character = npc.Character()
+    problems = npc.linters.human.lint(character)
+    assert 'Missing path' in problems
 
-def test_vice(lint_output):
-    assert "Missing vice" in lint_output('No Vice.nwod', strict=True)
+class TestStrictHumanLinting:
+    def test_has_virtue(self):
+        char_file = fixture_dir('linter', 'human', 'Gotta Nada.nwod')
+        character = npc.parser.parse_character(char_file)
+        problems = lint_strict(character)
+        assert 'Missing virtue' in problems
 
+    def test_has_vice(self):
+        char_file = fixture_dir('linter', 'human', 'Gotta Nada.nwod')
+        character = npc.parser.parse_character(char_file)
+        problems = lint_strict(character)
+        assert 'Missing vice' in problems
