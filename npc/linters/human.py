@@ -29,8 +29,9 @@ def lint(character, fix=False, *, strict=False):
     problems = []
     dirty = False
 
-    # If the character has no sheet, we're done
-    if 'path' not in character:
+    # If the character has no sheet, we cannot proceed
+    if not character.has_path:
+        problems.append('Missing path')
         return problems
 
     # Load the sheet for deep linting

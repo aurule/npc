@@ -96,7 +96,7 @@ def lint(character, fix=False, *, strict=False, sk_data=None):
         problems.append("Too many entitlements")
 
     # If the character has no sheet, we're done
-    if 'path' not in character:
+    if not character.has_path:
         return problems
 
     # Load the sheet for deep linting
