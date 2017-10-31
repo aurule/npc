@@ -8,3 +8,4 @@ pytest-qt==2.1.0
 sip==4.19
 stdeb==0.8.5
 coverage==4.4.1
+pytest-cov==2.5.1
