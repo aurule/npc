@@ -15,12 +15,24 @@ def test_requires_path():
 
 class TestStrictHumanLinting:
     def test_has_virtue(self):
+        char_file = fixture_dir('linter', 'human', 'Has Virtue.nwod')
+        character = npc.parser.parse_character(char_file)
+        problems = lint_strict(character)
+        assert 'Missing virtue' not in problems
+
+    def test_missing_virtue(self):
         char_file = fixture_dir('linter', 'human', 'Gotta Nada.nwod')
         character = npc.parser.parse_character(char_file)
         problems = lint_strict(character)
         assert 'Missing virtue' in problems
 
     def test_has_vice(self):
+        char_file = fixture_dir('linter', 'human', 'Has Vice.nwod')
+        character = npc.parser.parse_character(char_file)
+        problems = lint_strict(character)
+        assert 'Missing vice' not in problems
+
+    def test_missing_vice(self):
         char_file = fixture_dir('linter', 'human', 'Gotta Nada.nwod')
         character = npc.parser.parse_character(char_file)
         problems = lint_strict(character)
