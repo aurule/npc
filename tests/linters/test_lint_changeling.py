@@ -3,6 +3,7 @@
 import npc
 import pytest
 import os
+import functools
 from tests.util import fixture_dir
 
 def lint_changeling(filename, **kwargs):
@@ -11,6 +12,8 @@ def lint_changeling(filename, **kwargs):
     character = npc.parser.parse_character(char_file)
     problems = npc.linters.changeling.lint(character, sk_data=prefs.get('changeling'), **kwargs)
     return '/'.join(problems)
+
+lint_strict = functools.partial(lint_changeling, strict=True)
 
 class TestSeeming:
     def test_known_seeming(self):
@@ -96,15 +99,19 @@ class TestGoodwill:
         problems = lint_changeling('Goodwill for Same.nwod')
         assert "Court goodwill listed for court mantle" in problems
 
-# class TestStrictChangelingLinting:
-#     def test_court_no_mantle(self, lint_output):
-#         assert "No mantle for court 'Winter'" in lint_output('No Mantle.nwod', strict=True)
+class TestStrict:
+    def test_court_with_mantle(self):
+        problems = lint_strict('Right Mantle.nwod')
+        assert "No mantle for court" not in problems
 
-#     def test_unseen_sense(self, lint_output):
-#         assert "Changelings cannot have the Unseen Sense merit" in lint_output('Unseen Sense.nwod', strict=True)
+    def test_court_without_mantle(self):
+        problems = lint_strict('No Mantle.nwod')
+        assert "No mantle for court" in problems
 
-#     def test_virtue(self, lint_output):
-#         assert "Missing virtue" in lint_output('No Virtue.nwod', strict=True)
+    def test_without_unseen_sense(self):
+        problems = lint_strict('No Unseen.nwod')
+        assert "Changelings cannot have the Unseen Sense merit" not in problems
 
-#     def test_vice(self, lint_output):
-#         assert "Missing vice" in lint_output('No Vice.nwod', strict=True)
+    def test_with_unseen_sense(self):
+        problems = lint_strict('Has Unseen.nwod')
+        assert "Changelings cannot have the Unseen Sense merit" in problems
