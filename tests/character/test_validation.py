@@ -1,8 +1,13 @@
+"""Tests universal validations"""
+
 import npc
 import pytest
 
-class TestBasicValidation:
-    """Tests universal validations"""
+class TestDescription:
+    def test_filled_description(self):
+        char = npc.Character(description='Hi there!')
+        char.validate()
+        assert 'Missing description' not in char.problems
 
     def test_blank_description(self):
         char = npc.Character(description='')
@@ -14,9 +19,17 @@ class TestBasicValidation:
         char.validate()
         assert 'Missing description' in char.problems
 
+class TestRequiredTags:
     required_tags = ('type', 'name')
+
     @pytest.mark.parametrize('tag', required_tags)
-    def test_required_tag_presence(self, tag):
+    def test_required_tag_is_present(self, tag):
+        char = npc.Character(**{tag: ['foobar']})
+        char.validate()
+        assert 'Missing {}'.format(tag) not in char.problems
+
+    @pytest.mark.parametrize('tag', required_tags)
+    def test_required_tag_not_present(self, tag):
         char = npc.Character(**{tag: []})
         char.validate()
         assert 'Missing {}'.format(tag) in char.problems
@@ -26,6 +39,12 @@ class TestBasicValidation:
         char = npc.Character(**{tag: [' \t']})
         char.validate()
         assert 'Empty {}'.format(tag) in char.problems
+
+class TestStrict:
+    def test_single_type(self):
+        char = npc.Character(type=['dog'])
+        char.validate(strict=True)
+        assert "Multiple types" not in char.problems
 
     def test_multiple_types(self):
         char = npc.Character(type=['dog', 'cat'])
@@ -38,7 +57,8 @@ class TestBasicValidation:
         char.validate(strict=True)
         assert 'Unrecognized tags: head' in char.problems
 
-    def test_tag_present(self):
+class TestHelpers:
+    def test_tag_present_and_filled(self):
         char = npc.Character(head=['attached'], limbs=[' \n'], torso=[])
         char.problems = []
         char.validate_tag_present_and_filled('head')
@@ -48,37 +68,10 @@ class TestBasicValidation:
         char.validate_tag_present_and_filled('torso')
         assert 'Missing torso' in char.problems
 
-    def test_tag_too_many(self):
+    def test_tag_appears_once(self):
         char = npc.Character(head=['left', 'right', 'beeblebrox'])
         char.validate_tag_appears_once('head')
         assert 'Multiple heads: left, right, beeblebrox' in char.problems
-
-class TestChangelingValidation:
-    """Tests the changeling-specific validations"""
-
-    required_tags = ('seeming', 'kith')
-    @pytest.mark.parametrize('tag', required_tags)
-    def test_required_tag_presence(self, tag):
-        char = npc.Character(type=['changeling'], **{tag: []})
-        char.validate()
-        assert 'Missing {}'.format(tag) in char.problems
-
-    @pytest.mark.parametrize('tag', required_tags)
-    def test_required_tag_whitespace(self, tag):
-        char = npc.Character(type=['changeling'], **{tag: [' \t']})
-        char.validate()
-        assert 'Empty {}'.format(tag) in char.problems
-
-    only_one = [
-        ('court', ['summer', 'winter']),
-        ('motley', ['townies', 'hillbillies']),
-        ('entitlement', ['honorable knights', 'dishonorable knights'])
-    ]
-    @pytest.mark.parametrize('key, values', only_one)
-    def test_many_courts(self, key, values):
-        char = npc.Character(type=['changeling'], **{key: values})
-        char.validate()
-        assert 'Multiple {key}s: {vals}'.format(key=key, vals=", ".join(values)) in char.problems
 
 class TestValid:
     """Tests for the correctness of the `valid` getter"""
