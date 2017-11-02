@@ -1,10 +1,10 @@
 .SUFFIXES: .ui .py .qrc
 rwildcard = $(wildcard $1$2)$(foreach d,$(wildcard $1*),$(call rwildcard,$d/,$2))
-UI_FILES = $(call rwildcard,npc/gui/uis/,*.ui)
-COMPILED_UI_FILES = $(UI_FILES:.ui=.py)
-RESOURCE_FILES = $(call rwildcard,npc/gui/uis/,*.qrc)
-COMPILED_RESOURCE_FILES = $(RESOURCE_FILES:%.qrc=%_rc.py)
-IMAGES = $(call rwildcard,npc/gui/uis/icons,*.svg)
+UI_FILES := $(call rwildcard,npc/gui/uis/,*.ui)
+COMPILED_UI_FILES := $(UI_FILES:.ui=.py)
+RESOURCE_FILES := $(call rwildcard,npc/gui/uis/,*.qrc)
+COMPILED_RESOURCE_FILES := $(RESOURCE_FILES:%.qrc=%_rc.py)
+IMAGES := $(call rwildcard,npc/gui/uis/icons,*.svg)
 
 PREFIX = /usr/local
 
