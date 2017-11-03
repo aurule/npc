@@ -15,6 +15,12 @@ def lint_changeling(filename, **kwargs):
 
 lint_strict = functools.partial(lint_changeling, strict=True)
 
+def test_no_path():
+    prefs = npc.settings.Settings()
+    character = npc.Character({"type": ['changeling'], "kith": ['nope'], "seeming": ['nope']})
+    problems = npc.linters.changeling.lint(character, sk_data=prefs.get('changeling'))
+    assert problems
+
 class TestSeeming:
     def test_known_seeming(self):
         problems = lint_changeling('Known Seeming.nwod')
