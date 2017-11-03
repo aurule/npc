@@ -115,3 +115,12 @@ class TestStrict:
     def test_with_unseen_sense(self):
         problems = lint_strict('Has Unseen.nwod')
         assert "Changelings cannot have the Unseen Sense merit" in problems
+
+class TestEntitlement:
+    def test_one_entitlement(self):
+        problems = lint_changeling('One Entitlement.nwod')
+        assert "Too many entitlements" not in problems
+
+    def test_many_entitlements(self):
+        problems = lint_changeling('Many Entitlements.nwod')
+        assert "Too many entitlements" in problems
