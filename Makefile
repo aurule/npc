@@ -22,7 +22,12 @@ resources: $(COMPILED_RESOURCE_FILES)
 
 .PHONY: test
 test:
-	python3 -m pytest --cov=npc
+	python3 -m pytest
+
+.PHONY: coverage
+coverage:
+	python3 -m pytest --cov=npc -q
+	coverage html
 
 .PHONY: install
 install:
