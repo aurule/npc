@@ -209,7 +209,7 @@ def _cp_template_for_char(name, character, prefs, fn=None):
         with open(template_path, 'r') as template_data:
             data = header + template_data.read()
     except IOError as err:
-        return result.FSERror(errmsg=err.strerror + " ({})".format(template_path))
+        return result.FSError(errmsg=err.strerror + " ({})".format(template_path))
 
     if callable(fn):
         data = fn(data)
