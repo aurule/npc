@@ -22,6 +22,10 @@ def test_no_path():
     assert problems
 
 class TestSeeming:
+    def test_no_tag(self):
+        problems = lint_changeling('No Seeming or Kith.nwod')
+        assert not problems
+
     def test_known_seeming(self):
         problems = lint_changeling('Known Seeming.nwod')
         assert "Unrecognized @seeming" not in problems
@@ -47,6 +51,10 @@ class TestSeeming:
         assert "Incorrect notes for Seeming" in problems
 
 class TestKith:
+    def test_no_tag(self):
+        problems = lint_changeling('No Seeming or Kith.nwod')
+        assert not problems
+
     def test_known_kith(self):
         problems = lint_changeling('Known Kith.nwod')
         assert "Unrecognized @kith" not in problems
