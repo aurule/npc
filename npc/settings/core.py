@@ -292,6 +292,14 @@ class Settings:
         for _, data in self.get('types').items():
             yield data['type_path']
 
+    def get_available_types(self):
+        """
+        Get a list of all configured type names
+
+        Returns:
+            List of strings, one for each configured type
+        """
+        return self.get('types').keys()
 
 class InternalSettings(Settings, metaclass=util.Singleton):
     """
