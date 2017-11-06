@@ -76,7 +76,7 @@
      <item row="3" column="0">
       <widget class="QLabel" name="locLabel">
        <property name="text">
-        <string>Loc</string>
+        <string>Location</string>
        </property>
       </widget>
      </item>
@@ -178,6 +178,7 @@
   <tabstop>typeSelect</tabstop>
   <tabstop>characterName</tabstop>
   <tabstop>groupName</tabstop>
+  <tabstop>locName</tabstop>
   <tabstop>foreignBox</tabstop>
   <tabstop>foreignText</tabstop>
   <tabstop>deceasedBox</tabstop>
