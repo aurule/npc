@@ -30,6 +30,7 @@ class NewCharacterDialog(QtWidgets.QDialog, Ui_NewCharacterDialog):
             "ctype": "",
             "dead": False,
             "foreign": False,
+            "location": "",
             "groups": [],
             "serialize": ['name', 'ctype']
         }
@@ -43,6 +44,7 @@ class NewCharacterDialog(QtWidgets.QDialog, Ui_NewCharacterDialog):
         self.foreignText.textChanged.connect(self.set_foreign)
         self.deceasedBox.toggled.connect(self.set_deceased)
         self.deceasedText.textChanged.connect(self.set_deceased)
+        self.locName.textChanged.connect(lambda text: self.set_value("location", text))
 
         self.typeSelect.currentIndexChanged.connect(self.update_type_specific_controls)
         for type_key in sorted(self.prefs.get_available_types()):
