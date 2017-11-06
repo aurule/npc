@@ -24,34 +24,11 @@ class MainWindow(Ui_MainWindow):
         self.prefs = prefs
         self.campaign_root = path.expanduser('~')
 
-        # main window setup
-        self.window = window
-        self.setupUi(window)
-        self.setup_main_widgets()
-        self.force_titles()
-
-        # populate menus
-        self.update_recent_campaigns()
-
-        # Set up table
-        self.table_header = self.characterTableView.horizontalHeader()
-        self.table_header.setSectionResizeMode(0, QtWidgets.QHeaderView.Stretch)
-        self.table_header.setSectionResizeMode(1, QtWidgets.QHeaderView.ResizeToContents)
-        self.update_table()
-
-        # about dialog
-        self.about_dialog = QtWidgets.QDialog(self.window)
-        AboutDialog(self.about_dialog)
-        self.actionAbout.triggered.connect(self.about_dialog.open)
-
-        # commands setup
-        self.actionOpenCampaign.triggered.connect(self.open_campaign)
-        self.actionUserSettings.triggered.connect(self.run_user_settings)
-        self.actionCampaignSettings.triggered.connect(self.run_campaign_settings)
-        self.actionReloadSettings.triggered.connect(self.run_reload_settings)
-        self.actionInit.triggered.connect(self.run_init)
-        self.actionNew_Character.triggered.connect(self.run_new_character)
-        self.actionNew_Session.triggered.connect(self.run_new_session)
+        self.init_main_window(window)
+        self.init_menus()
+        self.init_table()
+        self.init_about_window()
+        self.init_command_actions()
 
         # quit menu entry
         self.actionQuit.triggered.connect(self.quit)
@@ -59,7 +36,14 @@ class MainWindow(Ui_MainWindow):
         if campaign is not None:
             self.set_campaign_root(campaign)
 
-    def setup_main_widgets(self):
+    def init_main_window(self, window):
+        """Initialize the main window object"""
+        self.window = window
+        self.setupUi(window)
+        self.init_main_widgets()
+        self.force_titles()
+
+    def init_main_widgets(self):
         """Connect the main window widgets together"""
         self.timer = QtCore.QTimer()
         self.timer.setSingleShot(True)
@@ -89,6 +73,33 @@ class MainWindow(Ui_MainWindow):
         self.recentCampaignActions = [QtWidgets.QAction(self.menuOpen_Recent_Campaign, visible=False, triggered=self.open_recent_campaign) for i in range(5)]
         for act in self.recentCampaignActions:
             self.menuOpen_Recent_Campaign.addAction(act)
+
+    def init_menus(self):
+        """Set up menus"""
+        self.update_recent_campaigns()
+
+    def init_table(self):
+        """Set up main table"""
+        self.table_header = self.characterTableView.horizontalHeader()
+        self.table_header.setSectionResizeMode(0, QtWidgets.QHeaderView.Stretch)
+        self.table_header.setSectionResizeMode(1, QtWidgets.QHeaderView.ResizeToContents)
+        self.update_table()
+
+    def init_about_window(self):
+        """Set up about window"""
+        self.about_dialog = QtWidgets.QDialog(self.window)
+        AboutDialog(self.about_dialog)
+        self.actionAbout.triggered.connect(self.about_dialog.open)
+
+    def init_command_actions(self):
+        """Link up actions with the right command methods"""
+        self.actionOpenCampaign.triggered.connect(self.open_campaign)
+        self.actionUserSettings.triggered.connect(self.run_user_settings)
+        self.actionCampaignSettings.triggered.connect(self.run_campaign_settings)
+        self.actionReloadSettings.triggered.connect(self.run_reload_settings)
+        self.actionInit.triggered.connect(self.run_init)
+        self.actionNew_Character.triggered.connect(self.run_new_character)
+        self.actionNew_Session.triggered.connect(self.run_new_session)
 
     def update_recent_campaigns(self):
         """
