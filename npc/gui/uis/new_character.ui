@@ -45,7 +45,11 @@
       </widget>
      </item>
      <item row="0" column="1">
-      <widget class="QComboBox" name="typeSelect"/>
+      <widget class="QComboBox" name="typeSelect">
+       <property name="toolTip">
+        <string>Type of character. Determines which fields are available.</string>
+       </property>
+      </widget>
      </item>
      <item row="1" column="0">
       <widget class="QLabel" name="nameLine">
@@ -58,7 +62,11 @@
       </widget>
      </item>
      <item row="1" column="1">
-      <widget class="QLineEdit" name="characterName"/>
+      <widget class="QLineEdit" name="characterName">
+       <property name="toolTip">
+        <string>The character's name</string>
+       </property>
+      </widget>
      </item>
      <item row="2" column="0">
       <widget class="QLabel" name="groupLabel">
@@ -71,7 +79,11 @@
       </widget>
      </item>
      <item row="2" column="1">
-      <widget class="QLineEdit" name="groupName"/>
+      <widget class="QLineEdit" name="groupName">
+       <property name="toolTip">
+        <string>Main group that the character belongs to</string>
+       </property>
+      </widget>
      </item>
      <item row="3" column="0">
       <widget class="QLabel" name="locLabel">
@@ -81,7 +93,11 @@
       </widget>
      </item>
      <item row="3" column="1">
-      <widget class="QLineEdit" name="locName"/>
+      <widget class="QLineEdit" name="locName">
+       <property name="toolTip">
+        <string>Place where the character lives within the main setting</string>
+       </property>
+      </widget>
      </item>
     </layout>
    </item>
