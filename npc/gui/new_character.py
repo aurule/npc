@@ -93,59 +93,12 @@ class NewCharacterDialog(QtWidgets.QDialog, Ui_NewCharacterDialog):
             widget.deleteLater()
         self.type_specific_widgets = []
 
-        def new_row(index, title, widget):
-            """
-            Add a new row of controls to the form
-
-            Args:
-                index (int): Where to place the row in the form
-                title (str): Label text for the row
-                widget (QtWidget): Widget for the row
-
-            Returns:
-                The height of the row, as gotten from the widget
-            """
-
-            self.infoForm.insertRow(index, title, widget)
-            self.type_specific_widgets.append(widget)
-            return widget.height()
-
         new_vbox_height_offset = 0
         type_key = self.typeSelect.itemData(index)
         if type_key == 'changeling':
-            seeming_select = QtWidgets.QComboBox(self)
-            new_vbox_height_offset += new_row(2, '&Seeming', seeming_select)
-            self.setTabOrder(self.characterName, seeming_select)
-
-            kith_select = QtWidgets.QComboBox(self)
-            new_vbox_height_offset += new_row(3, '&Kith', kith_select)
-            self.setTabOrder(seeming_select, kith_select)
-
-            courtInput = QtWidgets.QLineEdit(self)
-            new_vbox_height_offset += new_row(4, '&Court', courtInput)
-            self.setTabOrder(kith_select, courtInput)
-            self.setTabOrder(courtInput, self.groupName)
-
-            def update_kiths(_=0):
-                """Update the kith options from the selected seeming"""
-                kith_select.clear()
-                kith_select.addItems(seeming_select.currentData())
-
-            seeming_select.currentIndexChanged.connect(update_kiths)
-            seeming_select.currentTextChanged.connect(lambda text: self.set_value('seeming', text))
-            kith_select.currentTextChanged.connect(lambda text: self.set_value('kith', text))
-            courtInput.textChanged.connect(lambda text: self.set_value("court", text))
-
-            for seeming in self.prefs.get('changeling.seemings'):
-                seeming_select.addItem(seeming.title(), userData=[kith.title() for kith in self.prefs.get('changeling.kiths.{}'.format(seeming))])
-
-            self.set_value("command", commands.create_character.changeling)
-            self.set_value("serialize", ['name', 'seeming', 'kith'])
-
+            new_vbox_height_offset = self.create_changeling_controls()
         else:
-            self.set_value("command", commands.create_character.standard)
-            self.set_value("serialize", ['name', 'ctype'])
-            self.setTabOrder(self.characterName, self.groupName)
+            self.create_basic_controls()
 
         new_vbox_height_offset += len(self.type_specific_widgets)*6
 
@@ -153,6 +106,62 @@ class NewCharacterDialog(QtWidgets.QDialog, Ui_NewCharacterDialog):
             self.width(),
             self.height() - self.current_vbox_height_offset + new_vbox_height_offset)
         self.current_vbox_height_offset = new_vbox_height_offset
+
+
+    def new_row(self, index, title, widget):
+        """
+        Add a new row of controls to the form
+
+        Args:
+            index (int): Where to place the row in the form
+            title (str): Label text for the row
+            widget (QtWidget): Widget for the row
+
+        Returns:
+            The height of the row, as gotten from the widget
+        """
+
+        self.infoForm.insertRow(index, title, widget)
+        self.type_specific_widgets.append(widget)
+        return widget.height()
+
+    def create_basic_controls(self):
+        self.set_value("command", commands.create_character.standard)
+        self.set_value("serialize", ['name', 'ctype'])
+        self.setTabOrder(self.characterName, self.groupName)
+
+    def create_changeling_controls(self):
+        new_vbox_height_offset = 0
+        seeming_select = QtWidgets.QComboBox(self)
+        new_vbox_height_offset += self.new_row(2, '&Seeming', seeming_select)
+        self.setTabOrder(self.characterName, seeming_select)
+
+        kith_select = QtWidgets.QComboBox(self)
+        new_vbox_height_offset += self.new_row(3, '&Kith', kith_select)
+        self.setTabOrder(seeming_select, kith_select)
+
+        courtInput = QtWidgets.QLineEdit(self)
+        new_vbox_height_offset += self.new_row(4, '&Court', courtInput)
+        self.setTabOrder(kith_select, courtInput)
+        self.setTabOrder(courtInput, self.groupName)
+
+        def update_kiths(_=0):
+            """Update the kith options from the selected seeming"""
+            kith_select.clear()
+            kith_select.addItems(seeming_select.currentData())
+
+        seeming_select.currentIndexChanged.connect(update_kiths)
+        seeming_select.currentTextChanged.connect(lambda text: self.set_value('seeming', text))
+        kith_select.currentTextChanged.connect(lambda text: self.set_value('kith', text))
+        courtInput.textChanged.connect(lambda text: self.set_value("court", text))
+
+        for seeming in self.prefs.get('changeling.seemings'):
+            seeming_select.addItem(seeming.title(), userData=[kith.title() for kith in self.prefs.get('changeling.kiths.{}'.format(seeming))])
+
+        self.set_value("command", commands.create_character.changeling)
+        self.set_value("serialize", ['name', 'seeming', 'kith'])
+
+        return new_vbox_height_offset
 
     def run(self):
         """
