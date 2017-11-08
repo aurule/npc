@@ -126,11 +126,27 @@ class NewCharacterDialog(QtWidgets.QDialog, Ui_NewCharacterDialog):
         return widget.height()
 
     def create_basic_controls(self):
+        """
+        Set up the base controls
+
+        This just means resetting the tab order and internal data structures.
+
+        All create_*_controls methods should return the height of their controls.
+
+        Returns:
+            Zero, since this doesn't create anything
+        """
         self.set_value("command", commands.create_character.standard)
         self.set_value("serialize", ['name', 'ctype'])
         self.setTabOrder(self.characterName, self.groupName)
+        return 0
 
     def create_changeling_controls(self):
+        """
+        Set up the changeling-specific controls
+
+        Adds the seeming, kith, and court rows
+        """
         new_vbox_height_offset = 0
         seeming_select = QtWidgets.QComboBox(self)
         new_vbox_height_offset += self.new_row(2, '&Seeming', seeming_select)
