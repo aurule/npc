@@ -47,6 +47,10 @@ def test_singleton_settings():
     prefs2 = npc.settings.InternalSettings()
     assert prefs1 is prefs2
 
+def test_available_types(prefs):
+    names = prefs.get_available_types()
+    assert set(names) == set(['human', 'fetch', 'changeling', 'goblin'])
+
 class TestMetadata:
     """Tests the correctness of the metadata hash"""
 
