@@ -48,7 +48,7 @@ def startup_error(message):
         message (str): Message text to display
     """
     app = QtWidgets.QApplication([])
-    errorbox = QtWidgets.QMessageBox.critical(
+    QtWidgets.QMessageBox.critical(
         None,
         'Could not start NPC',
         message,

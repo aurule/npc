@@ -140,7 +140,7 @@ class MainWindow(Ui_MainWindow):
         """
         if not parent:
             parent = self.window
-        errorbox = QtWidgets.QMessageBox.warning(parent, title, message, QtWidgets.QMessageBox.Ok)
+        QtWidgets.QMessageBox.warning(parent, title, message, QtWidgets.QMessageBox.Ok)
 
     def update_table(self):
         """Update the characters table using search results"""

@@ -115,7 +115,7 @@ class Settings:
         working_data = deepcopy(settings_data)
 
         # types.*.sheet_template
-        for typekey, type_data in get(working_data, 'types', {}).items():
+        for typekey, _ in get(working_data, 'types', {}).items():
             type_path = get(working_data, "types.{}.sheet_template".format(typekey))
             if type_path:
                 working_data['types'][typekey]['sheet_template'] = path.join(base_path, path.expanduser(type_path))
