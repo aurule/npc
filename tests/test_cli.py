@@ -7,7 +7,7 @@ from distutils import dir_util
 @pytest.fixture
 def run():
     def do_run(*args):
-        newargs = ["python3", "npc.py", *args]
+        newargs = ["python3", "-m", "npc", *args]
         return subprocess.run(newargs, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     return do_run
 
@@ -27,7 +27,7 @@ def test_bad_settings(run, tmpdir):
 
 def test_help(run):
     procinfo = run()
-    assert 'usage: npc.py' in procinfo.stdout.decode('utf-8')
+    assert 'usage: npc' in procinfo.stdout.decode('utf-8')
 
 def test_failed_command(run, tmpdir):
     srcpath = fixture_dir('cli', 'failed_command')

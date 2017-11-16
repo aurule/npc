@@ -122,7 +122,7 @@ def _make_parser():
 
     # This is the main parser which handles program-wide options. These should
     # be kept sparse.
-    parser = argparse.ArgumentParser(description='GM helper script to manage game files')
+    parser = argparse.ArgumentParser(description='GM helper script to manage game files', prog='npc')
     parser.add_argument('--campaign', default='auto', help="Use the campaign files in a different directory", metavar='DIR')
     parser.add_argument('--version', action='version', version=__version__)
     parser.set_defaults(debug=False, batch=False)
