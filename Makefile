@@ -6,7 +6,7 @@ RESOURCE_FILES := $(call rwildcard,npc/gui/uis/,*.qrc)
 COMPILED_RESOURCE_FILES := $(RESOURCE_FILES:%.qrc=%_rc.py)
 IMAGES := $(call rwildcard,npc/gui/uis/icons,*.svg)
 
-PREFIX = /usr/local
+PREFIX := /usr/local
 
 all: resources uis
 
