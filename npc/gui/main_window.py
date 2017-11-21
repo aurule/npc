@@ -74,10 +74,13 @@ class MainWindow(Ui_MainWindow):
             QtWidgets.QAction(
                 self.menuOpen_Recent_Campaign,
                 visible=False,
-                triggered=self.open_recent_campaign) for i in range(5)
+                triggered=self.open_recent_campaign
+                ) for i in range(5)
             ]
-        for act in self.recentCampaignActions:
-            self.menuOpen_Recent_Campaign.addAction(act)
+        for new_action in self.recentCampaignActions:
+            self.menuOpen_Recent_Campaign.insertAction(None, new_action)
+        self.menuOpen_Recent_Campaign.addSeparator()
+        self.menuOpen_Recent_Campaign.addAction(self.actionClear_Recent_Campaigns)
 
     def init_menus(self):
         """Set up menus"""

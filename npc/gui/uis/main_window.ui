@@ -80,8 +80,6 @@
      <property name="title">
       <string>&amp;Recent Campaigns</string>
      </property>
-     <addaction name="separator"/>
-     <addaction name="actionClear_Recent_Camaigns"/>
     </widget>
     <addaction name="actionNew_Character"/>
     <addaction name="actionNew_Session"/>
@@ -216,7 +214,7 @@
     <string>Ctrl+Shift+N</string>
    </property>
   </action>
-  <action name="actionClear_Recent_Camaigns">
+  <action name="actionClear_Recent_Campaigns">
    <property name="icon">
     <iconset theme="edit-clear" resource="images.qrc">
      <normaloff>:/images/icons/edit-clear.svg</normaloff>:/images/icons/edit-clear.svg</iconset>
