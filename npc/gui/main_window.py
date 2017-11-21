@@ -70,7 +70,12 @@ class MainWindow(Ui_MainWindow):
             context=QtCore.Qt.WindowShortcut)
         self.focus_search_shortcut.activated.connect(self.characterSearch.setFocus)
 
-        self.recentCampaignActions = [QtWidgets.QAction(self.menuOpen_Recent_Campaign, visible=False, triggered=self.open_recent_campaign) for i in range(5)]
+        self.recentCampaignActions = [
+            QtWidgets.QAction(
+                self.menuOpen_Recent_Campaign,
+                visible=False,
+                triggered=self.open_recent_campaign) for i in range(5)
+            ]
         for act in self.recentCampaignActions:
             self.menuOpen_Recent_Campaign.addAction(act)
 
