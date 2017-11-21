@@ -23,6 +23,7 @@ class MainWindow(Ui_MainWindow):
 
         self.prefs = prefs
         self.campaign_root = path.expanduser('~')
+        self.qsettings = QtCore.QSettings('Aurule', 'NPC')
 
         self.init_main_window(window)
         self.init_menus()
@@ -77,6 +78,8 @@ class MainWindow(Ui_MainWindow):
                 triggered=self.open_recent_campaign
                 ) for i in range(5)
             ]
+        self.actionClear_Recent_Campaigns.triggered.connect(self.clear_recent_campaigns)
+
         for new_action in self.recentCampaignActions:
             self.menuOpen_Recent_Campaign.insertAction(None, new_action)
         self.menuOpen_Recent_Campaign.addSeparator()
@@ -113,12 +116,11 @@ class MainWindow(Ui_MainWindow):
         """
         Update the recent campaigns list
 
-        Loads recent campaign info from QSettings and creates menu items for
-        each. If there are none, the menu is disabled.
+        Loads recent campaign info from QSettings and shows menu items for
+        each. If there are none active, the menu is disabled.
         """
-        settings = QtCore.QSettings('Aurule', 'NPC')
-        campaign_paths = settings.value('recentCampaigns/paths', [])
-        campaign_titles = settings.value('recentCampaigns/titles', [])
+        campaign_paths = self.qsettings.value('recentCampaigns/paths', [])
+        campaign_titles = self.qsettings.value('recentCampaigns/titles', [])
 
         num_recent_campaigns = min(len(campaign_paths), 5)
 
@@ -135,6 +137,17 @@ class MainWindow(Ui_MainWindow):
             action.setVisible(False)
 
         self.menuOpen_Recent_Campaign.setEnabled(num_recent_campaigns > 0)
+
+    def clear_recent_campaigns(self):
+        """
+        Clear the recent campaigns list
+
+        Removes recent campaigns from QSettings and updates the
+        menu.
+        """
+        campaign_paths = self.qsettings.remove('recentCampaigns/paths')
+        campaign_titles = self.qsettings.remove('recentCampaigns/titles')
+        self.update_recent_campaigns()
 
     def _show_error(self, title, message, parent=None):
         """
@@ -229,9 +242,8 @@ class MainWindow(Ui_MainWindow):
         self.campaign_root = root_dir
         self.run_reload_settings()
 
-        settings = QtCore.QSettings('Aurule', 'NPC')
-        campaigns = settings.value('recentCampaigns/paths', [])
-        campaign_titles = settings.value('recentCampaigns/titles', [])
+        campaigns = self.qsettings.value('recentCampaigns/paths', [])
+        campaign_titles = self.qsettings.value('recentCampaigns/titles', [])
 
         try:
             campaigns.remove(root_dir)
@@ -244,8 +256,8 @@ class MainWindow(Ui_MainWindow):
         del campaigns[5:]
         del campaign_titles[5:]
 
-        settings.setValue('recentCampaigns/paths', campaigns)
-        settings.setValue('recentCampaigns/titles', campaign_titles)
+        self.qsettings.setValue('recentCampaigns/paths', campaigns)
+        self.qsettings.setValue('recentCampaigns/titles', campaign_titles)
         self.update_recent_campaigns()
         self.update_table()
 
