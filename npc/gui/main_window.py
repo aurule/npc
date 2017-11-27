@@ -208,7 +208,6 @@ class MainWindow(Ui_MainWindow):
         """
         _translate = QtCore.QCoreApplication.translate
         self.menuFile.setTitle(_translate("MainWindow", "&File"))
-        self.menuSettings.setTitle(_translate("MainWindow", "&Settings"))
 
     def open_campaign(self):
         """

@@ -86,15 +86,10 @@
     <addaction name="actionOpenCampaign"/>
     <addaction name="menuOpen_Recent_Campaign"/>
     <addaction name="separator"/>
-    <addaction name="actionQuit"/>
-   </widget>
-   <widget class="QMenu" name="menuSettings">
-    <property name="title">
-     <string>Setti&amp;ngs</string>
-    </property>
-    <addaction name="actionCampaignSettings"/>
     <addaction name="actionUserSettings"/>
     <addaction name="actionReloadSettings"/>
+    <addaction name="separator"/>
+    <addaction name="actionQuit"/>
    </widget>
    <widget class="QMenu" name="menuHelp">
     <property name="title">
@@ -102,15 +97,15 @@
     </property>
     <addaction name="actionAbout"/>
    </widget>
-   <widget class="QMenu" name="menuTools">
+   <widget class="QMenu" name="menuCampaign">
     <property name="title">
-     <string>&amp;Tools</string>
+     <string>&amp;Campaign</string>
     </property>
     <addaction name="actionInit"/>
+    <addaction name="actionCampaignSettings"/>
    </widget>
    <addaction name="menuFile"/>
-   <addaction name="menuSettings"/>
-   <addaction name="menuTools"/>
+   <addaction name="menuCampaign"/>
    <addaction name="menuHelp"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
@@ -169,7 +164,7 @@
      <normaloff>:/images/icons/view-refresh.svg</normaloff>:/images/icons/view-refresh.svg</iconset>
    </property>
    <property name="text">
-    <string>&amp;Reload</string>
+    <string>&amp;Reload Settings</string>
    </property>
    <property name="toolTip">
     <string>Reload settings</string>
@@ -181,7 +176,7 @@
      <normaloff>:/images/icons/journal-new.svg</normaloff>:/images/icons/journal-new.svg</iconset>
    </property>
    <property name="text">
-    <string>&amp;Set Up Campaign...</string>
+    <string>&amp;Set Up...</string>
    </property>
    <property name="toolTip">
     <string>Set up required folders in this campaign</string>
