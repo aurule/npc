@@ -80,6 +80,10 @@
      <property name="title">
       <string>&amp;Recent Campaigns</string>
      </property>
+     <property name="icon">
+      <iconset theme="document-open-recent" resource="images.qrc">
+       <normaloff>:/images/icons/document-open-recent.svg</normaloff>:/images/icons/document-open-recent.svg</iconset>
+     </property>
     </widget>
     <addaction name="actionNew_Character"/>
     <addaction name="actionNew_Session"/>
@@ -101,8 +105,11 @@
     <property name="title">
      <string>&amp;Campaign</string>
     </property>
-    <addaction name="actionInit"/>
+    <addaction name="actionLatest_Plot"/>
+    <addaction name="actionLatest_Session"/>
+    <addaction name="separator"/>
     <addaction name="actionCampaignSettings"/>
+    <addaction name="actionInit"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuCampaign"/>
@@ -176,7 +183,7 @@
      <normaloff>:/images/icons/journal-new.svg</normaloff>:/images/icons/journal-new.svg</iconset>
    </property>
    <property name="text">
-    <string>&amp;Set Up...</string>
+    <string>Set &amp;Up...</string>
    </property>
    <property name="toolTip">
     <string>Set up required folders in this campaign</string>
@@ -219,6 +226,16 @@
    </property>
    <property name="toolTip">
     <string>Clear recent campaigns</string>
+   </property>
+  </action>
+  <action name="actionLatest_Plot">
+   <property name="text">
+    <string>Latest &amp;Plot</string>
+   </property>
+  </action>
+  <action name="actionLatest_Session">
+   <property name="text">
+    <string>Latest &amp;Session</string>
    </property>
   </action>
  </widget>
