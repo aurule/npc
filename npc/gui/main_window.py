@@ -46,11 +46,14 @@ class MainWindow(Ui_MainWindow):
 
     def init_main_widgets(self):
         """Connect the main window widgets together"""
-        self.timer = QtCore.QTimer()
-        self.timer.setSingleShot(True)
-        self.timer.setInterval(350)
-        self.timer.timeout.connect(self.update_table)
-        self.characterSearch.textEdited.connect(self.timer.start)
+
+        # set up the search field with a debounce timer
+        self.table_search_text = ""
+        self.table_timer = QtCore.QTimer()
+        self.table_timer.setSingleShot(True)
+        self.table_timer.setInterval(350)
+        self.table_timer.timeout.connect(self.update_table)
+        self.characterSearch.textEdited.connect(self.start_table_timer)
 
         self.character_table_model = CharacterTableModel(self)
         self.characterTableView.setModel(self.character_table_model)
@@ -84,6 +87,12 @@ class MainWindow(Ui_MainWindow):
             self.menuOpen_Recent_Campaign.insertAction(None, new_action)
         self.menuOpen_Recent_Campaign.addSeparator()
         self.menuOpen_Recent_Campaign.addAction(self.actionClear_Recent_Campaigns)
+
+    def start_table_timer(self, newtext):
+        """Store search text and execute the search on a timer"""
+
+        self.table_search_text = newtext
+        self.table_timer.start()
 
     def init_menus(self):
         """Set up menus"""
@@ -165,7 +174,7 @@ class MainWindow(Ui_MainWindow):
 
     def update_table(self):
         """Update the characters table using search results"""
-        search_rules = self.characterSearch.text().split(';')
+        search_rules = self.table_search_text.split(';')
         all_characters = list(npc.parser.get_characters())
         filtered_characters = npc.commands.find_characters(search_rules, all_characters)
 
