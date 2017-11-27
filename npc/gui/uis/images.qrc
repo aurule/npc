@@ -1,5 +1,6 @@
 <RCC>
   <qresource prefix="images">
+    <file>icons/document-open-recent.svg</file>
     <file>icons/edit-clear.svg</file>
     <file>icons/folder-open.svg</file>
     <file>icons/document-new.svg</file>
