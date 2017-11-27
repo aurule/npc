@@ -1,0 +1,62 @@
+#!/bin/bash
+
+set -e
+
+# tell user they need to have the Qt system libraries installed despite the venv
+
+tested_python_versions=('3.5' '3.6')
+minimum_python_version='3.5'
+
+# Function to compare version numbers
+vercomp () {
+    if [[ $1 == $2 ]]
+    then
+        return 0
+    fi
+    local IFS=.
+    local i ver1=($1) ver2=($2)
+    # fill empty fields in ver1 with zeros
+    for ((i=${#ver1[@]}; i<${#ver2[@]}; i++))
+    do
+        ver1[i]=0
+    done
+    for ((i=0; i<${#ver1[@]}; i++))
+    do
+        if [[ -z ${ver2[i]} ]]
+        then
+            # fill empty fields in ver2 with zeros
+            ver2[i]=0
+        fi
+        if ((10#${ver1[i]} > 10#${ver2[i]}))
+        then
+            return 1
+        fi
+        if ((10#${ver1[i]} < 10#${ver2[i]}))
+        then
+            return 2
+        fi
+    done
+    return 0
+}
+
+echo "Setting up NPC development environment..."
+pyversion=`python --version | sed s/Python\ //`
+major_version=`echo $pyversion | cut -d '.' -f1,2`
+
+echo -n "Checking Python version..."
+[[ -z $VIRTUAL_ENV ]] && echo "ERROR: This setup script is supposed to be run from within an activated venv. Setting up system-level packages should be done through your system's package manager." && exit
+[[ vercomp $pyversion '3.5' == 2 ]] && echo "ERROR: Python version $pyversion is below the minimum to run NPC (3.5.0)" && exit
+[[ ! " ${tested_python_versions[@]} " =~ " ${major_version} " ]] && echo "WARNING: NPC has not been tested against Python $major_version!"
+echo "OK"
+
+echo -n "Checking out develop branch..."
+git fetch
+git checkout develop
+echo "OK"
+
+echo "Installing development dependencies..."
+pip install -r requirements-dev.txt
+echo "OK"
+
+echo "INFO: Ensure that your system has Qt installed in order to run the GUI."
+echo "Done setting up! Run 'make test' to verify that everything works."
