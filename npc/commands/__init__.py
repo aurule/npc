@@ -382,7 +382,7 @@ def find(*rules, search=None, ignore=None, **kwargs):
 
 def find_characters(rules, characters):
     """
-    Finds characters that match the given rules
+    Filter characters list according to the given rules
 
     Args:
         rules (list): One or more strings that describe which characters to

@@ -24,6 +24,7 @@ This release comes with a few enhancements, including a new way to configure cha
 * Markdown listings now accept "multimarkdown" as a metadata format. It works the same as passing "mmd".
 * New `report` option to the lint command that allows the reported problems to be shown without opening all of the affected files.
 * Can now clear recent campaign menu in the GUI
+* The `find` command now accepts the asterisk (`*`) character when searching on a field. It returns all characters that have any value for that field.
 
 ### Changed
 

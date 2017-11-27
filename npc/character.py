@@ -187,13 +187,21 @@ class Character(defaultdict):
         if key not in self:
             return False
 
+        wildcard_search = value == '*'
+
         if key in self.STRING_FIELDS:
+            if wildcard_search and len(self[key]) > 0:
+                return True
             return value in self[key].casefold()
 
         if key == 'rank':
             searchme = flatten([self['rank'][g] for g in self['rank']])
+            if wildcard_search and len(list(searchme)) > 0:
+                return True
         else:
             searchme = self[key]
+            if wildcard_search:
+                return True
 
         for searchval in searchme:
             if value in searchval.casefold():

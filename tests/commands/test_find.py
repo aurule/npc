@@ -25,3 +25,34 @@ def test_negation():
     assert char1 not in res
     assert char2 in res
     assert char3 in res
+
+class TestWildcard:
+    def test_simple_tag(self):
+        char1 = npc.Character(name=["char1"], court=['winter'])
+        char2 = npc.Character(name=["char2"], )
+        char3 = npc.Character(name=["char3"], court=['summer'])
+        raw_res = npc.commands.find_characters(["court: *"], [char1, char2, char3])
+        res = list(map(lambda x: x.get_first('name'), raw_res))
+        assert 'char1' in res
+        assert 'char2' not in res
+        assert 'char3' in res
+
+    def test_rank_tag(self):
+        char1 = npc.Character(name=["char1"], group=['winter'], rank={'winter': ['hobnob']})
+        char2 = npc.Character(name=["char2"])
+        char3 = npc.Character(name=["char3"], group=['summer'], rank={'summer': ['hobnob']})
+        raw_res = npc.commands.find_characters(["rank: *"], [char1, char2, char3])
+        res = list(map(lambda x: x.get_first('name'), raw_res))
+        assert 'char1' in res
+        assert 'char2' not in res
+        assert 'char3' in res
+
+    def test_text_tag(self):
+        char1 = npc.Character(name=["char1"], description="hello")
+        char2 = npc.Character(name=["char2"], description="")
+        char3 = npc.Character(name=["char3"])
+        raw_res = npc.commands.find_characters(["description: *"], [char1, char2, char3])
+        res = list(map(lambda x: x.get_first('name'), raw_res))
+        assert 'char1' in res
+        assert 'char2' not in res
+        assert 'char3' not in res
