@@ -58,5 +58,7 @@ echo "Installing development dependencies..."
 pip install -r requirements-dev.txt
 echo "OK"
 
+[[ -z `command -v make` ]] && echo "WARNING: You don't have 'make' installed, so you will not be able to use the makefile."
+
 echo "INFO: Ensure that your system has Qt installed in order to run the GUI."
 echo "Done setting up! Run 'make test' to verify that everything works."
