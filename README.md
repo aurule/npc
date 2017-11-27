@@ -23,7 +23,7 @@
     - [Using both `search` and `ignore`](#using-both-search-and-ignore)
 - [Configuration](#configuration)
     - [Type-Specific Settings](#type-specific-settings)
-- [Testing](#testing)
+- [Testing and Development](#testing-and-development)
     - [Requirements](#requirements-1)
     - [Running Tests](#running-tests)
 
@@ -317,7 +317,9 @@ Every seeming *must* have a corresponding entry in both the `blessings` and `cur
 
 Since both seemings and kiths share the same blessings and curses dictionaries, all seeming and kith names *should* be unique. If a seeming and kith have the same name, then both will have the same blessing. That's probably not what you want.
 
-# Testing
+# Testing and Development
+
+To set up the development environment, create and activate a venv and run `bin/setup`. It'll ensure everything is installed and ready to go.
 
 ## Requirements
 
