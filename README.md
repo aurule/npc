@@ -327,8 +327,8 @@ To set up the development environment, create and activate a venv and run `bin/s
 
 ## Requirements
 
-* [pytest](http://doc.pytest.org/en/latest/) 2.8.5
-* [pytest-qt](https://pytest-qt.readthedocs.io/en/latest/) 2.1.0
+* [pytest](http://doc.pytest.org/en/latest/) 3.3.0
+* [pytest-qt](https://pytest-qt.readthedocs.io/en/latest/) 2.2.1
 * [pytest-cov](https://pypi.python.org/pypi/pytest-cov) 2.5.1
 * [coverage](https://coverage.readthedocs.io/en/coverage-4.4.1/) 4.4.1
 * [stdeb](https://pypi.python.org/pypi/stdeb) 0.8.5 - optional: only for building debian packages
