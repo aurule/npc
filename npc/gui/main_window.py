@@ -120,6 +120,8 @@ class MainWindow(Ui_MainWindow):
         self.actionInit.triggered.connect(self.run_init)
         self.actionNew_Character.triggered.connect(self.run_new_character)
         self.actionNew_Session.triggered.connect(self.run_new_session)
+        self.actionLatest_Plot.triggered.connect(self.run_latest_plot)
+        self.actionLatest_Session.triggered.connect(self.run_latest_session)
 
     def update_recent_campaigns(self):
         """
@@ -386,6 +388,28 @@ class MainWindow(Ui_MainWindow):
                     self._show_error("Could not create character", result.errmsg)
                     return
             new_character_dialog.deleteLater()
+
+    def run_latest_session(self):
+        """Run the latest session command"""
+        with self.safe_command(commands.story.latest) as command:
+            result = command('session', prefs=self.prefs)
+
+            if not result.success:
+                self._show_error('Could not open session file', result.errmsg)
+                return
+
+            util.open_files(*result.openable, prefs=self.prefs)
+
+    def run_latest_plot(self):
+        """Run the latest plot command"""
+        with self.safe_command(commands.story.latest) as command:
+            result = command('plot', prefs=self.prefs)
+
+            if not result.success:
+                self._show_error('Could not open plot file', result.errmsg)
+                return
+
+            util.open_files(*result.openable, prefs=self.prefs)
 
     def quit(self):
         """Quite the application"""
