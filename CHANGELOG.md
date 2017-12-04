@@ -4,6 +4,12 @@ This file documents the changes made in each release. I didn't start maintaining
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/) (mostly).
 
+## 1.3.1 beta 2
+
+### Fixed
+
+* Crash in `find` command
+
 ## 1.3.1 [Unreleased]
 
 The path hierarchy is here! This new setting allows you to configure exactly where your character files are placed based on their tags. See the readme for more details.

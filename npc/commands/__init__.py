@@ -378,7 +378,7 @@ def find(*rules, search=None, ignore=None, **kwargs):
         openable = paths
         printables = []
 
-    return result.Success(openable=openable, printable=printable)
+    return result.Success(openable=openable, printables=printables)
 
 def find_characters(rules, characters):
     """
