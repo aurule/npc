@@ -18,7 +18,10 @@ def start(argv=None):
     Run the command-line interface
 
     Args:
-        argv (list): Arguments from the command invocation
+        argv (list): Arguments from the command invocation. When running from
+            code, this should just include the arguments you want to use, not
+            the name of the script itself. When left blank, sys.argv will be
+            used instead after chopping off the first argument.
 
     Returns:
         Integer code of zero for success or non-zero for failure.
