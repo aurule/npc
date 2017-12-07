@@ -52,8 +52,7 @@ setup(
     packages=find_packages(exclude=['tests']),
     install_requires=[
         "Mako>=1.0.0",
-        "Markdown>=2.6.0",
-        "PyQt5>=5.7.1"
+        "Markdown>=2.6.0"
     ],
     extras_requires={
         "test": [
