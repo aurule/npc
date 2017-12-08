@@ -1,3 +1,3 @@
 """Current version string for NPC"""
 
-__version__ = "1.3.1 beta 2"
+__version__ = "1.3.1 beta 3"
