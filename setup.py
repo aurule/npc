@@ -72,6 +72,8 @@ setup(
     entry_points={
         'console_scripts': [
             'npc=npc.cli:start',
+        ],
+        'gui_scripts': [
             'npc-gui=npc.gui:start',
         ]
     }
