@@ -156,12 +156,14 @@ def get_sectioner(order):
         A sectioning function, or None if the order was not recognized
     """
     def first_letter_last_name(character):
-        """Get the first letter of the character's last-most name"""
-        return character.get_first('name', '').split(' ')[-1][0]
+        """Get the first letter of the last word in the character's name"""
+        full_name = character.get_first('name', '')
+        return '' if len(full_name) == 0 else full_name.split(' ')[-1][0]
 
     def first_letter_first_name(character):
         """Get the first letter of the character's first name"""
-        return character.get_first('name', '').split(' ')[0][0]
+        full_name = character.get_first('name', '')
+        return '' if len(full_name) == 0 else full_name.split(' ')[0][0]
 
     if order == 'first':
         return first_letter_first_name

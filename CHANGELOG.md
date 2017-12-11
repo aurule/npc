@@ -4,6 +4,10 @@ This file documents the changes made in each release. I didn't start maintaining
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/) (mostly).
 
+## 1.3.1 beta 4 [Unreleased]
+
+* Crash in `list` command when a character has no name
+
 ## 1.3.1 beta 3
 
 * Remove PyQt as an explicit install dependency

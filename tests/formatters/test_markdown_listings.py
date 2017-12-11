@@ -7,7 +7,7 @@ import re
 from tests.util import fixture_dir
 
 class Listing:
-    CHARACTER_NAMES = ['Tom', 'Matt', 'Paul', 'Vincent']
+    CHARACTER_NAMES = ['Tom', 'Matt', 'Paul', 'Vincent', '']
     CHARACTER_NAME_REGEX = r'^###\s(?P<name>.*)$'
     SECTION_REGEX = r'^## .*$'
 
@@ -78,9 +78,9 @@ class TestSectioner:
         assert len(listing.sections) == 0
 
     def test_sectioner_is_inserted(self):
-        listing = Listing(sectioner=lambda c: c.get_first('name', '').split(' ')[-1][0])
+        listing = Listing(sectioner=npc.commands.listing.get_sectioner('last'))
         assert listing.result
-        assert len(listing.sections) == 4
+        assert len(listing.sections) == 5
 
 class TestProgressBar:
     def record_progress(self, num, total):
@@ -89,4 +89,4 @@ class TestProgressBar:
     def test_progress_per_character(self):
         """The progress meter should be updated once for each character"""
         listing = Listing(progress=self.record_progress)
-        assert self.progress_num == 4
+        assert self.progress_num == len(Listing.CHARACTER_NAMES)
