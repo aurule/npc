@@ -81,7 +81,7 @@ def make_list(*search, ignore=None, fmt=None, metadata=None, title=None, outfile
             include_metadata=metadata_type,
             metadata=meta,
             prefs=prefs,
-            sectioner=_get_sectioner(sort_order),
+            sectioner=get_sectioner(sort_order),
             progress=update_progress)
 
     # pass errors straight through
@@ -144,7 +144,7 @@ def _prune_chars(characters):
 
         yield char
 
-def _get_sectioner(order):
+def get_sectioner(order):
     """
     Get a sectioning function
 
