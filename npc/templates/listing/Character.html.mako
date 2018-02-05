@@ -47,11 +47,11 @@ ${', '}
 %endif
 \
 %if character.has_items('appearance'):
-<p><em>Appearance:</em> ${mdconv(' '.join(character['appearance']))}</p>
+${mdconv('*Appearance:*' + ' '.join(character['appearance']))}
 %endif
 \
-<p><em>Notes:</em> ${mdconv(character['description'])}</p>
+${mdconv('*Notes:* ' + character['description'])}
 \
 %if character.has_items('dead'):
-<p><em>Dead:</em> ${mdconv(' '.join(character['dead']))}</p>
+${mdconv('*Dead:*' + ' '.join(character['dead']))}
 %endif

@@ -54,16 +54,6 @@ def listing(characters, outstream, *, include_metadata=None, metadata=None, part
         'encoding_errors': 'xmlcharrefreplace'
     }
 
-    def strip_surrounding_tags(fn):
-        def tag_strip(text):
-            """ strips outer html tags """
-            text = fn(text)
-            start = text.find('>')+1
-            end = len(text)-text[::-1].find('<')-1
-
-            return text[start:end]
-        return tag_strip
-
     if not partial:
         if include_metadata:
             # load and render template
@@ -104,7 +94,7 @@ def listing(characters, outstream, *, include_metadata=None, metadata=None, part
             _out_write(
                 body_template.render(
                     character=char.copy_and_alter(html.escape),
-                    mdconv=strip_surrounding_tags(_clean_conv().convert)
+                    mdconv=_clean_conv().convert
                     ))
             update_progress(index + 1, total)
 
