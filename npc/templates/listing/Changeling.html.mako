@@ -73,17 +73,17 @@ ${', '}
 %endif
 \
 %if character.has_items('appearance'):
-${mdconv('*Appearance:*' + ' '.join(character['appearance']))}
+${mdconv('*Appearance:* ' + ' '.join(character['appearance']))}
 %endif
 %if character.has_items('mien'):
-${mdconv('*Mien:*' + ' '.join(character['mien']))}
+${mdconv('*Mien:* ' + ' '.join(character['mien']))}
 %endif
 %if character.has_items('mask'):
-${mdconv('*Mask:*' + ' '.join(character['mask']))}
+${mdconv('*Mask:* ' + ' '.join(character['mask']))}
 %endif
 \
 ${mdconv('*Notes:* ' + character['description'])}
 \
 %if character.has_items('dead'):
-${mdconv('*Dead:*' + ' '.join(character['dead']))}
+${mdconv('*Dead:* ' + ' '.join(character['dead']))}
 %endif
