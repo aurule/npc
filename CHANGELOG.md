@@ -6,7 +6,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ## 1.3.1 beta 5
 
-* Strip unwanted `p` tags around converted markdown when rendering html templates
+* Fix extra `p` tags in parsed markdown in html listings
 
 ## 1.3.1 beta 4
 
