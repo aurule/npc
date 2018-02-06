@@ -48,6 +48,7 @@ This release comes with a few enhancements, including a new way to configure cha
 * Can now clear recent campaign menu in the GUI
 * The `find` command now accepts the asterisk (`*`) character when searching on a field. It returns all characters that have any value for that field.
 * New `Open Latest` menu in the GUI to open the most recent plot or session file.
+* Character names are no longer limited to word-like characters and can include any letters or typographical marks you want
 
 ### Changed
 
