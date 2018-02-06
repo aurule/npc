@@ -9,7 +9,8 @@
 // "My Campaign/.npc/settings.json".
 {
 
-    // Name of the current campaign. This should always be set in the campaign settings file.
+    // Name of the current campaign. This should always be set in the campaign
+    // settings file.
     "campaign_name": "My Campaign",
 
     // Command to invoke your text editor of choice. This command must accept a
@@ -28,25 +29,26 @@
         "hierarchy": "{type}/{type-social}/{type-political}/{type-unit}/{groups}",
 
         // Directories which are required for the campaign.
-        // The command `npc init` creates all of these directories. If any of these
-        // are missing, some commands may not work.
+        // The command `npc init` creates all of these directories. If any of
+        // these are missing, some commands may not work.
         "required": {
 
-            // The base characters path determines which folder will be searched for
-            // character files.
+            // The base characters path determines which folder will be searched
+            // for character files.
             "characters": "Characters",
 
-            // The session path is searched for session log files, and is where new
-            // ones will be created.
+            // The session path is searched for session log files, and is where
+            // new ones will be created.
             "session": "Session History",
 
-            // The plot path is searched for plot files, and is where new ones will
-            // be created.
+            // The plot path is searched for plot files, and is where new ones
+            // will be created.
             "plot": "Plot",
 
-            // List of user-defined top-level directory paths. These are not used by NPC, but
-            // can be created for convenience. Each path can include multiple folders, and all
-            // of those folders will be created.
+            // List of user-defined top-level directory paths. These are not
+            // used by NPC, but can be created for convenience. Each path can
+            // include multiple folders, and all of those folders will be
+            // created.
             "additional_paths": []
         }
     },
@@ -60,7 +62,8 @@
             // Directory name to use when the path hierarchy includes {type}
             "type_path": "Humans",
 
-            // Template that's copied into the base character path when creating a new character sheet.
+            // Template that's copied into the base character path when creating
+            // a new character sheet.
             "sheet_template": "templates/Human Character Sheet.nwod",
 
             // Translate type-dependent hierarchy path components into the
@@ -163,9 +166,9 @@
         // formats are markdown or md, html or htm, and json.
         "default_format": "markdown",
 
-        // Default sorting method for character listings. The method "last" sorts by
-        // the last word in the character's name, and the method "first" sorts by
-        // the first word in the character's name.
+        // Default sorting method for character listings. The method "last"
+        // sorts by the last word in the character's name, and the method
+        // "first" sorts by the first word in the character's name.
         "sort_by": "last",
 
         // Encoding to use when creating html data for an NPC listing. Any
@@ -192,8 +195,9 @@
                 // Section header content added between groups of characters.
                 "section": "templates/listing/Section.md.mako",
 
-                // Templates for each character type. The template under "default"
-                // will be used whenever a type doesn't have its own template.
+                // Templates for each character type. The template under
+                // "default" will be used whenever a type doesn't have its own
+                // template.
                 "character": {
                     "default": "templates/listing/Character.md.mako",
                     "changeling": "templates/listing/Changeling.md.mako"
@@ -238,11 +242,12 @@
                 // Default metadata format to use.
                 // The markdown output formatter can add metadata using the
                 // MultiMarkdown and Yaml Front Matter formats. To use
-                // MultiMarkdown, use the value "mmd". To use Yaml Front Matter, use
-                // the values "yfm" or "yaml".
+                // MultiMarkdown, use the value "mmd". To use Yaml Front Matter,
+                // use the values "yfm" or "yaml".
                 "default_format": "mmd",
 
-                // Additional metadata keys to include in markdown character lists.
+                // Additional metadata keys to include in markdown character
+                // lists.
                 "additional_keys": {}
             },
 
