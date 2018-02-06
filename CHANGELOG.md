@@ -10,6 +10,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 * Fix listing output for characters with a bare `foreign` tag
 * Fix to `character.has_items` which was adding the queried key to the character's dict if not already present
 * Fix crash in progress bar when listing zero characters
+* Parser no longer chokes on special characters in character name from file name
 
 ## 1.3.1 beta 4
 

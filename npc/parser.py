@@ -14,7 +14,6 @@ VALID_EXTENSIONS = ('.nwod', '.dnd3', '.dfrpg')
 """tuple: file extensions that should be parsed"""
 
 
-NAME_RE = re.compile(r'(?P<name>[\w]+\.?(?:\s[\w.]+)*)(?: - )?.*')
 SECTION_RE = re.compile(r'^--.+--\s*$')
 TAG_RE = re.compile(r'^@(?P<tag>#\w+|\w+)\s+(?P<value>.*)$')
 
@@ -120,11 +119,11 @@ def parse_character(char_file_path: str) -> Character:
 
     # derive character name from basename
     basename = path.basename(char_file_path)
-    match = NAME_RE.match(path.splitext(basename)[0])
+    name = path.splitext(basename)[0].split(' - ', 1)[0]
 
     # instantiate new character
     parsed_char = Character(
-        name=[match.group('name')],
+        name=[name],
         path=char_file_path
     )
 
