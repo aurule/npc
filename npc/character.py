@@ -105,6 +105,20 @@ class Character(defaultdict):
         """
         return 'path' in self and self['path']
 
+    @property
+    def locations(self):
+        """
+        iter: Non-empty foreign and location names
+        """
+        return filter(bool, self['foreign'] + self['location'])
+
+    @property
+    def has_locations(self):
+        """
+        bool: Whether this character has non-empty location names
+        """
+        return len(list(self.locations)) >= 1
+
     def get_first(self, key, default=None):
         """
         Get the first element from the named key.

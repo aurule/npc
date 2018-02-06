@@ -105,3 +105,49 @@ class TestTagContains:
         char.append('status', 'happy')
         char.append('status', 'secretly plotting the downfall of his enemies')
         assert char.tag_contains('status', 'downfall')
+
+class TestLocations:
+    def test_foreign(self):
+        char = npc.Character()
+        char.append('foreign', 'Mars')
+        assert 'Mars' in char.locations
+
+    def test_location(self):
+        char = npc.Character()
+        char.append('location', 'Mars')
+        assert 'Mars' in char.locations
+
+    def test_both(self):
+        char = npc.Character()
+        char.append('location', 'Mars')
+        char.append('foreign', 'Mercury')
+        assert 'Mars' in char.locations
+        assert 'Mercury' in char.locations
+
+    def test_removes_empties(self):
+        char = npc.Character()
+        char.append('location', 'Mars')
+        char.append('foreign', '')
+        assert len(list(char.locations)) == 1
+
+class TestHasLocations:
+    def test_foreign(self):
+        char = npc.Character()
+        char.append('foreign', 'Mars')
+        assert char.has_locations
+
+    def test_location(self):
+        char = npc.Character()
+        char.append('location', 'Mars')
+        assert char.has_locations
+
+    def test_both(self):
+        char = npc.Character()
+        char.append('location', 'Mars')
+        char.append('foreign', 'Mercury')
+        assert char.has_locations
+
+    def test_empty(self):
+        char = npc.Character()
+        char.append('foreign', '')
+        assert not char.has_locations
