@@ -15,6 +15,8 @@ def bar(iteration, total, prefix = '', suffix = '', decimals = 1, length = 100, 
         length      - Optional  : character length of bar (Int)
         fill        - Optional  : bar fill character (Str)
     """
+    total = total or 1
+
     percent = ("{0:." + str(decimals) + "f}").format(100 * (iteration / float(total)))
     filledLength = int(length * iteration // total)
     bar = fill * filledLength + '-' * (length - filledLength)

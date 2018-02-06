@@ -9,6 +9,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 * Fix extra `p` tags in parsed markdown in html listings
 * Fix listing output for characters with a bare `foreign` tag
 * Fix to `character.has_items` which was adding the queried key to the character's dict if not already present
+* Fix crash in progress bar when listing zero characters
 
 ## 1.3.1 beta 4
 
