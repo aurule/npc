@@ -94,6 +94,9 @@ class TestTags:
     def test_comment(self, basic_character):
         assert '#comment' not in basic_character
 
+    def test_foreign(self, basic_character):
+        assert 'foreign' in basic_character
+
     def test_changeling_shortcut(self, character):
         """@changeling should set type, seeming, and kith"""
         c = character('Changeling Tag.nwod')
