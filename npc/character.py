@@ -372,7 +372,7 @@ class Character(defaultdict):
         if threshold < 1:
             raise OutOfBoundsError
 
-        return len(self[key]) >= threshold
+        return len(self.get(key, [])) >= threshold
 
     def copy_and_alter(self, func):
         """
