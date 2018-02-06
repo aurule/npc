@@ -7,6 +7,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 ## 1.3.1 beta 5
 
 * Fix extra `p` tags in parsed markdown in html listings
+* Fix listing output for characters with a bare `foreign` tag
 
 ## 1.3.1 beta 4
 

@@ -18,8 +18,10 @@
 %endif
 \
 <div>${'/'.join(character['type'])}\
-%if character.has_items('foreign') or character.has_items('location'):
- in ${' and '.join(character['foreign'] + character['location'])}\
+%if character.has_locations:
+ in ${' and '.join(character.locations)}\
+%elif character.has_items('foreign'):
+ (foreign)
 %endif
 %if 'wanderer' in character:
 , Wanderer\
