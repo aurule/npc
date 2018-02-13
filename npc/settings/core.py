@@ -158,9 +158,23 @@ class Settings:
         absolute_path_base = path.dirname(path.realpath(settings_path))
         loaded = self._expand_templates(absolute_path_base, loaded)
 
-        self.data = self._merge_settings(loaded, self.data)
+        self._merge_settings(loaded)
 
-    def _merge_settings(self, new_data, orig):
+    def update_key(self, key, value):
+        """
+        Change the value of a single settings key
+
+        Args:
+            key (str): Period-delimited key to update
+            value (any): New value to store in the key
+        """
+        key_parts = key.split('.')
+        for k in reversed(key_parts):
+            value = {k: value}
+
+        self._merge_settings(value)
+
+    def _merge_settings(self, new_data):
         """
         Merge data from one dict into another.
 
@@ -174,23 +188,25 @@ class Settings:
 
         Args:
             new_data (dict): Dict to merge
-            orig (dict): Dict to receive the merge
 
         Returns:
             Dict containing elements from both dicts.
         """
-        dest = dict(orig)
+        def merge_dict(new_data, orig):
+            dest = dict(orig)
 
-        for key, val in new_data.items():
-            if key in dest:
-                if isinstance(dest[key], dict):
-                    dest[key] = self._merge_settings(val, dest[key])
+            for key, val in new_data.items():
+                if key in dest:
+                    if isinstance(dest[key], dict):
+                        dest[key] = merge_dict(val, dest[key])
+                    else:
+                        dest[key] = val
                 else:
                     dest[key] = val
-            else:
-                dest[key] = val
 
-        return dest
+            return dest
+
+        self.data = merge_dict(new_data, self.data)
 
     def get_settings_path(self, location, settings_type=None):
         """

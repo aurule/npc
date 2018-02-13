@@ -51,6 +51,10 @@ def test_available_types(prefs):
     names = prefs.get_available_types()
     assert set(names) == set(['human', 'fetch', 'changeling', 'goblin', 'werewolf'])
 
+def test_update_key(prefs):
+    prefs.update_key('paths.required.characters', 'nothing here')
+    assert prefs.get('paths.required.characters') == 'nothing here'
+
 class TestMetadata:
     """Tests the correctness of the metadata hash"""
 
