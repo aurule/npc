@@ -49,7 +49,7 @@ def test_singleton_settings():
 
 def test_available_types(prefs):
     names = prefs.get_available_types()
-    assert set(names) == set(['human', 'fetch', 'changeling', 'goblin'])
+    assert set(names) == set(['human', 'fetch', 'changeling', 'goblin', 'werewolf'])
 
 class TestMetadata:
     """Tests the correctness of the metadata hash"""
