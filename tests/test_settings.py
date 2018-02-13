@@ -90,3 +90,13 @@ class TestMetadata:
         metadata = get_metadata(meta_format)
         assert metadata["test"] == "very yes"
         assert metadata["format"] == meta_format
+
+class TestIgnoredPaths:
+    def test_defaults_to_always_key(self, prefs):
+        prefs.update_key('paths.ignore.always', ['abc123'])
+        assert prefs.get_ignored_paths('dne') == ['abc123']
+
+    def test_adds_by_command_name(self, prefs):
+        prefs.update_key('paths.ignore.always', ['abc123'])
+        prefs.update_key('paths.ignore.dne', ['something else'])
+        assert set(prefs.get_ignored_paths('dne')) == set(['abc123', 'something else'])
