@@ -328,7 +328,7 @@ class Settings:
         Returns:
             List of string paths
         """
-        return self.get('paths.ignore.command_name', []) + self.get('paths.ignore.always')
+        return self.get("paths.ignore.{command_name}".format(command_name=command_name), []) + self.get('paths.ignore.always')
 
 class InternalSettings(Settings, metaclass=util.Singleton):
     """
