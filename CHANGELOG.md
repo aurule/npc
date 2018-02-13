@@ -8,6 +8,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ### Added
 
+* New `@werewolf` tag for specifying werewolf type and auspice on one line
+
 ### Changed
 
 ### Fixed

@@ -155,6 +155,9 @@ def parse_character(char_file_path: str) -> Character:
                     if len(bits) > 1:
                         parsed_char.append('kith', bits[1])
                     continue
+                elif tag == 'werewolf':
+                    parsed_char.append('type', 'Werewolf')
+                    parsed_char.append('auspice', value)
 
                 # replace first name
                 if tag == 'realname':
