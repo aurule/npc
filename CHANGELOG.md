@@ -4,29 +4,7 @@ This file documents the changes made in each release. I didn't start maintaining
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/) (mostly).
 
-## 1.3.1 beta 5
-
-* Fix extra `p` tags in parsed markdown in html listings
-* Fix listing output for characters with a bare `foreign` tag
-* Fix to `character.has_items` which was adding the queried key to the character's dict if not already present
-* Fix crash in progress bar when listing zero characters
-* Parser no longer chokes on special characters in character name from file name
-
-## 1.3.1 beta 4
-
-* Crash in `list` command when a character has no name
-
-## 1.3.1 beta 3
-
-* Remove PyQt as an explicit install dependency
-
-## 1.3.1 beta 2
-
-### Fixed
-
-* Crash in `find` command
-
-## 1.3.1 [Unreleased]
+## 1.3.1
 
 The path hierarchy is here! This new setting allows you to configure exactly where your character files are placed based on their tags. See the readme for more details.
 
@@ -65,6 +43,9 @@ This release comes with a few enhancements, including a new way to configure cha
 ### Fixed
 
 * Changeling linter thought every kith was unrecognized
+* Fix extra `p` tags in parsed markdown in html listings
+* Fix listing output for characters with a bare `foreign` tag
+* Parser no longer chokes on special characters in character name from file name
 
 ### Removed
 
