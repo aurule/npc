@@ -44,7 +44,7 @@ def reorg(*search, ignore=None, purge=False, verbose=False, commit=False, **kwar
     prefs = kwargs.get('prefs', settings.InternalSettings())
     if not ignore:
         ignore = []
-    ignore.extend(prefs.get('paths.ignore'))
+    ignore.extend(prefs.get_ignored_paths('reorg'))
     show_changes = verbose or not commit
 
     changelog = []
@@ -101,7 +101,7 @@ def dump(*search, ignore=None, sort=False, metadata=False, outfile=None, **kwarg
     prefs = kwargs.get('prefs', settings.InternalSettings())
     if not ignore:
         ignore = []
-    ignore.extend(prefs.get('paths.ignore'))
+    ignore.extend(prefs.get_ignored_paths('dump'))
 
     characters = parser.get_characters(flatten(search), ignore)
     if sort:
@@ -150,7 +150,7 @@ def lint(*search, ignore=None, fix=False, strict=False, report=False, **kwargs):
     prefs = kwargs.get('prefs', settings.InternalSettings())
     if not ignore:
         ignore = []
-    ignore.extend(prefs.get('paths.ignore'))
+    ignore.extend(prefs.get_ignored_paths('lint'))
 
     openable = []
     printable = []
@@ -304,7 +304,7 @@ def report(*tags, search=None, ignore=None, fmt=None, outfile=None, **kwargs):
         search = ['.']
     if not ignore:
         ignore = []
-    ignore.extend(prefs.get('paths.ignore'))
+    ignore.extend(prefs.get_ignored_paths('report'))
     if not fmt or fmt == 'default':
         fmt = prefs.get('report.default_format')
 
@@ -360,7 +360,7 @@ def find(*rules, search=None, ignore=None, **kwargs):
 
     if not ignore:
         ignore = []
-    ignore.extend(prefs.get('paths.ignore'))
+    ignore.extend(prefs.get_ignored_paths('find'))
 
     rules = list(flatten(rules))
 

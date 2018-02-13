@@ -47,7 +47,7 @@ def make_list(*search, ignore=None, fmt=None, metadata=None, title=None, outfile
     prefs = kwargs.get('prefs', settings.InternalSettings())
     if not ignore:
         ignore = []
-    ignore.extend(prefs.get('paths.ignore'))
+    ignore.extend(prefs.get_ignored_paths('listing'))
     sort_order = kwargs.get('sort', prefs.get('listing.sort_by'))
     update_progress = kwargs.get('progress', lambda i, t: False)
 

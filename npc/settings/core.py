@@ -301,6 +301,19 @@ class Settings:
         """
         return self.get('types').keys()
 
+    def get_ignored_paths(self, command_name):
+        """
+        Get a list of paths that should be ignored, based on the named command
+
+        Args:
+            command_name (str): Name of the command being run. Used to look up
+                command-specific ignored paths
+
+        Returns:
+            List of string paths
+        """
+        return self.get('paths.ignore.command_name', []) + self.get('paths.ignore.always')
+
 class InternalSettings(Settings, metaclass=util.Singleton):
     """
     Singleton settings class.

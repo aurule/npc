@@ -12,6 +12,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ### Changed
 
+* Ignored paths can now be specified for each command separately, in addition to universal ignored paths. You'll have to change your settings file to use the new `ignore` section format.
+
 ### Fixed
 
 ### Removed

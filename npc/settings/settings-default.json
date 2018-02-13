@@ -20,9 +20,12 @@
     // These are the root paths which NPC will use when finding campaign files.
     "paths": {
 
-        // Paths that will always be ignored. Evaluated relative to the campaign
-        // root.
-        "ignore": [],
+        // Paths that will be ignored for individual commands. Evaluated
+        // relative to the campaign root.
+        "ignore": {
+            // Paths that will be ignored for all commands.
+            "always": []
+        },
 
         // The hierarchy describes how to build a path from character tags. Each
         // component must be separated by a '/' character.
