@@ -128,7 +128,23 @@
             },
 
             "missing_values": {}
-        }
+        },
+
+        // Settings for werewolf characters
+        "werewolf": {
+            "type_path": "Werewolves",
+            "sheet_template": "templates/Werewolf Character Sheet.nwod",
+            "tag_names": {
+                "type-unit": "pack",
+                "type-social": "tribe",
+                "type-political": "auspice",
+                "type-groups": "lodge"
+            },
+
+            "missing_values": {
+                "tribe": "Ghost Wolves"
+            }
+        },
     },
 
     "story": {
