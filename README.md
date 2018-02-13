@@ -118,8 +118,6 @@ Simple characters have no unique options, they just change the character's type.
 The `new` command creates a new simple character using the named type. As long as that type has a defined template and type path, it'll work. There are a few accelerators for common simple types as well:
 
 * `human`: Create a human. Type path is `Humans/`
-* `fetch`: Create a fetch. Type path is `Fetches/`
-* `goblin`: Create a goblin. Type path is `Goblins/`
 
 ### Changelings
 

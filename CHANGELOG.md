@@ -14,6 +14,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ### Removed
 
+* The `fetch` and `goblin` character creation commands are gone. Use `new fetch` or `new goblin` instead.
+
 ## 1.3.1
 
 The path hierarchy is here! This new setting allows you to configure exactly where your character files are placed based on their tags. See the readme for more details.

@@ -160,12 +160,6 @@ def _make_parser():
     parser_human = subparsers.add_parser('human', aliases=['h'], parents=[common_options, character_parser], help="Create a new human character. Alias for `npc new human`")
     parser_human.add_argument('name', help="Character name", metavar='name')
     parser_human.set_defaults(func=commands.create_character.standard, ctype="human")
-    parser_fetch = subparsers.add_parser('fetch', parents=[common_options, character_parser], help="Create a new fetch character. Alias for `npc new fetch`")
-    parser_fetch.add_argument('name', help="Character name", metavar='name')
-    parser_fetch.set_defaults(func=commands.create_character.standard, ctype="fetch")
-    parser_goblin = subparsers.add_parser('goblin', parents=[common_options, character_parser], help="Create a new goblin character. Alias for `npc new goblin`")
-    parser_goblin.add_argument('name', help="Character name", metavar='name')
-    parser_goblin.set_defaults(func=commands.create_character.standard, ctype="goblin")
 
     # Subcommand for making changelings, with their unique options
     parser_changeling = subparsers.add_parser('changeling', aliases=['c'], parents=[common_options, character_parser], help="Create a new changeling character")
