@@ -259,6 +259,33 @@ class Character(defaultdict):
         self['rank'][group].append(value)
         return self
 
+    def merge_all(self, other_dict: dict):
+        """
+        Add all data from other_dict into this character
+
+        The value for each key in other_dict is appended to our own value for
+        that key. If that value is an array, its elements are joined onto our
+        own. Otherwise, the value is simply appended.
+
+        This method requires that keys with special formatting like `ranks` have
+        values that match that formatting within other_dict.
+
+        Args:
+            other_dict (dict): Dict of data to merge
+
+        Returns:
+            This character object. Convenient for changing.
+        """
+
+        for key, value in other_dict.items():
+            if key == 'rank':
+                for group_name, group_rank in value.items():
+                    merge_to_dict(self['rank'], group_name, group_rank)
+            else:
+                self.append(key, value)
+
+        return self
+
     def validate_tag_present_and_filled(self, tag: str):
         """
         Validate that a tag has a non-whitespace value
