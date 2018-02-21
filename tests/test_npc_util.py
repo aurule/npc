@@ -1,5 +1,6 @@
 import json
 import pytest
+from collections import defaultdict
 
 import npc
 from npc import util
@@ -58,3 +59,28 @@ class TestResult:
     def test_bool(self, val):
         result = util.result.Result(val)
         assert bool(result) == val
+
+class TestMergeDicts:
+    def test_none_value_sets_default(self):
+        base_dict = defaultdict(list)
+        util.merge_to_dict(base_dict, 'test', None)
+
+        assert base_dict.get('test') == []
+
+    def test_list_value_is_concatenated(self):
+        base_dict = {'test': [1, 2, 3]}
+        util.merge_to_dict(base_dict, 'test', [4, 5])
+
+        assert base_dict['test'] == [1, 2, 3, 4, 5]
+
+    def test_scalar_is_appended(self):
+        base_dict = {'test': [1, 2, 3]}
+        util.merge_to_dict(base_dict, 'test', 4)
+
+        assert base_dict['test'] == [1, 2, 3, 4]
+
+    def test_string_is_appended(self):
+        base_dict = {'test': [1, 2, 3]}
+        util.merge_to_dict(base_dict, 'test', 'four')
+
+        assert base_dict['test'] == [1, 2, 3, 'four']

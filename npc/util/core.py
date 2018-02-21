@@ -83,6 +83,24 @@ def flatten(thing):
         else:
             yield item
 
+def merge_to_dict(target_dict: dict, key: str, value):
+    """
+    Merge a key and value into an existing dict
+
+    Assumes that target_dict[key] exists and responds to `append`.
+
+    Args:
+        target_dict (dict): Dictionary to merge into
+        key (str): Key to merge
+        value (any):
+    """
+    if value is None:
+        target_dict[key]
+    elif hasattr(value, '__iter__') and not isinstance(value, str):
+        target_dict[key] += value
+    else:
+        target_dict[key].append(value)
+
 def find_campaign_root():
     """
     Determine the base campaign directory
