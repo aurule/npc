@@ -9,6 +9,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 ### Added
 
 * New `@werewolf` tag for specifying werewolf type and auspice on one line
+* Settings now has a `tag_defaults` key that sets default tag values for newly created characters.
 
 ### Changed
 

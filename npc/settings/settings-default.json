@@ -23,6 +23,7 @@
         // Paths that will be ignored for individual commands. Evaluated
         // relative to the campaign root.
         "ignore": {
+
             // Paths that will be ignored for all commands.
             "always": []
         },
@@ -160,6 +161,32 @@
 
     // Text to add to the beginning of new character files.
     "character_header": "",
+
+    // Default tag values to add to new characters. Values given on the command
+    // line will replace these values.
+    "tag_defaults": {
+
+        // Use the tag name as the key and the desired value as the value.
+        // "location": "New London, CT"
+
+        // To give multiple default values for a single tag, you can includ the
+        // tag more than once:
+        //
+        // "group": "Rough Boys",
+        // "group": "School Bros"
+        //
+        // Or you can include a list of values for the tag:
+        //
+        // "group": [
+        //     "Rough Boys",
+        //     "School Bros"
+        // ]
+
+        // Default ranks must be specified by group name:
+        // "rank": {
+        //     "School Bros": "Junior"
+        // }
+    },
 
     // Settings for the report command
     "report": {

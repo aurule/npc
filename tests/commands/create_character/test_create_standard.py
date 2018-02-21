@@ -37,6 +37,19 @@ def test_adds_location_tag(campaign):
     data = campaign.get_character_data('testmann.nwod')
     assert data['location'] == ['Sea of Tranquility']
 
+class TestDefaults:
+    def test_adds_default_values(self, campaign, prefs):
+        prefs.update_key('tag_defaults.title', 'The Chill')
+        npc.commands.create_character.standard('testmann', 'human', prefs=prefs)
+        data = campaign.get_character_data('testmann.nwod')
+        assert data['title'] == ['The Chill']
+
+    def test_adds_user_values(self, campaign, prefs):
+        prefs.update_key('tag_defaults.location', 'The Moon')
+        npc.commands.create_character.standard('testmann', 'human', location="The Earth", prefs=prefs)
+        data = campaign.get_character_data('testmann.nwod')
+        assert data['location'] == ['The Earth']
+
 class TestDead:
     """Test permutations of the --dead arg"""
 

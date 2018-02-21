@@ -136,7 +136,7 @@ def changeling(name, seeming, kith, *,
 
     return _cp_template_for_char(name, temp_char, prefs, fn=_insert_sk_data)
 
-def _minimal_character(ctype, groups, dead, foreign, location, prefs):
+def _minimal_character(ctype: str, groups, dead, foreign, location, prefs):
     """
     Create a minimal character object
 
@@ -157,16 +157,20 @@ def _minimal_character(ctype, groups, dead, foreign, location, prefs):
         Character object
     """
     temp_char = Character()
-    temp_char.append('description', prefs.get('character_header'))
-    temp_char.append('type', ctype.title())
+
+    tags = {}
+    tags['description'] = prefs.get('character_header')
+    tags['type'] = ctype.title()
     if groups:
-        temp_char['group'] = groups
+        tags['group'] = groups
     if dead is not False:
-        temp_char.append('dead', dead)
+        tags['dead'] = dead
     if foreign is not False:
-        temp_char.append('foreign', foreign)
+        tags['foreign'] = foreign
     if location is not False:
-        temp_char.append('location', location)
+        tags['location'] = location
+
+    temp_char.merge_all({**prefs.get('tag_defaults'), **tags})
 
     return temp_char
 
