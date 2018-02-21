@@ -25,6 +25,11 @@ class TestAppend:
         char.append_rank("Knights of the Round Table", "Dancer")
         assert char["rank"]["Knights of the Round Table"] == ["Dancer"]
 
+    def test_append_list(self):
+        char = npc.Character()
+        char.append("title", "The Stern")
+        char.append("title", ["The Drunk", "The Wise"])
+        assert char["title"] == ["The Stern", "The Drunk", "The Wise"]
 class TestGetFirst:
     def test_normal(self):
         char = npc.Character(name=["hello", "goodbye"])

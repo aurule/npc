@@ -1,5 +1,5 @@
 from collections import defaultdict
-from .util import OutOfBoundsError, flatten
+from .util import OutOfBoundsError, flatten, merge_to_dict
 
 class Character(defaultdict):
     """
@@ -232,17 +232,16 @@ class Character(defaultdict):
 
         Args:
             key (str): Name of the key
-            value (any): Value to add to the key's list
+            value (any): Value to add to the key's list. If value itself is a
+                list, its contents will be appended to our own.
 
         Returns:
             This character object. Convenient for chaining.
         """
         if key in self.STRING_FIELDS:
             self[key] += value
-        elif value is None:
-            self[key]
         else:
-            self[key].append(value)
+            merge_to_dict(self, key, value)
 
         return self
 
