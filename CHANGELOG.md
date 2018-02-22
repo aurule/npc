@@ -6,6 +6,11 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ## 1.4.0 [Unreleased]
 
+Werewolves are supported! Along with the tags, character sheet, and templates for that, there are a few other neat features.
+
+* Default tag values for new characters
+* Separate ignored paths for each command (requires settings change)
+
 ### Added
 
 * New `@werewolf` tag for specifying werewolf type and auspice on one line
