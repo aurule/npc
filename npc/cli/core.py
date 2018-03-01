@@ -63,6 +63,7 @@ def start(argv=None):
 
     # get args as a dict
     full_args = vars(args)
+    full_args['prefs'] = prefs
 
     # load default character path if search field is at its default
     if full_args.get('search') is None:
