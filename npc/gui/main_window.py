@@ -3,9 +3,10 @@ from contextlib import contextmanager
 from os import chdir, path, getcwd
 
 import npc
-from npc import commands, util, settings
+from npc import settings
 from npc.__version__ import __version__
 
+from . import commands, util
 from .new_character import NewCharacterDialog
 from .init_dialog import InitDialog
 from .uis.about import Ui_AboutDialog
@@ -192,13 +193,13 @@ class MainWindow(Ui_MainWindow):
     def open_character(self, index):
         """Open a character based on its index in the table"""
         char = self.character_table_model.characters[index.row()]
-        util.open_files(char.get('path'), prefs=self.prefs)
+        npc.util.open_files(char.get('path'), prefs=self.prefs)
 
     def open_multiple_characters(self):
         """Open multiple characters from the index selection"""
         indexes = self.characterTableView.selectedIndexes()
         characters = [self.character_table_model.characters[i.row()].get('path') for i in indexes]
-        util.open_files(*characters, prefs=self.prefs)
+        npc.util.open_files(*characters, prefs=self.prefs)
 
     def force_titles(self):
         """
@@ -272,23 +273,6 @@ class MainWindow(Ui_MainWindow):
         self.update_table()
 
     @contextmanager
-    def safe_command(self, command):
-        """
-        Helper to show error dialog for AttributeErrors from commands
-
-        Args:
-            command (callable): The command to run. Any AttributeError will
-                result in an error dialog being shown
-
-        Yields:
-            The command passed
-        """
-        try:
-            yield command
-        except AttributeError as err:
-            self._show_error('Command failed', err)
-
-    @contextmanager
     def dialog(self, dialog_class, *args, **kwargs):
         """
         Create and clean up after a dialog window class
@@ -311,25 +295,25 @@ class MainWindow(Ui_MainWindow):
 
     def run_user_settings(self):
         """Run the user settings command"""
-        with self.safe_command(commands.open_settings) as command:
+        with util.safe_command(commands.open_settings) as command:
             result = command('user', show_defaults=True, prefs=self.prefs)
 
             if not result.success:
                 self._show_error('Could not open user settings', result.errmsg)
                 return
 
-            util.open_files(*result.openable, prefs=self.prefs)
+            npc.util.open_files(*result.openable, prefs=self.prefs)
 
     def run_campaign_settings(self):
         """Run the campaign settings command"""
-        with self.safe_command(commands.open_settings) as command:
+        with util.safe_command(commands.open_settings) as command:
             result = command('campaign', show_defaults=True, prefs=self.prefs)
 
             if not result.success:
                 self._show_error('Could not open campaign settings', result.errmsg)
                 return
 
-            util.open_files(*result.openable, prefs=self.prefs)
+            npc.util.open_files(*result.openable, prefs=self.prefs)
 
     def run_reload_settings(self):
         """Reparse and lint the settings"""
@@ -350,14 +334,14 @@ class MainWindow(Ui_MainWindow):
 
     def run_new_session(self):
         """Run the session command"""
-        with self.safe_command(commands.session) as command:
+        with util.safe_command(commands.session) as command:
             result = command(prefs=self.prefs)
 
             if not result.success:
                 self._show_error('Could not create session files', result.errmsg)
                 return
 
-            util.open_files(*result.openable, prefs=self.prefs)
+            npc.util.open_files(*result.openable, prefs=self.prefs)
 
     def run_init(self):
         """Run the init command with inputs from its dialog"""
@@ -369,7 +353,7 @@ class MainWindow(Ui_MainWindow):
 
             if init_dialog.run():
                 values = init_dialog.values
-                with self.safe_command(commands.init) as command:
+                with util.safe_command(commands.init) as command:
                     command(**values)
 
     def run_new_character(self):
@@ -380,7 +364,7 @@ class MainWindow(Ui_MainWindow):
 
             values = new_character_dialog.values
             cmd = values.pop("command")
-            with self.safe_command(cmd) as command:
+            with util.safe_command(cmd) as command:
                 serial_args = [values.pop(k) for k in values.get('serialize', [])]
 
                 result = command(*serial_args, **values)
@@ -391,25 +375,25 @@ class MainWindow(Ui_MainWindow):
 
     def run_latest_session(self):
         """Run the latest session command"""
-        with self.safe_command(commands.story.latest) as command:
+        with util.safe_command(commands.latest) as command:
             result = command('session', prefs=self.prefs)
 
             if not result.success:
                 self._show_error('Could not open session file', result.errmsg)
                 return
 
-            util.open_files(*result.openable, prefs=self.prefs)
+            npc.util.open_files(*result.openable, prefs=self.prefs)
 
     def run_latest_plot(self):
         """Run the latest plot command"""
-        with self.safe_command(commands.story.latest) as command:
+        with util.safe_command(commands.latest) as command:
             result = command('plot', prefs=self.prefs)
 
             if not result.success:
                 self._show_error('Could not open plot file', result.errmsg)
                 return
 
-            util.open_files(*result.openable, prefs=self.prefs)
+            npc.util.open_files(*result.openable, prefs=self.prefs)
 
     def quit(self):
         """Quite the application"""

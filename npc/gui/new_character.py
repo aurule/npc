@@ -1,6 +1,6 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 
-from npc import commands
+from . import commands
 from .uis.new_character import Ui_NewCharacterDialog
 
 class NewCharacterDialog(QtWidgets.QDialog, Ui_NewCharacterDialog):
@@ -25,7 +25,7 @@ class NewCharacterDialog(QtWidgets.QDialog, Ui_NewCharacterDialog):
         self.type_specific_widgets = []
         self.current_vbox_height_offset = 0
         self.values = {
-            "command": commands.create_character.standard,
+            "command": commands.create_standard,
             "name": "",
             "ctype": "",
             "dead": False,
@@ -136,7 +136,7 @@ class NewCharacterDialog(QtWidgets.QDialog, Ui_NewCharacterDialog):
         Returns:
             Zero, since this doesn't create anything
         """
-        self.set_value("command", commands.create_character.standard)
+        self.set_value("command", commands.create_standard)
         self.set_value("serialize", ['name', 'ctype'])
         self.setTabOrder(self.characterName, self.groupName)
         return 0
@@ -174,7 +174,7 @@ class NewCharacterDialog(QtWidgets.QDialog, Ui_NewCharacterDialog):
         for seeming in self.prefs.get('changeling.seemings'):
             seeming_select.addItem(seeming.title(), userData=[kith.title() for kith in self.prefs.get('changeling.kiths.{}'.format(seeming))])
 
-        self.set_value("command", commands.create_character.changeling)
+        self.set_value("command", commands.create_changeling)
         self.set_value("serialize", ['name', 'seeming', 'kith'])
 
         return new_vbox_height_offset
