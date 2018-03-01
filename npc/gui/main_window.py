@@ -365,9 +365,7 @@ class MainWindow(Ui_MainWindow):
             values = new_character_dialog.values
             cmd = values.pop("command")
             with util.safe_command(cmd) as command:
-                serial_args = [values.pop(k) for k in values.get('serialize', [])]
-
-                result = command(*serial_args, **values)
+                result = command(values)
                 if not result.success:
                     self._show_error("Could not create character", result.errmsg)
                     return

@@ -12,14 +12,16 @@ def init(**kwargs):
 def open_settings(*args, **kwargs):
     return commands.open_settings(*args, **kwargs)
 
-def find_characters(*args, **kwargs):
-    return commands.find_characters(*args, **kwargs)
+def find_characters(*args):
+    return commands.find_characters(*args)
 
-def create_standard(*args, **kwargs):
-    return commands.create_character.standard(*args, **kwargs)
+def create_standard(kwargs):
+    serial_args, keyword_args = _serialize('name', 'ctype', **kwargs)
+    return commands.create_character.standard(*serial_args, **keyword_args)
 
-def create_changeling(*args, **kwargs):
-    return commands.create_character.changeling(*args, **kwargs)
+def create_changeling(kwargs):
+    serial_args, keyword_args = _serialize('name', 'seeming', 'kith', **kwargs)
+    return commands.create_character.changeling(*serial_args, **keyword_args)
 
 def session(**kwargs):
     return commands.story.session(**kwargs)

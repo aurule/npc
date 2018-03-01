@@ -70,9 +70,7 @@ def start(argv=None):
 
     # run the command
     try:
-        serial_args = [full_args.pop(k) for k in full_args.get('serialize', [])]
-
-        result = args.func(*serial_args, **full_args)
+        result = args.func(full_args)
     except AttributeError as err:
         if args.debug:
             raise
@@ -109,13 +107,11 @@ def _make_parser():
     character_parser.add_argument('--dead', default=False, const='', nargs='?', help='Mark that the character has died, with optional notes', metavar='notes')
     character_parser.add_argument('--foreign', default=False, const='', nargs='?', help="Mark that the character is foreign to the main campaign setting, with optional notes on where they're from", metavar='place')
     character_parser.add_argument('--location', default=False, help="Where the character is located within the main setting", metavar='place')
-    character_parser.set_defaults(serialize=['name', 'ctype'])
 
     # Parent parser for shared pathing options
     paths_parser = argparse.ArgumentParser(add_help=False)
     paths_parser.add_argument('--search', nargs="*", default=None, help="Paths to search. Individual files are added verbatim and directories are searched recursively.", metavar="PATH")
     paths_parser.add_argument('--ignore', nargs="*", default=None, help="Paths to skip when searching for character files", metavar="PATH")
-    paths_parser.set_defaults(serialize=['search'])
 
     common_options = argparse.ArgumentParser(add_help=False)
     common_options.add_argument('-b', '--batch', action='store_true', default=False, help="Do not print any messages or open any files in the editor")
@@ -145,7 +141,7 @@ def _make_parser():
     # Latest plot/session command
     parser_latest = subparsers.add_parser('latest', parents=[common_options], help="Get the latest plot and/or session files")
     parser_latest.add_argument('thingtype', nargs='?', default='both', choices=['both', 'session', 'plot'], help="Type of file to open. One of 'plot', 'session', or 'both'. Defualts to 'both'.")
-    parser_latest.set_defaults(func=commands.latest, serialize=['thingtype'])
+    parser_latest.set_defaults(func=commands.latest)
 
     # Create generic character
     parser_generic = subparsers.add_parser('new', parents=[common_options, character_parser], help="Create a new character from the named template")
@@ -166,7 +162,7 @@ def _make_parser():
     parser_changeling.add_argument('kith', help="The character's Kith", metavar='kith')
     parser_changeling.add_argument('-c', '--court', help="The character's Court", metavar='court')
     parser_changeling.add_argument('-m', '--motley', help="The character's Motley", metavar='motley')
-    parser_changeling.set_defaults(func=commands.create_changeling, serialize=['name', 'seeming', 'kith'])
+    parser_changeling.set_defaults(func=commands.create_changeling)
 
     # Subcommand for linting characer files
     parser_lint = subparsers.add_parser('lint', parents=[common_options, paths_parser], help="Check the character files for minimum completeness")
@@ -203,20 +199,20 @@ def _make_parser():
     parser_settings.add_argument('location', choices=['user', 'campaign'], help="The settings file to load")
     parser_settings.add_argument('-t', '--type', choices=['base', 'changeling'], help="Open a type-specific settings file", metavar='type', dest='settings_type')
     parser_settings.add_argument('-d', '--defaults', action="store_true", default=False, help="Open the default settings file for easy reference", dest='show_defaults')
-    parser_settings.set_defaults(func=commands.open_settings, serialize=['location'])
+    parser_settings.set_defaults(func=commands.open_settings)
 
     # Report on character tags
     parser_report = subparsers.add_parser('report', parents=[common_options, paths_parser], help="Create a report of the values for one or more tags")
     parser_report.add_argument('tags', nargs="+", help="Tag names to analyze")
     parser_report.add_argument('-t', '--format', choices=['json', 'htm', 'html', 'md', 'markdown'], default='default', help="Format to use for the tables. Defaults to the table format in settings", dest="fmt")
     parser_report.add_argument('-o', '--outfile', nargs="?", const='-', default=None, help="File where the listing will be saved")
-    parser_report.set_defaults(func=commands.report, serialize=['tags'])
+    parser_report.set_defaults(func=commands.report)
 
     # Find characters by tag contents
     parser_find = subparsers.add_parser('find', parents=[common_options, paths_parser], help="Find characters by their tags")
     parser_find.add_argument('rules', nargs="+", help="Rules to search by. Format for each is tag:text. Negate with tag~:text.")
     parser_find.add_argument('-d', '--dryrun', action="store_true", default=False, help="Show the files that would be opened, but don't open anything", dest="dryrun")
-    parser_find.set_defaults(func=commands.find, serialize=['rules'])
+    parser_find.set_defaults(func=commands.find)
 
     return parser
 
