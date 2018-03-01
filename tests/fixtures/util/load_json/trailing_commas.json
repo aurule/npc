@@ -1,0 +1,13 @@
+{
+    "data": {
+        "tea": "not tea",
+        "truth": "lies",
+        "freedom": "slavery",
+    },
+    "list": [
+        "one",
+        "two",
+        "three",
+        ", }"
+    ]
+}

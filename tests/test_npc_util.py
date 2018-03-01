@@ -13,6 +13,12 @@ class TestJsonLoading:
         loaded = util.load_json(filepath)
         assert "freedom" in loaded["data"]
 
+    def test_ignore_trailing_commas(self):
+        filepath = fixture_dir('util', 'load_json', 'trailing_commas.json')
+        loaded = util.load_json(filepath)
+        assert "freedom" in loaded["data"]
+        assert ", }" in loaded['list']
+
     def test_bad_syntax(self):
         filepath = fixture_dir('util', 'load_json', 'bad_syntax.json')
         with pytest.raises(json.decoder.JSONDecodeError) as err:

@@ -15,6 +15,7 @@ Werewolves are supported! Along with the tags, character sheet, and templates fo
 
 * New `@werewolf` tag for specifying werewolf type and auspice on one line
 * Settings now has a `tag_defaults` key that sets default tag values for newly created characters.
+* Settings files now ignore trailing commas
 
 ### Changed
 
