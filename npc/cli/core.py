@@ -9,9 +9,9 @@ import sys
 from os import chdir, getcwd, path
 
 # local packages
-from npc import commands, util, settings
+from npc import util, settings
 from npc.__version__ import __version__
-from . import progress_bar
+from . import progress_bar, commands
 
 def start(argv=None):
     """
@@ -142,24 +142,24 @@ def _make_parser():
 
     # Session subcommand
     parser_session = subparsers.add_parser('session', parents=[common_options], help="Create files for a new game session")
-    parser_session.set_defaults(func=commands.story.session)
+    parser_session.set_defaults(func=commands.session)
 
     # Latest plot/session command
     parser_latest = subparsers.add_parser('latest', parents=[common_options], help="Get the latest plot and/or session files")
     parser_latest.add_argument('thingtype', nargs='?', default='both', choices=['both', 'session', 'plot'], help="Type of file to open. One of 'plot', 'session', or 'both'. Defualts to 'both'.")
-    parser_latest.set_defaults(func=commands.story.latest, serialize=['thingtype'])
+    parser_latest.set_defaults(func=commands.latest, serialize=['thingtype'])
 
     # Create generic character
     parser_generic = subparsers.add_parser('new', parents=[common_options, character_parser], help="Create a new character from the named template")
     parser_generic.add_argument('ctype', metavar='template', help="Template to use. Must be configured in settings")
     parser_generic.add_argument('name', help="Character name", metavar='name')
-    parser_generic.set_defaults(func=commands.create_character.standard)
+    parser_generic.set_defaults(func=commands.create_standard)
 
     # These parsers are just named subcommand entry points to create simple
     # characters
     parser_human = subparsers.add_parser('human', aliases=['h'], parents=[common_options, character_parser], help="Create a new human character. Alias for `npc new human`")
     parser_human.add_argument('name', help="Character name", metavar='name')
-    parser_human.set_defaults(func=commands.create_character.standard, ctype="human")
+    parser_human.set_defaults(func=commands.create_standard, ctype="human")
 
     # Subcommand for making changelings, with their unique options
     parser_changeling = subparsers.add_parser('changeling', aliases=['c'], parents=[common_options, character_parser], help="Create a new changeling character")
@@ -168,7 +168,7 @@ def _make_parser():
     parser_changeling.add_argument('kith', help="The character's Kith", metavar='kith')
     parser_changeling.add_argument('-c', '--court', help="The character's Court", metavar='court')
     parser_changeling.add_argument('-m', '--motley', help="The character's Motley", metavar='motley')
-    parser_changeling.set_defaults(func=commands.create_character.changeling, serialize=['name', 'seeming', 'kith'])
+    parser_changeling.set_defaults(func=commands.create_changeling, serialize=['name', 'seeming', 'kith'])
 
     # Subcommand for linting characer files
     parser_lint = subparsers.add_parser('lint', parents=[common_options, paths_parser], help="Check the character files for minimum completeness")
@@ -184,7 +184,7 @@ def _make_parser():
     parser_list.add_argument('--title', help="Title to show in the metadata. Overrides the title from settings.", metavar="TITLE")
     parser_list.add_argument('-o', '--outfile', nargs="?", const='-', default=None, help="File where the listing will be saved")
     parser_list.add_argument('--sort', choices=['first', 'last'], default='last', help="The sort order for characters. Defaults to 'last'.")
-    parser_list.set_defaults(func=commands.listing.make_list, progress=_update_progress_bar)
+    parser_list.set_defaults(func=commands.make_list, progress=_update_progress_bar)
 
     # Dump raw character data
     parser_dump = subparsers.add_parser('dump', parents=[common_options, paths_parser], help="Export raw json data of all characters")
