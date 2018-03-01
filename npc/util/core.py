@@ -148,3 +148,7 @@ class Singleton(type):
 
 class OutOfBoundsError(ValueError):
     """Raise when a function input is outside of permitted bounds"""
+
+def serialize_args(*argnames, **full_args):
+    serial_args = [full_args.pop(k) for k in argnames]
+    return serial_args, full_args
