@@ -25,7 +25,15 @@
         "ignore": {
 
             // Paths that will be ignored for all commands.
-            "always": []
+            "always": [],
+
+            // Paths that will be ignored for the named command.
+            "reorg": [],
+            "dump": [],
+            "lint": [],
+            "report": [],
+            "find": [],
+            "listing": []
         },
 
         // The hierarchy describes how to build a path from character tags. Each
