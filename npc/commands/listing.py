@@ -52,8 +52,11 @@ def make_list(*search, ignore=None, fmt=None, metadata=None, title=None, outfile
     update_progress = kwargs.get('progress', lambda i, t: False)
 
     characters = util.sort_characters(
-        _prune_chars(parser.get_characters(flatten(search), ignore)),
-        order=sort_order)
+        _process_directives(
+            parser.get_characters(flatten(search), ignore)
+        ),
+        order=sort_order
+    )
 
     if fmt == "default" or not fmt:
         fmt = prefs.get('listing.default_format')
@@ -92,13 +95,13 @@ def make_list(*search, ignore=None, fmt=None, metadata=None, title=None, outfile
 
     return result.Success(openable=openable)
 
-def _prune_chars(characters):
+def _process_directives(characters):
     """
     Alter character records for output.
 
     Warning: This function will modify the objects in `characters`.
 
-    Applies behavior from directives and certain tags:
+    Applies behavior from directives:
 
     * skip: remove the character from the list
     * hide: remove the named fields from the character
