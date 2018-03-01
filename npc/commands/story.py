@@ -113,7 +113,6 @@ def latest(thingtype, **kwargs):
 
 
 def latest_file_info(target_path, target_regex):
-    pass
     """
     Get the "latest" file in target_path that matches target_regex
 
