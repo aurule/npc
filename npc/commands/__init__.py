@@ -105,7 +105,7 @@ def dump(*search, ignore=None, sort=False, metadata=False, outfile=None, **kwarg
 
     characters = parser.get_characters(flatten(search), ignore)
     if sort:
-        characters = util.sort_characters(characters)
+        characters = util.character_sorter.sort_characters(characters)
 
     # make some json
     if metadata:

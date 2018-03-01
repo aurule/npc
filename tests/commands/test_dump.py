@@ -24,7 +24,7 @@ def test_dump_matches_internal(list_json_output):
 def test_sort(list_json_output):
     """Tests that the dumped, sorted output identical to the internal sorted data"""
     raw_data = npc.parser.get_characters(search_paths=[fixture_dir('dump')])
-    sorted_data = npc.commands.util.sort_characters(raw_data)
+    sorted_data = npc.commands.util.character_sorter.sort_characters(raw_data)
     dump_data = list_json_output(sort=True)
     it = iter(sorted_data)
     with pytest.raises(StopIteration):

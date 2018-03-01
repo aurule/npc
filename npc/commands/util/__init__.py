@@ -8,6 +8,7 @@ import sys
 
 from npc.character import Character
 from npc import settings
+from . import character_sorter
 
 def create_path_from_character(character: Character, *, base_path=None, hierarchy=None, **kwargs):
     """
@@ -187,37 +188,6 @@ def find_empty_dirs(root):
     for dirpath, dirs, files in walk(root):
         if not dirs and not files:
             yield dirpath
-
-def sort_characters(characters, order=None):
-    """
-    Sort a list of Characters.
-
-    Args:
-        characters (list): Characters to sort.
-        order (str|None): The order in which the characters should be sorted.
-            Unrecognized sort orders are ignored. Supported orders are:
-            * "last" - sort by last-most name (default)
-            * "first" - sort by first name
-
-    Returns:
-        List of characters ordered as requested.
-    """
-    def last_name(character):
-        """Get the character's last-most name"""
-        return character.get_first('name', '').split(' ')[-1]
-
-    def first_name(character):
-        """Get the character's first name"""
-        return character.get_first('name', '').split(' ')[0]
-
-    if order is None:
-        order = "last"
-
-    if order == "last":
-        return sorted(characters, key=last_name)
-    elif order == "first":
-        return sorted(characters, key=first_name)
-    return characters
 
 @contextmanager
 def smart_open(filename=None, binary=False):

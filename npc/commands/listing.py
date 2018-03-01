@@ -51,7 +51,7 @@ def make_list(*search, ignore=None, fmt=None, metadata=None, title=None, outfile
     sort_order = kwargs.get('sort', prefs.get('listing.sort_by'))
     update_progress = kwargs.get('progress', lambda i, t: False)
 
-    characters = util.sort_characters(
+    characters = util.character_sorter.sort_characters(
         _process_directives(
             parser.get_characters(flatten(search), ignore)
         ),

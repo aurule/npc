@@ -30,18 +30,18 @@ class TestSortCharacters:
         ]
 
     def test_default(self, characters):
-        result = util.sort_characters(characters)
-        control = util.sort_characters(characters, 'last')
+        result = util.character_sorter.sort_characters(characters)
+        control = util.character_sorter.sort_characters(characters, 'last')
         assert result == control
 
     def test_last(self, characters):
-        result = util.sort_characters(characters, 'last')
+        result = util.character_sorter.sort_characters(characters, 'last')
         assert result[0].get_first('name') == 'Zach Albright'
         assert result[1].get_first('name') == 'Alfred Lisbon'
         assert result[2].get_first('name') == 'Baldy Parson'
 
     def test_first(self, characters):
-        result = util.sort_characters(characters, 'first')
+        result = util.character_sorter.sort_characters(characters, 'first')
         assert result[0].get_first('name') == 'Alfred Lisbon'
         assert result[1].get_first('name') == 'Baldy Parson'
         assert result[2].get_first('name') == 'Zach Albright'
