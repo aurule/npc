@@ -63,12 +63,10 @@ def start(argv=None):
 
     # get args as a dict
     full_args = vars(args)
-    try:
-        # load default character path if search field is at its default
-        if full_args['search'] is None:
-            full_args['search'] = [prefs.get('paths.required.characters')]
-    except KeyError:
-        pass
+
+    # load default character path if search field is at its default
+    if full_args.get('search') is None:
+        full_args['search'] = [prefs.get('paths.required.characters')]
 
     # run the command
     try:
