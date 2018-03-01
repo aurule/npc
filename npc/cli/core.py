@@ -46,7 +46,7 @@ def start(argv=None):
 
     # load settings data
     try:
-        prefs = settings.InternalSettings(args.debug)
+        prefs = settings.Settings(args.debug)
     except OSError as err:
         util.error(err.strerror)
         return 4
