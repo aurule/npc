@@ -10,12 +10,14 @@ Werewolves are supported! Along with the tags, character sheet, and templates fo
 
 * Default tag values for new characters
 * Separate ignored paths for each command (requires settings change)
+* Better character sorting (requires settings change)
 
 ### Added
 
 * New `@werewolf` tag for specifying werewolf type and auspice on one line
 * Settings now has a `tag_defaults` key that sets default tag values for newly created characters.
 * Settings files now ignore trailing commas
+* Sorting for lists now allows you to sort by any tag or set of tags, each in ascending or descending order
 
 ### Changed
 

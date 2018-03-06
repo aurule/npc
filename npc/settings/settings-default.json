@@ -220,10 +220,13 @@
         // formats are markdown or md, html or htm, and json.
         "default_format": "markdown",
 
-        // Default sorting method for character listings. The method "last"
-        // sorts by the last word in the character's name, and the method
-        // "first" sorts by the first word in the character's name.
-        "sort_by": "last",
+        // Default sort order for character listings. Characters are sorted by
+        // their values for each tag in order, and each sort is
+        // smallest-to-largest by default. To sort a tag largest-to-smallest
+        // instead, write it as "-tag".
+        "sort_by": [
+            "last"
+        ],
 
         // Encoding to use when creating html data for an NPC listing. Any
         // valid html charset can be used, but the most common are "ascii" and

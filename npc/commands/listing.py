@@ -51,11 +51,11 @@ def make_list(*search, ignore=None, fmt=None, metadata=None, title=None, outfile
     sort_order = kwargs.get('sort', prefs.get('listing.sort_by'))
     update_progress = kwargs.get('progress', lambda i, t: False)
 
-    characters = util.character_sorter.sort_characters(
+    sorter = util.character_sorter.CharacterSorter(*sort_order)
+    characters = sorter.sort(
         _process_directives(
             parser.get_characters(flatten(search), ignore)
-        ),
-        order=sort_order
+        )
     )
 
     if fmt == "default" or not fmt:
@@ -172,4 +172,4 @@ def get_sectioner(order):
         return first_letter_first_name
     if order == 'last':
         return first_letter_last_name
-    return None
+    return lambda c: ''
