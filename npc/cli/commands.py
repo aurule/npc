@@ -12,6 +12,7 @@ def reorg(kwargs):
 
 def dump(kwargs):
     serial_args, keyword_args = util.serialize_args('search', **kwargs)
+    kwargs['sort_by'] = list(map(lambda s: s.strip(), kwargs['sort_by'].split(',')))
     return commands.dump(*serial_args, **keyword_args)
 
 def lint(kwargs):

@@ -78,7 +78,7 @@ def reorg(*search, ignore=None, purge=False, verbose=False, commit=False, **kwar
 
     return result.Success(printables=changelog)
 
-def dump(*search, ignore=None, sort=False, metadata=False, outfile=None, **kwargs):
+def dump(*search, ignore=None, do_sort=False, metadata=False, outfile=None, **kwargs):
     """
     Dump the raw character data, unaltered.
 
@@ -87,7 +87,7 @@ def dump(*search, ignore=None, sort=False, metadata=False, outfile=None, **kwarg
     Args:
         search (List): Paths to search for character files
         ignore (List): Paths to ignore
-        sort (bool): Whether to sort the characters before dumping
+        do_sort (bool): Whether to sort the characters before dumping
         metadata (bool): Whether to prepend metadata to the output
         outfile (string|None): Filename to put the dumped data. None and "-"
             print to stdout.
@@ -102,10 +102,12 @@ def dump(*search, ignore=None, sort=False, metadata=False, outfile=None, **kwarg
     if not ignore:
         ignore = []
     ignore.extend(prefs.get_ignored_paths('dump'))
+    sort_by = kwargs.get('sort_by', prefs.get('dump.sort_by'))
 
     characters = parser.get_characters(flatten(search), ignore)
-    if sort:
-        characters = util.character_sorter.sort_characters(characters)
+    if do_sort:
+        sorter = util.character_sorter.CharacterSorter(sort_by)
+        characters = sorter.sort(characters)
 
     # make some json
     if metadata:

@@ -160,6 +160,7 @@
     },
 
     "story": {
+
         // Session template used for making new session entries
         "session_template": "templates/Session Log.md",
 
@@ -215,7 +216,9 @@
         }
     },
 
+    // Settings for the list command
     "listing": {
+
         // Default format to use when creating a list of characters. Recognized
         // formats are markdown or md, html or htm, and json.
         "default_format": "markdown",
@@ -322,5 +325,16 @@
                 "additional_keys": {}
             }
         }
+    },
+
+    // Settings for the dump command
+    "dump": {
+
+        // Default sort order for character dumps. Sorting does not happen by
+        // default, so be sure to enable `do_sort` to see an effect. Characters
+        // are sorted by their values for each tag in order, and each sort is
+        // smallest-to-largest by default. To sort a tag largest-to-smallest
+        // instead, write it as "-tag".
+        "sort_by": []
     }
 }
