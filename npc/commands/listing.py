@@ -55,7 +55,7 @@ def make_list(*search, ignore=None, fmt=None, metadata=None, title=None, outfile
 
     characters = _process_directives(parser.get_characters(flatten(search), ignore))
     if do_sort:
-        sorter = util.character_sorter.CharacterSorter(sort_order)
+        sorter = util.character_sorter.CharacterSorter(sort_order, prefs=prefs)
         characters = sorter.sort(characters)
 
     if fmt == "default" or not fmt:

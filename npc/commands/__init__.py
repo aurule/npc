@@ -106,7 +106,7 @@ def dump(*search, ignore=None, do_sort=False, metadata=False, outfile=None, **kw
 
     characters = parser.get_characters(flatten(search), ignore)
     if do_sort:
-        sorter = util.character_sorter.CharacterSorter(sort_by)
+        sorter = util.character_sorter.CharacterSorter(sort_by, prefs=prefs)
         characters = sorter.sort(characters)
 
     # make some json

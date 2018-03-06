@@ -3,8 +3,9 @@ Reusable sorter for characters
 """
 
 from functools import cmp_to_key
+from . import core
 
-def sort(characters, keys=None):
+def sort(characters, keys=None, prefs=None):
     """
     Sort a set of characters by a list of tag keys.
 
@@ -14,6 +15,7 @@ def sort(characters, keys=None):
     Args:
         characters (list): List of character objects to sort
         keys (list): List of tag names by which to sort.
+        prefs (Settings): Settings object containing type data
 
     Returns:
         List of characters sorted according to their keys.
@@ -21,7 +23,7 @@ def sort(characters, keys=None):
     if keys is None:
         keys = ['last']
 
-    sorter = CharacterSorter(keys)
+    sorter = CharacterSorter(keys, prefs=prefs)
     return sorter.sort(characters)
 
 class CharacterSorter:
@@ -32,23 +34,30 @@ class CharacterSorter:
     repeatedly to lists of character objects. The first call to `sort` will
     store comparer functions to speed up future calls.
     """
-    def __init__(self, keys):
+    def __init__(self, keys, prefs=None):
         """
         Args:
             keys (list): List of sorting keys. Use '-key' to sort descending. Keys
                 can be the name of any tag, or a special value:
                 * 'last': The last word of the character's name
                 * 'first': The first word of the character's name
+            prefs (Settings): Settings object containing type data
         """
         self.keys = keys
+        self.prefs = prefs
+
         self.comparers = []
         self.functions = {
             'first': lambda c: c.get_first('name', '').split(' ')[0],
             'last': lambda c: c.get_first('name', '').split(' ')[-1]
         }
 
-    def generic_get(self, tag):
-        return lambda c: c.get_first(tag)
+    def generic_get(self, tag_name):
+        def _get(character, tag_name=tag_name):
+            if self.prefs is not None:
+                tag_name = core.translate_tag_for_character_type(character.type_key, tag_name, prefs=self.prefs)
+            return character.get_first(tag_name)
+        return _get
 
     def sort(self, characters):
         """

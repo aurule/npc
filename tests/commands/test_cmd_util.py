@@ -24,9 +24,9 @@ class TestSortCharacters:
     @pytest.fixture
     def characters(self):
         return [
-            npc.Character(name=['Alfred Lisbon'], group=['High Rollers']),
-            npc.Character(name=['Baldy Parson'], group=['High Rollers']),
-            npc.Character(name=['Zach Albright'], group=['Low Rollers'])
+            npc.Character(name=['Alfred Lisbon'], group=['High Rollers'], type=['changeling'], motley=['dudes2']),
+            npc.Character(name=['Baldy Parson'], group=['High Rollers'], type=['changeling'], motley=['dudes1']),
+            npc.Character(name=['Zach Albright'], group=['Low Rollers'], type=['changeling'], motley=['dudes3'])
         ]
 
     def test_last(self, characters):
@@ -41,8 +41,12 @@ class TestSortCharacters:
         result = util.character_sorter.CharacterSorter(['-first']).sort(characters)
         assert list(map(lambda c: c.get_first('name'), result)) == ['Zach Albright', 'Baldy Parson', 'Alfred Lisbon']
 
-    def test_multiple(self, characters):
+    def test_multiple_tags(self, characters):
         result = util.character_sorter.CharacterSorter(['group', '-last']).sort(characters)
+        assert list(map(lambda c: c.get_first('name'), result)) == ['Baldy Parson', 'Alfred Lisbon', 'Zach Albright']
+
+    def test_translated_sort(self, characters, prefs):
+        result = util.character_sorter.CharacterSorter(['type-unit'], prefs=prefs).sort(characters)
         assert list(map(lambda c: c.get_first('name'), result)) == ['Baldy Parson', 'Alfred Lisbon', 'Zach Albright']
 
 class TestSmartOpen:
