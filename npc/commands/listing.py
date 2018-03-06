@@ -33,7 +33,8 @@ def make_list(*search, ignore=None, fmt=None, metadata=None, title=None, outfile
             Overrides the title from settings.
         outfile (string|None): Filename to put the listed data. None and "-"
             print to stdout.
-        sort (string|None): Sort order for characters. Defaults to the value of
+        do_sort (bool): Whether to avoid sorting altogether. Defaults to True.
+        sort_by (string|None): Sort order for characters. Defaults to the value of
             "list_sort" in settings.
         prefs (Settings): Settings object to use. Uses internal settings by
             default.
@@ -48,15 +49,14 @@ def make_list(*search, ignore=None, fmt=None, metadata=None, title=None, outfile
     if not ignore:
         ignore = []
     ignore.extend(prefs.get_ignored_paths('listing'))
-    sort_order = kwargs.get('sort', prefs.get('listing.sort_by'))
+    sort_order = kwargs.get('sort_by', prefs.get('listing.sort_by'))
+    do_sort = kwargs.get('do_sort', True)
     update_progress = kwargs.get('progress', lambda i, t: False)
 
-    sorter = util.character_sorter.CharacterSorter(*sort_order)
-    characters = sorter.sort(
-        _process_directives(
-            parser.get_characters(flatten(search), ignore)
-        )
-    )
+    characters = _process_directives(parser.get_characters(flatten(search), ignore))
+    if do_sort:
+        sorter = util.character_sorter.CharacterSorter(*sort_order)
+        characters = sorter.sort(characters)
 
     if fmt == "default" or not fmt:
         fmt = prefs.get('listing.default_format')
