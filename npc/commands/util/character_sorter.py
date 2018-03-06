@@ -21,7 +21,7 @@ def sort(characters, keys=None):
     if keys is None:
         keys = ['last']
 
-    sorter = CharacterSorter.new(keys)
+    sorter = CharacterSorter(keys)
     return sorter.sort(characters)
 
 class CharacterSorter:
@@ -32,7 +32,7 @@ class CharacterSorter:
     repeatedly to lists of character objects. The first call to `sort` will
     store comparer functions to speed up future calls.
     """
-    def __init__(self, *keys):
+    def __init__(self, keys):
         """
         Args:
             keys (list): List of sorting keys. Use '-key' to sort descending. Keys
@@ -40,7 +40,7 @@ class CharacterSorter:
                 * 'last': The last word of the character's name
                 * 'first': The first word of the character's name
         """
-        self.keys = list(keys)
+        self.keys = keys
         self.comparers = []
         self.functions = {
             'first': lambda c: c.get_first('name', '').split(' ')[0],

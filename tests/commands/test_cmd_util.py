@@ -30,19 +30,19 @@ class TestSortCharacters:
         ]
 
     def test_last(self, characters):
-        result = util.character_sorter.CharacterSorter('last').sort(characters)
+        result = util.character_sorter.CharacterSorter(['last']).sort(characters)
         assert list(map(lambda c: c.get_first('name'), result)) == ['Zach Albright', 'Alfred Lisbon', 'Baldy Parson']
 
     def test_first(self, characters):
-        result = util.character_sorter.CharacterSorter('first').sort(characters)
+        result = util.character_sorter.CharacterSorter(['first']).sort(characters)
         assert list(map(lambda c: c.get_first('name'), result)) == ['Alfred Lisbon', 'Baldy Parson', 'Zach Albright']
 
     def test_reverse(self, characters):
-        result = util.character_sorter.CharacterSorter('-first').sort(characters)
+        result = util.character_sorter.CharacterSorter(['-first']).sort(characters)
         assert list(map(lambda c: c.get_first('name'), result)) == ['Zach Albright', 'Baldy Parson', 'Alfred Lisbon']
 
     def test_multiple(self, characters):
-        result = util.character_sorter.CharacterSorter('group', '-last').sort(characters)
+        result = util.character_sorter.CharacterSorter(['group', '-last']).sort(characters)
         assert list(map(lambda c: c.get_first('name'), result)) == ['Baldy Parson', 'Alfred Lisbon', 'Zach Albright']
 
 class TestSmartOpen:
