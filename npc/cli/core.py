@@ -178,7 +178,7 @@ def _make_parser():
     parser_list.add_argument('-m', '--metadata', nargs="?", const='default', default=False, help="Add metadata to the output. If the output format supports more than one metadata format, you can specify that format as well.")
     parser_list.add_argument('--title', help="Title to show in the metadata. Overrides the title from settings.", metavar="TITLE")
     parser_list.add_argument('-o', '--outfile', nargs="?", const='-', default=None, help="File where the listing will be saved")
-    parser_list.add_argument('--sort', dest='sort_by', default=None, help="The sort order for characters. Separate multiple tags with a comma. Defaults to the settings value 'listing.sort_by'.")
+    parser_list.add_argument('--sort_by', default=None, help="The sort order for characters. Separate multiple tags with a comma. Defaults to the settings value 'listing.sort_by'.")
     parser_list.add_argument('--no_sort', action='store_false', dest='do_sort', help="Do not sort characters at all")
     parser_list.set_defaults(func=commands.make_list, progress=_update_progress_bar)
 
@@ -188,6 +188,7 @@ def _make_parser():
     parser_dump.add_argument('-m', '--metadata', action="store_true", default=False, help="Add metadata to the output.")
     parser_dump.add_argument('-o', '--outfile', nargs="?", const='-', default=None, help="File where the listing will be saved")
     parser_dump.add_argument('--sort_by', default=None, help="The sort order for characters. Separate multiple tags with a comma. Defaults to the settings value 'dump.sort_by'.")
+    parser_dump.add_argument('--no_sort', action='store_false', dest='do_sort', help="Do not sort characters at all")
     parser_dump.set_defaults(func=commands.dump)
 
     # Reorganize character files subcommand

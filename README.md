@@ -228,7 +228,10 @@ Options:
 * `--metadata`: Include metadata in the output. Can optionally specify the format of this metadata, if the main format supports it. Pass `default` to use the metadata type from your settings. Recognized values depend on the output format:
     - Markdown supports `mmd` for MultiMarkdown metadata, and `yfm` or `yaml` for YAML Front Matter metadata
     - HTML supports `meta` to put metadata in `<meta>` elements in the document `<head>`
+* `--title`: Override just the title from the metadata.
 * `--outfile`: Path where the output should go. If omitted (or you pass `-`), the output will go to stdout for chaining to another command.
+* `--sort_by`: Sort characters by these tag names before creating the listing. Separate multiple tags with a comma, and use `-tag` for a reverse sort on that tag.
+* `--no_sort`: Suppress sorting entirely.
 
 ## Dump Raw NPC Data
 
@@ -241,6 +244,8 @@ Options:
 * `--sort`: Sort NPCs by name before dumping the output
 * `--metadata`: Include metadata in the output. Uses the json default metadata from the settings and includes a few special fields.
 * `--outfile`: Path where the output should go. If omitted (or you pass "`-`"), the output will go to stdout for chaining to another command.
+* `--sort_by`: Sort characters by these tag names before creating the dump. Separate multiple tags with a comma, and use `-tag` for a reverse sort on that tag.
+* `--no_sort`: Suppress sorting entirely. True by default.
 
 ## Reorganize Character Files
 

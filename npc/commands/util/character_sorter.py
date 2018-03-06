@@ -41,7 +41,9 @@ class CharacterSorter:
                 can be the name of any tag, or a special value:
                 * 'last': The last word of the character's name
                 * 'first': The first word of the character's name
-            prefs (Settings): Settings object containing type data
+            prefs (Settings): Settings object containing type data. If provided,
+                special type-dependent tags can be used for sorting, like
+                'type-unit', or 'type-social'.
         """
         self.keys = keys
         self.prefs = prefs
