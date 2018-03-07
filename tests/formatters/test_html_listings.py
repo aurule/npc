@@ -78,7 +78,7 @@ class TestSectioner:
         assert len(listing.sections) == 0
 
     def test_sectioner_is_inserted(self):
-        listing = Listing(sectioner=lambda c: c.get_first('name', '').split(' ')[-1][0])
+        listing = Listing(sectioners=[lambda c: c.get_first('name', '').split(' ')[-1][0]])
         assert listing.result
         assert len(listing.sections) == 4
 

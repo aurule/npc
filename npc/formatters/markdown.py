@@ -30,9 +30,10 @@ def listing(characters, outstream, *, include_metadata=None, metadata=None, part
             include_metadata and metadata args are ignored.
         prefs (Settings): Settings object. Used to get the location of template
             files.
-        sectioner (function): Function that returns a section heading for each
-            character. When its return value changes, the section template is
-            rendered with the new title. Omit to suppress sections.
+        sectioners (List[function]): List of functions that return a section
+            heading for each character. When its return value changes, the
+            section template is rendered with the new title. Omit to suppress
+            sections.
         progress (function): Callback function to track the progress of
             generating a listing. Must accept the current count and total count.
             Should print to stderr.
@@ -43,7 +44,7 @@ def listing(characters, outstream, *, include_metadata=None, metadata=None, part
     prefs = kwargs.get('prefs', settings.InternalSettings())
     if not metadata:
         metadata = {}
-    sectioner = kwargs.get('sectioner', lambda c: '')
+    sectioners = kwargs.get('sectioners', [lambda c: ''])
     update_progress = kwargs.get('progress', lambda i, t: False)
 
     if not partial:
@@ -67,18 +68,19 @@ def listing(characters, outstream, *, include_metadata=None, metadata=None, part
         _prefs_get = prefs.get
         _out_write = outstream.write
 
-        section_title = ''
+        section_titles = [''] * len(sectioners)
         section_template = Template(
             filename=_prefs_get("listing.templates.markdown.section"),
             module_directory=tempdir)
         total = len(characters)
         update_progress(0, total)
         for index, char in enumerate(characters):
-            if sectioner(char) != section_title:
-                section_title = sectioner(char)
-                _out_write(
-                    section_template.render_unicode(
-                        title=section_title))
+            for sectioner_num, sectioner in enumerate(sectioners):
+                if sectioner(char) != section_titles[sectioner_num]:
+                    section_titles[sectioner_num] = sectioner(char)
+                    _out_write(
+                        section_template.render_unicode(
+                            title=section_titles[sectioner_num]))
             body_file = _prefs_get("listing.templates.markdown.character.{}".format(char.type_key))
             if not body_file:
                 body_file = _prefs_get("listing.templates.markdown.character.default")

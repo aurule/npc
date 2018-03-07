@@ -78,7 +78,7 @@ class TestSectioner:
         assert len(listing.sections) == 0
 
     def test_sectioner_is_inserted(self):
-        listing = Listing(sectioner=npc.commands.listing.get_sectioner('last'))
+        listing = Listing(sectioners=[npc.commands.listing.get_sectioner('last')])
         assert listing.result
         assert len(listing.sections) == 5
 

@@ -84,7 +84,7 @@ def make_list(*search, ignore=None, fmt=None, metadata=None, title=None, outfile
             include_metadata=metadata_type,
             metadata=meta,
             prefs=prefs,
-            sectioner=get_sectioner(sort_order),
+            sectioners=[get_sectioner(sort_order)],
             progress=update_progress)
 
     # pass errors straight through
