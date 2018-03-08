@@ -4,7 +4,7 @@ from contextlib import contextmanager
 import sys
 
 from npc.character import Character
-from npc import settings
+from npc import settings, util
 from . import character_sorter
 
 def create_path_from_character(character: Character, *, base_path=None, hierarchy=None, **kwargs):
@@ -116,7 +116,7 @@ def create_path_from_character(character: Character, *, base_path=None, hierarch
 
         if '?' in component:
             tag_name, literal = component.split('?')
-            tag_name = translate_tag_for_character_type(character.type_key, tag_name, prefs=prefs)
+            tag_name = util.translate_tag_for_character_type(character.type_key, tag_name, prefs=prefs)
             if tag_name == 'foreign':
                 # "foreign?" gets special handling to check the wanderer tag as well
                 if character.foreign:
@@ -125,7 +125,7 @@ def create_path_from_character(character: Character, *, base_path=None, hierarch
                 target_path = add_path_if_exists(target_path, literal)
             continue
 
-        tag_name = translate_tag_for_character_type(character.type_key, component, prefs=prefs)
+        tag_name = util.translate_tag_for_character_type(character.type_key, component, prefs=prefs)
         if tag_name == 'type':
             # get the translated type path for the character's type
             target_path = add_path_if_exists(target_path, prefs.get('types.{}.type_path'.format(character.type_key), placeholder('type')))
@@ -160,22 +160,6 @@ def create_path_from_character(character: Character, *, base_path=None, hierarch
                     default=placeholder(tag_name)))
 
     return target_path
-
-def translate_tag_for_character_type(char_type, tag_name, prefs=None):
-    """
-    Translate a type-dependent tag into the corresponding tag for the
-    character's type.
-
-    Args:
-        type (string): Type to use
-        tag_name (string): Name of the tag to translate
-        prefs (Settings): Settings object containing type data
-    """
-    return prefs.get(
-        'types.{char_type}.tag_names.{tag_name}'.format(
-            char_type=char_type,
-            tag_name=tag_name),
-        tag_name)
 
 def find_empty_dirs(root):
     """

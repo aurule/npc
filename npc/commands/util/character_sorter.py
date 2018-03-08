@@ -3,7 +3,7 @@ Reusable sorter for characters
 """
 
 from functools import cmp_to_key
-from . import core
+from npc import util
 
 def sort(characters, keys=None, prefs=None):
     """
@@ -57,7 +57,7 @@ class CharacterSorter:
     def generic_get(self, tag_name):
         def _get(character, tag_name=tag_name):
             if self.prefs is not None:
-                tag_name = core.translate_tag_for_character_type(character.type_key, tag_name, prefs=self.prefs)
+                tag_name = util.translate_tag_for_character_type(character.type_key, tag_name, prefs=self.prefs)
             return character.get_first(tag_name)
         return _get
 

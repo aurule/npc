@@ -252,8 +252,10 @@
                 // not used by default for markdown listings.
                 "footer": "templates/listing/Footer.md.mako",
 
-                // Section header content added between groups of characters.
-                "section": "templates/listing/Section.md.mako",
+                // Where to find each named section template
+                "sections": {
+                    "simple": "templates/listing/sections/SimpleSection.md.mako"
+                },
 
                 // Templates for each character type. The template under
                 // "default" will be used whenever a type doesn't have its own
@@ -271,7 +273,9 @@
                     "plain": "templates/listing/Header.html.plain.mako"
                 },
                 "footer": "templates/listing/Footer.html.mako",
-                "section": "templates/listing/Section.html.mako",
+                "sections": {
+                    "simple": "templates/listing/sections/SimpleSection.html.mako"
+                },
                 "character": {
                     "default": "templates/listing/Character.html.mako",
                     "changeling": "templates/listing/Changeling.html.mako"

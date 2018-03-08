@@ -47,8 +47,10 @@ def listing(characters, outstream, *, include_metadata=None, metadata=None, part
     encoding = kwargs.get('encoding', prefs.get('listing.html_encoding'))
     if not metadata:
         metadata = {}
-    sectioners = kwargs.get('sectioners', [lambda c: ''])
+    sectioners = kwargs.get('sectioners', [])
     update_progress = kwargs.get('progress', lambda i, t: False)
+
+    character_header_level = len(sectioners) + 1
 
     encoding_options = {
         'output_encoding': encoding,
@@ -76,19 +78,13 @@ def listing(characters, outstream, *, include_metadata=None, metadata=None, part
         _prefs_get = prefs.get
         _out_write = outstream.write
 
-        section_titles = [''] * len(sectioners)
-        section_template = Template(
-            filename=_prefs_get("listing.templates.html.section"),
-            module_directory=tempdir, **encoding_options)
         total = len(characters)
         update_progress(0, total)
         for index, char in enumerate(characters):
-            for sectioner_num, sectioner in enumerate(sectioners):
-                if sectioner(char) != section_titles[sectioner_num]:
-                    section_titles[sectioner_num] = sectioner(char)
-                    _out_write(
-                        section_template.render(
-                            title=section_titles[sectioner_num]))
+            for sectioner in sectioners:
+                if sectioner.would_change(character):
+                    sectioner.update_text(character)
+                    _out_write(sectioner.render_template('html', **encoding_options))
             body_file = _prefs_get("listing.templates.html.character.{}".format(char.type_key))
             if not body_file:
                 body_file = _prefs_get("listing.templates.html.character.default")
@@ -96,6 +92,7 @@ def listing(characters, outstream, *, include_metadata=None, metadata=None, part
             _out_write(
                 body_template.render(
                     character=char.copy_and_alter(html.escape),
+                    header_level=character_header_level,
                     mdconv=_clean_conv().convert
                     ))
             update_progress(index + 1, total)

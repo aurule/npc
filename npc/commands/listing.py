@@ -36,6 +36,7 @@ def make_list(*search, ignore=None, fmt=None, metadata=None, title=None, outfile
         do_sort (bool): Whether to avoid sorting altogether. Defaults to True.
         sort_by (string|None): Sort order for characters. Defaults to the value of
             "list_sort" in settings.
+        group_by (List[string]): List of tag names to group characters by
         prefs (Settings): Settings object to use. Uses internal settings by
             default.
         progress (function): Callback function to track the progress of
@@ -51,6 +52,7 @@ def make_list(*search, ignore=None, fmt=None, metadata=None, title=None, outfile
     ignore.extend(prefs.get_ignored_paths('listing'))
     sort_order = kwargs.get('sort_by', prefs.get('listing.sort_by'))
     do_sort = kwargs.get('do_sort', True)
+    group_by = kwargs.get('group_by', [])
     update_progress = kwargs.get('progress', lambda i, t: False)
 
     characters = _process_directives(parser.get_characters(flatten(search), ignore))
@@ -77,6 +79,8 @@ def make_list(*search, ignore=None, fmt=None, metadata=None, title=None, outfile
     if title:
         meta['title'] = title
 
+    sectioners = [formatters.sectioners.get_sectioner(tag=g, heading_level=i+1, prefs=prefs) for i, g in enumerate(group_by)]
+
     with util.smart_open(outfile, binary=(out_type in formatters.BINARY_TYPES)) as outstream:
         response = formatter(
             characters,
@@ -84,7 +88,7 @@ def make_list(*search, ignore=None, fmt=None, metadata=None, title=None, outfile
             include_metadata=metadata_type,
             metadata=meta,
             prefs=prefs,
-            sectioners=[get_sectioner(sort_order)],
+            sectioners=sectioners,
             progress=update_progress)
 
     # pass errors straight through
@@ -146,30 +150,3 @@ def _process_directives(characters):
             char['type'] = 'Unknown'
 
         yield char
-
-def get_sectioner(order):
-    """
-    Get a sectioning function
-
-    Args:
-        order (str): Name of the order that defines the sections. One of "last"
-            or "first"
-
-    Returns:
-        A sectioning function, or None if the order was not recognized
-    """
-    def first_letter_last_name(character):
-        """Get the first letter of the last word in the character's name"""
-        full_name = character.get_first('name', '')
-        return '' if len(full_name) == 0 else full_name.split(' ')[-1][0]
-
-    def first_letter_first_name(character):
-        """Get the first letter of the character's first name"""
-        full_name = character.get_first('name', '')
-        return '' if len(full_name) == 0 else full_name.split(' ')[0][0]
-
-    if order == 'first':
-        return first_letter_first_name
-    if order == 'last':
-        return first_letter_last_name
-    return lambda c: ''

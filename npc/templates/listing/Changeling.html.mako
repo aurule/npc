@@ -1,14 +1,15 @@
-<%page args="character, mdconv"/>
+<%page args="character, header_level, mdconv"/>
 <%def name="make_ranks(group_name)">\
     %if group_name in character['rank']:
  (${', '.join(character['rank'][group_name])})\
     %endif
 </%def>\
-<h3>${character.get_first('name')}\
+${"<h{}>".format(header_level)}
+${character.get_first('name')}\
 %if 'dead' in character:
  (Deceased)\
 %endif
-</h3>
+${"</h{}>".format(header_level)}
 
 %if character.has_items('name', 2):
 <div><em>AKA ${', '.join(character.get_remaining('name'))}</em></div>

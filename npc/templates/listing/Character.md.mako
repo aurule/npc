@@ -1,10 +1,10 @@
-<%page args="character"/>\
+<%page args="character, header_level"/>\
 <%def name="make_ranks(group_name)">\
     % if group_name in character['rank']:
  (${', '.join(character['rank'][group_name])})\
     % endif
 </%def>\
-<%text>###</%text> ${character.get_first('name')}\
+${'#' * header_level} ${character.get_first('name')}\
 % if 'dead' in character:
  (Deceased)\
 % endif

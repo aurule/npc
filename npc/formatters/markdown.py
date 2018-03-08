@@ -44,8 +44,10 @@ def listing(characters, outstream, *, include_metadata=None, metadata=None, part
     prefs = kwargs.get('prefs', settings.InternalSettings())
     if not metadata:
         metadata = {}
-    sectioners = kwargs.get('sectioners', [lambda c: ''])
+    sectioners = kwargs.get('sectioners', [])
     update_progress = kwargs.get('progress', lambda i, t: False)
+
+    character_header_level = len(sectioners) + 1
 
     if not partial:
         if include_metadata:
@@ -68,19 +70,13 @@ def listing(characters, outstream, *, include_metadata=None, metadata=None, part
         _prefs_get = prefs.get
         _out_write = outstream.write
 
-        section_titles = [''] * len(sectioners)
-        section_template = Template(
-            filename=_prefs_get("listing.templates.markdown.section"),
-            module_directory=tempdir)
         total = len(characters)
         update_progress(0, total)
         for index, char in enumerate(characters):
-            for sectioner_num, sectioner in enumerate(sectioners):
-                if sectioner(char) != section_titles[sectioner_num]:
-                    section_titles[sectioner_num] = sectioner(char)
-                    _out_write(
-                        section_template.render_unicode(
-                            title=section_titles[sectioner_num]))
+            for sectioner in sectioners:
+                if sectioner.would_change(character):
+                    sectioner.update_text(character)
+                    _out_write(sectioner.render_template('markdown'))
             body_file = _prefs_get("listing.templates.markdown.character.{}".format(char.type_key))
             if not body_file:
                 body_file = _prefs_get("listing.templates.markdown.character.default")
@@ -88,7 +84,7 @@ def listing(characters, outstream, *, include_metadata=None, metadata=None, part
                 return result.ConfigError(errmsg="Cannot find default character template for markdown listing")
 
             body_template = Template(filename=body_file, module_directory=tempdir)
-            _out_write(body_template.render_unicode(character=char))
+            _out_write(body_template.render_unicode(character=char, header_level=character_header_level))
             update_progress(index + 1, total)
 
     if not partial:
