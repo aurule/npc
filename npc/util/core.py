@@ -167,6 +167,16 @@ class OutOfBoundsError(ValueError):
     """Raise when a function input is outside of permitted bounds"""
 
 def serialize_args(*argnames, **full_args):
+    """
+    Split positional args from a set of keyword args
+
+    Args:
+        argnames (List[str]): Names of args to make positional
+        full_args (dict): Keyword arguments dict
+
+    Returns:
+        Tuple of (positional args list, keyword args dict).
+    """
     serial_args = [full_args.pop(k) for k in argnames]
     return serial_args, full_args
 
