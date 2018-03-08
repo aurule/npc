@@ -180,6 +180,27 @@ def serialize_args(*argnames, **full_args):
     serial_args = [full_args.pop(k) for k in argnames]
     return serial_args, full_args
 
+def listify_args(*argnames, **full_args):
+    """
+    Modify named keyword arguments to make them lists instead of strings.
+
+    The lists are created by splitting each named value on commas, then
+    stripping any extra white space. If the named arg is None, it is not
+    modified.
+
+    Args:
+        argnames (List[str]): List of keyword argument names to modify
+        full_args (dict): Keyword arguments dict
+
+    Returns:
+        New keyword arguments dict with the named arguments translated from
+        strings into lists of strings.
+    """
+    for argname in argnames:
+        if full_args[argname] is not None:
+            full_args[argname] = [s.strip() for s in full_args[argname].split(',')]
+    return full_args
+
 def translate_tag_for_character_type(char_type, tag_name, prefs=None):
     """
     Translate a type-dependent tag into the corresponding tag for the

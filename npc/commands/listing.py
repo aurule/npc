@@ -36,7 +36,7 @@ def make_list(*search, ignore=None, fmt=None, metadata=None, title=None, outfile
         do_sort (bool): Whether to avoid sorting altogether. Defaults to True.
         sort_by (string|None): Sort order for characters. Defaults to the value of
             "list_sort" in settings.
-        group_by (List[string]): List of tag names to group characters by
+        headings (List[string]): List of tag names to group characters by
         prefs (Settings): Settings object to use. Uses internal settings by
             default.
         progress (function): Callback function to track the progress of
@@ -50,9 +50,9 @@ def make_list(*search, ignore=None, fmt=None, metadata=None, title=None, outfile
     if not ignore:
         ignore = []
     ignore.extend(prefs.get_ignored_paths('listing'))
-    sort_order = kwargs.get('sort_by', prefs.get('listing.sort_by'))
     do_sort = kwargs.get('do_sort', True)
-    group_by = kwargs.get('group_by', [])
+    sort_order = kwargs.get('sort_by', prefs.get('listing.sort_by')) if do_sort else []
+    headings = kwargs.get('headings', sort_order) if do_sort else []
     update_progress = kwargs.get('progress', lambda i, t: False)
 
     characters = _process_directives(parser.get_characters(flatten(search), ignore))
@@ -79,7 +79,7 @@ def make_list(*search, ignore=None, fmt=None, metadata=None, title=None, outfile
     if title:
         meta['title'] = title
 
-    sectioners = [formatters.sectioners.get_sectioner(tag=g, heading_level=i+1, prefs=prefs) for i, g in enumerate(group_by)]
+    sectioners = [formatters.sectioners.get_sectioner(tag=g, heading_level=i+1, prefs=prefs) for i, g in enumerate(headings)]
 
     with util.smart_open(outfile, binary=(out_type in formatters.BINARY_TYPES)) as outstream:
         response = formatter(

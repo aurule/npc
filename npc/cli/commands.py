@@ -44,7 +44,7 @@ def create_changeling(kwargs):
 
 def make_list(kwargs):
     serial_args, keyword_args = util.serialize_args('search', **kwargs)
-    kwargs['sort_by'] = list(map(lambda s: s.strip(), kwargs['sort_by'].split(',')))
+    keyword_args = util.listify_args('sort_by', 'group_by')
     return commands.listing.make_list(*serial_args, **keyword_args)
 
 def session(kwargs):

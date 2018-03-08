@@ -179,7 +179,8 @@ def _make_parser():
     parser_list.add_argument('--title', help="Title to show in the metadata. Overrides the title from settings.", metavar="TITLE")
     parser_list.add_argument('-o', '--outfile', nargs="?", const='-', default=None, help="File where the listing will be saved")
     parser_list.add_argument('--sort_by', default=None, help="The sort order for characters. Separate multiple tags with a comma. Defaults to the settings value 'listing.sort_by'.")
-    parser_list.add_argument('--no_sort', action='store_false', dest='do_sort', help="Do not sort characters at all")
+    parser_list.add_argument('--headings', default=None, help="Generate headings for these tags. Separate multiple tags with a comma. Defaults to the value of `sort_by`.")
+    parser_list.add_argument('--no_sort', action='store_false', dest='do_sort', help="Do not sort characters at all and do not generate any headings.")
     parser_list.set_defaults(func=commands.make_list, progress=_update_progress_bar)
 
     # Dump raw character data
