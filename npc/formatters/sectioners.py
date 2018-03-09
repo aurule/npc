@@ -114,7 +114,7 @@ class BaseSectioner:
         Returns:
             True if the output of `text_for` differs from our `current_text`.
         """
-        return self.text_for(character) == self.current_text
+        return self.text_for(character) != self.current_text
 
     def update_text(self, character):
         """
@@ -171,7 +171,7 @@ class TagSectioner(BaseSectioner):
         Returns:
             First value for our tag in the passed character.
         """
-        tag = util.translate_tag_for_character_type(character.type_key, tag, self.prefs)
+        tag = util.translate_tag_for_character_type(character.type_key, self.tag_name, self.prefs)
         return character.get_first(tag, None)
 
 class LastInitialSectioner(BaseSectioner):
