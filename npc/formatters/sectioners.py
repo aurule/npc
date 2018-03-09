@@ -100,7 +100,7 @@ class BaseSectioner:
         if output_format in self.templates:
             return self.templates[output_format]
 
-        template_path = Path(prefs.get("listing.templates.{output_format}.sections.simple"))
+        template_path = str(Path(self.prefs.get("listing.templates.{output_format}.sections.simple".format(output_format=output_format))))
         self.templates[output_format] = Template(filename=template_path, module_directory=self.tempdir, **encoding_options)
         return self.templates[output_format]
 
@@ -187,5 +187,8 @@ class LastInitialSectioner(BaseSectioner):
             First character of the last word in the character's first value for
             the name tag.
         """
-        full_name = character.get_first('name', '')
-        return None if len(full_name) == 0 else full_name.split(' ')[-1][0]
+        full_name = character.get_first('name')
+        try:
+            return None if full_name is None else full_name.split(' ')[-1][0]
+        except IndexError as e:
+            return None
