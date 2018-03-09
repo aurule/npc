@@ -57,7 +57,7 @@ class BaseSectioner:
         self.tempdir = tempfile.TemporaryDirectory()
         self.templates = {} # cache for template objects by format
 
-    def __del__():
+    def __del__(self):
         """
         Destroy this sectioner object.
 

@@ -74,8 +74,8 @@ def listing(characters, outstream, *, include_metadata=None, metadata=None, part
         update_progress(0, total)
         for index, char in enumerate(characters):
             for sectioner in sectioners:
-                if sectioner.would_change(character):
-                    sectioner.update_text(character)
+                if sectioner.would_change(char):
+                    sectioner.update_text(char)
                     _out_write(sectioner.render_template('markdown'))
             body_file = _prefs_get("listing.templates.markdown.character.{}".format(char.type_key))
             if not body_file:

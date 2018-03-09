@@ -79,7 +79,7 @@ def make_list(*search, ignore=None, fmt=None, metadata=None, title=None, outfile
     if title:
         meta['title'] = title
 
-    sectioners = [formatters.sectioners.get_sectioner(tag=g, heading_level=i+1, prefs=prefs) for i, g in enumerate(headings)]
+    sectioners = [formatters.sectioners.get_sectioner(key=g, heading_level=i+1, prefs=prefs) for i, g in enumerate(headings)]
 
     with util.smart_open(outfile, binary=(out_type in formatters.BINARY_TYPES)) as outstream:
         response = formatter(
