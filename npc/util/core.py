@@ -197,7 +197,7 @@ def listify_args(*argnames, **full_args):
         strings into lists of strings.
     """
     for argname in argnames:
-        if full_args[argname] is not None:
+        if argname in full_args and full_args[argname] is not None:
             full_args[argname] = [s.strip() for s in full_args[argname].split(',')]
     return full_args
 
