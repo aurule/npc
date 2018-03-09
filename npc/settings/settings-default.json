@@ -231,6 +231,11 @@
             "last"
         ],
 
+        // Starting level for section headers. Translates directly to the header
+        // tag used: 1 to h1, 2 to h2, etc. Set higher if you want the first
+        // section heading to have a smaller header.
+        "base_header_level": 1,
+
         // Encoding to use when creating html data for an NPC listing. Any
         // valid html charset can be used, but the most common are "ascii" and
         // "utf-8".
