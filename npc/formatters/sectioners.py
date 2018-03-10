@@ -155,7 +155,7 @@ class TagSectioner(BaseSectioner):
     translates that tag first if needed according to the user preferences.
     """
     def __init__(self, tag, heading_level, prefs):
-        super().__init__()
+        super().__init__(heading_level, prefs)
 
         self.tag_name = tag
         self.prefs = prefs
