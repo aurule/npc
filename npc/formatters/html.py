@@ -95,6 +95,9 @@ def listing(characters, outstream, *, include_metadata=None, metadata=None, part
             body_file = _prefs_get("listing.templates.html.character.{}".format(char.type_key))
             if not body_file:
                 body_file = _prefs_get("listing.templates.html.character.default")
+            if not body_file:
+                return result.ConfigError(errmsg="Cannot find default character template for html listing")
+
             body_template = Template(filename=body_file, module_directory=tempdir, **encoding_options)
             _out_write(
                 body_template.render(
