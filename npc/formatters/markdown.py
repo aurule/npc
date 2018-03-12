@@ -13,22 +13,22 @@ from npc.util import result
 SUPPORTED_METADATA_TYPES = ['yaml', 'yfm', 'multimarkdown', 'mmd']
 """Recognized metadata type names"""
 
-def listing(characters, outstream, *, include_metadata=None, metadata=None, partial=False, **kwargs):
+def listing(characters, outstream, *, metadata_format=None, metadata=None, partial=False, **kwargs):
     """
     Create a markdown character listing
 
     Args:
         characters (list): Character info dicts to show
         outstream (stream): Output stream
-        include_metadata (string|None): Whether to include metadata, and what
+        metadata_format (string|None): Whether to include metadata, and what
             format to use. Accepts values of 'mmd', 'yaml', or 'yfm'. Metadata
             will always include a title and creation date.
         metadata (dict): Additional metadata to insert. Ignored unless
-            include_metadata is set. The keys 'title', and 'created' will
+            metadata_format is set. The keys 'title', and 'created' will
             overwrite the generated values for those keys.
         partial (bool): Whether to produce partial output by omitting the
             header and footer. Does not allow metadata to be included, so the
-            include_metadata and metadata args are ignored.
+            metadata_format and metadata args are ignored.
         prefs (Settings): Settings object. Used to get the location of template
             files.
         sectioners (List[function]): List of functions that return a section
@@ -54,17 +54,17 @@ def listing(characters, outstream, *, include_metadata=None, metadata=None, part
         character_header_level = 1
 
     if not partial:
-        if include_metadata:
+        if metadata_format:
             # coerce to canonical form
-            if include_metadata == "yaml":
-                include_metadata = "yfm"
-            elif include_metadata == "multimarkdown":
-                include_metadata = 'mmd'
+            if metadata_format == "yaml":
+                metadata_format = "yfm"
+            elif metadata_format == "multimarkdown":
+                metadata_format = 'mmd'
 
             # load and render template
-            header_file = prefs.get("listing.templates.markdown.header.{}".format(include_metadata))
+            header_file = prefs.get("listing.templates.markdown.header.{}".format(metadata_format))
             if not header_file:
-                return result.OptionError(errmsg="Unrecognized metadata format '{}'".format(include_metadata))
+                return result.OptionError(errmsg="Unrecognized metadata format '{}'".format(metadata_format))
 
             header_template = Template(filename=header_file)
             outstream.write(header_template.render_unicode(metadata=metadata))

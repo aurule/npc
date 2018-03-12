@@ -22,15 +22,15 @@ def listing(characters, outstream, *, metadata=None, partial=False, **kwargs):
     Args:
         characters (list): Character info dicts to show
         outstream (stream): Output stream
-        include_metadata (string|None): Whether to include metadata, and what
+        metadata_format (string|None): Whether to include metadata, and what
             format to use. Accepts a value of 'meta'. Metadata will always
             contain a title and creation date, if included.
         metadata (dict): Additional metadata to insert. Ignored unless
-            include_metadata is set. The keys 'title', and 'created' will
+            metadata_format is set. The keys 'title', and 'created' will
             overwrite the generated values for those keys.
         partial (bool): Whether to produce partial output by omitting the head
             and other tags. Only the content of the body tag is created.
-            Does not allow metadata to be included, so the include_metadata and
+            Does not allow metadata to be included, so the metadata_format and
             metadata args are ignored.
         prefs (Settings): Settings object. Used to get the location of template
             files.
@@ -47,7 +47,7 @@ def listing(characters, outstream, *, metadata=None, partial=False, **kwargs):
         A util.Result object. Openable will not be set.
     """
     prefs = kwargs.get('prefs', settings.InternalSettings())
-    metadata_format = kwargs.get('include_metadata', 'plain')
+    metadata_format = kwargs.get('metadata_format', 'plain')
     encoding = kwargs.get('encoding', prefs.get('listing.html_encoding'))
     if not metadata:
         metadata = {}

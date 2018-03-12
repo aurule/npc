@@ -48,13 +48,13 @@ class TestIncludeMetadata:
 
     @pytest.mark.parametrize('format_name', npc.formatters.html.SUPPORTED_METADATA_TYPES)
     def test_valid_formats(self, format_name):
-        listing = Listing(include_metadata=format_name, metadata=self.metadata)
+        listing = Listing(metadata_format=format_name, metadata=self.metadata)
         assert listing.result
         with open(fixture_dir('listing', 'html', 'metadata', "metadata-{}.txt".format(format_name)), 'r') as f:
             assert f.read() in listing.output
 
     def test_invalid_format(self):
-        listing = Listing(include_metadata='soap', metadata=self.metadata)
+        listing = Listing(metadata_format='soap', metadata=self.metadata)
         assert listing.result.success == False
 
 class TestPartialOption:
@@ -67,7 +67,7 @@ class TestPartialOption:
         assert "I'm footer content! Woohoo!" not in listing.output
 
     def test_hides_metadata(self):
-        listing = Listing(include_metadata='meta', metadata=self.metadata, partial=True)
+        listing = Listing(metadata_format='meta', metadata=self.metadata, partial=True)
         assert listing.result
         assert "friend" not in listing.output
 

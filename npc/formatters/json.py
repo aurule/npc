@@ -9,7 +9,7 @@ import json
 import npc
 from npc.util import result
 
-def listing(characters, outstream, *, include_metadata=False, metadata=None, **kwargs):
+def listing(characters, outstream, *, metadata_format=False, metadata=None, **kwargs):
     """
     Dump a json representation of all character data
 
@@ -18,11 +18,11 @@ def listing(characters, outstream, *, include_metadata=False, metadata=None, **k
     Args:
         characters (list): Character dicts to dump
         outstream (stream): Output stream
-        include_metadata (bool): Whether to insert a metadata object. The
+        metadata_format (bool): Whether to insert a metadata object. The
             metadata object will always include a title and creation date, along
             with the key `"meta": true` to distinguish it from character data.
         metadata (dict): Additional metadata keys. Ignored unless
-            include_metadata is True. The keys 'meta', 'title', and 'created'
+            metadata_format is True. The keys 'meta', 'title', and 'created'
             will overwrite the generated values for those keys.
 
     Returns:
@@ -31,7 +31,7 @@ def listing(characters, outstream, *, include_metadata=False, metadata=None, **k
     if not metadata:
         metadata = {}
 
-    if include_metadata:
+    if metadata_format:
         meta = {'meta': True, **metadata}
         characters = [meta] + characters
 

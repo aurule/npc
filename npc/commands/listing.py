@@ -90,7 +90,7 @@ def make_list(*search, ignore=None, fmt=None, metadata=None, title=None, outfile
         response = formatter(
             characters,
             outstream,
-            include_metadata=metadata_type,
+            metadata_format=metadata_type,
             metadata=meta,
             prefs=prefs,
             sectioners=sectioners,
