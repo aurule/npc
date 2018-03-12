@@ -231,7 +231,9 @@ Options:
 * `--title`: Override just the title from the metadata.
 * `--outfile`: Path where the output should go. If omitted (or you pass `-`), the output will go to stdout for chaining to another command.
 * `--sort_by`: Sort characters by these tag names before creating the listing. Separate multiple tags with a comma, and use `-tag` for a reverse sort on that tag.
+* `--headings`: Add section headings for these tags. This defaults to the tags in `sort_by`, but you can override it to make headings for any tags. It's best that the tags are a subset of `sort_by`, since otherwise you'll have repeat headings everywhere. Not supported by the `json` format.
 * `--no_sort`: Suppress sorting entirely.
+* `--partial`: Force the output to contain only body content, with no headers *or* footers. Not supported by the `json` format.
 
 ## Dump Raw NPC Data
 
