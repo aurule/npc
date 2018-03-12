@@ -19,6 +19,8 @@ Werewolves are supported! Along with the tags, character sheet, and templates fo
 * Settings files now ignore trailing commas
 * Sort character listings and dumps by any tag or set of tags, each in ascending or descending order. You'll have to update your settings files to use the new `sort_by` format.
 * Sort by type-dependent tags
+* Configurable list headings for character tags.
+* Set the base heading level in settings.
 * Turn off sorting for character listings altogether using `--no_sort`
 * Force listing to contain only body content using `--partial`
 
