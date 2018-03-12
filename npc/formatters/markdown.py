@@ -4,7 +4,6 @@ Markdown formatter for creating a page of characters.
 
 import tempfile
 from mako.template import Template
-from operator import attrgetter
 
 import npc
 from npc import settings
@@ -13,7 +12,7 @@ from npc.util import result
 SUPPORTED_METADATA_TYPES = ['yaml', 'yfm', 'multimarkdown', 'mmd']
 """Recognized metadata type names"""
 
-def listing(characters, outstream, *, metadata_format=None, metadata=None, partial=False, **kwargs):
+def listing(characters, outstream, *, metadata=None, partial=False, **kwargs):
     """
     Create a markdown character listing
 
@@ -43,58 +42,19 @@ def listing(characters, outstream, *, metadata_format=None, metadata=None, parti
         A util.Result object. Openable will not be set.
     """
     prefs = kwargs.get('prefs', settings.InternalSettings())
-    if not metadata:
+    if metadata is None:
         metadata = {}
-    sectioners = kwargs.get('sectioners', [])
-    update_progress = kwargs.get('progress', lambda i, t: False)
 
-    if sectioners:
-        character_header_level = max(s.heading_level for s in sectioners) + 1
-    else:
-        character_header_level = 1
+    renderer = npc.formatters.MarkdownFormatter(
+        metadata=metadata,
+        sectioners=kwargs.get('sectioners', []),
+        update_progress=kwargs.get('update_progress', lambda i, t: False),
+        partial=partial,
+        metadata_format=kwargs.get('metadata_format'),
+        prefs=prefs
+    )
 
-    if not partial:
-        if metadata_format:
-            # coerce to canonical form
-            if metadata_format == "yaml":
-                metadata_format = "yfm"
-            elif metadata_format == "multimarkdown":
-                metadata_format = 'mmd'
-
-            # load and render template
-            header_file = prefs.get("listing.templates.markdown.header.{}".format(metadata_format))
-            if not header_file:
-                return result.OptionError(errmsg="Unrecognized metadata format '{}'".format(metadata_format))
-
-            header_template = Template(filename=header_file)
-            outstream.write(header_template.render_unicode(metadata=metadata))
-
-    with tempfile.TemporaryDirectory() as tempdir:
-        # directly access certain functions for speed
-        _prefs_get = prefs.get
-        _out_write = outstream.write
-
-        total = len(characters)
-        update_progress(0, total)
-        for index, char in enumerate(characters):
-            for sectioner in sectioners:
-                if sectioner.would_change(char):
-                    sectioner.update_text(char)
-                    _out_write(sectioner.render_template('markdown'))
-            body_file = _prefs_get("listing.templates.markdown.character.{}".format(char.type_key))
-            if not body_file:
-                body_file = _prefs_get("listing.templates.markdown.character.default")
-            if not body_file:
-                return result.ConfigError(errmsg="Cannot find default character template for markdown listing")
-
-            body_template = Template(filename=body_file, module_directory=tempdir)
-            _out_write(body_template.render_unicode(character=char, header_level=character_header_level))
-            update_progress(index + 1, total)
-
-    if not partial:
-        footer_template = Template(filename=prefs.get("listing.templates.markdown.footer"))
-        outstream.write(footer_template.render_unicode())
-    return result.Success()
+    return renderer.render(characters, outstream)
 
 def report(tables, outstream, **kwargs):
     """

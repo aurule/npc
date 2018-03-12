@@ -98,7 +98,7 @@ def make_list(*search, ignore=None, fmt=None, metadata=None, title=None, outfile
             prefs=prefs,
             sectioners=sectioners,
             partial=partial,
-            progress=update_progress)
+            update_progress=update_progress)
 
     # pass errors straight through
     if not response.success:

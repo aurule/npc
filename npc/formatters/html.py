@@ -2,11 +2,8 @@
 HTML formatter for creating a page of characters.
 """
 
-import html
 import tempfile
-from markdown import Markdown
 from mako.template import Template
-from operator import attrgetter
 
 import npc
 from npc import settings
@@ -47,66 +44,20 @@ def listing(characters, outstream, *, metadata=None, partial=False, **kwargs):
         A util.Result object. Openable will not be set.
     """
     prefs = kwargs.get('prefs', settings.InternalSettings())
-    metadata_format = kwargs.get('metadata_format', 'plain')
-    encoding = kwargs.get('encoding', prefs.get('listing.html_encoding'))
-    if not metadata:
+    if metadata is None:
         metadata = {}
-    sectioners = kwargs.get('sectioners', [])
-    update_progress = kwargs.get('progress', lambda i, t: False)
 
-    if sectioners:
-        character_header_level = max(s.heading_level for s in sectioners) + 1
-    else:
-        character_header_level = 1
+    renderer = npc.formatters.HtmlFormatter(
+        metadata=metadata,
+        sectioners=kwargs.get('sectioners', []),
+        update_progress=kwargs.get('update_progress', lambda i, t: False),
+        partial=partial,
+        metadata_format=kwargs.get('metadata_format'),
+        encoding=kwargs.get('encoding', prefs.get('listing.html_encoding')),
+        prefs=prefs
+    )
 
-    encoding_options = {
-        'output_encoding': encoding,
-        'encoding_errors': 'xmlcharrefreplace'
-    }
-
-    if not partial:
-        # load and render template
-        header_file = prefs.get("listing.templates.html.header.{}".format(metadata_format))
-        if not header_file:
-            return result.OptionError(errmsg="Unrecognized metadata format option '{}'".format(metadata_format))
-
-        header_template = Template(filename=header_file, **encoding_options)
-        outstream.write(header_template.render(encoding=encoding, metadata=metadata))
-
-    with tempfile.TemporaryDirectory() as tempdir:
-        md_converter = Markdown(extensions=['markdown.extensions.smarty'])
-
-        # directly access certain functions for speed
-        _clean_conv = md_converter.reset
-        _prefs_get = prefs.get
-        _out_write = outstream.write
-
-        total = len(characters)
-        update_progress(0, total)
-        for index, char in enumerate(characters):
-            for sectioner in sectioners:
-                if sectioner.would_change(char):
-                    sectioner.update_text(char)
-                    _out_write(sectioner.render_template('html', **encoding_options))
-            body_file = _prefs_get("listing.templates.html.character.{}".format(char.type_key))
-            if not body_file:
-                body_file = _prefs_get("listing.templates.html.character.default")
-            if not body_file:
-                return result.ConfigError(errmsg="Cannot find default character template for html listing")
-
-            body_template = Template(filename=body_file, module_directory=tempdir, **encoding_options)
-            _out_write(
-                body_template.render(
-                    character=char.copy_and_alter(html.escape),
-                    header_level=character_header_level,
-                    mdconv=_clean_conv().convert
-                    ))
-            update_progress(index + 1, total)
-
-    if not partial:
-        footer_template = Template(filename=prefs.get("listing.templates.html.footer"), **encoding_options)
-        outstream.write(footer_template.render())
-    return result.Success()
+    return renderer.render(characters, outstream)
 
 def report(tables, outstream, **kwargs):
     """

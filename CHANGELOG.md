@@ -29,6 +29,7 @@ Werewolves are supported! Along with the tags, character sheet, and templates fo
 * Ignored paths can now be specified for each command separately, in addition to universal ignored paths. You'll have to change your settings files to use the new `ignore` section format.
 * The `list` command's `--sort` argument is renamed `--sort_by`.
 * The `include_metadata` argument to formatters is now `metadata_format`.
+* Refactored the listing renderers into objects
 
 ### Fixed
 
