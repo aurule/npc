@@ -54,10 +54,10 @@ def listing(characters, outstream, *, include_metadata=None, metadata=None, part
     sectioners = kwargs.get('sectioners', [])
     update_progress = kwargs.get('progress', lambda i, t: False)
 
-    if not len(sectioners):
-        character_header_level = 1
+    if sectioners:
+        character_header_level = max(s.heading_level for s in sectioners) + 1
     else:
-        character_header_level = max(sectioners, key=attrgetter('heading_level')).header_level + 1
+        character_header_level = 1
 
     encoding_options = {
         'output_encoding': encoding,
