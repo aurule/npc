@@ -4,6 +4,7 @@ Markdown formatter for creating a page of characters.
 
 import tempfile
 from mako.template import Template
+from operator import attrgetter
 
 import npc
 from npc import settings
@@ -47,7 +48,10 @@ def listing(characters, outstream, *, include_metadata=None, metadata=None, part
     sectioners = kwargs.get('sectioners', [])
     update_progress = kwargs.get('progress', lambda i, t: False)
 
-    character_header_level = len(sectioners) + 1
+    if not len(sectioners):
+        character_header_level = 1
+    else:
+        character_header_level = max(sectioners, key=attrgetter('heading_level')).heading_level + 1
 
     if not partial:
         if include_metadata:

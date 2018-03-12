@@ -7,6 +7,7 @@ import tempfile
 from markdown import Markdown
 from mako.template import Template
 from .. import util, settings
+from operator import attrgetter
 
 SUPPORTED_METADATA_TYPES = ['meta']
 """Recognized metadata type names"""
@@ -50,7 +51,10 @@ def listing(characters, outstream, *, include_metadata=None, metadata=None, part
     sectioners = kwargs.get('sectioners', [])
     update_progress = kwargs.get('progress', lambda i, t: False)
 
-    character_header_level = len(sectioners) + 1
+    if not len(sectioners):
+        character_header_level = 1
+    else:
+        character_header_level = max(sectioners, key=attrgetter('heading_level')).header_level + 1
 
     encoding_options = {
         'output_encoding': encoding,
