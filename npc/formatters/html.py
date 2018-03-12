@@ -6,8 +6,11 @@ import html
 import tempfile
 from markdown import Markdown
 from mako.template import Template
-from .. import util, settings
 from operator import attrgetter
+
+import npc
+from npc import settings
+from npc.util import result
 
 SUPPORTED_METADATA_TYPES = ['meta']
 """Recognized metadata type names"""
@@ -66,7 +69,7 @@ def listing(characters, outstream, *, include_metadata=None, metadata=None, part
             # load and render template
             header_file = prefs.get("listing.templates.html.header.{}".format(include_metadata))
             if not header_file:
-                return util.result.OptionError(errmsg="Unrecognized metadata format option '{}'".format(include_metadata))
+                return result.OptionError(errmsg="Unrecognized metadata format option '{}'".format(include_metadata))
 
             header_template = Template(filename=header_file, **encoding_options)
             outstream.write(header_template.render(encoding=encoding, metadata=metadata))
@@ -104,7 +107,7 @@ def listing(characters, outstream, *, include_metadata=None, metadata=None, part
     if not partial:
         footer_template = Template(filename=prefs.get("listing.templates.html.footer"), **encoding_options)
         outstream.write(footer_template.render())
-    return util.result.Success()
+    return result.Success()
 
 def report(tables, outstream, **kwargs):
     """
@@ -140,4 +143,4 @@ def report(tables, outstream, **kwargs):
         for key, table in tables.items():
             outstream.write(table_template.render(data=table, tag=key))
 
-    return util.result.Success()
+    return result.Success()
