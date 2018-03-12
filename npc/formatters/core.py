@@ -187,6 +187,26 @@ class MarkdownFormatter(TemplateFormatter):
 
         Manipulates the `metadata_format` to allow additional values than are
         defined in the settings.
+
+        Args:
+            metadata (dict): Additional metadata to insert. Ignored unless
+                metadata_format is set. The keys 'title', and 'created' will
+                overwrite the generated values for those keys.
+            metadata_format (string|None): Whether to include metadata, and what
+                format to use. Accepts a value of 'meta'. Metadata will always
+                contain a title and creation date, if included.
+            sectioners (List[Sectioner]): List of sectioner objects that create
+                section headings for each character. Omit to have no section
+                headings.
+            partial (bool): Whether to produce partial output by omitting the
+                head and other tags. Only the content of the body is created.
+                Does not allow metadata to be included, so the metadata_format
+                and metadata args are ignored.
+            update_progress (function): Callback function to track the progress of
+                generating a listing. Must accept the current count and total count.
+                Should print to stderr.
+            prefs (Settings): Settings object. Used to get the location of
+                template files.
         """
         super().__init__(**kwargs)
 
@@ -207,6 +227,24 @@ class HtmlFormatter(TemplateFormatter):
         Create an html formatter
 
         Args:
+            metadata (dict): Additional metadata to insert. Ignored unless
+                metadata_format is set. The keys 'title', and 'created' will
+                overwrite the generated values for those keys.
+            metadata_format (string|None): Whether to include metadata, and what
+                format to use. Accepts a value of 'meta'. Metadata will always
+                contain a title and creation date, if included.
+            sectioners (List[Sectioner]): List of sectioner objects that create
+                section headings for each character. Omit to have no section
+                headings.
+            partial (bool): Whether to produce partial output by omitting the
+                head and other tags. Only the content of the body is created.
+                Does not allow metadata to be included, so the metadata_format
+                and metadata args are ignored.
+            update_progress (function): Callback function to track the progress of
+                generating a listing. Must accept the current count and total count.
+                Should print to stderr.
+            prefs (Settings): Settings object. Used to get the location of
+                template files.
             encoding (string): Encoding format of the output text. Overrides the
                 value in settings.
         """
