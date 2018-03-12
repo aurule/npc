@@ -15,7 +15,7 @@ from npc.util import result
 SUPPORTED_METADATA_TYPES = ['meta']
 """Recognized metadata type names"""
 
-def listing(characters, outstream, *, include_metadata=None, metadata=None, partial=False, **kwargs):
+def listing(characters, outstream, *, metadata=None, partial=False, **kwargs):
     """
     Create an html character listing
 
@@ -23,23 +23,22 @@ def listing(characters, outstream, *, include_metadata=None, metadata=None, part
         characters (list): Character info dicts to show
         outstream (stream): Output stream
         include_metadata (string|None): Whether to include metadata, and what
-            format to use. Accepts values of 'mmd', 'yaml', or 'yfm'. Metadata
-            will always include a title and creation date.
+            format to use. Accepts a value of 'meta'. Metadata will always
+            contain a title and creation date, if included.
         metadata (dict): Additional metadata to insert. Ignored unless
             include_metadata is set. The keys 'title', and 'created' will
             overwrite the generated values for those keys.
-        prefs (Settings): Settings object. Used to get the location of template
-            files.
         partial (bool): Whether to produce partial output by omitting the head
             and other tags. Only the content of the body tag is created.
-            Does not allow metadata to be included, the include_metadata and
+            Does not allow metadata to be included, so the include_metadata and
             metadata args are ignored.
+        prefs (Settings): Settings object. Used to get the location of template
+            files.
         encoding (string): Encoding format of the output text. Overrides the
             value in settings.
-        sectioners (List[function]): List of functions that return a section
-            heading for each character. When its return value changes, the
-            section template is rendered with the new title. Omit to suppress
-            sections.
+        sectioners (List[Sectioner]): List of sectioner objects that create
+            section headings for each character. Omit to have no section
+            headings.
         progress (function): Callback function to track the progress of
             generating a listing. Must accept the current count and total count.
             Should print to stderr.
