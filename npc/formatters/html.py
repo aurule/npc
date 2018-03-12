@@ -48,6 +48,7 @@ def listing(characters, outstream, *, include_metadata=None, metadata=None, part
         A util.Result object. Openable will not be set.
     """
     prefs = kwargs.get('prefs', settings.InternalSettings())
+    metadata_format = kwargs.get('include_metadata', 'plain')
     encoding = kwargs.get('encoding', prefs.get('listing.html_encoding'))
     if not metadata:
         metadata = {}
@@ -65,17 +66,13 @@ def listing(characters, outstream, *, include_metadata=None, metadata=None, part
     }
 
     if not partial:
-        if include_metadata:
-            # load and render template
-            header_file = prefs.get("listing.templates.html.header.{}".format(include_metadata))
-            if not header_file:
-                return result.OptionError(errmsg="Unrecognized metadata format option '{}'".format(include_metadata))
+        # load and render template
+        header_file = prefs.get("listing.templates.html.header.{}".format(metadata_format))
+        if not header_file:
+            return result.OptionError(errmsg="Unrecognized metadata format option '{}'".format(metadata_format))
 
-            header_template = Template(filename=header_file, **encoding_options)
-            outstream.write(header_template.render(encoding=encoding, metadata=metadata))
-        else:
-            header_template = Template(filename=prefs.get("listing.templates.html.header.plain"), **encoding_options)
-            outstream.write(header_template.render(encoding=encoding))
+        header_template = Template(filename=header_file, **encoding_options)
+        outstream.write(header_template.render(encoding=encoding, metadata=metadata))
 
     with tempfile.TemporaryDirectory() as tempdir:
         md_converter = Markdown(extensions=['markdown.extensions.smarty'])

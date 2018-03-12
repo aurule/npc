@@ -1,4 +1,4 @@
-<%page args="encoding"/>\
+<%page args="metadata, encoding"/>\
 <!DOCTYPE html>
 <html>
 <head>
