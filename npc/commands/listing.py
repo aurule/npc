@@ -37,6 +37,8 @@ def make_list(*search, ignore=None, fmt=None, metadata=None, title=None, outfile
         sort_by (string|None): Sort order for characters. Defaults to the value of
             "list_sort" in settings.
         headings (List[string]): List of tag names to group characters by
+        partial (bool): Whether to omit headers and footers and just render body
+            content. Defaults to false.
         prefs (Settings): Settings object to use. Uses internal settings by
             default.
         progress (function): Callback function to track the progress of
@@ -53,6 +55,7 @@ def make_list(*search, ignore=None, fmt=None, metadata=None, title=None, outfile
     do_sort = kwargs.get('do_sort', True)
     sort_order = kwargs.get('sort_by', prefs.get('listing.sort_by')) if do_sort else []
     headings = kwargs.get('headings', sort_order) if do_sort else []
+    partial = kwargs.get('partial', False)
     update_progress = kwargs.get('progress', lambda i, t: False)
 
     characters = _process_directives(parser.get_characters(flatten(search), ignore))
@@ -94,6 +97,7 @@ def make_list(*search, ignore=None, fmt=None, metadata=None, title=None, outfile
             metadata=meta,
             prefs=prefs,
             sectioners=sectioners,
+            partial=partial,
             progress=update_progress)
 
     # pass errors straight through

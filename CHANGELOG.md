@@ -20,6 +20,7 @@ Werewolves are supported! Along with the tags, character sheet, and templates fo
 * Sort character listings and dumps by any tag or set of tags, each in ascending or descending order. You'll have to update your settings files to use the new `sort_by` format.
 * Sort by type-dependent tags
 * Turn off sorting for character listings altogether using `--no_sort`
+* Force listing to contain only body content using `--partial`
 
 ### Changed
 
