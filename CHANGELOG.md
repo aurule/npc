@@ -8,6 +8,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 Werewolves are supported! Along with the tags, character sheet, and templates for that, there are a few other neat features.
 
+* Werewolf characters
 * Default tag values for new characters
 * Separate ignored paths for each command (requires settings change)
 * Better character sorting (requires settings change)
