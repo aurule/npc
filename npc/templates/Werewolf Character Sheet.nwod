@@ -66,15 +66,15 @@ skills
     subterfuge      0
 
 gifts
-    title/purpose
+    gift •
         description
 
-rituals
-    title/purpose
+rites
+    rite •
         description
 
 merits
-    blah •
+    merit •
         description
 
 attacks
