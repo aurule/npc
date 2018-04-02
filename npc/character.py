@@ -22,6 +22,7 @@ class Character(defaultdict):
 
     GROUP_TAGS = (
         'court', 'motley', 'entitlement', # changeling
+        'pack', 'tribe', 'lodge',         # werewolf
         'group')                          # universal
     """tuple (str): Group-like tags. These all accept an accompanying `rank`
         tag."""
@@ -479,6 +480,11 @@ class Character(defaultdict):
                     lines.append("@seeming {}".format(self.get_first('seeming')))
                 if 'kith' in self:
                     lines.append("@kith {}".format(self.get_first('kith')))
+        elif self.type_key == 'werewolf':
+            if 'auspice' in self:
+                lines.append("@werewolf {}".format(self.get_first('auspice')))
+            else:
+                lines.append("@type Werewolf")
         else:
             lines.append("@type {}".format(self.get_first('type')))
 
@@ -488,7 +494,9 @@ class Character(defaultdict):
         tags_or_flag('foreign')
         tags_for_all('location')
         add_flag('wanderer')
+
         tags_for_all('freehold')
+
         for tagname in self.GROUP_TAGS:
             for groupname in self[tagname]:
                 lines.append("@{} {}".format(tagname, groupname))
