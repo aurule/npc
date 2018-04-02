@@ -137,6 +137,53 @@ def changeling(name, seeming, kith, *,
 
     return _cp_template_for_char(name, temp_char, prefs, fn=_insert_sk_data)
 
+def werewolf(name, auspice, *, tribe=None, pack=None, **kwargs):
+    """
+    Create a Werewolf character.
+
+    Args:
+        name (str): Base file name
+        auspice (str): Name of the character's Auspice.
+        tribe (str): Name of the character's Tribe. Leave empty for Ghost Wolves.
+        pack (str): name of the character's pack.
+        dead (bool|str): Whether to add the @dead tag. Pass False to exclude it
+            (the default), an empty string to inlcude it with no details given,
+            and a non-empty string to include the tag along with the contents of
+            the argument.
+        foreign (bool|str): Details of non-standard residence. Leave empty to
+            exclude the @foreign tag.
+        location (str): Details about where the character lives. Leave empty to
+            exclude the @location tag.
+        groups (list): One or more names of groups the character belongs to.
+            Used to derive path.
+        prefs (Settings): Settings object to use. Uses internal settings by
+            default.
+
+    Returns:
+        Result object. Openable will contain the path to the new character file.
+    """
+    prefs = kwargs.get('prefs', settings.InternalSettings())
+    groups = kwargs.get('groups', [])
+    location = kwargs.get('location', None)
+    dead = kwargs.get('dead', False)
+    foreign = kwargs.get('foreign', False)
+
+    # build minimal Character
+    temp_char = _minimal_character(
+        ctype='werewolf',
+        groups=groups,
+        dead=dead,
+        foreign=foreign,
+        location=location,
+        prefs=prefs)
+    temp_char.append('auspice', auspice.title())
+    if tribe:
+        temp_char.append('tribe', tribe.title())
+    if pack:
+        temp_char.append('pack', pack)
+
+    return _cp_template_for_char(name, temp_char, prefs)
+
 def _minimal_character(ctype: str, groups, dead, foreign, location, prefs):
     """
     Create a minimal character object
