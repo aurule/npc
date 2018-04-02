@@ -156,6 +156,12 @@
             "missing_values": {
                 "tribe": "Ghost Wolves"
             }
+        },
+
+        // Settings for spirit characters
+        "spirit": {
+            "type_path": "Spirits",
+            "sheet_template": "templates/Spirit Character Sheet.nwod"
         }
     },
 

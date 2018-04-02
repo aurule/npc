@@ -49,7 +49,7 @@ def test_singleton_settings():
 
 def test_available_types(prefs):
     names = prefs.get_available_types()
-    assert set(names) == set(['human', 'fetch', 'changeling', 'goblin', 'werewolf'])
+    assert set(names) == set(['human', 'fetch', 'changeling', 'goblin', 'werewolf', 'spirit'])
 
 def test_update_key(prefs):
     prefs.update_key('paths.required.characters', 'nothing here')

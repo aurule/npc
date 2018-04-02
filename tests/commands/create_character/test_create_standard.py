@@ -7,7 +7,7 @@ def test_missing_template(campaign):
     assert not result.success
     assert result.errcode == 1
 
-@pytest.mark.parametrize('chartype', ['human', 'fetch', 'goblin'])
+@pytest.mark.parametrize('chartype', ['human', 'fetch', 'goblin', 'spirit'])
 def test_creates_character(campaign, chartype):
     result = npc.commands.create_character.standard('testmann', chartype)
     character = campaign.get_character('testmann.nwod')
