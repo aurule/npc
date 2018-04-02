@@ -88,15 +88,6 @@ def changeling(name, seeming, kith, *,
     groups = kwargs.get('groups', [])
     location = kwargs.get('location', None)
 
-    seeming_re = re.compile(
-        r'^(\s+)seeming(\s+)\w+$',
-        re.MULTILINE | re.IGNORECASE
-    )
-    kith_re = re.compile(
-        r'^(\s+)kith(\s+)\w+$',
-        re.MULTILINE | re.IGNORECASE
-    )
-
     # build minimal Character
     temp_char = _minimal_character(
         ctype='changeling',
@@ -114,6 +105,16 @@ def changeling(name, seeming, kith, *,
 
     def _insert_sk_data(data):
         """Insert seeming and kith in the advantages block of a template"""
+
+        seeming_re = re.compile(
+            r'^(\s+)seeming(\s+)\w+$',
+            re.MULTILINE | re.IGNORECASE
+        )
+        kith_re = re.compile(
+            r'^(\s+)kith(\s+)\w+$',
+            re.MULTILINE | re.IGNORECASE
+        )
+
         seeming_name = temp_char.get_first('seeming')
         seeming_key = seeming.lower()
         if seeming_key in prefs.get('changeling.seemings'):
