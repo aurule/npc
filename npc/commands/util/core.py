@@ -116,7 +116,7 @@ def create_path_from_character(character: Character, *, base_path=None, hierarch
 
         if '?' in component:
             tag_name, literal = component.split('?')
-            tag_name = util.translate_tag_for_character_type(character.type_key, tag_name, prefs=prefs)
+            tag_name = prefs.translate_tag_for_character_type(character.type_key, tag_name)
             if tag_name == 'foreign':
                 # "foreign?" gets special handling to check the wanderer tag as well
                 if character.foreign:
@@ -125,7 +125,7 @@ def create_path_from_character(character: Character, *, base_path=None, hierarch
                 target_path = add_path_if_exists(target_path, literal)
             continue
 
-        tag_name = util.translate_tag_for_character_type(character.type_key, component, prefs=prefs)
+        tag_name = prefs.translate_tag_for_character_type(character.type_key, component)
         if tag_name == 'type':
             # get the translated type path for the character's type
             target_path = add_path_if_exists(target_path, prefs.get('types.{}.type_path'.format(character.type_key), placeholder('type')))

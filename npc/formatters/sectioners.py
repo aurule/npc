@@ -171,7 +171,7 @@ class TagSectioner(BaseSectioner):
         Returns:
             First value for our tag in the passed character.
         """
-        tag = util.translate_tag_for_character_type(character.type_key, self.tag_name, self.prefs)
+        tag = self.prefs.translate_tag_for_character_type(character.type_key, self.tag_name)
         return character.get_first(tag, None)
 
 class LastInitialSectioner(BaseSectioner):

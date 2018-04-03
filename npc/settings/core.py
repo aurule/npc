@@ -332,6 +332,22 @@ class Settings:
         global_ignores = self.get('paths.ignore.always', [])
         return command_ignores + global_ignores
 
+    def translate_tag_for_character_type(self, char_type, tag_name):
+        """
+        Translate a type-dependent tag into the corresponding tag for the
+        character's type.
+
+        Args:
+            type (string): Type to use
+            tag_name (string): Name of the tag to translate
+        """
+        return self.get(
+            'types.{char_type}.tag_names.{tag_name}'.format(
+                char_type=char_type,
+                tag_name=tag_name),
+            tag_name)
+
+
 class InternalSettings(Settings, metaclass=util.Singleton):
     """
     Singleton settings class.

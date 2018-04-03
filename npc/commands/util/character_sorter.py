@@ -57,7 +57,7 @@ class CharacterSorter:
     def generic_get(self, tag_name):
         def _get(character, tag_name=tag_name):
             if self.prefs is not None:
-                tag_name = util.translate_tag_for_character_type(character.type_key, tag_name, prefs=self.prefs)
+                tag_name = self.prefs.translate_tag_for_character_type(character.type_key, tag_name)
             return character.get_first(tag_name)
         return _get
 

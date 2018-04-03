@@ -200,19 +200,3 @@ def listify_args(*argnames, **full_args):
         if argname in full_args and full_args[argname] is not None:
             full_args[argname] = [s.strip() for s in full_args[argname].split(',')]
     return full_args
-
-def translate_tag_for_character_type(char_type, tag_name, prefs=None):
-    """
-    Translate a type-dependent tag into the corresponding tag for the
-    character's type.
-
-    Args:
-        type (string): Type to use
-        tag_name (string): Name of the tag to translate
-        prefs (Settings): Settings object containing type data
-    """
-    return prefs.get(
-        'types.{char_type}.tag_names.{tag_name}'.format(
-            char_type=char_type,
-            tag_name=tag_name),
-        tag_name)
