@@ -42,6 +42,10 @@ def create_changeling(kwargs):
     serial_args, keyword_args = util.serialize_args('name', 'seeming', 'kith', **kwargs)
     return commands.create_character.changeling(*serial_args, **keyword_args)
 
+def create_werewolf(kwargs):
+    serial_args, keyword_args = util.serialize_args('name', 'auspice', **kwargs)
+    return commands.create_character.werewolf(*serial_args, **keyword_args)
+
 def make_list(kwargs):
     serial_args, keyword_args = util.serialize_args('search', **kwargs)
     keyword_args = util.listify_args('sort_by', 'group_by')
