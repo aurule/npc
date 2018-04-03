@@ -90,3 +90,36 @@ class TestMergeDicts:
         util.merge_to_dict(base_dict, 'test', 'four')
 
         assert base_dict['test'] == [1, 2, 3, 'four']
+
+class SingletonClass(metaclass=util.Singleton):
+    def __init__(self, word):
+        self.word = word
+
+    def get_a_thing(self):
+        return self.word
+
+class TestSingleton:
+    def test_creates_one_instance(self):
+        obj1 = SingletonClass('hello')
+        obj2 = SingletonClass('goodbye')
+        assert obj1.get_a_thing() == 'hello'
+        assert obj2.get_a_thing() == 'hello'
+
+class TestSerializeArgs:
+    def test_creates_list_of_serial_args(self):
+        serial, full = util.serialize_args('first', 'second', **{'first': '1', 'second': '2', 'third': '3'})
+        assert serial == ['1', '2']
+
+    def test_removes_serial_args_from_dict(self):
+        serial, full = util.serialize_args('first', 'second', **{'first': '1', 'second': '2', 'third': '3'})
+        assert full == {'third': '3'}
+
+class TestListifyArgs:
+    def test_modifies_named_strings(self):
+        args = util.listify_args('list', **{'list': '1, 2, 3', 'not_list': 'hammer, spanner, prybar'})
+        assert args['list'] == ['1', '2', '3']
+        assert args['not_list'] == 'hammer, spanner, prybar'
+
+    def test_skips_none(self):
+        args = util.listify_args('list', **{'list': None, 'not_list': 'hammer, spanner, prybar'})
+        assert args['list'] is None
