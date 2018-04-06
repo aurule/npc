@@ -91,10 +91,6 @@ def lint(character, fix=False, *, strict=False, sk_data=None):
             print(sk_data['kiths'].values())
             problems.append("Unrecognized @kith '{}'".format(kith_name))
 
-    # Max of one entitlement
-    if 'entitlement' in character and character.has_items('entitlement', 2):
-        problems.append("Too many entitlements")
-
     # If the character has no sheet, we're done
     if not character.has_path:
         return problems
