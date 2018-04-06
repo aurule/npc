@@ -25,7 +25,8 @@ def test_required_tag_empty(tag):
 
 only_one = [
     ('tribe', ['blood talons', 'hunters in darkness']),
-    ('pack', ['townies', 'hillbillies'])
+    ('pack', ['townies', 'hillbillies']),
+    ('lodge', ['some dudes', 'some other dudes'])
 ]
 @pytest.mark.parametrize('key, values', only_one)
 def test_single_tags(key, values):

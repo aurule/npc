@@ -396,6 +396,7 @@ class Character(defaultdict):
         self.validate_tag_present_and_filled('auspice')
         self.validate_tag_appears_once('tribe')
         self.validate_tag_appears_once('pack')
+        self.validate_tag_appears_once('lodge')
 
     def has_items(self, key, threshold=1):
         """
