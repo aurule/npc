@@ -352,6 +352,8 @@ class Character(defaultdict):
 
         if self.type_key == "changeling":
             self._validate_changeling(strict=strict)
+        if self.type_key == 'werewolf':
+            self._validate_werewolf(strict=strict)
 
         return self.valid
 
@@ -380,6 +382,20 @@ class Character(defaultdict):
         self.validate_tag_appears_once('court')
         self.validate_tag_appears_once('motley')
         self.validate_tag_appears_once('entitlement')
+
+    def _validate_werewolf(self, strict=False):
+        """
+        Validate the basics of a werewolf character
+
+        Validations:
+        * Auspice is present
+        * Zero or one tribe
+        * Zero or one pack
+        """
+
+        self.validate_tag_present_and_filled('auspice')
+        self.validate_tag_appears_once('tribe')
+        self.validate_tag_appears_once('pack')
 
     def has_items(self, key, threshold=1):
         """
