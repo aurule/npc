@@ -4,7 +4,7 @@
  (${', '.join(character['rank'][group_name])})\
     %endif
 </%def>\
-${"<h{}>".format(header_level)}
+${"<h{}>".format(header_level)}\
 ${character.get_first('name')}\
 %if 'dead' in character:
  (Deceased)\
