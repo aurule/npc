@@ -27,8 +27,9 @@ ${"</h{}>".format(header_level)}
 %if 'wanderer' in character:
 , Wanderer\
 %endif
+
 %if character.has_items('pack'):
-, ${character.get_first('pack')} Pack${make_ranks(character.get_first('pack'))}\
+${character.get_first('pack')} Pack${make_ranks(character.get_first('pack'))}\
 %endif
 %if character.has_items('tribe'):
 , ${character.get_first('tribe')} Tribe${make_ranks(character.get_first('tribe'))}\
