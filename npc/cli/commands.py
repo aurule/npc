@@ -13,6 +13,8 @@ def reorg(kwargs):
 def dump(kwargs):
     serial_args, keyword_args = util.serialize_args('search', **kwargs)
     keyword_args = util.listify_args('sort_by', **keyword_args)
+    if not keyword_args['sort_by']:
+        keyword_args.pop('sort_by')
     return commands.dump(*serial_args, **keyword_args)
 
 def lint(kwargs):
@@ -48,7 +50,11 @@ def create_werewolf(kwargs):
 
 def make_list(kwargs):
     serial_args, keyword_args = util.serialize_args('search', **kwargs)
-    keyword_args = util.listify_args('sort_by', 'group_by', **keyword_args)
+    keyword_args = util.listify_args('sort_by', 'headings', **keyword_args)
+    if not keyword_args['sort_by']:
+        keyword_args.pop('sort_by')
+    if not keyword_args['headings']:
+        keyword_args.pop('headings')
     return commands.listing.make_list(*serial_args, **keyword_args)
 
 def session(kwargs):

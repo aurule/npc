@@ -56,13 +56,8 @@ def make_list(*search, ignore=None, fmt=None, metadata=None, title=None, outfile
     partial = kwargs.get('partial', False)
     update_progress = kwargs.get('progress', lambda i, t: False)
 
-    if do_sort:
-        sort_order = kwargs.get('sort_by')
-        if not sort_order:
-            sort_order = prefs.get('listing.sort_by')
-    else:
-        sort_order = []
-    headings = kwargs.get('headings', sort_order) if do_sort else []
+    sort_order = kwargs.get('sort_by', prefs.get('listing.sort_by')) if do_sort else []
+    headings = kwargs.get('headings', sort_order)
 
     characters = _process_directives(parser.get_characters(flatten(search), ignore))
     if do_sort:
