@@ -274,7 +274,8 @@
                 // template.
                 "character": {
                     "default": "templates/listing/Character.md.mako",
-                    "changeling": "templates/listing/Changeling.md.mako"
+                    "changeling": "templates/listing/Changeling.md.mako",
+                    "werewolf": "templates/listing/Werewolf.md.mako"
                 }
             },
 
@@ -290,7 +291,8 @@
                 },
                 "character": {
                     "default": "templates/listing/Character.html.mako",
-                    "changeling": "templates/listing/Changeling.html.mako"
+                    "changeling": "templates/listing/Changeling.html.mako",
+                    "werewolf": "templates/listing/Werewolf.html.mako"
                 }
             }
         },
