@@ -154,7 +154,8 @@
             },
 
             "missing_values": {
-                "tribe": "Ghost Wolves"
+                "tribe": "Ghost Wolves",
+                "auspice": "Pure"
             }
         },
 
