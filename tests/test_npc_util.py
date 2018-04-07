@@ -123,3 +123,7 @@ class TestListifyArgs:
     def test_skips_none(self):
         args = util.listify_args('list', **{'list': None, 'not_list': 'hammer, spanner, prybar'})
         assert args['list'] is None
+
+    def test_removes_empties(self):
+        args = util.listify_args('list', **{'list': ',', 'not_list': 'hammer, spanner, prybar'})
+        assert args['list'] == []

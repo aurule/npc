@@ -198,5 +198,5 @@ def listify_args(*argnames, **full_args):
     """
     for argname in argnames:
         if argname in full_args and full_args[argname] is not None:
-            full_args[argname] = [s.strip() for s in full_args[argname].split(',')]
+            full_args[argname] = [s.strip() for s in full_args[argname].split(',') if s]
     return full_args
