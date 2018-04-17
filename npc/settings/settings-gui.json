@@ -9,7 +9,7 @@
 {
     "gui": {
         "defaults": {
-            "character_type": "changeling"
+            "character_type": "human"
         }
     }
 }
