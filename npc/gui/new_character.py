@@ -45,6 +45,12 @@ class NewCharacterDialog(QtWidgets.QDialog, Ui_NewCharacterDialog):
         self.deceasedText.textChanged.connect(self.set_deceased)
         self.locName.textChanged.connect(lambda text: self.set_value("location", text))
 
+        self._setup_type_select()
+
+    def _setup_type_select(self):
+        """
+        Populate type selector and set default state
+        """
         for type_key in sorted(self.prefs.get_available_types()):
             item = self.typeSelect.addItem(type_key.title(), userData=type_key)
         default_index = self.typeSelect.findText(self.prefs.get('gui.defaults.character_type').title())

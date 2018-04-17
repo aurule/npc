@@ -25,6 +25,7 @@ Werewolves are supported! Along with the tags, character sheet, and templates fo
 * Set the base heading level in settings.
 * Turn off sorting for character listings altogether using `--no_sort`
 * Force listing to contain only body content using `--partial`
+* New setting for default character type in GUI
 
 ### Changed
 
