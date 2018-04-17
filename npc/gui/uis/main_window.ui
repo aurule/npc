@@ -29,6 +29,9 @@
    <layout class="QVBoxLayout" name="verticalLayout">
     <item>
      <widget class="QLineEdit" name="characterSearch">
+      <property name="toolTip">
+       <string>Type to search instantly</string>
+      </property>
       <property name="placeholderText">
        <string>Search for characters</string>
       </property>
@@ -171,7 +174,7 @@
      <normaloff>:/images/icons/view-refresh.svg</normaloff>:/images/icons/view-refresh.svg</iconset>
    </property>
    <property name="text">
-    <string>&amp;Reload Settings</string>
+    <string>R&amp;eload Settings</string>
    </property>
    <property name="toolTip">
     <string>Reload settings</string>
@@ -196,6 +199,9 @@
    </property>
    <property name="text">
     <string>&amp;New Character...</string>
+   </property>
+   <property name="toolTip">
+    <string>Create a new character</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+N</string>
@@ -232,10 +238,16 @@
    <property name="text">
     <string>Latest &amp;Plot</string>
    </property>
+   <property name="toolTip">
+    <string>Open the latest plot file</string>
+   </property>
   </action>
   <action name="actionLatest_Session">
    <property name="text">
     <string>Latest &amp;Session</string>
+   </property>
+   <property name="toolTip">
+    <string>Open the latest session file</string>
    </property>
   </action>
  </widget>

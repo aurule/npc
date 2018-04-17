@@ -120,6 +120,7 @@ class Ui_MainWindow(object):
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "NPC"))
+        self.characterSearch.setToolTip(_translate("MainWindow", "Type to search instantly"))
         self.characterSearch.setPlaceholderText(_translate("MainWindow", "Search for characters"))
         self.menuFile.setTitle(_translate("MainWindow", "Fi&le"))
         self.menuOpen_Recent_Campaign.setTitle(_translate("MainWindow", "&Recent Campaigns"))
@@ -134,11 +135,12 @@ class Ui_MainWindow(object):
         self.actionOpenCampaign.setShortcut(_translate("MainWindow", "Ctrl+O"))
         self.actionCampaignSettings.setText(_translate("MainWindow", "&Campaign Settings"))
         self.actionCampaignSettings.setToolTip(_translate("MainWindow", "Open campaign settings"))
-        self.actionReloadSettings.setText(_translate("MainWindow", "&Reload Settings"))
+        self.actionReloadSettings.setText(_translate("MainWindow", "R&eload Settings"))
         self.actionReloadSettings.setToolTip(_translate("MainWindow", "Reload settings"))
         self.actionInit.setText(_translate("MainWindow", "Set &Up..."))
         self.actionInit.setToolTip(_translate("MainWindow", "Set up required folders in this campaign"))
         self.actionNew_Character.setText(_translate("MainWindow", "&New Character..."))
+        self.actionNew_Character.setToolTip(_translate("MainWindow", "Create a new character"))
         self.actionNew_Character.setShortcut(_translate("MainWindow", "Ctrl+N"))
         self.actionNew_Session.setText(_translate("MainWindow", "New &Session"))
         self.actionNew_Session.setToolTip(_translate("MainWindow", "Create files for a new game session"))
@@ -146,6 +148,8 @@ class Ui_MainWindow(object):
         self.actionClear_Recent_Campaigns.setText(_translate("MainWindow", "Clear Items"))
         self.actionClear_Recent_Campaigns.setToolTip(_translate("MainWindow", "Clear recent campaigns"))
         self.actionLatest_Plot.setText(_translate("MainWindow", "Latest &Plot"))
+        self.actionLatest_Plot.setToolTip(_translate("MainWindow", "Open the latest plot file"))
         self.actionLatest_Session.setText(_translate("MainWindow", "Latest &Session"))
+        self.actionLatest_Session.setToolTip(_translate("MainWindow", "Open the latest session file"))
 
 from . import images_rc
