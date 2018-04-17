@@ -61,7 +61,12 @@ class Settings:
         self.user_settings_path = path.expanduser('~/.config/npc/')
         self.campaign_settings_path = '.npc/'
 
-        self.settings_files = ['settings.json', 'settings-changeling.json']
+        self.settings_files = [
+            'settings.json',
+            'settings-changeling.json',
+            'settings-werewolf.json',
+            'settings-gui.json'
+        ]
         self.settings_paths = [self.default_settings_path, self.user_settings_path, self.campaign_settings_path]
 
         self.verbose = verbose

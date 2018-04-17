@@ -32,7 +32,6 @@ class NewCharacterDialog(QtWidgets.QDialog, Ui_NewCharacterDialog):
             "foreign": False,
             "location": "",
             "groups": [],
-            "serialize": ['name', 'ctype']
         }
 
         self.setupUi(self)
@@ -46,9 +45,13 @@ class NewCharacterDialog(QtWidgets.QDialog, Ui_NewCharacterDialog):
         self.deceasedText.textChanged.connect(self.set_deceased)
         self.locName.textChanged.connect(lambda text: self.set_value("location", text))
 
-        self.typeSelect.currentIndexChanged.connect(self.update_type_specific_controls)
         for type_key in sorted(self.prefs.get_available_types()):
             item = self.typeSelect.addItem(type_key.title(), userData=type_key)
+        default_index = self.typeSelect.findText(self.prefs.get('gui.defaults.character_type').title())
+        if default_index != -1:
+            self.typeSelect.setCurrentIndex(default_index)
+            self.update_type_specific_controls(default_index)
+        self.typeSelect.currentIndexChanged.connect(self.update_type_specific_controls)
 
     def set_value(self, key, value):
         """
@@ -97,6 +100,8 @@ class NewCharacterDialog(QtWidgets.QDialog, Ui_NewCharacterDialog):
         type_key = self.typeSelect.itemData(index)
         if type_key == 'changeling':
             new_vbox_height_offset = self.create_changeling_controls()
+        elif type_key == 'werewolf':
+            new_vbox_height_offset = self.create_werewolf_controls()
         else:
             self.create_basic_controls()
 
@@ -137,7 +142,6 @@ class NewCharacterDialog(QtWidgets.QDialog, Ui_NewCharacterDialog):
             Zero, since this doesn't create anything
         """
         self.set_value("command", commands.create_standard)
-        self.set_value("serialize", ['name', 'ctype'])
         self.setTabOrder(self.characterName, self.groupName)
         return 0
 
@@ -175,7 +179,35 @@ class NewCharacterDialog(QtWidgets.QDialog, Ui_NewCharacterDialog):
             seeming_select.addItem(seeming.title(), userData=[kith.title() for kith in self.prefs.get('changeling.kiths.{}'.format(seeming))])
 
         self.set_value("command", commands.create_changeling)
-        self.set_value("serialize", ['name', 'seeming', 'kith'])
+
+        return new_vbox_height_offset
+
+    def create_werewolf_controls(self):
+        """
+        Set up the werewolf-specific controls
+
+        Adds the auspice and tribe rows
+        """
+        new_vbox_height_offset = 0
+
+        auspice_select = QtWidgets.QComboBox(self)
+        new_vbox_height_offset += self.new_row(2, '&Auspice', auspice_select)
+        for auspice in self.prefs.get('werewolf.auspices'):
+            auspice_select.addItem(auspice.title())
+        self.setTabOrder(self.characterName, auspice_select)
+
+        tribe_select = QtWidgets.QComboBox(self)
+        new_vbox_height_offset += self.new_row(2, '&Tribe', tribe_select)
+        for tribe in self.prefs.get('werewolf.tribes'):
+            tribe_select.addItem(tribe.title())
+        tribe_select.insertSeparator(tribe_select.count())
+        for tribe in self.prefs.get('werewolf.pure'):
+            tribe_select.addItem(tribe.title())
+        self.setTabOrder(auspice_select, tribe_select)
+        self.setTabOrder(tribe_select, self.groupName)
+
+        auspice_select.currentTextChanged.connect(lambda text: self.set_value('auspice', text))
+        tribe_select.currentTextChanged.connect(lambda text: self.set_value('tribe', text))
 
         return new_vbox_height_offset
 
