@@ -36,6 +36,18 @@ class SettingsLinter:
         """
         self.errors.append("{} {}".format(self.error_prefix, message))
 
+    def add_errors(self, messages):
+        """
+        Add multiple errors to the log
+
+        Adds every element of messages to the internal errors log
+
+        Args:
+            messages (list[string]): List of strings to add as errors
+        """
+        for message in messages:
+            self.add_error(message)
+
     @contextmanager
     def error_section(self, message):
         """

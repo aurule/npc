@@ -50,8 +50,7 @@ class ChangelingSettingsLinter(SettingsLinter):
 
         if not blessings.issuperset(seemings):
             with self.error_section('Seemings must all have a blessing. Seemings without a blessing:'):
-                for seeming_name in seemings.difference(blessings):
-                    self.add_error(seeming_name)
+                self.add_errors(seemings.difference(blessings))
 
     def check_seemings_have_curses(self):
         curses = set(self.prefs.get('changeling.curses', {}).keys())
@@ -59,8 +58,7 @@ class ChangelingSettingsLinter(SettingsLinter):
 
         if not curses.issuperset(seemings):
             with self.error_section('Seemings must all have a curse. Seemings without a curse:'):
-                for seeming_name in seemings.difference(curses):
-                    self.add_error(seeming_name)
+                self.add_errors(seemings.difference(curses))
 
     def check_kiths_have_blessings(self):
         blessings = set(self.prefs.get('changeling.blessings', {}).keys())
@@ -69,5 +67,4 @@ class ChangelingSettingsLinter(SettingsLinter):
 
         if not blessings.issuperset(kiths):
             with self.error_section('Kiths must all have a blessing. Kiths without a blessing:'):
-                for kith_name in kiths.difference(blessings):
-                    self.add_error(kith_name)
+                self.add_errors(kiths.difference(blessings))

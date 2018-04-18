@@ -45,5 +45,4 @@ class WerewolfSettingsLinter(SettingsLinter):
 
         if not moon.isdisjoint(pure):
             with self.error_section('Pure and non-pure tribes must be unique. Shared tribes:'):
-                for tribe_name in moon.intersection(pure):
-                    self.add_error(tribe_name)
+                self.add_errors(moon.intersection(pure))
