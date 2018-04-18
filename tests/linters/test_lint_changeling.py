@@ -129,3 +129,36 @@ class TestStrict:
     def test_with_unseen_sense(self):
         problems = lint_strict('Has Unseen.nwod')
         assert "Changelings cannot have the Unseen Sense merit" in problems
+
+class TestViceAndVirtue:
+    @pytest.mark.parametrize("strict,is_problem", [
+                             (True, False),
+                             (False, False),
+                             ])
+    def test_has_virtue(self, prefs, strict, is_problem):
+        problems = lint_changeling('Has Virtue.nwod', strict=strict)
+        assert ('Missing virtue' in problems) == is_problem
+
+    @pytest.mark.parametrize("strict,is_problem", [
+                             (True, True),
+                             (False, False),
+                             ])
+    def test_missing_virtue(self, prefs, strict, is_problem):
+        problems = lint_changeling('Gotta Nada.nwod', strict=strict)
+        assert ('Missing virtue' in problems) == is_problem
+
+    @pytest.mark.parametrize("strict,is_problem", [
+                             (True, False),
+                             (False, False),
+                             ])
+    def test_has_vice(self, prefs, strict, is_problem):
+        problems = lint_changeling('Has Vice.nwod', strict=strict)
+        assert ('Missing vice' in problems) == is_problem
+
+    @pytest.mark.parametrize("strict,is_problem", [
+                             (True, True),
+                             (False, False),
+                             ])
+    def test_missing_vice(self, prefs, strict, is_problem):
+        problems = lint_changeling('Gotta Nada.nwod', strict=strict)
+        assert ('Missing vice' in problems) == is_problem
