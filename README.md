@@ -338,7 +338,7 @@ To set up the development environment, create and activate a venv and run `bin/s
 * [coverage](https://coverage.readthedocs.io/en/coverage-4.4.1/) 4.4.1
 * [stdeb](https://pypi.python.org/pypi/stdeb) 0.8.5 - optional: only for building debian packages
 
-These can all be installed with `pip -r requirements-dev.txt`.
+These can all be installed with `pip install -r requirements-dev.txt`.
 
 ## Running Tests
 
