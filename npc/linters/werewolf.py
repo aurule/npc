@@ -68,7 +68,9 @@ def lint_tribe(character, prefs):
     tribe = character.get_first('tribe')
     if not tribe:
         return problems
-    if not tribe.lower() in all_tribes:
+
+    tribe_key = tribe.lower()
+    if not tribe_key in all_tribes:
         problems.append("Unrecognized tribe '{}'".format(tribe))
 
     # Get auspice
@@ -76,14 +78,14 @@ def lint_tribe(character, prefs):
 
     if auspice:
         # Pure should not have an auspice
-        if tribe in prefs.get('werewolf.pure'):
-            problems.append('Auspice present, but werewolf is pure')
+        if tribe_key in prefs.get('werewolf.pure'):
+            problems.append('Auspice present, but werewolf is Pure')
         # regardless, auspice must be recognized
         if auspice.lower() not in prefs.get('werewolf.auspices'):
             problems.append("Unrecognized auspice '{}'".format(auspice))
     else:
         # Non-pure must have an auspice
-        if tribe in prefs.get('werewolf.tribes'):
+        if tribe_key in prefs.get('werewolf.tribes'):
             problems.append('Missing auspice')
 
     return problems
