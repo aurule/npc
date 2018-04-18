@@ -51,3 +51,29 @@ class TestViceAndVirtue:
         character = npc.parser.parse_character(char_file)
         problems = npc.linters.werewolf.lint(character, strict=strict, prefs=prefs)
         assert ('Missing vice' in problems) == is_problem
+
+def test_tribe_not_recognized(prefs):
+    char_file = fixture_dir('linter', 'werewolf', 'Bad Tribe.nwod')
+    character = npc.parser.parse_character(char_file)
+    problems = npc.linters.werewolf.lint(character, prefs=prefs)
+    assert "Unrecognized tribe 'Go Pats'" in problems
+
+class TestAuspiceNotPresent:
+    def test_moon_tribe_adds_error(self, prefs):
+        char_file = fixture_dir('linter', 'werewolf', 'No Auspice.nwod')
+        character = npc.parser.parse_character(char_file)
+        problems = npc.linters.werewolf.lint(character, prefs=prefs)
+        assert "Missing auspice" in problems
+
+class TestAuspicePresent:
+    def test_pure_tribe_adds_error(self, prefs):
+        char_file = fixture_dir('linter', 'werewolf', 'Pure with Auspice.nwod')
+        character = npc.parser.parse_character(char_file)
+        problems = npc.linters.werewolf.lint(character, prefs=prefs)
+        assert "Auspice present, but werewolf is Pure" in problems
+
+    def test_pure_tribe_adds_error(self, prefs):
+        char_file = fixture_dir('linter', 'werewolf', 'Bad Auspice.nwod')
+        character = npc.parser.parse_character(char_file)
+        problems = npc.linters.werewolf.lint(character, prefs=prefs)
+        assert "Unrecognized auspice 'Crazy Town'" in problems
