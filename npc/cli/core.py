@@ -51,9 +51,10 @@ def start(argv=None):
         util.error(err.strerror)
         return 4
 
-    changeling_errors = settings.lint_changeling_settings(prefs)
-    if changeling_errors:
-        print("\n".join(changeling_errors))
+    setting_errors = settings.lint_settings(prefs)
+    if setting_errors:
+        print("Error in settings")
+        print("\n".join(setting_errors))
         return 5
 
     # show help when no input was given

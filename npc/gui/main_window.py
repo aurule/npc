@@ -323,10 +323,10 @@ class MainWindow(Ui_MainWindow):
             self._show_error("Could not open settings", err.strerror)
             return
 
-        changeling_errors = settings.lint_changeling_settings(new_prefs)
-        if changeling_errors:
-            message = "\n".join(changeling_errors)
-            self._show_error("Error in changeling settings", message)
+        settings_errors = settings.lint_settings(new_prefs)
+        if settings_errors:
+            message = "\n".join(settings_errors)
+            self._show_error("Error in settings", message)
             return
 
         self.prefs = new_prefs

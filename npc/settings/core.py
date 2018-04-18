@@ -362,6 +362,22 @@ class InternalSettings(Settings, metaclass=util.Singleton):
     """
     pass
 
+def lint_settings(prefs):
+    """
+    Check the correctness of all loaded settings.
+
+    Args:
+        prefs (Settings): Settings object to check
+
+    Returns:
+        A list of string error messages, or an empty list if no errors were
+        found.
+    """
+    changeling_errors = lint_changeling_settings(prefs)
+    werewolf_errors = lint_werewolf_settings(prefs)
+
+    return changeling_errors + werewolf_errors
+
 def lint_changeling_settings(prefs):
     """
     Check correctness of changeling-specific settings.
@@ -389,7 +405,7 @@ def lint_changeling_settings(prefs):
 
     errors = []
     if not ok_result:
-        errors.append("Mismatch in changeling settings:")
+        errors.append("Changeling settings are not correct:")
 
         if not blessing_keys.issuperset(seemings):
             errors.append("* Seemings without blessings:")
@@ -403,5 +419,29 @@ def lint_changeling_settings(prefs):
             errors.append("* Kiths without blessings:")
             for kith in kiths.difference(blessing_keys):
                 errors.append("  - {}".format(kith))
+
+    return errors
+
+def lint_werewolf_settings(prefs):
+    """
+    Check correctness of werewolf-specific settings.
+
+    The only check performed is that a tribe does not appear in both the
+    'tribes' list and the 'pure' list.
+    """
+
+    tribes = set(prefs.get('werewolf.tribes', {}))
+    pure = set(prefs.get('werewolf.pure', {}))
+
+    ok_result = tribes.isdisjoint(pure)
+
+    errors = []
+    if not ok_result:
+        errors.append("Werewolf settings are not correct:")
+
+        if not tribes.isdisjoint(pure):
+            errors.append("* Pure and non-pure tribes must be unique. Shared tribes:")
+            for tribe_name in tribes.union(pure):
+                errors.append("  - {}".format(tribe_name))
 
     return errors
