@@ -388,9 +388,10 @@ class Character(defaultdict):
         Validate the basics of a werewolf character
 
         Validations:
-        * Auspice is present
+        * Zero or one auspice
         * Zero or one tribe
         * Zero or one pack
+        * Zero or one lodge
         """
 
         self.validate_tag_appears_once('auspice')
