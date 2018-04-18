@@ -382,9 +382,10 @@ def lint_changeling_settings(prefs):
     """
     Check correctness of changeling-specific settings.
 
-    To be correct, the changeling settings must have a blessing and curse for
-    every seeming, and a blessing for every kith. Duplicate names between
-    seemings and kiths *are not* reported.
+    These tests are done:
+
+    * Every seeming must have a blessing and a curse
+    * Every kith must have a blessing
 
     Args:
         prefs (Settings): Settings object to check
@@ -430,8 +431,8 @@ def lint_werewolf_settings(prefs):
     'tribes' list and the 'pure' list.
     """
 
-    tribes = set(prefs.get('werewolf.tribes', {}))
-    pure = set(prefs.get('werewolf.pure', {}))
+    tribes = set(prefs.get('werewolf.tribes.moon', {}))
+    pure = set(prefs.get('werewolf.tribes.pure', {}))
 
     ok_result = tribes.isdisjoint(pure)
 
