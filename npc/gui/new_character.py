@@ -204,10 +204,10 @@ class NewCharacterDialog(QtWidgets.QDialog, Ui_NewCharacterDialog):
 
         tribe_select = QtWidgets.QComboBox(self)
         new_vbox_height_offset += self.new_row(2, '&Tribe', tribe_select)
-        for tribe in self.prefs.get('werewolf.tribes'):
+        for tribe in self.prefs.get('werewolf.tribes.moon'):
             tribe_select.addItem(tribe.title())
         tribe_select.insertSeparator(tribe_select.count())
-        for tribe in self.prefs.get('werewolf.pure'):
+        for tribe in self.prefs.get('werewolf.tribes.pure'):
             tribe_select.addItem(tribe.title())
         self.setTabOrder(auspice_select, tribe_select)
         self.setTabOrder(tribe_select, self.groupName)
