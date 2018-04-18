@@ -29,6 +29,7 @@ class ChangelingSettingsLinter(SettingsLinter):
         * Every seeming must have a blessing
         * Every seeming must have a curse
         * Every kith must have a blessing
+        * Each kith appears in a single seeming
 
         Args:
             prefs (Settings): Settings object to lint
@@ -39,6 +40,7 @@ class ChangelingSettingsLinter(SettingsLinter):
         self.check_seemings_have_blessings()
         self.check_seemings_have_curses()
         self.check_kiths_have_blessings()
+        self.check_kiths_have_one_seeming()
 
         if not self.clean:
             self.errors.insert(0, 'Changeling settings are not correct:')
@@ -68,3 +70,17 @@ class ChangelingSettingsLinter(SettingsLinter):
         if not blessings.issuperset(kiths):
             with self.error_section('Kiths must all have a blessing. Kiths without a blessing:'):
                 self.add_errors(kiths.difference(blessings))
+
+    def check_kiths_have_one_seeming(self):
+        kith_sets = [set(kith_group) for kith_group in self.prefs.get('changeling.kiths').values()]
+
+        dupe_kiths = set()
+        while kith_sets:
+            test_set = kith_sets.pop()
+            unique_kiths = test_set.difference(*kith_sets)
+            if test_set != unique_kiths:
+                dupe_kiths = dupe_kiths.union(test_set - unique_kiths)
+
+        if dupe_kiths:
+            with self.error_section('Kiths must belong to one seeming. Kiths with multiple seemings:'):
+                self.add_errors(dupe_kiths)

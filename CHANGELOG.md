@@ -128,6 +128,7 @@ The CLI has a new `find` command which makes it easy to get character files base
     - The changeling settings format now requires that kith names are grouped by seeming
     - Improved formatting for results from the changeling settings linter
     - Metadata blocks now contain the NPC version number
+    - Changeling kiths can only appear under one seeming
 * CLI
     - Moved CLI interface to its own module: `npc.cli`
     - The `--batch` and `--debug` options now live under each command. This means they must go after the command name instead of in front of it.
