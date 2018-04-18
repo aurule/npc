@@ -62,7 +62,7 @@ def lint_tribe(character, prefs):
     Lint tribe and auspice issues
     """
     problems = []
-        all_tribes = prefs.get('werewolf.tribes') + prefs.get('werewolf.pure')
+    all_tribes = prefs.get('werewolf.tribes') + prefs.get('werewolf.pure')
 
     # Make sure tribe is present
     tribe = character.get_first('tribe')
