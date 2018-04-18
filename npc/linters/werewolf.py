@@ -64,8 +64,10 @@ def lint_tribe(character, prefs):
     problems = []
     all_tribes = prefs.get('werewolf.tribes') + prefs.get('werewolf.pure')
 
-    # Make sure tribe is present
+    # Make sure tribe is present and recognized
     tribe = character.get_first('tribe')
+    if not tribe:
+        return problems
     if not tribe.lower() in all_tribes:
         problems.append("Unrecognized tribe '{}'".format(tribe))
         return problems
