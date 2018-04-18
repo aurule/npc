@@ -1,3 +1,5 @@
+"""Tests the helpers for linting generic nwod characters"""
+
 import npc
 import pytest
 import os
