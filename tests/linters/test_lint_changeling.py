@@ -13,8 +13,6 @@ def lint_changeling(filename, **kwargs):
     problems = npc.linters.changeling.lint(character, sk_data=prefs.get('changeling'), **kwargs)
     return '/'.join(problems)
 
-lint_strict = functools.partial(lint_changeling, strict=True)
-
 def test_no_path():
     prefs = npc.settings.Settings()
     character = npc.Character({"type": ['changeling'], "kith": ['nope'], "seeming": ['nope']})
@@ -114,21 +112,37 @@ class TestGoodwill:
         assert "Court goodwill listed for court mantle" in problems
 
 class TestStrict:
-    def test_court_with_mantle(self):
-        problems = lint_strict('Right Mantle.nwod')
-        assert "No mantle for court" not in problems
+    @pytest.mark.parametrize("strict,is_problem", [
+                             (True, False),
+                             (False, False),
+                             ])
+    def test_court_with_mantle(self, strict, is_problem):
+        problems = lint_changeling('Right Mantle.nwod', strict=strict)
+        assert ("No mantle for court" in problems) == is_problem
 
-    def test_court_without_mantle(self):
-        problems = lint_strict('No Mantle.nwod')
-        assert "No mantle for court" in problems
+    @pytest.mark.parametrize("strict,is_problem", [
+                             (True, True),
+                             (False, False),
+                             ])
+    def test_court_without_mantle(self, strict, is_problem):
+        problems = lint_changeling('No Mantle.nwod', strict=strict)
+        assert ("No mantle for court" in problems) == is_problem
 
-    def test_without_unseen_sense(self):
-        problems = lint_strict('No Unseen.nwod')
-        assert "Changelings cannot have the Unseen Sense merit" not in problems
+    @pytest.mark.parametrize("strict,is_problem", [
+                             (True, False),
+                             (False, False),
+                             ])
+    def test_without_unseen_sense(self, strict, is_problem):
+        problems = lint_changeling('No Unseen.nwod', strict=strict)
+        assert ("Changelings cannot have the Unseen Sense merit" in problems) == is_problem
 
-    def test_with_unseen_sense(self):
-        problems = lint_strict('Has Unseen.nwod')
-        assert "Changelings cannot have the Unseen Sense merit" in problems
+    @pytest.mark.parametrize("strict,is_problem", [
+                             (True, True),
+                             (False, False),
+                             ])
+    def test_with_unseen_sense(self, strict, is_problem):
+        problems = lint_changeling('Has Unseen.nwod', strict=strict)
+        assert ("Changelings cannot have the Unseen Sense merit" in problems) == is_problem
 
 class TestViceAndVirtue:
     @pytest.mark.parametrize("strict,is_problem", [
