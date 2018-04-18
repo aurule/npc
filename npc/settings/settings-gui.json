@@ -9,6 +9,7 @@
 {
     "gui": {
         "defaults": {
+            // The default character type to use for the new character dialog
             "character_type": "human"
         }
     }
