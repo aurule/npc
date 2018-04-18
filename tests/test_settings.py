@@ -35,13 +35,6 @@ def test_expanded_paths(prefs):
     prefs.load_more(override_path)
     assert prefs.get('types.changeling.sheet_template') == fixture_dir('settings', 'changeling.nwod')
 
-def test_changeling_linting(prefs):
-    override_path = fixture_dir('settings', 'settings-changeling-mismatch.json')
-    prefs.load_more(override_path)
-    errors = "\n".join(npc.settings.lint_changeling_settings(prefs))
-    assert "bad seeming" in errors
-    assert "bad kith" in errors
-
 def test_singleton_settings():
     prefs1 = npc.settings.InternalSettings()
     prefs2 = npc.settings.InternalSettings()

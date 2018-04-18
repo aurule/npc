@@ -12,6 +12,7 @@ from copy import deepcopy
 
 import npc
 from npc import util
+from npc.linters.settings import lint
 
 class Settings:
     """
@@ -366,26 +367,7 @@ def lint_settings(prefs):
     """
     Check the correctness of all loaded settings.
 
-    Args:
-        prefs (Settings): Settings object to check
-
-    Returns:
-        A list of string error messages, or an empty list if no errors were
-        found.
-    """
-    changeling_errors = lint_changeling_settings(prefs)
-    werewolf_errors = lint_werewolf_settings(prefs)
-
-    return changeling_errors + werewolf_errors
-
-def lint_changeling_settings(prefs):
-    """
-    Check correctness of changeling-specific settings.
-
-    These tests are done:
-
-    * Every seeming must have a blessing and a curse
-    * Every kith must have a blessing
+    Uses the linters.settings package to do the work.
 
     Args:
         prefs (Settings): Settings object to check
@@ -394,55 +376,4 @@ def lint_changeling_settings(prefs):
         A list of string error messages, or an empty list if no errors were
         found.
     """
-    blessing_keys = set(prefs.get('changeling.blessings', {}).keys())
-    curse_keys = set(prefs.get('changeling.curses', {}).keys())
-    seemings = set(prefs.get('changeling.seemings', []))
-    idx_kiths = prefs.get('changeling.kiths', {})
-    kiths = set(util.flatten(idx_kiths.values()))
-
-    ok_result = (blessing_keys.issuperset(seemings) and
-                 curse_keys.issuperset(seemings) and
-                 blessing_keys.issuperset(kiths))
-
-    errors = []
-    if not ok_result:
-        errors.append("Changeling settings are not correct:")
-
-        if not blessing_keys.issuperset(seemings):
-            errors.append("* Seemings without blessings:")
-            for seeming in seemings.difference(blessing_keys):
-                errors.append("  - {}".format(seeming))
-        if not curse_keys.issuperset(seemings):
-            errors.append("* Seemings without curses:")
-            for seeming in seemings.difference(curse_keys):
-                errors.append("  - {}".format(seeming))
-        if not blessing_keys.issuperset(kiths):
-            errors.append("* Kiths without blessings:")
-            for kith in kiths.difference(blessing_keys):
-                errors.append("  - {}".format(kith))
-
-    return errors
-
-def lint_werewolf_settings(prefs):
-    """
-    Check correctness of werewolf-specific settings.
-
-    The only check performed is that a tribe does not appear in both the
-    'tribes' list and the 'pure' list.
-    """
-
-    tribes = set(prefs.get('werewolf.tribes.moon', {}))
-    pure = set(prefs.get('werewolf.tribes.pure', {}))
-
-    ok_result = tribes.isdisjoint(pure)
-
-    errors = []
-    if not ok_result:
-        errors.append("Werewolf settings are not correct:")
-
-        if not tribes.isdisjoint(pure):
-            errors.append("* Pure and non-pure tribes must be unique. Shared tribes:")
-            for tribe_name in tribes.union(pure):
-                errors.append("  - {}".format(tribe_name))
-
-    return errors
+    return lint(prefs)
