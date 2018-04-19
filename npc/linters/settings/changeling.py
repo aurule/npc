@@ -42,7 +42,7 @@ class ChangelingSettingsLinter(SettingsLinter):
         self.check_kiths_have_blessings()
         self.check_kiths_have_one_seeming()
 
-        if not self.clean:
+        if not self.valid:
             self.errors.insert(0, 'Changeling settings are not correct:')
         return self.errors
 

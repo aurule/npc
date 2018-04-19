@@ -35,7 +35,7 @@ class WerewolfSettingsLinter(SettingsLinter):
         """
         self.check_shared_tribes()
 
-        if not self.clean:
+        if not self.valid:
             self.errors.insert(0, 'Werewolf settings are not correct:')
         return self.errors
 

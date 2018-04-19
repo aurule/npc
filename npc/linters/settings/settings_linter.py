@@ -22,7 +22,7 @@ class SettingsLinter:
         raise NotImplementedError
 
     @property
-    def clean(self):
+    def valid(self):
         return not self.errors
 
     def add_error(self, message):
