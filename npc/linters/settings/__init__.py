@@ -3,6 +3,7 @@ Linters for verifying the correctness of a Settings object
 """
 
 from . import changeling, werewolf
+from .settings_linter import SettingsLinter
 
 def lint(prefs):
     """
