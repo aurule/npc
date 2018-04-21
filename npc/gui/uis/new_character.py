@@ -11,7 +11,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 class Ui_NewCharacterDialog(object):
     def setupUi(self, NewCharacterDialog):
         NewCharacterDialog.setObjectName("NewCharacterDialog")
-        NewCharacterDialog.resize(450, 405)
+        NewCharacterDialog.resize(450, 432)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.MinimumExpanding, QtWidgets.QSizePolicy.MinimumExpanding)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
