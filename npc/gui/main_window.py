@@ -161,20 +161,6 @@ class MainWindow(Ui_MainWindow):
         campaign_titles = self.qsettings.remove('recentCampaigns/titles')
         self.update_recent_campaigns()
 
-    def _show_error(self, title, message, parent=None):
-        """
-        Helper to show a modal error window
-
-        Args:
-            title (str): Title for the error window
-            message (str): Message text to display
-            parent (object): Parent window for the modal. This window will be
-                disabled while the modal is visible. Defaults to the main window.
-        """
-        if not parent:
-            parent = self.window
-        QtWidgets.QMessageBox.warning(parent, title, message, QtWidgets.QMessageBox.Ok)
-
     def update_table(self):
         """Update the characters table using search results"""
         search_rules = self.table_search_text.split(';')
@@ -248,7 +234,7 @@ class MainWindow(Ui_MainWindow):
         try:
             chdir(root_dir)
         except:
-            self._show_error("Cannot open campaign", "Cannot open the folder at {}".format(root_dir))
+            util.show_error("Cannot open campaign", "Cannot open the folder at {}".format(root_dir), self.window)
             return
         self.campaign_root = root_dir
         self.run_reload_settings()
@@ -299,7 +285,7 @@ class MainWindow(Ui_MainWindow):
             result = command('user', show_defaults=True, prefs=self.prefs)
 
             if not result.success:
-                self._show_error('Could not open user settings', result.errmsg)
+                util.show_error('Could not open user settings', result.errmsg, self.window)
                 return
 
             npc.util.open_files(*result.openable, prefs=self.prefs)
@@ -310,7 +296,7 @@ class MainWindow(Ui_MainWindow):
             result = command('campaign', show_defaults=True, prefs=self.prefs)
 
             if not result.success:
-                self._show_error('Could not open campaign settings', result.errmsg)
+                util.show_error('Could not open campaign settings', result.errmsg, self.window)
                 return
 
             npc.util.open_files(*result.openable, prefs=self.prefs)
@@ -320,13 +306,13 @@ class MainWindow(Ui_MainWindow):
         try:
             new_prefs = settings.Settings()
         except OSError as err:
-            self._show_error("Could not open settings", err.strerror)
+            util.show_error("Could not open settings", err.strerror, self.window)
             return
 
         settings_errors = settings.lint_settings(new_prefs)
         if settings_errors:
             message = "\n".join(settings_errors)
-            self._show_error("Error in settings", message)
+            util.show_error("Error in settings", message, self.window)
             return
 
         self.prefs = new_prefs
@@ -338,7 +324,7 @@ class MainWindow(Ui_MainWindow):
             result = command(prefs=self.prefs)
 
             if not result.success:
-                self._show_error('Could not create session files', result.errmsg)
+                util.show_error('Could not create session files', result.errmsg, self.window)
                 return
 
             npc.util.open_files(*result.openable, prefs=self.prefs)
@@ -367,7 +353,7 @@ class MainWindow(Ui_MainWindow):
             with util.safe_command(cmd) as command:
                 result = command(values)
                 if not result.success:
-                    self._show_error("Could not create character", result.errmsg)
+                    util.show_error("Could not create character", result.errmsg, self.window)
                     return
             new_character_dialog.deleteLater()
 
@@ -377,7 +363,7 @@ class MainWindow(Ui_MainWindow):
             result = command('session', prefs=self.prefs)
 
             if not result.success:
-                self._show_error('Could not open session file', result.errmsg)
+                util.show_error('Could not open session file', result.errmsg, self.window)
                 return
 
             npc.util.open_files(*result.openable, prefs=self.prefs)
@@ -388,7 +374,7 @@ class MainWindow(Ui_MainWindow):
             result = command('plot', prefs=self.prefs)
 
             if not result.success:
-                self._show_error('Could not open plot file', result.errmsg)
+                util.show_error('Could not open plot file', result.errmsg, self.window)
                 return
 
             npc.util.open_files(*result.openable, prefs=self.prefs)
