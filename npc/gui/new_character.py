@@ -43,6 +43,10 @@ class NewCharacterDialog(QtWidgets.QDialog, Ui_NewCharacterDialog):
 
         self.path_dislpay = QtWidgets.QLabel(self)
         self.infoForm.insertRow(5, 'Path:', self.path_dislpay)
+        self.path_timer = QtCore.QTimer()
+        self.path_timer.setSingleShot(True)
+        self.path_timer.setInterval(300)
+        self.path_timer.timeout.connect(self.update_path)
 
         self.typeSelect.currentTextChanged.connect(lambda text: self.set_value("ctype", text))
         self.characterName.textChanged.connect(lambda text: self.set_value("name", text))
@@ -80,10 +84,12 @@ class NewCharacterDialog(QtWidgets.QDialog, Ui_NewCharacterDialog):
         """
 
         self.values[key] = value
-        self.update_path(self.values)
+        self.path_timer.start()
 
-    def update_path(self, values_in):
-        values = values_in.copy()
+    def update_path(self):
+        """Update the path label based on current values"""
+
+        values = self.values.copy()
 
         tags = {}
         tags['type'] = values['ctype']
