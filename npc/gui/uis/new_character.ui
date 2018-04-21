@@ -64,7 +64,7 @@
      <item row="1" column="1">
       <widget class="QLineEdit" name="characterName">
        <property name="toolTip">
-        <string>The character's name</string>
+        <string>The character's name. Use ' - ' to add a brief note.</string>
        </property>
       </widget>
      </item>
