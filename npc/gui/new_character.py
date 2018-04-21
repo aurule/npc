@@ -1,6 +1,11 @@
-from PyQt5 import QtCore, QtGui, QtWidgets
+"""New character dialog"""
 
-from . import commands
+from PyQt5 import QtCore, QtGui, QtWidgets
+from os import path
+
+from . import commands, util
+from npc.character import Character
+from npc.commands.util import create_path_from_character
 from .uis.new_character import Ui_NewCharacterDialog
 
 class NewCharacterDialog(QtWidgets.QDialog, Ui_NewCharacterDialog):
@@ -35,6 +40,9 @@ class NewCharacterDialog(QtWidgets.QDialog, Ui_NewCharacterDialog):
         }
 
         self.setupUi(self)
+
+        self.path_dislpay = QtWidgets.QLabel(self)
+        self.infoForm.insertRow(5, 'Path:', self.path_dislpay)
 
         self.typeSelect.currentTextChanged.connect(lambda text: self.set_value("ctype", text))
         self.characterName.textChanged.connect(lambda text: self.set_value("name", text))
@@ -72,6 +80,41 @@ class NewCharacterDialog(QtWidgets.QDialog, Ui_NewCharacterDialog):
         """
 
         self.values[key] = value
+        self.update_path(self.values)
+
+    def update_path(self, values_in):
+        values = values_in.copy()
+
+        tags = {}
+        tags['type'] = values['ctype']
+        if values['groups']:
+            tags['group'] = values.pop('groups')
+
+        tags.update({k: v for (k, v) in values.items() if v})
+
+        temp_char = Character()
+        temp_char.merge_all({**self.prefs.get('tag_defaults'), **tags})
+
+        template_path = self.prefs.get('types.{}.sheet_template'.format(temp_char.type_key))
+        char_name = values['name']
+        if char_name:
+            filename = char_name + path.splitext(template_path)[1]
+        else:
+            filename = ''
+        base_path = create_path_from_character(temp_char, prefs=self.prefs)
+        final_path = path.join(base_path, filename)
+
+        path_exists = path.exists(final_path)
+
+        if path_exists:
+            self.buttonBox.button(QtWidgets.QDialogButtonBox.Ok).setEnabled(False)
+        else:
+            self.buttonBox.button(QtWidgets.QDialogButtonBox.Ok).setEnabled(True)
+
+        if path_exists and char_name:
+            self.path_dislpay.setText("Character already exists")
+        else:
+            self.path_dislpay.setText(final_path)
 
     def set_foreign(self, _):
         """Special handling for the compound `foreign` value"""
