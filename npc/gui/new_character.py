@@ -77,7 +77,10 @@ class NewCharacterDialog(QtWidgets.QDialog, Ui_NewCharacterDialog):
         """Special handling for the compound `foreign` value"""
 
         if self.foreignBox.isChecked():
-            self.set_value("foreign", self.foreignText.text())
+            if self.foreignText.text():
+                self.set_value("foreign", self.foreignText.text())
+            else:
+                self.set_value("foreign", True)
         else:
             self.set_value("foreign", False)
 
@@ -85,7 +88,10 @@ class NewCharacterDialog(QtWidgets.QDialog, Ui_NewCharacterDialog):
         """Special handling for the compound `deceased` value"""
 
         if self.deceasedBox.isChecked():
-            self.set_value("dead", self.deceasedText.toPlainText())
+            if self.deceasedText.toPlainText():
+                self.set_value("dead", self.deceasedText.toPlainText())
+            else:
+                self.set_value("dead", True)
         else:
             self.set_value("dead", False)
 
