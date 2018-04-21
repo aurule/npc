@@ -268,8 +268,8 @@ class Character(defaultdict):
         that key. If that value is an array, its elements are joined onto our
         own. Otherwise, the value is simply appended.
 
-        This method requires that keys with special formatting like `ranks` have
-        values that match that formatting within other_dict.
+        This method requires that keys with special formatting like `ranks` are
+        formatted appropriately in other_dict.
 
         Args:
             other_dict (dict): Dict of data to merge
