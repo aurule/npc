@@ -1,4 +1,5 @@
 import sys
+from npc.util import print_err
 
 def bar(iteration, total, prefix = '', suffix = '', decimals = 1, length = 100, fill = '#'):
     """
@@ -20,11 +21,7 @@ def bar(iteration, total, prefix = '', suffix = '', decimals = 1, length = 100, 
     percent = ("{0:." + str(decimals) + "f}").format(100 * (iteration / float(total)))
     filledLength = int(length * iteration // total)
     bar = fill * filledLength + '-' * (length - filledLength)
-    eprint('\r%s |%s| %s%% %s' % (prefix, bar, percent, suffix), end = '\r')
+    print_err('\r%s |%s| %s%% %s' % (prefix, bar, percent, suffix), end = '\r')
     # Print New Line on Complete
     if iteration == total:
-        eprint()
-
-def eprint(*args, **kwargs):
-    """Print to stderr"""
-    print(*args, file=sys.stderr, **kwargs)
+        print_err()

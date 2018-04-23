@@ -41,14 +41,14 @@ def start(argv=None):
     try:
         chdir(base)
     except OSError as err:
-        util.error("{}: '{}'".format(err.strerror, base))
+        util.print_err("{}: '{}'".format(err.strerror, base))
         return 4
 
     # load settings data
     try:
         prefs = settings.Settings(args.debug)
     except OSError as err:
-        util.error(err.strerror)
+        util.print_err(err.strerror)
         return 4
 
     setting_errors = settings.lint_settings(prefs)
@@ -76,12 +76,12 @@ def start(argv=None):
     except AttributeError as err:
         if args.debug:
             raise
-        util.error(err)
+        util.print_err(err)
         return 6
 
     # handle errors
     if not result.success:
-        util.error(result)
+        util.print_err(result)
         return result.errcode
 
     if not args.batch:

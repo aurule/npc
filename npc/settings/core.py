@@ -85,7 +85,7 @@ class Settings:
                     # All of these files are optional, so normally we silently
                     # ignore these errors
                     if self.verbose:
-                        util.error(err.strerror, err.filename)
+                        util.print_err(err.strerror, err.filename)
 
     def _expand_templates(self, base_path, settings_data):
         """
@@ -157,7 +157,7 @@ class Settings:
         try:
             loaded = util.load_json(settings_path)
         except json.decoder.JSONDecodeError as err:
-            util.error(err.nicemsg)
+            util.print_err(err.nicemsg)
             return
 
         # paths should be evaluated relative to the settings file in settings_path
@@ -270,7 +270,7 @@ class Settings:
                 current_data = current_data[k]
             except (KeyError, TypeError):
                 if self.verbose:
-                    util.error("Key not found: {}".format(key))
+                    util.print_err("Key not found: {}".format(key))
                 return default
         return current_data
 

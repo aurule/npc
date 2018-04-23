@@ -69,9 +69,9 @@ def load_json(filename):
             err.nicemsg = "Could not load '{0}': {1}".format(filename, err.strerror)
             raise err
 
-def error(*args, **kwargs):
+def print_err(*args, **kwargs):
     """
-    Print an error message to stderr.
+    Print a message to stderr.
 
     Args:
         Same as print(). The `file` param is prepopulated with sys.stderr.

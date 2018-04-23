@@ -26,8 +26,10 @@ class TestJsonLoading:
         assert "Bad syntax" in err.value.nicemsg
 
 def test_error_printer(capsys):
-    util.error("Catchphrase!")
+    util.print_err("Catchphrase!")
+
     out, err = capsys.readouterr()
+
     assert out == ""
     assert err == "Catchphrase!\n"
 
