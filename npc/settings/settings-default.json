@@ -275,7 +275,8 @@
                 "character": {
                     "default": "templates/listing/Character.md.mako",
                     "changeling": "templates/listing/Changeling.md.mako",
-                    "werewolf": "templates/listing/Werewolf.md.mako"
+                    "werewolf": "templates/listing/Werewolf.md.mako",
+                    "spirit": "templates/listing/Spirit.md.mako"
                 }
             },
 
@@ -292,7 +293,8 @@
                 "character": {
                     "default": "templates/listing/Character.html.mako",
                     "changeling": "templates/listing/Changeling.html.mako",
-                    "werewolf": "templates/listing/Werewolf.html.mako"
+                    "werewolf": "templates/listing/Werewolf.html.mako",
+                    "spirit": "templates/listing/Spirit.html.mako"
                 }
             }
         },
