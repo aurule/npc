@@ -167,7 +167,7 @@ def _make_parser():
     parser_changeling.set_defaults(func=commands.create_changeling)
 
     # Subcommand for making changelings, with their unique options
-    parser_werewolf = subparsers.add_parser('werewolf', aliases=['c'], parents=[common_options, character_options], help="Create a new werewolf character")
+    parser_werewolf = subparsers.add_parser('werewolf', aliases=['w'], parents=[common_options, character_options], help="Create a new werewolf character")
     parser_werewolf.add_argument('name', help="Character name", metavar='name')
     parser_werewolf.add_argument('auspice', help="The character's Auspice", metavar='auspice')
     parser_werewolf.add_argument('-t', '--tribe', help="The character's Tribe", metavar='tribe')
