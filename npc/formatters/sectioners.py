@@ -101,7 +101,7 @@ class BaseSectioner:
             return self.templates[output_format]
 
         template_path = str(Path(self.prefs.get("listing.templates.{output_format}.sections.simple".format(output_format=output_format))))
-        self.templates[output_format] = Template(filename=template_path, module_directory=str(self.tempdir), **encoding_options)
+        self.templates[output_format] = Template(filename=template_path, module_directory=self.tempdir.name, **encoding_options)
         return self.templates[output_format]
 
     def would_change(self, character):
