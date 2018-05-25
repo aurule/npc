@@ -39,6 +39,10 @@ class BaseSectioner:
     This is used to cache the Mako template.
 
     To get the current text of the object, use `current_text`.
+
+    The intended way to use a sectioner object is to first check if its value
+    would change for a character using `would_change()`. If it would, then call
+    `update_text()` and store or write the output of `render_template()`.
     """
     def __init__(self, heading_level, prefs):
         """
