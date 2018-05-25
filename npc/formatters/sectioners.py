@@ -69,6 +69,49 @@ class BaseSectioner:
         """
         self.tempdir.cleanup()
 
+    def text_for(self, character):
+        """
+        Generate text for a character.
+
+        This method must be overridden in child sectioners. It should not modify
+        `current_text`, merely generate a new string based on the given
+        character object.
+
+        Args:
+            character (Character): Character object to use for generating new
+                text.
+
+        Returns:
+            String of text data based on the given character.
+        """
+        raise NotImplementedError
+
+    def would_change(self, character):
+        """
+        Whether the sectioner's text would be different for the given character
+
+        Args:
+            character (Character): Character object to test
+
+        Returns:
+            True if the output of `text_for` differs from our `current_text`.
+        """
+        return self.text_for(character) != self.current_text
+
+    def update_text(self, character):
+        """
+        Update the stored `current_text` by generating text for the given
+        character.
+
+        Args:
+            character (Character): Character object to use for generating new
+                text.
+
+        Returns:
+            None
+        """
+        self.current_text = self.text_for(character)
+
     def render_template(self, output_format, **encoding_options):
         """
         Render our template.
@@ -107,49 +150,6 @@ class BaseSectioner:
         template_path = str(Path(self.prefs.get("listing.templates.{output_format}.sections.simple".format(output_format=output_format))))
         self.templates[output_format] = Template(filename=template_path, module_directory=self.tempdir.name, **encoding_options)
         return self.templates[output_format]
-
-    def would_change(self, character):
-        """
-        Whether the sectioner's text would be different for the given character
-
-        Args:
-            character (Character): Character object to test
-
-        Returns:
-            True if the output of `text_for` differs from our `current_text`.
-        """
-        return self.text_for(character) != self.current_text
-
-    def update_text(self, character):
-        """
-        Update the stored `current_text` by generating text for the given
-        character.
-
-        Args:
-            character (Character): Character object to use for generating new
-                text.
-
-        Returns:
-            None
-        """
-        self.current_text = self.text_for(character)
-
-    def text_for(self, character):
-        """
-        Generate text for a character.
-
-        This method must be overridden in child sectioners. It should not modify
-        `current_text`, merely generate a new string based on the given
-        character object.
-
-        Args:
-            character (Character): Character object to use for generating new
-                text.
-
-        Returns:
-            String of text data based on the given character.
-        """
-        raise NotImplementedError
 
 class TagSectioner(BaseSectioner):
     """
