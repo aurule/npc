@@ -30,10 +30,9 @@ def listing(characters, outstream, *, metadata=None, partial=False, **kwargs):
             metadata_format and metadata args are ignored.
         prefs (Settings): Settings object. Used to get the location of template
             files.
-        sectioners (List[function]): List of functions that return a section
-            heading for each character. When its return value changes, the
-            section template is rendered with the new title. Omit to suppress
-            sections.
+        sectioners (List[BaseSectioner]): List of BaseSectioner objects to
+            render section templates based on character attributes. Omit to
+            suppress sections.
         progress (function): Callback function to track the progress of
             generating a listing. Must accept the current count and total count.
             Should print to stderr.

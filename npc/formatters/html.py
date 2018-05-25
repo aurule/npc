@@ -33,9 +33,9 @@ def listing(characters, outstream, *, metadata=None, partial=False, **kwargs):
             files.
         encoding (string): Encoding format of the output text. Overrides the
             value in settings.
-        sectioners (List[Sectioner]): List of sectioner objects that create
-            section headings for each character. Omit to have no section
-            headings.
+        sectioners (List[BaseSectioner]): List of BaseSectioner objects to
+            render section templates based on character attributes. Omit to
+            suppress sections.
         progress (function): Callback function to track the progress of
             generating a listing. Must accept the current count and total count.
             Should print to stderr.
