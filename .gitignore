@@ -65,6 +65,3 @@ target/
 
 # venv directory
 .venv
-
-# testing leftovers
-<TemporaryDirectory*/
