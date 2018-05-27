@@ -59,7 +59,7 @@ class BaseSectioner:
         self.prefs = prefs
 
         self.tempdir = tempfile.TemporaryDirectory()
-        self.templates = {} # cache for template objects by format
+        self.templates_cache = {} # cache for template objects by format
 
     def __del__(self):
         """
@@ -68,6 +68,19 @@ class BaseSectioner:
         Explicitly cleans up the Mako cache temporary directory.
         """
         self.tempdir.cleanup()
+
+    @property
+    def template_key(self):
+        """
+        Key to use in the settings to find the right template path.
+
+        Must be within 'sections' within every key under 'listing.templates'.
+        For example, the default key 'simple' must be set under
+        'listing.templates.markdown.sections.simple' and
+        'listing.templates.html.sections.simple'.
+        """
+        return 'simple'
+
 
     def text_for(self, character):
         """
@@ -144,12 +157,17 @@ class BaseSectioner:
         Returns:
             Mako Template object.
         """
-        if output_format in self.templates:
-            return self.templates[output_format]
+        if output_format in self.templates_cache:
+            return self.templates_cache[output_format]
 
-        template_path = str(Path(self.prefs.get("listing.templates.{output_format}.sections.simple".format(output_format=output_format))))
-        self.templates[output_format] = Template(filename=template_path, module_directory=self.tempdir.name, **encoding_options)
-        return self.templates[output_format]
+        template_path = str(
+            Path(
+                self.prefs.get(
+                    "listing.templates.{output_format}.sections.{template_key}".format(
+                        output_format=output_format,
+                        template_key=self.template_key))))
+        self.templates_cache[output_format] = Template(filename=template_path, module_directory=self.tempdir.name, **encoding_options)
+        return self.templates_cache[output_format]
 
 class TagSectioner(BaseSectioner):
     """
