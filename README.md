@@ -118,8 +118,6 @@ Simple characters have no unique options, they just change the character's type.
 The `new` command creates a new simple character using the named type. As long as that type has a defined template and type path, it'll work. There are a few accelerators for common simple types as well:
 
 * `human`: Create a human. Type path is `Humans/`
-* `fetch`: Create a fetch. Type path is `Fetches/`
-* `goblin`: Create a goblin. Type path is `Goblins/`
 
 ### Changelings
 
@@ -230,7 +228,12 @@ Options:
 * `--metadata`: Include metadata in the output. Can optionally specify the format of this metadata, if the main format supports it. Pass `default` to use the metadata type from your settings. Recognized values depend on the output format:
     - Markdown supports `mmd` for MultiMarkdown metadata, and `yfm` or `yaml` for YAML Front Matter metadata
     - HTML supports `meta` to put metadata in `<meta>` elements in the document `<head>`
+* `--title`: Override just the title from the metadata.
 * `--outfile`: Path where the output should go. If omitted (or you pass `-`), the output will go to stdout for chaining to another command.
+* `--sort_by`: Sort characters by these tag names before creating the listing. Separate multiple tags with a comma, and use `-tag` for a reverse sort on that tag.
+* `--headings`: Add section headings for these tags. This defaults to the tags in `sort_by`, but you can override it to make headings for any tags. It's best that the tags are a subset of `sort_by`, since otherwise you'll have repeat headings everywhere. Not supported by the `json` format.
+* `--no_sort`: Suppress sorting entirely.
+* `--partial`: Force the output to contain only body content, with no headers *or* footers. Not supported by the `json` format.
 
 ## Dump Raw NPC Data
 
@@ -243,6 +246,8 @@ Options:
 * `--sort`: Sort NPCs by name before dumping the output
 * `--metadata`: Include metadata in the output. Uses the json default metadata from the settings and includes a few special fields.
 * `--outfile`: Path where the output should go. If omitted (or you pass "`-`"), the output will go to stdout for chaining to another command.
+* `--sort_by`: Sort characters by these tag names before creating the dump. Separate multiple tags with a comma, and use `-tag` for a reverse sort on that tag.
+* `--no_sort`: Suppress sorting entirely. True by default.
 
 ## Reorganize Character Files
 
@@ -333,7 +338,7 @@ To set up the development environment, create and activate a venv and run `bin/s
 * [coverage](https://coverage.readthedocs.io/en/coverage-4.4.1/) 4.4.1
 * [stdeb](https://pypi.python.org/pypi/stdeb) 0.8.5 - optional: only for building debian packages
 
-These can all be installed with `pip -r requirements-dev.txt`.
+These can all be installed with `pip install -r requirements-dev.txt`.
 
 ## Running Tests
 

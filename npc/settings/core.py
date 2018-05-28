@@ -12,6 +12,7 @@ from copy import deepcopy
 
 import npc
 from npc import util
+from npc.linters.settings import lint
 
 class Settings:
     """
@@ -61,7 +62,12 @@ class Settings:
         self.user_settings_path = path.expanduser('~/.config/npc/')
         self.campaign_settings_path = '.npc/'
 
-        self.settings_files = ['settings.json', 'settings-changeling.json']
+        self.settings_files = [
+            'settings.json',
+            'settings-changeling.json',
+            'settings-werewolf.json',
+            'settings-gui.json'
+        ]
         self.settings_paths = [self.default_settings_path, self.user_settings_path, self.campaign_settings_path]
 
         self.verbose = verbose
@@ -79,7 +85,7 @@ class Settings:
                     # All of these files are optional, so normally we silently
                     # ignore these errors
                     if self.verbose:
-                        util.error(err.strerror, err.filename)
+                        util.print_err(err.strerror, err.filename)
 
     def _expand_templates(self, base_path, settings_data):
         """
@@ -151,16 +157,30 @@ class Settings:
         try:
             loaded = util.load_json(settings_path)
         except json.decoder.JSONDecodeError as err:
-            util.error(err.nicemsg)
+            util.print_err(err.nicemsg)
             return
 
         # paths should be evaluated relative to the settings file in settings_path
         absolute_path_base = path.dirname(path.realpath(settings_path))
         loaded = self._expand_templates(absolute_path_base, loaded)
 
-        self.data = self._merge_settings(loaded, self.data)
+        self._merge_settings(loaded)
 
-    def _merge_settings(self, new_data, orig):
+    def update_key(self, key, value):
+        """
+        Change the value of a single settings key
+
+        Args:
+            key (str): Period-delimited key to update
+            value (any): New value to store in the key
+        """
+        key_parts = key.split('.')
+        for k in reversed(key_parts):
+            value = {k: value}
+
+        self._merge_settings(value)
+
+    def _merge_settings(self, new_data):
         """
         Merge data from one dict into another.
 
@@ -174,23 +194,25 @@ class Settings:
 
         Args:
             new_data (dict): Dict to merge
-            orig (dict): Dict to receive the merge
 
         Returns:
             Dict containing elements from both dicts.
         """
-        dest = dict(orig)
+        def merge_dict(new_data, orig):
+            dest = dict(orig)
 
-        for key, val in new_data.items():
-            if key in dest:
-                if isinstance(dest[key], dict):
-                    dest[key] = self._merge_settings(val, dest[key])
+            for key, val in new_data.items():
+                if key in dest:
+                    if isinstance(dest[key], dict):
+                        dest[key] = merge_dict(val, dest[key])
+                    else:
+                        dest[key] = val
                 else:
                     dest[key] = val
-            else:
-                dest[key] = val
 
-        return dest
+            return dest
+
+        self.data = merge_dict(new_data, self.data)
 
     def get_settings_path(self, location, settings_type=None):
         """
@@ -248,7 +270,7 @@ class Settings:
                 current_data = current_data[k]
             except (KeyError, TypeError):
                 if self.verbose:
-                    util.error("Key not found: {}".format(key))
+                    util.print_err("Key not found: {}".format(key))
                 return default
         return current_data
 
@@ -301,6 +323,37 @@ class Settings:
         """
         return self.get('types').keys()
 
+    def get_ignored_paths(self, command_name):
+        """
+        Get a list of paths that should be ignored, based on the named command
+
+        Args:
+            command_name (str): Name of the command being run. Used to look up
+                command-specific ignored paths
+
+        Returns:
+            List of string paths
+        """
+        command_ignores = self.get("paths.ignore.{command_name}".format(command_name=command_name), [])
+        global_ignores = self.get('paths.ignore.always', [])
+        return command_ignores + global_ignores
+
+    def translate_tag_for_character_type(self, char_type, tag_name):
+        """
+        Translate a type-dependent tag into the corresponding tag for the
+        character's type.
+
+        Args:
+            type (string): Type to use
+            tag_name (string): Name of the tag to translate
+        """
+        return self.get(
+            'types.{char_type}.tag_names.{tag_name}'.format(
+                char_type=char_type,
+                tag_name=tag_name),
+            tag_name)
+
+
 class InternalSettings(Settings, metaclass=util.Singleton):
     """
     Singleton settings class.
@@ -310,13 +363,11 @@ class InternalSettings(Settings, metaclass=util.Singleton):
     """
     pass
 
-def lint_changeling_settings(prefs):
+def lint_settings(prefs):
     """
-    Check correctness of changeling-specific settings.
+    Check the correctness of all loaded settings.
 
-    To be correct, the changeling settings must have a blessing and curse for
-    every seeming, and a blessing for every kith. Duplicate names between
-    seemings and kiths *are not* reported.
+    Uses the linters.settings package to do the work.
 
     Args:
         prefs (Settings): Settings object to check
@@ -325,31 +376,4 @@ def lint_changeling_settings(prefs):
         A list of string error messages, or an empty list if no errors were
         found.
     """
-    blessing_keys = set(prefs.get('changeling.blessings', {}).keys())
-    curse_keys = set(prefs.get('changeling.curses', {}).keys())
-    seemings = set(prefs.get('changeling.seemings', []))
-    idx_kiths = prefs.get('changeling.kiths', {})
-    kiths = set(util.flatten(idx_kiths.values()))
-
-    ok_result = (blessing_keys.issuperset(seemings) and
-                 curse_keys.issuperset(seemings) and
-                 blessing_keys.issuperset(kiths))
-
-    errors = []
-    if not ok_result:
-        errors.append("Mismatch in changeling settings:")
-
-        if not blessing_keys.issuperset(seemings):
-            errors.append("* Seemings without blessings:")
-            for seeming in seemings.difference(blessing_keys):
-                errors.append("  - {}".format(seeming))
-        if not curse_keys.issuperset(seemings):
-            errors.append("* Seemings without curses:")
-            for seeming in seemings.difference(curse_keys):
-                errors.append("  - {}".format(seeming))
-        if not blessing_keys.issuperset(kiths):
-            errors.append("* Kiths without blessings:")
-            for kith in kiths.difference(blessing_keys):
-                errors.append("  - {}".format(kith))
-
-    return errors
+    return lint(prefs)

@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>450</width>
-    <height>405</height>
+    <height>432</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -64,7 +64,7 @@
      <item row="1" column="1">
       <widget class="QLineEdit" name="characterName">
        <property name="toolTip">
-        <string>The character's name</string>
+        <string>The character's name. Use ' - ' to add a brief note.</string>
        </property>
       </widget>
      </item>

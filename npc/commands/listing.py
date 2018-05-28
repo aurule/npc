@@ -33,8 +33,12 @@ def make_list(*search, ignore=None, fmt=None, metadata=None, title=None, outfile
             Overrides the title from settings.
         outfile (string|None): Filename to put the listed data. None and "-"
             print to stdout.
-        sort (string|None): Sort order for characters. Defaults to the value of
+        do_sort (bool): Whether to avoid sorting altogether. Defaults to True.
+        sort_by (string|None): Sort order for characters. Defaults to the value of
             "list_sort" in settings.
+        headings (List[string]): List of tag names to group characters by
+        partial (bool): Whether to omit headers and footers and just render body
+            content. Defaults to false.
         prefs (Settings): Settings object to use. Uses internal settings by
             default.
         progress (function): Callback function to track the progress of
@@ -47,13 +51,18 @@ def make_list(*search, ignore=None, fmt=None, metadata=None, title=None, outfile
     prefs = kwargs.get('prefs', settings.InternalSettings())
     if not ignore:
         ignore = []
-    ignore.extend(prefs.get('paths.ignore'))
-    sort_order = kwargs.get('sort', prefs.get('listing.sort_by'))
+    ignore.extend(prefs.get_ignored_paths('listing'))
+    do_sort = kwargs.get('do_sort', True)
+    partial = kwargs.get('partial', False)
     update_progress = kwargs.get('progress', lambda i, t: False)
 
-    characters = util.sort_characters(
-        _prune_chars(parser.get_characters(flatten(search), ignore)),
-        order=sort_order)
+    sort_order = kwargs.get('sort_by', prefs.get('listing.sort_by')) if do_sort else []
+    headings = kwargs.get('headings', sort_order)
+
+    characters = _process_directives(parser.get_characters(flatten(search), ignore))
+    if do_sort:
+        sorter = util.character_sorter.CharacterSorter(sort_order, prefs=prefs)
+        characters = sorter.sort(characters)
 
     if fmt == "default" or not fmt:
         fmt = prefs.get('listing.default_format')
@@ -74,15 +83,23 @@ def make_list(*search, ignore=None, fmt=None, metadata=None, title=None, outfile
     if title:
         meta['title'] = title
 
+    header_offset = int(prefs.get('listing.base_header_level'))
+    sectioners = [
+        formatters.sectioners.get_sectioner(
+            key=g, heading_level=i+header_offset, prefs=prefs
+        ) for i, g in enumerate(headings)
+    ]
+
     with util.smart_open(outfile, binary=(out_type in formatters.BINARY_TYPES)) as outstream:
         response = formatter(
             characters,
             outstream,
-            include_metadata=metadata_type,
+            metadata_format=metadata_type,
             metadata=meta,
             prefs=prefs,
-            sectioner=get_sectioner(sort_order),
-            progress=update_progress)
+            sectioners=sectioners,
+            partial=partial,
+            update_progress=update_progress)
 
     # pass errors straight through
     if not response.success:
@@ -92,13 +109,13 @@ def make_list(*search, ignore=None, fmt=None, metadata=None, title=None, outfile
 
     return result.Success(openable=openable)
 
-def _prune_chars(characters):
+def _process_directives(characters):
     """
     Alter character records for output.
 
     Warning: This function will modify the objects in `characters`.
 
-    Applies behavior from directives and certain tags:
+    Applies behavior from directives:
 
     * skip: remove the character from the list
     * hide: remove the named fields from the character
@@ -143,30 +160,3 @@ def _prune_chars(characters):
             char['type'] = 'Unknown'
 
         yield char
-
-def get_sectioner(order):
-    """
-    Get a sectioning function
-
-    Args:
-        order (str): Name of the order that defines the sections. One of "last"
-            or "first"
-
-    Returns:
-        A sectioning function, or None if the order was not recognized
-    """
-    def first_letter_last_name(character):
-        """Get the first letter of the last word in the character's name"""
-        full_name = character.get_first('name', '')
-        return '' if len(full_name) == 0 else full_name.split(' ')[-1][0]
-
-    def first_letter_first_name(character):
-        """Get the first letter of the character's first name"""
-        full_name = character.get_first('name', '')
-        return '' if len(full_name) == 0 else full_name.split(' ')[0][0]
-
-    if order == 'first':
-        return first_letter_first_name
-    if order == 'last':
-        return first_letter_last_name
-    return None

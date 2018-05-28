@@ -15,7 +15,7 @@ class TestListing:
     def test_metadata_included(self, character):
         metadata = {'hello': 'friend'}
         data_out = io.StringIO()
-        assert npc.formatters.json.listing([character], data_out, include_metadata=True, metadata=metadata)
+        assert npc.formatters.json.listing([character], data_out, metadata_format=True, metadata=metadata)
 
         metadata['meta'] = True
         parsed_data = json.loads(data_out.getvalue())

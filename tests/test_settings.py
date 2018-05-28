@@ -35,13 +35,6 @@ def test_expanded_paths(prefs):
     prefs.load_more(override_path)
     assert prefs.get('types.changeling.sheet_template') == fixture_dir('settings', 'changeling.nwod')
 
-def test_changeling_linting(prefs):
-    override_path = fixture_dir('settings', 'settings-changeling-mismatch.json')
-    prefs.load_more(override_path)
-    errors = "\n".join(npc.settings.lint_changeling_settings(prefs))
-    assert "bad seeming" in errors
-    assert "bad kith" in errors
-
 def test_singleton_settings():
     prefs1 = npc.settings.InternalSettings()
     prefs2 = npc.settings.InternalSettings()
@@ -49,7 +42,11 @@ def test_singleton_settings():
 
 def test_available_types(prefs):
     names = prefs.get_available_types()
-    assert set(names) == set(['human', 'fetch', 'changeling', 'goblin'])
+    assert set(names) == set(['human', 'fetch', 'changeling', 'goblin', 'werewolf', 'spirit'])
+
+def test_update_key(prefs):
+    prefs.update_key('paths.required.characters', 'nothing here')
+    assert prefs.get('paths.required.characters') == 'nothing here'
 
 class TestMetadata:
     """Tests the correctness of the metadata hash"""
@@ -86,3 +83,13 @@ class TestMetadata:
         metadata = get_metadata(meta_format)
         assert metadata["test"] == "very yes"
         assert metadata["format"] == meta_format
+
+class TestIgnoredPaths:
+    def test_defaults_to_always_key(self, prefs):
+        prefs.update_key('paths.ignore.always', ['abc123'])
+        assert prefs.get_ignored_paths('dne') == ['abc123']
+
+    def test_adds_by_command_name(self, prefs):
+        prefs.update_key('paths.ignore.always', ['abc123'])
+        prefs.update_key('paths.ignore.dne', ['something else'])
+        assert set(prefs.get_ignored_paths('dne')) == set(['abc123', 'something else'])

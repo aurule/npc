@@ -1,0 +1,43 @@
+--Notes--
+Blah
+
+--Appearance--
+Blah
+
+--Stats--
+attributes
+    rank        1
+    power       •
+    finesse     •
+    resistance  •
+
+advantages
+    will        2 (finesse+resistance)
+    size        5 (adult)
+    corpus      1 (resistance+size)
+    speed       2 (power+finesse+species factor 10)
+    defense     1 (higher of power or finesse)
+    armor       0
+    init        2 (finesse+resistance)
+
+influences
+    blah •
+        description
+
+numina
+    power
+        description
+
+attacks
+    fists - 0B - atk 0
+    melee name - damage, size - atk 0
+    ranged name - damage, range s/m/l, mag, size - atk 0 (s/m/l, aim +1)
+        notes
+        + attachment/mod - effects
+
+gear
+    type - effects
+        notes
+
+--History--
+if important

@@ -1,5 +1,6 @@
 import json
 import pytest
+from collections import defaultdict
 
 import npc
 from npc import util
@@ -12,6 +13,12 @@ class TestJsonLoading:
         loaded = util.load_json(filepath)
         assert "freedom" in loaded["data"]
 
+    def test_ignore_trailing_commas(self):
+        filepath = fixture_dir('util', 'load_json', 'trailing_commas.json')
+        loaded = util.load_json(filepath)
+        assert "freedom" in loaded["data"]
+        assert ", }" in loaded['list']
+
     def test_bad_syntax(self):
         filepath = fixture_dir('util', 'load_json', 'bad_syntax.json')
         with pytest.raises(json.decoder.JSONDecodeError) as err:
@@ -19,8 +26,10 @@ class TestJsonLoading:
         assert "Bad syntax" in err.value.nicemsg
 
 def test_error_printer(capsys):
-    util.error("Catchphrase!")
+    util.print_err("Catchphrase!")
+
     out, err = capsys.readouterr()
+
     assert out == ""
     assert err == "Catchphrase!\n"
 
@@ -58,3 +67,65 @@ class TestResult:
     def test_bool(self, val):
         result = util.result.Result(val)
         assert bool(result) == val
+
+class TestMergeDicts:
+    def test_none_value_sets_default(self):
+        base_dict = defaultdict(list)
+        util.merge_to_dict(base_dict, 'test', None)
+
+        assert base_dict.get('test') == []
+
+    def test_list_value_is_concatenated(self):
+        base_dict = {'test': [1, 2, 3]}
+        util.merge_to_dict(base_dict, 'test', [4, 5])
+
+        assert base_dict['test'] == [1, 2, 3, 4, 5]
+
+    def test_scalar_is_appended(self):
+        base_dict = {'test': [1, 2, 3]}
+        util.merge_to_dict(base_dict, 'test', 4)
+
+        assert base_dict['test'] == [1, 2, 3, 4]
+
+    def test_string_is_appended(self):
+        base_dict = {'test': [1, 2, 3]}
+        util.merge_to_dict(base_dict, 'test', 'four')
+
+        assert base_dict['test'] == [1, 2, 3, 'four']
+
+class SingletonClass(metaclass=util.Singleton):
+    def __init__(self, word):
+        self.word = word
+
+    def get_a_thing(self):
+        return self.word
+
+class TestSingleton:
+    def test_creates_one_instance(self):
+        obj1 = SingletonClass('hello')
+        obj2 = SingletonClass('goodbye')
+        assert obj1.get_a_thing() == 'hello'
+        assert obj2.get_a_thing() == 'hello'
+
+class TestSerializeArgs:
+    def test_creates_list_of_serial_args(self):
+        serial, full = util.serialize_args('first', 'second', **{'first': '1', 'second': '2', 'third': '3'})
+        assert serial == ['1', '2']
+
+    def test_removes_serial_args_from_dict(self):
+        serial, full = util.serialize_args('first', 'second', **{'first': '1', 'second': '2', 'third': '3'})
+        assert full == {'third': '3'}
+
+class TestListifyArgs:
+    def test_modifies_named_strings(self):
+        args = util.listify_args('list', **{'list': '1, 2, 3', 'not_list': 'hammer, spanner, prybar'})
+        assert args['list'] == ['1', '2', '3']
+        assert args['not_list'] == 'hammer, spanner, prybar'
+
+    def test_skips_none(self):
+        args = util.listify_args('list', **{'list': None, 'not_list': 'hammer, spanner, prybar'})
+        assert args['list'] is None
+
+    def test_removes_empties(self):
+        args = util.listify_args('list', **{'list': ',', 'not_list': 'hammer, spanner, prybar'})
+        assert args['list'] == []

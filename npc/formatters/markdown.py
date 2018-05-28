@@ -12,27 +12,27 @@ from npc.util import result
 SUPPORTED_METADATA_TYPES = ['yaml', 'yfm', 'multimarkdown', 'mmd']
 """Recognized metadata type names"""
 
-def listing(characters, outstream, *, include_metadata=None, metadata=None, partial=False, **kwargs):
+def listing(characters, outstream, *, metadata=None, partial=False, **kwargs):
     """
     Create a markdown character listing
 
     Args:
         characters (list): Character info dicts to show
         outstream (stream): Output stream
-        include_metadata (string|None): Whether to include metadata, and what
+        metadata_format (string|None): Whether to include metadata, and what
             format to use. Accepts values of 'mmd', 'yaml', or 'yfm'. Metadata
             will always include a title and creation date.
         metadata (dict): Additional metadata to insert. Ignored unless
-            include_metadata is set. The keys 'title', and 'created' will
+            metadata_format is set. The keys 'title', and 'created' will
             overwrite the generated values for those keys.
         partial (bool): Whether to produce partial output by omitting the
             header and footer. Does not allow metadata to be included, so the
-            include_metadata and metadata args are ignored.
+            metadata_format and metadata args are ignored.
         prefs (Settings): Settings object. Used to get the location of template
             files.
-        sectioner (function): Function that returns a section heading for each
-            character. When its return value changes, the section template is
-            rendered with the new title. Omit to suppress sections.
+        sectioners (List[BaseSectioner]): List of BaseSectioner objects to
+            render section templates based on character attributes. Omit to
+            suppress sections.
         progress (function): Callback function to track the progress of
             generating a listing. Must accept the current count and total count.
             Should print to stderr.
@@ -41,58 +41,19 @@ def listing(characters, outstream, *, include_metadata=None, metadata=None, part
         A util.Result object. Openable will not be set.
     """
     prefs = kwargs.get('prefs', settings.InternalSettings())
-    if not metadata:
+    if metadata is None:
         metadata = {}
-    sectioner = kwargs.get('sectioner', lambda c: '')
-    update_progress = kwargs.get('progress', lambda i, t: False)
 
-    if not partial:
-        if include_metadata:
-            # coerce to canonical form
-            if include_metadata == "yaml":
-                include_metadata = "yfm"
-            elif include_metadata == "multimarkdown":
-                include_metadata = 'mmd'
+    renderer = npc.formatters.MarkdownFormatter(
+        metadata=metadata,
+        sectioners=kwargs.get('sectioners', []),
+        update_progress=kwargs.get('update_progress', lambda i, t: False),
+        partial=partial,
+        metadata_format=kwargs.get('metadata_format'),
+        prefs=prefs
+    )
 
-            # load and render template
-            header_file = prefs.get("listing.templates.markdown.header.{}".format(include_metadata))
-            if not header_file:
-                return result.OptionError(errmsg="Unrecognized metadata format '{}'".format(include_metadata))
-
-            header_template = Template(filename=header_file)
-            outstream.write(header_template.render_unicode(metadata=metadata))
-
-    with tempfile.TemporaryDirectory() as tempdir:
-        # directly access certain functions for speed
-        _prefs_get = prefs.get
-        _out_write = outstream.write
-
-        section_title = ''
-        section_template = Template(
-            filename=_prefs_get("listing.templates.markdown.section"),
-            module_directory=tempdir)
-        total = len(characters)
-        update_progress(0, total)
-        for index, char in enumerate(characters):
-            if sectioner(char) != section_title:
-                section_title = sectioner(char)
-                _out_write(
-                    section_template.render_unicode(
-                        title=section_title))
-            body_file = _prefs_get("listing.templates.markdown.character.{}".format(char.type_key))
-            if not body_file:
-                body_file = _prefs_get("listing.templates.markdown.character.default")
-            if not body_file:
-                return result.ConfigError(errmsg="Cannot find default character template for markdown listing")
-
-            body_template = Template(filename=body_file, module_directory=tempdir)
-            _out_write(body_template.render_unicode(character=char))
-            update_progress(index + 1, total)
-
-    if not partial:
-        footer_template = Template(filename=prefs.get("listing.templates.markdown.footer"))
-        outstream.write(footer_template.render_unicode())
-    return result.Success()
+    return renderer.render(characters, outstream)
 
 def report(tables, outstream, **kwargs):
     """

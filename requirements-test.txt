@@ -1,0 +1,8 @@
+Mako==1.0.7
+Markdown==2.6.9
+MarkupSafe==1.0
+py==1.5.3
+PyQt5==5.7.1
+sip==4.19
+pytest==3.5.0
+pytest-qt==2.3.1

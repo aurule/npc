@@ -24,9 +24,9 @@ def start(argv=None):
     except OSError as err:
         startup_error(err.strerror)
 
-    changeling_errors = settings.lint_changeling_settings(prefs)
-    if changeling_errors:
-        message = "\n".join(changeling_errors)
+    setting_errors = settings.lint_settings(prefs)
+    if setting_errors:
+        message = "Error in settings\n".join(setting_errors)
         startup_error(message)
 
     app = QtWidgets.QApplication(argv)

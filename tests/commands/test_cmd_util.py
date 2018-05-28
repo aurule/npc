@@ -24,27 +24,30 @@ class TestSortCharacters:
     @pytest.fixture
     def characters(self):
         return [
-            npc.Character(name=['Alfred Lisbon']),
-            npc.Character(name=['Baldy Parson']),
-            npc.Character(name=['Zach Albright'])
+            npc.Character(name=['Alfred Lisbon'], group=['High Rollers'], type=['changeling'], motley=['dudes2']),
+            npc.Character(name=['Baldy Parson'], group=['High Rollers'], type=['changeling'], motley=['dudes1']),
+            npc.Character(name=['Zach Albright'], group=['Low Rollers'], type=['changeling'], motley=['dudes3'])
         ]
 
-    def test_default(self, characters):
-        result = util.sort_characters(characters)
-        control = util.sort_characters(characters, 'last')
-        assert result == control
-
     def test_last(self, characters):
-        result = util.sort_characters(characters, 'last')
-        assert result[0].get_first('name') == 'Zach Albright'
-        assert result[1].get_first('name') == 'Alfred Lisbon'
-        assert result[2].get_first('name') == 'Baldy Parson'
+        result = util.character_sorter.CharacterSorter(['last']).sort(characters)
+        assert list(map(lambda c: c.get_first('name'), result)) == ['Zach Albright', 'Alfred Lisbon', 'Baldy Parson']
 
     def test_first(self, characters):
-        result = util.sort_characters(characters, 'first')
-        assert result[0].get_first('name') == 'Alfred Lisbon'
-        assert result[1].get_first('name') == 'Baldy Parson'
-        assert result[2].get_first('name') == 'Zach Albright'
+        result = util.character_sorter.CharacterSorter(['first']).sort(characters)
+        assert list(map(lambda c: c.get_first('name'), result)) == ['Alfred Lisbon', 'Baldy Parson', 'Zach Albright']
+
+    def test_reverse(self, characters):
+        result = util.character_sorter.CharacterSorter(['-first']).sort(characters)
+        assert list(map(lambda c: c.get_first('name'), result)) == ['Zach Albright', 'Baldy Parson', 'Alfred Lisbon']
+
+    def test_multiple_tags(self, characters):
+        result = util.character_sorter.CharacterSorter(['group', '-last']).sort(characters)
+        assert list(map(lambda c: c.get_first('name'), result)) == ['Baldy Parson', 'Alfred Lisbon', 'Zach Albright']
+
+    def test_translated_sort(self, characters, prefs):
+        result = util.character_sorter.CharacterSorter(['type-unit'], prefs=prefs).sort(characters)
+        assert list(map(lambda c: c.get_first('name'), result)) == ['Baldy Parson', 'Alfred Lisbon', 'Zach Albright']
 
 class TestSmartOpen:
     def test_with_named_file(self, tmpdir):

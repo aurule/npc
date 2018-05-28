@@ -4,21 +4,45 @@ This file documents the changes made in each release. I didn't start maintaining
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/) (mostly).
 
-## 1.3.1 beta 4
+## 1.4.0
 
-* Crash in `list` command when a character has no name
+Werewolves are supported! Along with the tags, character sheet, and templates for that, there are a few other neat features.
 
-## 1.3.1 beta 3
+* Werewolf characters
+* Spirit characters
+* Default tag values for new characters
+* Separate ignored paths for each command (requires settings change)
+* Better character sorting (requires settings change)
 
-* Remove PyQt as an explicit install dependency
+### Added
 
-## 1.3.1 beta 2
+* New `@werewolf` tag for specifying werewolf type and auspice on one line
+* Settings now has a `tag_defaults` key that sets default tag values for newly created characters.
+* Settings files now ignore trailing commas
+* Sort character listings and dumps by any tag or set of tags, each in ascending or descending order. You'll have to update your settings files to use the new `sort_by` format.
+* Sort by type-dependent tags
+* Configurable list headings for character tags.
+* Set the base heading level in settings.
+* Turn off sorting for character listings altogether using `--no_sort`
+* Force listing to contain only body content using `--partial`
+* New setting for default character type in GUI
+* Settings for allowed werewolf auspices and tribes
+* Customizable sectioners to support complex sorting of character listings
+
+### Changed
+
+* Ignored paths can now be specified for each command separately, in addition to universal ignored paths. You'll have to change your settings files to use the new `ignore` section format.
+* The `list` command's `--sort` argument is renamed `--sort_by`.
+* The `include_metadata` argument to formatters is now `metadata_format`.
+* Refactored the listing renderers into objects
 
 ### Fixed
 
-* Crash in `find` command
+### Removed
 
-## 1.3.1 [Unreleased]
+* The `fetch` and `goblin` character creation commands are gone. Use `new fetch` or `new goblin` instead.
+
+## 1.3.1
 
 The path hierarchy is here! This new setting allows you to configure exactly where your character files are placed based on their tags. See the readme for more details.
 
@@ -40,6 +64,7 @@ This release comes with a few enhancements, including a new way to configure cha
 * Can now clear recent campaign menu in the GUI
 * The `find` command now accepts the asterisk (`*`) character when searching on a field. It returns all characters that have any value for that field.
 * New `Open Latest` menu in the GUI to open the most recent plot or session file.
+* Character names are no longer limited to word-like characters and can include any letters or typographical marks you want
 
 ### Changed
 
@@ -56,6 +81,9 @@ This release comes with a few enhancements, including a new way to configure cha
 ### Fixed
 
 * Changeling linter thought every kith was unrecognized
+* Fix extra `p` tags in parsed markdown in html listings
+* Fix listing output for characters with a bare `foreign` tag
+* Parser no longer chokes on special characters in character name from file name
 
 ### Removed
 
@@ -101,6 +129,7 @@ The CLI has a new `find` command which makes it easy to get character files base
     - The changeling settings format now requires that kith names are grouped by seeming
     - Improved formatting for results from the changeling settings linter
     - Metadata blocks now contain the NPC version number
+    - Changeling kiths can only appear under one seeming
 * CLI
     - Moved CLI interface to its own module: `npc.cli`
     - The `--batch` and `--debug` options now live under each command. This means they must go after the command name instead of in front of it.

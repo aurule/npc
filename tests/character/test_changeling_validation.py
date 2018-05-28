@@ -29,7 +29,7 @@ only_one = [
     ('entitlement', ['honorable knights', 'dishonorable knights'])
 ]
 @pytest.mark.parametrize('key, values', only_one)
-def test_many_courts(key, values):
+def test_single_tags(key, values):
     char = npc.Character(type=['changeling'], **{key: values})
     char.validate()
     assert 'Multiple {key}s: {vals}'.format(key=key, vals=", ".join(values)) in char.problems

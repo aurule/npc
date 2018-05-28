@@ -1,5 +1,5 @@
 from collections import defaultdict
-from .util import OutOfBoundsError, flatten
+from .util import OutOfBoundsError, flatten, merge_to_dict
 
 class Character(defaultdict):
     """
@@ -22,6 +22,7 @@ class Character(defaultdict):
 
     GROUP_TAGS = (
         'court', 'motley', 'entitlement', # changeling
+        'pack', 'tribe', 'lodge',         # werewolf
         'group')                          # universal
     """tuple (str): Group-like tags. These all accept an accompanying `rank`
         tag."""
@@ -104,6 +105,20 @@ class Character(defaultdict):
         bool: Whether this character has a path
         """
         return 'path' in self and self['path']
+
+    @property
+    def locations(self):
+        """
+        iter: Non-empty foreign and location names
+        """
+        return filter(bool, self['foreign'] + self['location'])
+
+    @property
+    def has_locations(self):
+        """
+        bool: Whether this character has non-empty location names
+        """
+        return len(list(self.locations)) >= 1
 
     def get_first(self, key, default=None):
         """
@@ -218,17 +233,16 @@ class Character(defaultdict):
 
         Args:
             key (str): Name of the key
-            value (any): Value to add to the key's list
+            value (any): Value to add to the key's list. If value itself is a
+                list, its contents will be appended to our own.
 
         Returns:
             This character object. Convenient for chaining.
         """
         if key in self.STRING_FIELDS:
             self[key] += value
-        elif value is None:
-            self[key]
         else:
-            self[key].append(value)
+            merge_to_dict(self, key, value)
 
         return self
 
@@ -244,6 +258,33 @@ class Character(defaultdict):
             This character object. Convenient for chaining.
         """
         self['rank'][group].append(value)
+        return self
+
+    def merge_all(self, other_dict: dict):
+        """
+        Add all data from other_dict into this character
+
+        The value for each key in other_dict is appended to our own value for
+        that key. If that value is an array, its elements are joined onto our
+        own. Otherwise, the value is simply appended.
+
+        This method requires that keys with special formatting like `ranks` are
+        formatted appropriately in other_dict.
+
+        Args:
+            other_dict (dict): Dict of data to merge
+
+        Returns:
+            This character object. Convenient for changing.
+        """
+
+        for key, value in other_dict.items():
+            if key == 'rank':
+                for group_name, group_rank in value.items():
+                    merge_to_dict(self['rank'], group_name, group_rank)
+            else:
+                self.append(key, value)
+
         return self
 
     def validate_tag_present_and_filled(self, tag: str):
@@ -311,6 +352,8 @@ class Character(defaultdict):
 
         if self.type_key == "changeling":
             self._validate_changeling(strict=strict)
+        if self.type_key == 'werewolf':
+            self._validate_werewolf(strict=strict)
 
         return self.valid
 
@@ -340,6 +383,22 @@ class Character(defaultdict):
         self.validate_tag_appears_once('motley')
         self.validate_tag_appears_once('entitlement')
 
+    def _validate_werewolf(self, strict=False):
+        """
+        Validate the basics of a werewolf character
+
+        Validations:
+        * Zero or one auspice
+        * Zero or one tribe
+        * Zero or one pack
+        * Zero or one lodge
+        """
+
+        self.validate_tag_appears_once('auspice')
+        self.validate_tag_appears_once('tribe')
+        self.validate_tag_appears_once('pack')
+        self.validate_tag_appears_once('lodge')
+
     def has_items(self, key, threshold=1):
         """
         Get whether there are a certain number of values for key
@@ -358,7 +417,7 @@ class Character(defaultdict):
         if threshold < 1:
             raise OutOfBoundsError
 
-        return len(self[key]) >= threshold
+        return len(self.get(key, [])) >= threshold
 
     def copy_and_alter(self, func):
         """
@@ -439,6 +498,11 @@ class Character(defaultdict):
                     lines.append("@seeming {}".format(self.get_first('seeming')))
                 if 'kith' in self:
                     lines.append("@kith {}".format(self.get_first('kith')))
+        elif self.type_key == 'werewolf':
+            if 'auspice' in self:
+                lines.append("@werewolf {}".format(self.get_first('auspice')))
+            else:
+                lines.append("@type Werewolf")
         else:
             lines.append("@type {}".format(self.get_first('type')))
 
@@ -448,7 +512,9 @@ class Character(defaultdict):
         tags_or_flag('foreign')
         tags_for_all('location')
         add_flag('wanderer')
+
         tags_for_all('freehold')
+
         for tagname in self.GROUP_TAGS:
             for groupname in self[tagname]:
                 lines.append("@{} {}".format(tagname, groupname))

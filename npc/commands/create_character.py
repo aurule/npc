@@ -88,15 +88,6 @@ def changeling(name, seeming, kith, *,
     groups = kwargs.get('groups', [])
     location = kwargs.get('location', None)
 
-    seeming_re = re.compile(
-        r'^(\s+)seeming(\s+)\w+$',
-        re.MULTILINE | re.IGNORECASE
-    )
-    kith_re = re.compile(
-        r'^(\s+)kith(\s+)\w+$',
-        re.MULTILINE | re.IGNORECASE
-    )
-
     # build minimal Character
     temp_char = _minimal_character(
         ctype='changeling',
@@ -114,6 +105,16 @@ def changeling(name, seeming, kith, *,
 
     def _insert_sk_data(data):
         """Insert seeming and kith in the advantages block of a template"""
+
+        seeming_re = re.compile(
+            r'^(\s+)seeming(\s+)\w+$',
+            re.MULTILINE | re.IGNORECASE
+        )
+        kith_re = re.compile(
+            r'^(\s+)kith(\s+)\w+$',
+            re.MULTILINE | re.IGNORECASE
+        )
+
         seeming_name = temp_char.get_first('seeming')
         seeming_key = seeming.lower()
         if seeming_key in prefs.get('changeling.seemings'):
@@ -136,7 +137,54 @@ def changeling(name, seeming, kith, *,
 
     return _cp_template_for_char(name, temp_char, prefs, fn=_insert_sk_data)
 
-def _minimal_character(ctype, groups, dead, foreign, location, prefs):
+def werewolf(name, auspice, *, tribe=None, pack=None, **kwargs):
+    """
+    Create a Werewolf character.
+
+    Args:
+        name (str): Base file name
+        auspice (str): Name of the character's Auspice.
+        tribe (str): Name of the character's Tribe. Leave empty for Ghost Wolves.
+        pack (str): name of the character's pack.
+        dead (bool|str): Whether to add the @dead tag. Pass False to exclude it
+            (the default), an empty string to inlcude it with no details given,
+            and a non-empty string to include the tag along with the contents of
+            the argument.
+        foreign (bool|str): Details of non-standard residence. Leave empty to
+            exclude the @foreign tag.
+        location (str): Details about where the character lives. Leave empty to
+            exclude the @location tag.
+        groups (list): One or more names of groups the character belongs to.
+            Used to derive path.
+        prefs (Settings): Settings object to use. Uses internal settings by
+            default.
+
+    Returns:
+        Result object. Openable will contain the path to the new character file.
+    """
+    prefs = kwargs.get('prefs', settings.InternalSettings())
+    groups = kwargs.get('groups', [])
+    location = kwargs.get('location', None)
+    dead = kwargs.get('dead', False)
+    foreign = kwargs.get('foreign', False)
+
+    # build minimal Character
+    temp_char = _minimal_character(
+        ctype='werewolf',
+        groups=groups,
+        dead=dead,
+        foreign=foreign,
+        location=location,
+        prefs=prefs)
+    temp_char.append('auspice', auspice.title())
+    if tribe:
+        temp_char.append('tribe', tribe.title())
+    if pack:
+        temp_char.append('pack', pack)
+
+    return _cp_template_for_char(name, temp_char, prefs)
+
+def _minimal_character(ctype: str, groups, dead, foreign, location, prefs):
     """
     Create a minimal character object
 
@@ -157,16 +205,20 @@ def _minimal_character(ctype, groups, dead, foreign, location, prefs):
         Character object
     """
     temp_char = Character()
-    temp_char.append('description', prefs.get('character_header'))
-    temp_char.append('type', ctype.title())
+
+    tags = {}
+    tags['description'] = prefs.get('character_header')
+    tags['type'] = ctype.title()
     if groups:
-        temp_char['group'] = groups
+        tags['group'] = groups
     if dead is not False:
-        temp_char.append('dead', dead)
+        tags['dead'] = dead
     if foreign is not False:
-        temp_char.append('foreign', foreign)
+        tags['foreign'] = foreign
     if location is not False:
-        temp_char.append('location', location)
+        tags['location'] = location
+
+    temp_char.merge_all({**prefs.get('tag_defaults'), **tags})
 
     return temp_char
 

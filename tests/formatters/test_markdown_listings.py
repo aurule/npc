@@ -48,13 +48,13 @@ class TestIncludeMetadata:
 
     @pytest.mark.parametrize('format_name', npc.formatters.markdown.SUPPORTED_METADATA_TYPES)
     def test_valid_formats(self, format_name):
-        listing = Listing(include_metadata=format_name, metadata=self.metadata)
+        listing = Listing(metadata_format=format_name, metadata=self.metadata)
         assert listing.result
         with open(fixture_dir('listing', 'markdown', 'metadata', "metadata-{}.txt".format(format_name)), 'r') as f:
             assert f.read() in listing.output
 
     def test_invalid_format(self):
-        listing = Listing(include_metadata='soap', metadata=self.metadata)
+        listing = Listing(metadata_format='soap', metadata=self.metadata)
         assert listing.result.success == False
 
 class TestPartialOption:
@@ -67,26 +67,26 @@ class TestPartialOption:
         assert "I'm footer content! Woohoo!" not in listing.output
 
     def test_hides_metadata(self):
-        listing = Listing(include_metadata='mmd', metadata=self.metadata, partial=True)
+        listing = Listing(metadata_format='mmd', metadata=self.metadata, partial=True)
         assert listing.result
         assert "friend" not in listing.output
 
-class TestSectioner:
-    def test_no_default_sections(self):
-        listing = Listing()
-        assert listing.result
-        assert len(listing.sections) == 0
+# class TestSectioner:
+#     def test_no_default_sections(self):
+#         listing = Listing()
+#         assert listing.result
+#         assert len(listing.sections) == 0
 
-    def test_sectioner_is_inserted(self):
-        listing = Listing(sectioner=npc.commands.listing.get_sectioner('last'))
-        assert listing.result
-        assert len(listing.sections) == 5
+#     def test_sectioner_is_inserted(self):
+#         listing = Listing(sectioners=[npc.commands.listing.get_sectioner('last')])
+#         assert listing.result
+#         assert len(listing.sections) == 5
 
-class TestProgressBar:
-    def record_progress(self, num, total):
-        self.progress_num = num
+# class TestProgressBar:
+#     def record_progress(self, num, total):
+#         self.progress_num = num
 
-    def test_progress_per_character(self):
-        """The progress meter should be updated once for each character"""
-        listing = Listing(progress=self.record_progress)
-        assert self.progress_num == len(Listing.CHARACTER_NAMES)
+#     def test_progress_per_character(self):
+#         """The progress meter should be updated once for each character"""
+#         listing = Listing(progress=self.record_progress)
+#         assert self.progress_num == len(Listing.CHARACTER_NAMES)

@@ -13,6 +13,10 @@ from .character import Character
 VALID_EXTENSIONS = ('.nwod', '.dnd3', '.dfrpg')
 """tuple: file extensions that should be parsed"""
 
+
+SECTION_RE = re.compile(r'^--.+--\s*$')
+TAG_RE = re.compile(r'^@(?P<tag>#\w+|\w+)\s+(?P<value>.*)$')
+
 def get_characters(search_paths=None, ignore_paths=None):
     """
     Get data from character files
@@ -112,17 +116,14 @@ def parse_character(char_file_path: str) -> Character:
         The `description` key stores a simple string, and the `rank` key stores
         a dict of list entries. Those keys are individual group names.
     """
-    name_re = re.compile(r'(?P<name>[\w]+\.?(?:\s[\w.]+)*)(?: - )?.*')
-    section_re = re.compile(r'^--.+--\s*$')
-    tag_re = re.compile(r'^@(?P<tag>#\w+|\w+)\s+(?P<value>.*)$')
 
     # derive character name from basename
     basename = path.basename(char_file_path)
-    match = name_re.match(path.splitext(basename)[0])
+    name = path.splitext(basename)[0].split(' - ', 1)[0]
 
     # instantiate new character
     parsed_char = Character(
-        name=[match.group('name')],
+        name=[name],
         path=char_file_path
     )
 
@@ -132,10 +133,10 @@ def parse_character(char_file_path: str) -> Character:
 
         for line in char_file:
             # stop processing once we see game stats
-            if section_re.match(line):
+            if SECTION_RE.match(line):
                 break
 
-            match = tag_re.match(line)
+            match = TAG_RE.match(line)
             if match:
                 tag = match.group('tag').lower()
                 value = match.group('value')
@@ -154,6 +155,9 @@ def parse_character(char_file_path: str) -> Character:
                     if len(bits) > 1:
                         parsed_char.append('kith', bits[1])
                     continue
+                elif tag == 'werewolf':
+                    parsed_char.append('type', 'Werewolf')
+                    parsed_char.append('auspice', value)
 
                 # replace first name
                 if tag == 'realname':

@@ -27,19 +27,36 @@ def load_json(filename):
     Returns:
         List or dict from `json.loads()`
     """
-    comment_re = re.compile(
-        r'(^)?[^\S\n]*/(?:\*(.*?)\*/[^\S\n]*|/[^\n]*)($)?',
-        re.DOTALL | re.MULTILINE
-    )
+
+    def remove_comments(json_like):
+        """
+        Removes C-style comments from *json_like* and returns the result.
+        """
+        comments_re = re.compile(
+            r'//.*?$|/\*.*?\*/|\'(?:\\.|[^\\\'])*\'|"(?:\\.|[^\\"])*"',
+            re.DOTALL | re.MULTILINE
+        )
+        def replacer(match):
+            s = match.group(0)
+            if s[0] == '/': return ""
+            return s
+        return comments_re.sub(replacer, json_like)
+
+    def remove_trailing_commas(json_like):
+        """
+        Removes trailing commas from *json_like* and returns the result.
+        """
+        trailing_object_commas_re = re.compile(r'(,)\s*}(?=([^"\\]*(\\.|"([^"\\]*\\.)*[^"\\]*"))*[^"]*$)')
+        trailing_array_commas_re = re.compile(r'(,)\s*\](?=([^"\\]*(\\.|"([^"\\]*\\.)*[^"\\]*"))*[^"]*$)')
+        # Fix objects {} first
+        objects_fixed = trailing_object_commas_re.sub("}", json_like)
+        # Now fix arrays/lists [] and return the result
+        return trailing_array_commas_re.sub("]", objects_fixed)
+
     with open(filename) as json_file:
         content = ''.join(json_file.readlines())
-
-        ## Looking for comments
-        match = comment_re.search(content)
-        while match:
-            # single line comment
-            content = content[:match.start()] + content[match.end():]
-            match = comment_re.search(content)
+        content = remove_comments(content) # Remove comments
+        content = remove_trailing_commas(content) # Remove trailing commas
 
         # Return parsed json
         try:
@@ -52,9 +69,9 @@ def load_json(filename):
             err.nicemsg = "Could not load '{0}': {1}".format(filename, err.strerror)
             raise err
 
-def error(*args, **kwargs):
+def print_err(*args, **kwargs):
     """
-    Print an error message to stderr.
+    Print a message to stderr.
 
     Args:
         Same as print(). The `file` param is prepopulated with sys.stderr.
@@ -82,6 +99,24 @@ def flatten(thing):
                 yield flattened_item
         else:
             yield item
+
+def merge_to_dict(target_dict: dict, key: str, value):
+    """
+    Merge a key and value into an existing dict
+
+    Assumes that target_dict[key] exists and responds to `append`.
+
+    Args:
+        target_dict (dict): Dictionary to merge into
+        key (str): Key to merge
+        value (any):
+    """
+    if value is None:
+        target_dict[key]
+    elif hasattr(value, '__iter__') and not isinstance(value, str):
+        target_dict[key] += value
+    else:
+        target_dict[key].append(value)
 
 def find_campaign_root():
     """
@@ -130,3 +165,38 @@ class Singleton(type):
 
 class OutOfBoundsError(ValueError):
     """Raise when a function input is outside of permitted bounds"""
+
+def serialize_args(*argnames, **full_args):
+    """
+    Split positional args from a set of keyword args
+
+    Args:
+        argnames (List[str]): Names of args to make positional
+        full_args (dict): Keyword arguments dict
+
+    Returns:
+        Tuple of (positional args list, keyword args dict).
+    """
+    serial_args = [full_args.pop(k) for k in argnames]
+    return serial_args, full_args
+
+def listify_args(*argnames, **full_args):
+    """
+    Modify named keyword arguments to make them lists instead of strings.
+
+    The lists are created by splitting each named value on commas, then
+    stripping any extra white space. If the named arg is None, it is not
+    modified.
+
+    Args:
+        argnames (List[str]): List of keyword argument names to modify
+        full_args (dict): Keyword arguments dict
+
+    Returns:
+        New keyword arguments dict with the named arguments translated from
+        strings into lists of strings.
+    """
+    for argname in argnames:
+        if argname in full_args and full_args[argname] is not None:
+            full_args[argname] = [s.strip() for s in full_args[argname].split(',') if s]
+    return full_args

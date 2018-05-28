@@ -4,9 +4,31 @@ import os
 from tests.util import fixture_dir
 
 def test_remove_filename_comments():
-    parseables = fixture_dir('parsing', 'characters', 'Fetches')
+    parseables = fixture_dir('parsing', 'characters', 'Fetches', 'macho mannersson - faker.nwod')
     characters = list(npc.parser.get_characters(search_paths=[parseables]))
     assert characters[0]['name'][0] == 'macho mannersson'
+
+class TestSpecialCharacters:
+
+    def test_allow_apostrophes_in_names(self):
+        parseables = fixture_dir('parsing', 'characters', 'Fetches', "manny o'mann - super faker.nwod")
+        characters = list(npc.parser.get_characters(search_paths=[parseables]))
+        assert characters[0]['name'][0] == "manny o'mann"
+
+    def test_allow_periods_in_names(self):
+        parseables = fixture_dir('parsing', 'characters', 'Fetches', "Dr. Manny Mann - fakier.nwod")
+        characters = list(npc.parser.get_characters(search_paths=[parseables]))
+        assert characters[0]['name'][0] == "Dr. Manny Mann"
+
+    def test_allow_hyphens_in_names(self):
+        parseables = fixture_dir('parsing', 'characters', 'Fetches', "Manny Manly-Mann - fakiest.nwod")
+        characters = list(npc.parser.get_characters(search_paths=[parseables]))
+        assert characters[0]['name'][0] == "Manny Manly-Mann"
+
+    def test_allow_commas_in_names(self):
+        parseables = fixture_dir('parsing', 'characters', 'Fetches', "Manners Mann, Ph.D. - fakierest.nwod")
+        characters = list(npc.parser.get_characters(search_paths=[parseables]))
+        assert characters[0]['name'][0] == "Manners Mann, Ph.D."
 
 class TestInclusion:
     """Tests which files are included in the parsed data"""
@@ -71,6 +93,9 @@ class TestTags:
 
     def test_comment(self, basic_character):
         assert '#comment' not in basic_character
+
+    def test_foreign(self, basic_character):
+        assert 'foreign' in basic_character
 
     def test_changeling_shortcut(self, character):
         """@changeling should set type, seeming, and kith"""

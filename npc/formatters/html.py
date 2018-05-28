@@ -2,39 +2,40 @@
 HTML formatter for creating a page of characters.
 """
 
-import html
 import tempfile
-from markdown import Markdown
 from mako.template import Template
-from .. import util, settings
+
+import npc
+from npc import settings
+from npc.util import result
 
 SUPPORTED_METADATA_TYPES = ['meta']
 """Recognized metadata type names"""
 
-def listing(characters, outstream, *, include_metadata=None, metadata=None, partial=False, **kwargs):
+def listing(characters, outstream, *, metadata=None, partial=False, **kwargs):
     """
     Create an html character listing
 
     Args:
         characters (list): Character info dicts to show
         outstream (stream): Output stream
-        include_metadata (string|None): Whether to include metadata, and what
-            format to use. Accepts values of 'mmd', 'yaml', or 'yfm'. Metadata
-            will always include a title and creation date.
+        metadata_format (string|None): Whether to include metadata, and what
+            format to use. Accepts a value of 'meta'. Metadata will always
+            contain a title and creation date, if included.
         metadata (dict): Additional metadata to insert. Ignored unless
-            include_metadata is set. The keys 'title', and 'created' will
+            metadata_format is set. The keys 'title', and 'created' will
             overwrite the generated values for those keys.
-        prefs (Settings): Settings object. Used to get the location of template
-            files.
         partial (bool): Whether to produce partial output by omitting the head
             and other tags. Only the content of the body tag is created.
-            Does not allow metadata to be included, the include_metadata and
+            Does not allow metadata to be included, so the metadata_format and
             metadata args are ignored.
+        prefs (Settings): Settings object. Used to get the location of template
+            files.
         encoding (string): Encoding format of the output text. Overrides the
             value in settings.
-        sectioner (function): Function that returns a section heading for each
-            character. When its return value changes, the section template is
-            rendered with the new title. Omit to suppress sections.
+        sectioners (List[BaseSectioner]): List of BaseSectioner objects to
+            render section templates based on character attributes. Omit to
+            suppress sections.
         progress (function): Callback function to track the progress of
             generating a listing. Must accept the current count and total count.
             Should print to stderr.
@@ -43,65 +44,20 @@ def listing(characters, outstream, *, include_metadata=None, metadata=None, part
         A util.Result object. Openable will not be set.
     """
     prefs = kwargs.get('prefs', settings.InternalSettings())
-    encoding = kwargs.get('encoding', prefs.get('listing.html_encoding'))
-    if not metadata:
+    if metadata is None:
         metadata = {}
-    sectioner = kwargs.get('sectioner', lambda c: '')
-    update_progress = kwargs.get('progress', lambda i, t: False)
 
-    encoding_options = {
-        'output_encoding': encoding,
-        'encoding_errors': 'xmlcharrefreplace'
-    }
+    renderer = npc.formatters.HtmlFormatter(
+        metadata=metadata,
+        sectioners=kwargs.get('sectioners', []),
+        update_progress=kwargs.get('update_progress', lambda i, t: False),
+        partial=partial,
+        metadata_format=kwargs.get('metadata_format'),
+        encoding=kwargs.get('encoding', prefs.get('listing.html_encoding')),
+        prefs=prefs
+    )
 
-    if not partial:
-        if include_metadata:
-            # load and render template
-            header_file = prefs.get("listing.templates.html.header.{}".format(include_metadata))
-            if not header_file:
-                return util.result.OptionError(errmsg="Unrecognized metadata format option '{}'".format(include_metadata))
-
-            header_template = Template(filename=header_file, **encoding_options)
-            outstream.write(header_template.render(encoding=encoding, metadata=metadata))
-        else:
-            header_template = Template(filename=prefs.get("listing.templates.html.header.plain"), **encoding_options)
-            outstream.write(header_template.render(encoding=encoding))
-
-    with tempfile.TemporaryDirectory() as tempdir:
-        md_converter = Markdown(extensions=['markdown.extensions.smarty'])
-
-        # directly access certain functions for speed
-        _clean_conv = md_converter.reset
-        _prefs_get = prefs.get
-        _out_write = outstream.write
-
-        section_title = ''
-        section_template = Template(
-            filename=_prefs_get("listing.templates.html.section"),
-            module_directory=tempdir, **encoding_options)
-        total = len(characters)
-        update_progress(0, total)
-        for index, char in enumerate(characters):
-            if sectioner(char) != section_title:
-                section_title = sectioner(char)
-                _out_write(
-                    section_template.render(
-                        title=section_title))
-            body_file = _prefs_get("listing.templates.html.character.{}".format(char.type_key))
-            if not body_file:
-                body_file = _prefs_get("listing.templates.html.character.default")
-            body_template = Template(filename=body_file, module_directory=tempdir, **encoding_options)
-            _out_write(
-                body_template.render(
-                    character=char.copy_and_alter(html.escape),
-                    mdconv=_clean_conv().convert
-                    ))
-            update_progress(index + 1, total)
-
-    if not partial:
-        footer_template = Template(filename=prefs.get("listing.templates.html.footer"), **encoding_options)
-        outstream.write(footer_template.render())
-    return util.result.Success()
+    return renderer.render(characters, outstream)
 
 def report(tables, outstream, **kwargs):
     """
@@ -137,4 +93,4 @@ def report(tables, outstream, **kwargs):
         for key, table in tables.items():
             outstream.write(table_template.render(data=table, tag=key))
 
-    return util.result.Success()
+    return result.Success()

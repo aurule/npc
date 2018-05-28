@@ -9,7 +9,8 @@
 // "My Campaign/.npc/settings.json".
 {
 
-    // Name of the current campaign. This should always be set in the campaign settings file.
+    // Name of the current campaign. This should always be set in the campaign
+    // settings file.
     "campaign_name": "My Campaign",
 
     // Command to invoke your text editor of choice. This command must accept a
@@ -19,34 +20,47 @@
     // These are the root paths which NPC will use when finding campaign files.
     "paths": {
 
-        // Paths that will always be ignored. Evaluated relative to the campaign
-        // root.
-        "ignore": [],
+        // Paths that will be ignored for individual commands. Evaluated
+        // relative to the campaign root.
+        "ignore": {
+
+            // Paths that will be ignored for all commands.
+            "always": [],
+
+            // Paths that will be ignored for the named command.
+            "reorg": [],
+            "dump": [],
+            "lint": [],
+            "report": [],
+            "find": [],
+            "listing": []
+        },
 
         // The hierarchy describes how to build a path from character tags. Each
         // component must be separated by a '/' character.
         "hierarchy": "{type}/{type-social}/{type-political}/{type-unit}/{groups}",
 
         // Directories which are required for the campaign.
-        // The command `npc init` creates all of these directories. If any of these
-        // are missing, some commands may not work.
+        // The command `npc init` creates all of these directories. If any of
+        // these are missing, some commands may not work.
         "required": {
 
-            // The base characters path determines which folder will be searched for
-            // character files.
+            // The base characters path determines which folder will be searched
+            // for character files.
             "characters": "Characters",
 
-            // The session path is searched for session log files, and is where new
-            // ones will be created.
+            // The session path is searched for session log files, and is where
+            // new ones will be created.
             "session": "Session History",
 
-            // The plot path is searched for plot files, and is where new ones will
-            // be created.
+            // The plot path is searched for plot files, and is where new ones
+            // will be created.
             "plot": "Plot",
 
-            // List of user-defined top-level directory paths. These are not used by NPC, but
-            // can be created for convenience. Each path can include multiple folders, and all
-            // of those folders will be created.
+            // List of user-defined top-level directory paths. These are not
+            // used by NPC, but can be created for convenience. Each path can
+            // include multiple folders, and all of those folders will be
+            // created.
             "additional_paths": []
         }
     },
@@ -60,7 +74,8 @@
             // Directory name to use when the path hierarchy includes {type}
             "type_path": "Humans",
 
-            // Template that's copied into the base character path when creating a new character sheet.
+            // Template that's copied into the base character path when creating
+            // a new character sheet.
             "sheet_template": "templates/Human Character Sheet.nwod",
 
             // Translate type-dependent hierarchy path components into the
@@ -125,10 +140,34 @@
             },
 
             "missing_values": {}
+        },
+
+        // Settings for werewolf characters
+        "werewolf": {
+            "type_path": "Werewolves",
+            "sheet_template": "templates/Werewolf Character Sheet.nwod",
+            "tag_names": {
+                "type-unit": "pack",
+                "type-social": "tribe",
+                "type-political": "auspice",
+                "type-groups": "lodge"
+            },
+
+            "missing_values": {
+                "tribe": "Ghost Wolves",
+                "auspice": "Pure"
+            }
+        },
+
+        // Settings for spirit characters
+        "spirit": {
+            "type_path": "Spirits",
+            "sheet_template": "templates/Spirit Character Sheet.nwod"
         }
     },
 
     "story": {
+
         // Session template used for making new session entries
         "session_template": "templates/Session Log.md",
 
@@ -138,6 +177,32 @@
 
     // Text to add to the beginning of new character files.
     "character_header": "",
+
+    // Default tag values to add to new characters. Values given on the command
+    // line will replace these values.
+    "tag_defaults": {
+
+        // Use the tag name as the key and the desired value as the value.
+        // "location": "New London, CT"
+
+        // To give multiple default values for a single tag, you can includ the
+        // tag more than once:
+        //
+        // "group": "Rough Boys",
+        // "group": "School Bros"
+        //
+        // Or you can include a list of values for the tag:
+        //
+        // "group": [
+        //     "Rough Boys",
+        //     "School Bros"
+        // ]
+
+        // Default ranks must be specified by group name:
+        // "rank": {
+        //     "School Bros": "Junior"
+        // }
+    },
 
     // Settings for the report command
     "report": {
@@ -158,15 +223,25 @@
         }
     },
 
+    // Settings for the list command
     "listing": {
+
         // Default format to use when creating a list of characters. Recognized
         // formats are markdown or md, html or htm, and json.
         "default_format": "markdown",
 
-        // Default sorting method for character listings. The method "last" sorts by
-        // the last word in the character's name, and the method "first" sorts by
-        // the first word in the character's name.
-        "sort_by": "last",
+        // Default sort order for character listings. Characters are sorted by
+        // their values for each tag in order, and each sort is
+        // smallest-to-largest by default. To sort a tag largest-to-smallest
+        // instead, write it as "-tag".
+        "sort_by": [
+            "last"
+        ],
+
+        // Starting level for section headers. Translates directly to the header
+        // tag used: 1 to h1, 2 to h2, etc. Set higher if you want the first
+        // section heading to have a smaller header.
+        "base_header_level": 1,
 
         // Encoding to use when creating html data for an NPC listing. Any
         // valid html charset can be used, but the most common are "ascii" and
@@ -189,14 +264,19 @@
                 // not used by default for markdown listings.
                 "footer": "templates/listing/Footer.md.mako",
 
-                // Section header content added between groups of characters.
-                "section": "templates/listing/Section.md.mako",
+                // Where to find each named section template
+                "sections": {
+                    "simple": "templates/listing/sections/SimpleSection.md.mako"
+                },
 
-                // Templates for each character type. The template under "default"
-                // will be used whenever a type doesn't have its own template.
+                // Templates for each character type. The template under
+                // "default" will be used whenever a type doesn't have its own
+                // template.
                 "character": {
                     "default": "templates/listing/Character.md.mako",
-                    "changeling": "templates/listing/Changeling.md.mako"
+                    "changeling": "templates/listing/Changeling.md.mako",
+                    "werewolf": "templates/listing/Werewolf.md.mako",
+                    "spirit": "templates/listing/Spirit.md.mako"
                 }
             },
 
@@ -207,10 +287,14 @@
                     "plain": "templates/listing/Header.html.plain.mako"
                 },
                 "footer": "templates/listing/Footer.html.mako",
-                "section": "templates/listing/Section.html.mako",
+                "sections": {
+                    "simple": "templates/listing/sections/SimpleSection.html.mako"
+                },
                 "character": {
                     "default": "templates/listing/Character.html.mako",
-                    "changeling": "templates/listing/Changeling.html.mako"
+                    "changeling": "templates/listing/Changeling.html.mako",
+                    "werewolf": "templates/listing/Werewolf.html.mako",
+                    "spirit": "templates/listing/Spirit.html.mako"
                 }
             }
         },
@@ -238,11 +322,12 @@
                 // Default metadata format to use.
                 // The markdown output formatter can add metadata using the
                 // MultiMarkdown and Yaml Front Matter formats. To use
-                // MultiMarkdown, use the value "mmd". To use Yaml Front Matter, use
-                // the values "yfm" or "yaml".
+                // MultiMarkdown, use the value "mmd". To use Yaml Front Matter,
+                // use the values "yfm" or "yaml".
                 "default_format": "mmd",
 
-                // Additional metadata keys to include in markdown character lists.
+                // Additional metadata keys to include in markdown character
+                // lists.
                 "additional_keys": {}
             },
 
@@ -260,5 +345,16 @@
                 "additional_keys": {}
             }
         }
+    },
+
+    // Settings for the dump command
+    "dump": {
+
+        // Default sort order for character dumps. Sorting does not happen by
+        // default, so be sure to enable `do_sort` to see an effect. Characters
+        // are sorted by their values for each tag in order, and each sort is
+        // smallest-to-largest by default. To sort a tag largest-to-smallest
+        // instead, write it as "-tag".
+        "sort_by": []
     }
 }

@@ -48,6 +48,7 @@ clean:
 	find . -name '*.pyc' -delete
 	find . -name '__pycache__' -type d | xargs rm -fr
 	find . -name '.cache' -type d | xargs rm -fr
+	find . -name '<Temp*' -type d -print0 | xargs -0 rm -fr
 	rm -fr deb_dist dist npc.egg-info
 
 .PHONY: clean-all

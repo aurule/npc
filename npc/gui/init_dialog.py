@@ -1,7 +1,7 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 from contextlib import contextmanager
 
-from npc import commands
+from . import commands, util
 from .uis.init_dialog import Ui_InitDialog
 
 class InitDialog(QtWidgets.QDialog, Ui_InitDialog):
@@ -34,23 +34,9 @@ class InitDialog(QtWidgets.QDialog, Ui_InitDialog):
     def set_value(self, key, value):
         self.values[key] = value
 
-    @contextmanager
-    def safe_command(self, command):
-        """
-        Helper to suppress AttributeErrors from commands
-
-        Args:
-            command (callable): The command to run. Any AttributeError raised by
-                the command will be suppressed.
-        """
-        try:
-            yield command
-        except AttributeError as err:
-            pass
-
     def update_dirlist(self):
         """Update the preview of directories to create"""
-        with self.safe_command(commands.init) as command:
+        with util.safe_command(commands.init) as command:
             result = command(dryrun=True, prefs=self.prefs, **self.values)
             self.initFoldersToCreate.setText("\n".join(sorted(result.changes)))
 

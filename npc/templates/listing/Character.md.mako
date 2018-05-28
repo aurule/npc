@@ -1,10 +1,10 @@
-<%page args="character"/>\
+<%page args="character, header_level"/>\
 <%def name="make_ranks(group_name)">\
     % if group_name in character['rank']:
  (${', '.join(character['rank'][group_name])})\
     % endif
 </%def>\
-<%text>###</%text> ${character.get_first('name')}\
+${'#' * header_level} ${character.get_first('name')}\
 % if 'dead' in character:
  (Deceased)\
 % endif
@@ -18,9 +18,11 @@ ${', '.join(character['title'])}
 % endif
 \
 ${'/'.join(character['type'])}\
-% if character.has_items('foreign') or character.has_items('location'):
- in ${' and '.join(character['foreign'] + character['location'])}\
-% endif
+%if character.has_locations:
+ in ${' and '.join(character.locations)}\
+%elif character.has_items('foreign'):
+ (foreign)
+%endif
 % if 'wanderer' in character:
 , Wanderer\
 % endif

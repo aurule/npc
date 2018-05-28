@@ -8,6 +8,7 @@
 // "My Campaign/.npc/settings-changeling.json".
 {
     "changeling": {
+        // Seemings that are allowed in the game
         "seemings": [
             "beast",
             "darkling",
@@ -16,6 +17,8 @@
             "ogre",
             "wizened"
         ],
+
+        // Kiths that are allowed in the game, organized by seeming.
         "kiths": {
             "beast": [
                 "broadback",
@@ -120,6 +123,9 @@
                 "fatemaker"
             ]
         },
+
+        // Descriptions for the seeming and kith blessings. Every seeming and
+        // kith must have a blessing.
         "blessings": {
             // seemings
             "beast": "8-again animal ken and free specialty; glamour adds to presence and composure",
@@ -231,6 +237,8 @@
             "thusser": "Spend glamour and sing/play instrument to hypnotize target (WM 110)",
             "fatemaker": "Spend 2 glamour on talecrafting to avoid cruel twist of fate (SaD 66)"
         },
+
+        // Seeming curse descriptions. Every seeming must have a curse.
         "curses": {
             "beast": "-4 untrained mental; no 10-again on Int",
             "darkling": "-1 to daytime contracts, -2 if sun visible",

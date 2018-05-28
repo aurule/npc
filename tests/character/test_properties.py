@@ -25,6 +25,21 @@ class TestAppend:
         char.append_rank("Knights of the Round Table", "Dancer")
         assert char["rank"]["Knights of the Round Table"] == ["Dancer"]
 
+    def test_append_list(self):
+        char = npc.Character()
+        char.append("title", "The Stern")
+        char.append("title", ["The Drunk", "The Wise"])
+        assert char["title"] == ["The Stern", "The Drunk", "The Wise"]
+
+def test_merge_all():
+    char = npc.Character()
+    char.append('name', 'Mr. Titleson')
+    char.append('title', 'The Wise')
+
+    more_tags = {'title': 'The Stern', 'location': 'Nothingtown'}
+    char.merge_all(more_tags)
+    assert char['title'] == ['The Wise', 'The Stern']
+
 class TestGetFirst:
     def test_normal(self):
         char = npc.Character(name=["hello", "goodbye"])
@@ -105,3 +120,49 @@ class TestTagContains:
         char.append('status', 'happy')
         char.append('status', 'secretly plotting the downfall of his enemies')
         assert char.tag_contains('status', 'downfall')
+
+class TestLocations:
+    def test_foreign(self):
+        char = npc.Character()
+        char.append('foreign', 'Mars')
+        assert 'Mars' in char.locations
+
+    def test_location(self):
+        char = npc.Character()
+        char.append('location', 'Mars')
+        assert 'Mars' in char.locations
+
+    def test_both(self):
+        char = npc.Character()
+        char.append('location', 'Mars')
+        char.append('foreign', 'Mercury')
+        assert 'Mars' in char.locations
+        assert 'Mercury' in char.locations
+
+    def test_removes_empties(self):
+        char = npc.Character()
+        char.append('location', 'Mars')
+        char.append('foreign', '')
+        assert len(list(char.locations)) == 1
+
+class TestHasLocations:
+    def test_foreign(self):
+        char = npc.Character()
+        char.append('foreign', 'Mars')
+        assert char.has_locations
+
+    def test_location(self):
+        char = npc.Character()
+        char.append('location', 'Mars')
+        assert char.has_locations
+
+    def test_both(self):
+        char = npc.Character()
+        char.append('location', 'Mars')
+        char.append('foreign', 'Mercury')
+        assert char.has_locations
+
+    def test_empty(self):
+        char = npc.Character()
+        char.append('foreign', '')
+        assert not char.has_locations

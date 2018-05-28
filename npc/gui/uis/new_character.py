@@ -11,7 +11,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 class Ui_NewCharacterDialog(object):
     def setupUi(self, NewCharacterDialog):
         NewCharacterDialog.setObjectName("NewCharacterDialog")
-        NewCharacterDialog.resize(450, 405)
+        NewCharacterDialog.resize(450, 432)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.MinimumExpanding, QtWidgets.QSizePolicy.MinimumExpanding)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
@@ -114,7 +114,7 @@ class Ui_NewCharacterDialog(object):
         self.typeLabel.setText(_translate("NewCharacterDialog", "T&ype"))
         self.typeSelect.setToolTip(_translate("NewCharacterDialog", "Type of character. Determines which fields are available."))
         self.nameLine.setText(_translate("NewCharacterDialog", "&Name"))
-        self.characterName.setToolTip(_translate("NewCharacterDialog", "The character\'s name"))
+        self.characterName.setToolTip(_translate("NewCharacterDialog", "The character\'s name. Use \' - \' to add a brief note."))
         self.groupLabel.setText(_translate("NewCharacterDialog", "&Group"))
         self.groupName.setToolTip(_translate("NewCharacterDialog", "Main group that the character belongs to"))
         self.locLabel.setText(_translate("NewCharacterDialog", "Location"))

@@ -1,13 +1,11 @@
-"""
-Shared helpers and utility functions
-"""
 
 from os import path, walk
 from contextlib import contextmanager
 import sys
 
 from npc.character import Character
-from npc import settings
+from npc import settings, util
+from . import character_sorter
 
 def create_path_from_character(character: Character, *, base_path=None, hierarchy=None, **kwargs):
     """
@@ -101,17 +99,6 @@ def create_path_from_character(character: Character, *, base_path=None, hierarch
             return test_path
         return base
 
-    def translate_by_type(component):
-        """
-        Translate a type-dependent path component into the corresponding tag
-        for the character's type.
-        """
-        return prefs.get(
-            'types.{char_type}.tag_names.{component}'.format(
-                char_type=character.type_key,
-                component=component),
-            component)
-
     def placeholder(component):
         return prefs.get(
             'types.{char_type}.missing_values.{component}'.format(
@@ -129,7 +116,7 @@ def create_path_from_character(character: Character, *, base_path=None, hierarch
 
         if '?' in component:
             tag_name, literal = component.split('?')
-            tag_name = translate_by_type(tag_name)
+            tag_name = prefs.translate_tag_for_character_type(character.type_key, tag_name)
             if tag_name == 'foreign':
                 # "foreign?" gets special handling to check the wanderer tag as well
                 if character.foreign:
@@ -138,7 +125,7 @@ def create_path_from_character(character: Character, *, base_path=None, hierarch
                 target_path = add_path_if_exists(target_path, literal)
             continue
 
-        tag_name = translate_by_type(component)
+        tag_name = prefs.translate_tag_for_character_type(character.type_key, component)
         if tag_name == 'type':
             # get the translated type path for the character's type
             target_path = add_path_if_exists(target_path, prefs.get('types.{}.type_path'.format(character.type_key), placeholder('type')))
@@ -187,37 +174,6 @@ def find_empty_dirs(root):
     for dirpath, dirs, files in walk(root):
         if not dirs and not files:
             yield dirpath
-
-def sort_characters(characters, order=None):
-    """
-    Sort a list of Characters.
-
-    Args:
-        characters (list): Characters to sort.
-        order (str|None): The order in which the characters should be sorted.
-            Unrecognized sort orders are ignored. Supported orders are:
-            * "last" - sort by last-most name (default)
-            * "first" - sort by first name
-
-    Returns:
-        List of characters ordered as requested.
-    """
-    def last_name(character):
-        """Get the character's last-most name"""
-        return character.get_first('name', '').split(' ')[-1]
-
-    def first_name(character):
-        """Get the character's first name"""
-        return character.get_first('name', '').split(' ')[0]
-
-    if order is None:
-        order = "last"
-
-    if order == "last":
-        return sorted(characters, key=last_name)
-    elif order == "first":
-        return sorted(characters, key=first_name)
-    return characters
 
 @contextmanager
 def smart_open(filename=None, binary=False):
