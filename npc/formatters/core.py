@@ -46,7 +46,6 @@ class TemplateFormatter:
             prefs (Settings): Settings object. Used to get the location of
                 template files.
         """
-        self.list_format = None # Override this!
 
         self.metadata = kwargs.get('metadata', {})
         self.metadata_format = kwargs.get('metadata_format')
@@ -65,6 +64,11 @@ class TemplateFormatter:
         else:
             self.character_header_level = 1
 
+    @property
+    def list_format(self):
+        raise NotImplementedError
+
+
     def render(self, characters, outstream):
         """
         Create a listing
@@ -76,8 +80,6 @@ class TemplateFormatter:
         Returns:
             A util.Result object. Openable will not be set.
         """
-        if self.list_format is None:
-            raise NotImplementedError
 
         header_result = self.render_header(outstream)
         if not header_result:
@@ -210,13 +212,15 @@ class MarkdownFormatter(TemplateFormatter):
         """
         super().__init__(**kwargs)
 
-        self.list_format = 'markdown'
-
         # coerce metadata format to canonical form
         if self.metadata_format == "yaml":
             self.metadata_format = "yfm"
         elif self.metadata_format == "multimarkdown":
             self.metadata_format = 'mmd'
+
+    @property
+    def list_format(self):
+        return 'markdown'
 
 class HtmlFormatter(TemplateFormatter):
     """
@@ -250,8 +254,6 @@ class HtmlFormatter(TemplateFormatter):
         """
         super().__init__(**kwargs)
 
-        self.list_format = 'html'
-
         self.encoding = kwargs.get('encoding', self.prefs.get('listing.html_encoding'))
         self.encoding_options = {
             'output_encoding': self.encoding,
@@ -267,6 +269,10 @@ class HtmlFormatter(TemplateFormatter):
 
         self.md_converter = Markdown(extensions=['markdown.extensions.smarty'])
         self._clean_conv = self.md_converter.reset
+
+    @property
+    def list_format(self):
+        return 'html'
 
     def char_args(self, character):
         """
