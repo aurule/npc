@@ -23,7 +23,7 @@ class Character(defaultdict):
     GROUP_TAGS = (
         'court', 'motley', 'entitlement', # changeling
         'pack', 'tribe', 'lodge',         # werewolf
-        'group')                          # universal
+        'group', 'employer')              # universal
     """tuple (str): Group-like tags. These all accept an accompanying `rank`
         tag."""
 
