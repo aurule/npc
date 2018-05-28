@@ -185,7 +185,7 @@
         // Use the tag name as the key and the desired value as the value.
         // "location": "New London, CT"
 
-        // To give multiple default values for a single tag, you can includ the
+        // To give multiple default values for a single tag, you can include the
         // tag more than once:
         //
         // "group": "Rough Boys",
