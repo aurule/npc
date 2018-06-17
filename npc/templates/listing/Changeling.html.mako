@@ -85,7 +85,7 @@ ${mdconv('*Mien:* ' + ' '.join(character['mien']))}
 ${mdconv('*Mask:* ' + ' '.join(character['mask']))}
 %endif
 \
-${mdconv('*Notes:* ' + character['description'])}
+${mdconv('*Notes:* ' + character.description)}
 \
 %if character.has_items('dead'):
 ${mdconv('*Dead:* ' + ' '.join(character['dead']))}

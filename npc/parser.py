@@ -113,7 +113,7 @@ def parse_character(char_file_path: str) -> Character:
 
     Returns:
         Character object. Most keys store a list of values from the character.
-        The `description` key stores a simple string, and the `rank` key stores
+        The string keys store a simple string, and the `rank` key stores
         a dict of list entries. Those keys are individual group names.
     """
 
@@ -172,7 +172,7 @@ def parse_character(char_file_path: str) -> Character:
                         parsed_char.append_rank(last_group, value)
                     continue
             else:
-                # don't add double newlines to the description text
+                # Ignore second empty description line in a row
                 if line == "\n":
                     if previous_line_empty:
                         continue
@@ -182,11 +182,9 @@ def parse_character(char_file_path: str) -> Character:
                     previous_line_empty = False
 
                 # all remaining text goes in the description
-                parsed_char.append('description', line)
+                parsed_char.append('description', line.strip())
                 continue
 
             parsed_char.append(tag, value)
 
-    # clean up leading and trailing whitespace
-    parsed_char['description'] = parsed_char['description'].strip()
     return parsed_char

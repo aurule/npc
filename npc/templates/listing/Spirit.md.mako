@@ -49,7 +49,7 @@ ${', '.join(["{}{}".format(g, make_ranks(g)) for g in character.get_remaining('g
 *Ban:* ${' '.join(character['ban'])}
 % endif
 
-*Notes:* ${character['description']}
+*Notes:* ${character.description}
 \
 % if character.has_items('dead'):
 

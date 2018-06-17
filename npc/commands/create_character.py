@@ -207,7 +207,7 @@ def _minimal_character(ctype: str, groups, dead, foreign, location, prefs):
     temp_char = Character()
 
     tags = {}
-    tags['description'] = prefs.get('character_header')
+    tags['description'] = [prefs.get('character_header')]
     tags['type'] = ctype.title()
     if groups:
         tags['group'] = groups

@@ -2,7 +2,7 @@ import npc
 import pytest
 
 def test_find_desc():
-    char = npc.Character(description='crazed moon staring guy')
+    char = npc.Character(description=['crazed moon staring guy'])
     res = npc.commands.find_characters(["desc: moon"], [char])
     assert char in res
 
@@ -48,11 +48,11 @@ class TestWildcard:
         assert 'char3' in res
 
     def test_text_tag(self):
-        char1 = npc.Character(name=["char1"], description="hello")
-        char2 = npc.Character(name=["char2"], description="")
+        char1 = npc.Character(name=["char1"], description=["hello"])
+        char2 = npc.Character(name=["char2"], description=[""])
         char3 = npc.Character(name=["char3"])
         raw_res = npc.commands.find_characters(["description: *"], [char1, char2, char3])
         res = list(map(lambda x: x.get_first('name'), raw_res))
         assert 'char1' in res
-        assert 'char2' not in res
+        assert 'char2' in res
         assert 'char3' not in res

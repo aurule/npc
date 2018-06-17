@@ -80,5 +80,5 @@ def test_rank():
 
 def test_description():
     desc = 'Fee fie fo fum! I smell the blood of an Englishman!'
-    char = npc.Character(description=desc)
+    char = npc.Character(description=[desc])
     assert desc in char.build_header()

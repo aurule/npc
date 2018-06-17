@@ -61,7 +61,7 @@ ${group}${make_ranks(group)}\
 *Appearance:* ${' '.join(character['appearance'])}
 % endif
 
-*Notes:* ${character['description']}
+*Notes:* ${character.description}
 % if character.has_items('dead'):
 
 *Dead:* ${' '.join(character['dead'])}

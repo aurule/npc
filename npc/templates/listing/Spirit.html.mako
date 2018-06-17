@@ -57,7 +57,7 @@ ${mdconv('*Appearance:* ' + ' '.join(character['appearance']))}
 ${mdconv('*Ban:* ' + ' '.join(character['ban']))}
 %endif
 \
-${mdconv('*Notes:* ' + character['description'])}
+${mdconv('*Notes:* ' + character.description)}
 \
 %if character.has_items('dead'):
 ${mdconv('*Dead:* ' + ' '.join(character['dead']))}

@@ -6,18 +6,23 @@ class Character(defaultdict):
     Object to hold and access data for a single character
 
     Can be accessed like a dictionary where missing keys will return an empty
-    array instead of throwing an exception. The "description" and "path" keys
-    are special: they will always contain a string.
+    array instead of throwing an exception. The "path" key is special: it will
+    always contain a string.
 
     While values can be accessed directly, it's better practice to use the
     getter and setter methods that are provided, since they automatically
     preserve the internal structure of the dict.
     """
 
-    STRING_FIELDS = ('description', 'path')
+    STRING_FIELDS = ('path',)
     """
     tuple (Str): String-only data. These are stored as plain strings and do not
         come from a tag.
+    """
+
+    IMPLICIT_FIELDS = ('description',)
+    """
+    tuple (Str): Fields without an explicit tag.
     """
 
     GROUP_TAGS = (
@@ -42,7 +47,7 @@ class Character(defaultdict):
     """tuple (str): Tags that must have a value. Shortcuts, like @changeling,
         are expanded during parsing and do not appear literally."""
 
-    KNOWN_TAGS = STRING_FIELDS + GROUP_TAGS + BARE_FLAGS + DATA_FLAGS + ADDON_TAGS + TAGS
+    KNOWN_TAGS = STRING_FIELDS + IMPLICIT_FIELDS + GROUP_TAGS + BARE_FLAGS + DATA_FLAGS + ADDON_TAGS + TAGS
     """tuple (str): All recognized tags. Other, unrecognized tags are fine to
         add and will be ignored by methods that don't know how to handle them."""
 
@@ -51,11 +56,10 @@ class Character(defaultdict):
         Create a new Character object.
 
         When supplying values through `attributes` or `**kwargs`, remember that
-        almost everything needs to be in a list. The exceptions are the
-        "description" and "path" keys, which must be strings, and the "rank"
-        key, which is special. It is a dict of dicts, and the members of that
-        dict are lists. When in doubt, it's safer to build the object using the
-        append and append_rank methods.
+        almost everything needs to be in a list. The exceptions are the "path"
+        key, which must be strings, and the "rank" key, which is special. It is
+        a dict of dicts, and the members of that dict are lists. When in doubt,
+        it's safer to build the object using the append and append_rank methods.
 
         Args:
             attributes (dict): Dictionary of attributes to insert into the
@@ -120,6 +124,14 @@ class Character(defaultdict):
         """
         return len(list(self.locations)) >= 1
 
+    @property
+    def description(self):
+        """
+        str: All description lines joined by newlines.
+        """
+        return "\n".join(self['description'])
+
+
     def get_first(self, key, default=None):
         """
         Get the first element from the named key.
@@ -133,10 +145,11 @@ class Character(defaultdict):
             The first value in the named key's array. Usually a string. Returns
             default if the key is not present or has no values.
 
-            The "description" and "path" keys are not arrays, so this method
-            will return the entire value.
+            The "path" and "rank" keys are not arrays, so this method behaves
+            differently. Passing "path" will return the entire path value, and
+            passing "ranks" will return the default.
         """
-        if key not in self:
+        if key not in self or key == 'rank':
             return default
 
         if key in self.STRING_FIELDS:
@@ -158,10 +171,11 @@ class Character(defaultdict):
             A slice of the key's array including all elements except the first.
             May be empty.
 
-            The "description" and "path" keys are not arrays, so this method
-            will return the entire value.
+            The "path" and "rank" keys are not arrays, so this method behaves
+            differently. Passing "path" will return the entire path value, and
+            passing "ranks" will return an empty array.
         """
-        if key not in self:
+        if key not in self or key == 'rank':
             return []
 
         if key in self.STRING_FIELDS:
@@ -335,7 +349,7 @@ class Character(defaultdict):
         """
 
         self.problems = []
-        if not self['description'].strip():
+        if not self.description.strip():
             self.problems.append("Missing description")
 
         self.validate_tag_present_and_filled('type')
@@ -530,4 +544,4 @@ class Character(defaultdict):
         tags_for_all('hidegroup')
         tags_for_all('hideranks')
 
-        return self['description'] + "\n".join(lines)
+        return self.description + "\n".join(lines)

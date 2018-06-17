@@ -10,6 +10,10 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 * New `employer` group-like tag
 
+### Changed
+
+* Description lines are now stored in an array. A string representation can be accessed with the `description` property.
+
 ## 1.4.0
 
 Werewolves are supported! Along with the tags, character sheet, and templates for that, there are a few other neat features.
