@@ -163,6 +163,19 @@
         "spirit": {
             "type_path": "Spirits",
             "sheet_template": "templates/Spirit Character Sheet.nwod"
+        },
+
+        // Settings for vampire characters
+        "vampire": {
+            "type_path": "Vampires",
+            "sheet_template": "templates/Vampire Character Sheet.nwod",
+            "tag_names": {
+                "type-unit": "",
+                "type-social": "",
+                "type-political": "",
+                "type-groups": ""
+            },
+            "missing_values": {}
         }
     },
 
