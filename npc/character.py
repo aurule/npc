@@ -228,8 +228,8 @@ class Character(defaultdict):
         """
         Add a value to a key's array.
 
-        The "description" key is not an array, so `value` will be appended to
-        the existing description.
+        Keys marked as string fields are not arrays, so `value` will be
+        appended to the existing data.
 
         Args:
             key (str): Name of the key
