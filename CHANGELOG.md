@@ -8,13 +8,20 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ### Added
 
+* The `session` command can now create additional files alongside the plot and session log
 * New `employer` group-like tag
 
 ### Changed
 
-* Description lines are now stored in an array. A string representation can be accessed with the `description` property.
-* The `session` command now reports which path was missing if either the plot path or session path are not accessible
+* The `session` command got rewritten
+    - Now reports which path was missing if either the plot path or session path are not accessible
+    - Its settings structure is different: see the "story" section in "settings-default.json"
+    - Character case in template names are now duplicated in generated files
+    - Templates can have special "NNN" and "((COPY))" keywords that get replaced on file creation
+    - Template names are now used to locate existing files as well as generate new file names
+* The `latest` command now reports which path was missing if either the plot path or session path are not accessible
 * The `latest` command no longer requires the input "both" to return all the latest files. Instead, all files are returned by default and using a keyword limits what is returned. The function argument is now optional.
+* Description lines are now stored in an array. A string representation can be accessed with the `description` property.
 
 ## 1.4.0
 

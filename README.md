@@ -87,15 +87,19 @@ Options:
 
 ## Create Session Files
 
-The `session` command creates the files that I need at the very start of a gaming session. It looks for the last session log and plot file, named `Session Log \d+` and `Plot \d+` respectively, and extracts their sequence number. It increments that to get the number for the new files, then copies the old plot file to its new location, and copies the session log template to its new location. It will open all four files.
+The `session` command creates the files that I need at the very start of a gaming session. It looks for the last session log and plot file, named `Session Log \d+` and `Plot \d+` by default, and extracts their sequence number. It increments that to get the number for the new files, then copies all session and plot templates into the new locations. Anywhere that "NNN" appears, either in a template name or contents, iot's replaced with the new sequence number. If "((COPY))" appears in a template's contents, it's replaced with the entire contents of the previous file matching that template. By default, this happens with the plot file: when creating plot 2, it copies the contents of plot 1. When done, the new session log and plot file are opened as well as the old session log and plot file. Other files are created, but not opened.
 
-If anything goes wrong in this process (like malformatted file names) it will yell about it. Everything in a file name after "` - `" is ignored.
+If one of the new plot or session files already exists, it won't be overwritten. This lets me plan ahead with the next plot file without creating the other stuff until game night.
+
+The template names are turned into regexes to find the latest files. "Session NNN.md" will find "Session 1.md", "Session 2.md", etc. The number is what's extracted.
+
+If anything goes wrong in this process (like malformatted file names) it will yell about it.
 
 ## Open Latest Plot and Session Files
 
 The `latest` command opens the most recent plot and/or session file, so that I can easily find it without digging through a crowded folder.
 
-The only option is what kind of file to open. With no option, it opens the latest plot and session together. Passing `session` opens the latest session and passing `plot` opens the latest plot.
+The only option is what kind of file to open. With no option, it opens the latest plot and session together. Passing `session` opens the latest session and passing `plot` opens the latest plot. Passing anything else also opens both files.
 
 ## Create a Character
 
