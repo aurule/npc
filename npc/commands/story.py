@@ -33,8 +33,11 @@ def session(**kwargs):
     plot_path = prefs.get('paths.required.plot')
     session_path = prefs.get('paths.required.session')
 
-    if not (path.exists(plot_path) and path.exists(session_path)):
-        return result.FSError(errmsg="Cannot access paths '{}' and/or '{}'".format(plot_path, session_path))
+    if not path.exists(plot_path):
+        return result.FSError(errmsg="Cannot access plot path '{}'".format(plot_path))
+
+    if not path.exists(session_path):
+        return result.FSError(errmsg="Cannot access session path '{}'".format(session_path))
 
     latest_plot = latest_file_info(plot_path, PLOT_REGEX)
     latest_session = latest_file_info(session_path, SESSION_REGEX)

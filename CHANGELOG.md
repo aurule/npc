@@ -13,6 +13,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 ### Changed
 
 * Description lines are now stored in an array. A string representation can be accessed with the `description` property.
+* The `session` command now reports which path was missing if either the plot path or session path are not accessible
 
 ## 1.4.0
 

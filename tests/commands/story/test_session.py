@@ -22,3 +22,17 @@ def test_no_files(campaign):
     assert result.success
     assert campaign.get_file('Session History', 'session 1.md').check()
     assert campaign.get_file('Plot', 'plot 1.md').check()
+
+def test_requires_plot_path(campaign):
+    """When the directories do not exist"""
+
+    campaign.mkdir('Session History')
+    result = npc.commands.story.session()
+    assert not result.success
+
+def test_requires_session_history_path(campaign):
+    """When the directories do not exist"""
+
+    campaign.mkdir('Plot')
+    result = npc.commands.story.session()
+    assert not result.success
