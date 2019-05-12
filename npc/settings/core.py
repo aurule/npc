@@ -131,10 +131,10 @@ class Settings:
             if type_path:
                 working_data['types'][typekey]['sheet_template'] = path.join(base_path, path.expanduser(type_path))
 
-        # story.session_template
-        session_path = get(working_data, 'story.session_template')
-        if session_path:
-            working_data['story']['session_template'] = path.join(base_path, path.expanduser(session_path))
+        # story.templates.*
+        story_templates = get(working_data, 'story.templates')
+        if story_templates:
+            working_data['story']['templates'] = expand_filenames(story_templates)
 
         # report.templates.*
         report_templates = get(working_data, 'report.templates')
