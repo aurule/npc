@@ -83,7 +83,7 @@ def session(**kwargs):
 
     return result.Success(openable=openable)
 
-def latest(thingtype, **kwargs):
+def latest(thingtype='', **kwargs):
     """
     Open the latest plot and/or session file
 
@@ -103,14 +103,12 @@ def latest(thingtype, **kwargs):
 
     latest_plot = latest_file_info(plot_path, PLOT_REGEX)
     latest_session = latest_file_info(session_path, SESSION_REGEX)
-    if thingtype == 'both':
-        openable = [latest_plot['path'], latest_session['path']]
-    elif thingtype == 'session':
+    if thingtype == 'session':
         openable = [latest_session['path']]
     elif thingtype == 'plot':
         openable = [latest_plot['path']]
     else:
-        return result.OptionError(errmsg="Unrecognized type '{}'".format(thingtype))
+        openable = [latest_plot['path'], latest_session['path']]
 
     return result.Success(openable=openable)
 

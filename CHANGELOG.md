@@ -14,6 +14,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 * Description lines are now stored in an array. A string representation can be accessed with the `description` property.
 * The `session` command now reports which path was missing if either the plot path or session path are not accessible
+* The `latest` command no longer requires the input "both" to return all the latest files. Instead, all files are returned by default and using a keyword limits what is returned. The function argument is now optional.
 
 ## 1.4.0
 

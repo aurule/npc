@@ -95,7 +95,7 @@ If anything goes wrong in this process (like malformatted file names) it will ye
 
 The `latest` command opens the most recent plot and/or session file, so that I can easily find it without digging through a crowded folder.
 
-The only option is what kind of file to open. Passing `session` opens the latest session; `plot` opens the latest plot; and `both` opens the latest plot and session together.
+The only option is what kind of file to open. With no option, it opens the latest plot and session together. Passing `session` opens the latest session and passing `plot` opens the latest plot.
 
 ## Create a Character
 
