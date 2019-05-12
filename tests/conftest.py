@@ -43,6 +43,10 @@ class Campaign:
         srcpath = fixture_dir(*fixture_path)
         dir_util.copy_tree(srcpath, str(self.basedir))
 
+    def mkdir(self, directory_name):
+        """Create a directory within this campaign root"""
+        self.basedir.mkdir(directory_name)
+
 @pytest.fixture
 def campaign(tmpdir, request, prefs):
     base = os.path.dirname(os.path.realpath(__file__))
