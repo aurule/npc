@@ -100,12 +100,17 @@ class Settings:
         """
 
         def expand_filenames(data):
+            def expanded_path(value):
+                return path.join(base_path, path.expanduser(value))
+
             outdata = {}
             for key, value in data.items():
                 if isinstance(value, dict):
                     outdata[key] = expand_filenames(value)
+                elif isinstance(value, list):
+                    outdata[key] = [expanded_path(v) for v in value]
                 else:
-                    outdata[key] = path.join(base_path, path.expanduser(value))
+                    outdata[key] = expanded_path(value)
             return outdata
 
         def get(data, key, default=None):
