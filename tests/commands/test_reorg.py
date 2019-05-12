@@ -15,7 +15,7 @@ def test_move_by_type(campaign, new_path):
     result = do_reorg()
     assert result
     character = campaign.get_character(new_path)
-    assert character.check()
+    assert character.exists()
 
 @pytest.mark.parametrize('new_path', [
     os.path.join('Goblins', 'Market', 'Marcy Marketto.nwod'),
@@ -30,7 +30,7 @@ def test_move_by_group(campaign, new_path):
     result = do_reorg(verbose=True)
     print(result.printables)
     character = campaign.get_character(new_path)
-    assert character.check()
+    assert character.exists()
 
 def test_partial_tree(campaign):
     """Should not choke when ideal dirs don't exist"""
@@ -39,13 +39,13 @@ def test_partial_tree(campaign):
     result = do_reorg()
     assert result.success
     character = campaign.get_character(os.path.join('Humans', 'JJ.nwod'))
-    assert character.check()
+    assert character.exists()
 
 def test_commit(campaign):
     campaign.populate_from_fixture_dir('reorg', 'by_type')
     do_reorg(commit=False)
     character = campaign.get_character('Alpha Mann.nwod')
-    assert character.check()
+    assert character.exists()
 
 class TestPurge:
     def test_removes_directories(self, campaign):
@@ -55,7 +55,7 @@ class TestPurge:
         result = do_reorg(purge=True)
         assert result.success
         fetches_folder = campaign.get_character(os.path.join('Fetches'))
-        assert not fetches_folder.check()
+        assert not fetches_folder.exists()
 
     def test_preserves_directories(self, campaign):
         """Does not remove empty directories without purge option"""
@@ -64,7 +64,7 @@ class TestPurge:
         result = do_reorg()
         assert result.success
         humans_folder = campaign.get_character(os.path.join('Humans'))
-        assert humans_folder.check()
+        assert humans_folder.exists()
 
 class TestChangeling:
     @pytest.mark.parametrize('new_path', [
@@ -77,13 +77,13 @@ class TestChangeling:
         campaign.populate_from_fixture_dir('reorg', 'changeling_courts')
         do_reorg()
         character = campaign.get_character(new_path)
-        assert character.check()
+        assert character.exists()
 
     def test_move_courtless(self, campaign):
         campaign.populate_from_fixture_dir('reorg', 'changeling_courtless')
         do_reorg()
         character = campaign.get_character(os.path.join('Changelings', 'Courtless', 'Connie Courtless.nwod'),)
-        assert character.check()
+        assert character.exists()
 
     @pytest.mark.parametrize('new_path', [
         os.path.join('Changelings', 'Summer', 'Hound Tribunal', 'Samantha Summer.nwod'),
@@ -96,4 +96,4 @@ class TestChangeling:
         campaign.populate_from_fixture_dir('reorg', 'changeling_group')
         do_reorg()
         character = campaign.get_character(new_path)
-        assert character.check()
+        assert character.exists()

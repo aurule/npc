@@ -10,27 +10,27 @@ def test_bad_path(capsys):
 
     assert 'No such file or directory' in err
 
-def test_failed_command(tmpdir, capsys):
+def test_failed_command(tmp_path, capsys):
     srcpath = fixture_dir('cli', 'failed_command')
-    dir_util.copy_tree(srcpath, str(tmpdir))
+    dir_util.copy_tree(srcpath, str(tmp_path))
 
-    npc.cli.start(['--campaign', str(tmpdir), 'h', 'manny'])
+    npc.cli.start(['--campaign', str(tmp_path), 'h', 'manny'])
     _, err = capsys.readouterr()
 
     assert 'No such file or directory' in err
 
 class TestBatch:
-    def test_no_printing(self, tmpdir, capsys):
-        npc.cli.start(['--campaign', str(tmpdir), 'init', '--dryrun', '--batch'])
+    def test_no_printing(self, tmp_path, capsys):
+        npc.cli.start(['--campaign', str(tmp_path), 'init', '--dryrun', '--batch'])
         output, _ = capsys.readouterr()
 
         assert output == ''
 
-    def test_no_opening(self, tmpdir, capsys):
+    def test_no_opening(self, tmp_path, capsys):
         srcpath = fixture_dir('cli', 'batch_no_open')
-        dir_util.copy_tree(srcpath, str(tmpdir))
+        dir_util.copy_tree(srcpath, str(tmp_path))
 
-        npc.cli.start(['--campaign', str(tmpdir), 'h', 'manny', '--batch'])
+        npc.cli.start(['--campaign', str(tmp_path), 'h', 'manny', '--batch'])
         output, _ = capsys.readouterr()
 
         assert output == ''

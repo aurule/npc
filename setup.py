@@ -56,7 +56,7 @@ setup(
     ],
     extras_requires={
         "test": [
-            "pytest>=2.8.5",
+            "pytest>=3.9.1",
             "pytest-qt>=2.1.0"
         ]
     },

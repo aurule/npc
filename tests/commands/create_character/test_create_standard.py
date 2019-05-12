@@ -12,7 +12,7 @@ def test_creates_character(campaign, chartype):
     result = npc.commands.create_character.standard('testmann', chartype)
     character = campaign.get_character('testmann.nwod')
     assert result.success
-    assert character.check()
+    assert character.exists()
     assert campaign.get_absolute(result.openable[0]) == str(character)
 
 def test_duplicate_character(campaign):

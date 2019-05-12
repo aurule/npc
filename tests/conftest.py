@@ -4,31 +4,32 @@ import os
 from tests.util import fixture_dir
 from distutils import dir_util
 
-@pytest.fixture(scope="module")
+@pytest.fixture
 def prefs():
     """Creates a non-singleton Settings object."""
     return npc.settings.Settings()
 
 class Campaign:
-    def __init__(self, tmpdir, chardir):
-        self.basedir = tmpdir
-        self.chardir = tmpdir.mkdir(chardir)
+    def __init__(self, tmp_path, chardir):
+        self.basedir = tmp_path
+        self.chardir = tmp_path / chardir
+        self.chardir.mkdir()
 
     def get_character(self, filename):
         """Get a file object for the given character filename"""
-        return self.chardir.join(filename)
+        return self.chardir.joinpath(filename)
 
     def get_character_data(self, filename):
         """Get the parsed data from the given character filename"""
-        parseables = str(self.chardir.join(filename))
+        parseables = str(self.chardir.joinpath(filename))
         return next(c for c in npc.parser.get_characters(search_paths=[parseables]))
 
     def get_file(self, *fileparts):
-        return self.basedir.join(*fileparts)
+        return self.basedir.joinpath(*fileparts)
 
     def get_absolute(self, filename):
         """Get the fully qualified path to the given filename"""
-        return str(self.basedir.join(filename))
+        return str(self.basedir.joinpath(filename))
 
     def populate_from_fixture_dir(self, *fixture_path):
         """
@@ -45,13 +46,13 @@ class Campaign:
 
     def mkdir(self, directory_name):
         """Create a directory within this campaign root"""
-        self.basedir.mkdir(directory_name)
+        self.basedir.joinpath(directory_name).mkdir()
 
 @pytest.fixture
-def campaign(tmpdir, request, prefs):
+def campaign(tmp_path, request, prefs):
     base = os.path.dirname(os.path.realpath(__file__))
-    os.chdir(str(tmpdir))
+    os.chdir(str(tmp_path))
     def fin():
         os.chdir(base)
     request.addfinalizer(fin)
-    return Campaign(tmpdir, prefs.get('paths.required.characters'))
+    return Campaign(tmp_path, prefs.get('paths.required.characters'))

@@ -7,7 +7,7 @@ def test_creates_character(campaign):
     result = npc.commands.create_character.werewolf('werewolf mann', 'cahalith')
     character = campaign.get_character('werewolf mann.nwod')
     assert result.success
-    assert character.check()
+    assert character.exists()
     assert campaign.get_absolute(result.openable[0]) == str(character)
 
 def test_adds_group_tags(campaign):

@@ -11,14 +11,14 @@ from npc.commands import util
 import pytest
 from tests.util import fixture_dir
 
-def test_find_empty_dirs(tmpdir):
-    tmpdir.mkdir('empty1')
-    tmpdir.mkdir('empty2')
-    tmpdir.mkdir('not_empty')
-    tmpdir.join('not_empty', 'test.txt').write_text('.', 'utf-8')
-    result = list(util.find_empty_dirs(str(tmpdir)))
-    assert str(tmpdir.join('empty1')) in result
-    assert str(tmpdir.join('empty2')) in result
+def test_find_empty_dirs(tmp_path):
+    tmp_path.joinpath('empty1').mkdir()
+    tmp_path.joinpath('empty2').mkdir()
+    tmp_path.joinpath('not_empty').mkdir()
+    tmp_path.joinpath('not_empty', 'test.txt').write_text('.', 'utf-8')
+    result = list(util.find_empty_dirs(str(tmp_path)))
+    assert str(tmp_path / 'empty1') in result
+    assert str(tmp_path / 'empty2') in result
 
 class TestSortCharacters:
     @pytest.fixture
