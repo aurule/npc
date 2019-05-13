@@ -1,5 +1,6 @@
 
 from os import path, walk
+from pathlib import Path
 from contextlib import contextmanager
 import sys
 
@@ -90,12 +91,12 @@ def create_path_from_character(character: Character, *, base_path=None, hierarch
     if not hierarchy:
         hierarchy = prefs.get('paths.hierarchy')
 
-    target_path = base_path
+    target_path = Path(base_path)
 
     def add_path_if_exists(base, potential):
         """Add a directory to the base path if that directory exists."""
-        test_path = path.join(base, potential)
-        if path.exists(test_path):
+        test_path = base.joinpath(potential)
+        if test_path.exists():
             return test_path
         return base
 
@@ -159,7 +160,7 @@ def create_path_from_character(character: Character, *, base_path=None, hierarch
                     key=tag_name,
                     default=placeholder(tag_name)))
 
-    return target_path
+    return str(target_path)
 
 def find_empty_dirs(root):
     """
