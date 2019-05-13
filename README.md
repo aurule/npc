@@ -344,6 +344,12 @@ To set up the development environment, create and activate a venv and run `bin/s
 
 These can all be installed with `pip install -r requirements-dev.txt`.
 
+After cloning, I like using [virtualenvwrapper](https://virtualenvwrapper.readthedocs.io/en/latest/) to manage the venv:
+
+`mkvirtualenv -p /usr/bin/python3 -a ~/Workspace/npc -r requirements-dev.txt npc`
+
+Then call `workon npc` to launch into the venv.
+
 ## Running Tests
 
 Go to the root project directory and run `python -m pytest` or `make test`.
