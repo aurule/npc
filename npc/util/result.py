@@ -63,8 +63,7 @@ class Failure(Result):
     A more specific error class should be used whenever possible
     """
     def __init__(self, **kwargs):
-        super().__init__(False, **kwargs)
-        self.errcode = 1
+        super().__init__(False, errcode=1, **kwargs)
 
     def __str__(self):
         return self.errmsg
