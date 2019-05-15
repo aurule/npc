@@ -5,7 +5,7 @@ from util import fixture_dir
 from distutils import dir_util
 
 def test_bad_path(capsys):
-    npc.cli.start(['--campaign', fixture_dir('cli', 'nope')])
+    npc.cli.start(['--campaign', str(fixture_dir('cli', 'nope'))])
     _, err = capsys.readouterr()
 
     assert 'No such file or directory' in err

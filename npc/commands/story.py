@@ -3,7 +3,8 @@ Commands related to story files instead of characters
 """
 
 import re
-from os import path, scandir
+from os import scandir
+from pathlib import Path
 from shutil import copy as shcopy
 
 from npc import settings
@@ -30,23 +31,23 @@ def session(**kwargs):
         log and plot planning files.
     """
     prefs = kwargs.get('prefs', settings.InternalSettings())
-    plot_dir = prefs.get('paths.required.plot')
-    session_dir = prefs.get('paths.required.session')
+    plot_dir = Path(prefs.get('paths.required.plot'))
+    session_dir = Path(prefs.get('paths.required.session'))
 
-    if not path.exists(plot_dir):
+    if not plot_dir.exists():
         return result.FSError(errmsg="Cannot access plot path '{}'".format(plot_dir))
 
-    if not path.exists(session_dir):
+    if not session_dir.exists():
         return result.FSError(errmsg="Cannot access session path '{}'".format(session_dir))
 
     plot_template = prefs.get('story.templates.plot')
-    if SEQUENCE_KEYWORD not in plot_template:
+    if SEQUENCE_KEYWORD not in str(plot_template):
         return result.ConfigError(errmsg="Plot template has no number placeholder ({})".format(SEQUENCE_KEYWORD))
     plot_regex = regex_from_template(plot_template)
     latest_plot = latest_file(plot_dir, plot_regex)
 
     session_template = prefs.get('story.templates.session')
-    if SEQUENCE_KEYWORD not in session_template:
+    if SEQUENCE_KEYWORD not in str(session_template):
         return result.ConfigError(errmsg="Session template has no number placeholder ({})".format(SEQUENCE_KEYWORD))
     session_regex = regex_from_template(session_template)
     latest_session = latest_file(session_dir, session_regex)
@@ -75,13 +76,13 @@ def session(**kwargs):
                 return ''
 
         for template_path in templates:
-            if SEQUENCE_KEYWORD not in template_path:
+            if SEQUENCE_KEYWORD not in str(template_path):
                 print_err("Template {} has no number placeholder ({})".format(template_path, SEQUENCE_KEYWORD))
                 continue
 
-            new_file_name = path.basename(template_path).replace(SEQUENCE_KEYWORD, str(new_number))
-            destination = path.join(dest_dir, new_file_name)
-            if path.exists(destination):
+            new_file_name = template_path.name.replace(SEQUENCE_KEYWORD, str(new_number))
+            destination = dest_dir.joinpath(new_file_name)
+            if destination.exists():
                 continue
 
             with open(template_path, 'r') as f:
@@ -109,17 +110,17 @@ def session(**kwargs):
     copy_templates(session_dir, session_templates)
 
     openable = [
-        latest_file(session_dir, session_regex).path,
-        latest_file(plot_dir, plot_regex).path
+        str(latest_file(session_dir, session_regex).path),
+        str(latest_file(plot_dir, plot_regex).path)
     ]
-    old_session_name = path.basename(session_template).replace(SEQUENCE_KEYWORD, str(new_number - 1))
-    old_session = path.join(session_dir, old_session_name)
-    if path.exists(old_session):
-        openable.append(old_session)
-    old_plot_name = path.basename(plot_template).replace(SEQUENCE_KEYWORD, str(new_number - 1))
-    old_plot = path.join(plot_dir, old_plot_name)
-    if path.exists(old_plot):
-        openable.append(old_plot)
+    old_session_name = session_template.name.replace(SEQUENCE_KEYWORD, str(new_number - 1))
+    old_session = session_dir.joinpath(old_session_name)
+    if old_session.exists():
+        openable.append(str(old_session))
+    old_plot_name = plot_template.name.replace(SEQUENCE_KEYWORD, str(new_number - 1))
+    old_plot = plot_dir.joinpath(old_plot_name)
+    if old_plot.exists():
+        openable.append(str(old_plot))
 
     return result.Success(openable=openable)
 
@@ -138,13 +139,13 @@ def latest(thingtype='', **kwargs):
         Result object. Openable will contain the path(s) to the requested file(s).
     """
     prefs = kwargs.get('prefs', settings.InternalSettings())
-    plot_dir = prefs.get('paths.required.plot')
-    session_dir = prefs.get('paths.required.session')
+    plot_dir = Path(prefs.get('paths.required.plot'))
+    session_dir = Path(prefs.get('paths.required.session'))
 
-    if not path.exists(plot_dir):
+    if not plot_dir.exists():
         return result.FSError(errmsg="Cannot access plot path '{}'".format(plot_dir))
 
-    if not path.exists(session_dir):
+    if not session_dir.exists():
         return result.FSError(errmsg="Cannot access session path '{}'".format(session_dir))
 
     plot_template = prefs.get('story.templates.plot')
@@ -156,11 +157,11 @@ def latest(thingtype='', **kwargs):
     latest_session = latest_file(session_dir, session_regex)
 
     if thingtype == 'session':
-        openable = [latest_session.path]
+        openable = [str(latest_session.path)]
     elif thingtype == 'plot':
-        openable = [latest_plot.path]
+        openable = [str(latest_plot.path)]
     else:
-        openable = [latest_session.path, latest_plot.path]
+        openable = [str(latest_session.path), str(latest_plot.path)]
 
     return result.Success(openable=openable)
 
@@ -179,7 +180,7 @@ def regex_from_template(template_path):
     Returns:
         Regex object
     """
-    chopped_name = path.basename(template_path)
+    chopped_name = Path(template_path).name
     regex_string = chopped_name.replace(SEQUENCE_KEYWORD, r'(?P<number>\d+)', 1).replace(SEQUENCE_KEYWORD, r'\d+')
     return re.compile("^{regex_string}$".format(regex_string=regex_string), flags=re.I)
 
@@ -218,4 +219,4 @@ def latest_file(target_path, target_regex):
         latest_file = ''
         file_number = 0
 
-    return LatestFileInfo(path.join(target_path, latest_file), file_number)
+    return LatestFileInfo(target_path.joinpath(latest_file), file_number)

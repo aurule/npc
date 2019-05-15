@@ -7,13 +7,14 @@ without going through the CLI.
 
 import json
 from collections import Counter
-from os import path, makedirs, rmdir, getcwd
+from os import makedirs, rmdir, getcwd
+from pathlib import Path
 from shutil import move as shmove
 import itertools
 
 import npc
 from npc import formatters, linters, parser, settings
-from npc.util import flatten, result
+from npc.util import flatten, result, PathEncoder
 from npc.character import Character
 
 from . import create_character, listing, util, story
@@ -49,15 +50,16 @@ def reorg(*search, ignore=None, purge=False, verbose=False, commit=False, **kwar
 
     changelog = []
 
-    base_path = prefs.get('paths.required.characters')
-    if not path.exists(base_path):
+    base_path = Path(prefs.get('paths.required.characters'))
+    if not base_path.exists():
         return result.FSError(errmsg="Cannot access '{}'".format(base_path))
 
     if show_changes:
         changelog.append("Move characters")
     for parsed_character in parser.get_characters(flatten(search), ignore):
-        new_path = util.create_path_from_character(parsed_character, base_path=base_path)
-        if path.normcase(path.normpath(new_path)) != path.normcase(path.normpath(path.dirname(parsed_character['path']))):
+        new_path = Path(util.create_path_from_character(parsed_character, base_path=base_path))
+        parsed_path = Path(parsed_character['path'])
+        if not new_path.resolve().samefile(parsed_path.resolve()):
             if show_changes:
                 changelog.append("* Move {} to {}".format(parsed_character['path'], new_path))
             if commit:
@@ -118,7 +120,7 @@ def dump(*search, ignore=None, do_sort=False, metadata=False, outfile=None, **kw
         characters = itertools.chain([meta], characters)
 
     with util.smart_open(outfile) as outstream:
-        json.dump([c for c in characters], outstream)
+        json.dump([c for c in characters], outstream, cls=PathEncoder)
 
     openable = [outfile] if outfile and outfile != '-' else None
 
@@ -201,7 +203,7 @@ def init(create_types=False, create_all=False, **kwargs):
         Result object. Openable will be empty.
     """
     prefs = kwargs.get('prefs', settings.InternalSettings())
-    campaign_name = kwargs.get('campaign_name', path.basename(getcwd()))
+    campaign_name = kwargs.get('campaign_name', Path.cwd().name)
     dryrun = kwargs.get('dryrun', False)
     verbose = kwargs.get('verbose', False)
 
@@ -223,7 +225,7 @@ def init(create_types=False, create_all=False, **kwargs):
                 new_dir(extra_path)
             continue
         new_dir(required_path)
-    if not path.exists(prefs.get_settings_path('campaign')):
+    if not prefs.get_settings_path('campaign').exists():
         new_dir('.npc')
         log_change(prefs.get_settings_path('campaign'))
         if not dryrun:
@@ -231,9 +233,9 @@ def init(create_types=False, create_all=False, **kwargs):
                 json.dump({'campaign_name': campaign_name}, settings_file, indent=4)
 
     if create_types or create_all:
-        cbase = prefs.get('paths.required.characters')
+        cbase = Path(prefs.get('paths.required.characters'))
         for type_path in prefs.get_type_paths():
-            new_dir(path.join(cbase, type_path))
+            new_dir(cbase.joinpath(type_path))
 
     return result.Success(printables=changelog)
 
@@ -264,8 +266,8 @@ def open_settings(location, show_defaults=False, settings_type=None, **kwargs):
         settings_type = settings_type.lower()
 
     target_path = prefs.get_settings_path(location, settings_type)
-    if not path.exists(target_path):
-        dirname = path.dirname(target_path)
+    if not target_path.exists():
+        dirname = target_path.parent
         makedirs(dirname, mode=0o775, exist_ok=True)
         with open(target_path, 'a') as settings_file:
             settings_file.write('{}')

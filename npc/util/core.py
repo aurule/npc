@@ -6,7 +6,8 @@ import re
 import json
 import sys
 import subprocess
-from os import getcwd, path
+from os import getcwd
+from pathlib import Path
 
 def load_json(filename):
     """
@@ -69,6 +70,15 @@ def load_json(filename):
             err.nicemsg = "Could not load '{0}': {1}".format(filename, err.strerror)
             raise err
 
+class PathEncoder(json.JSONEncoder):
+    """
+    Properly encode pathlib objects by casting to strings
+    """
+    def default(self, o):
+        if isinstance(o, Path):
+            return str(o)
+        return json.JSONEncoder.default(self, o)
+
 def print_err(*args, **kwargs):
     """
     Print a message to stderr.
@@ -130,13 +140,13 @@ def find_campaign_root():
     Returns:
         Directory path to the campaign.
     """
-    current_dir = getcwd()
-    base = current_dir
-    old_base = ''
-    while not path.isdir(path.join(base, '.npc')):
+    current_dir = Path.cwd()
+    base = current_dir.resolve()
+    old_base = Path('')
+    while not base.joinpath('.npc').is_dir():
         old_base = base
-        base = path.abspath(path.join(base, path.pardir))
-        if old_base == base:
+        base = base.parent.resolve()
+        if old_base.samefile(base):
             return current_dir
     return base
 

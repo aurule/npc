@@ -60,4 +60,4 @@ class TestTemplate:
             template = sectioner.template('html')
 
             assert isinstance(template, mako.template.Template)
-            assert template.filename == prefs.get('listing.templates.html.sections.simple')
+            assert template.filename == str(prefs.get('listing.templates.html.sections.simple'))

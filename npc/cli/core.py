@@ -6,7 +6,7 @@ Provides the cli method for interpreting commandline arguments.
 
 import argparse
 import sys
-from os import chdir, getcwd, path
+from os import chdir
 
 # local packages
 from npc import util, settings

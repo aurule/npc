@@ -86,7 +86,7 @@ def report(tables, outstream, **kwargs):
 
     with tempfile.TemporaryDirectory() as tempdir:
         table_template = Template(
-            filename=prefs.get("report.templates.html"),
+            filename=str(prefs.get("report.templates.html")),
             module_directory=tempdir,
             **encoding_options)
 

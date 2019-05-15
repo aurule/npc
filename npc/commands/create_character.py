@@ -3,7 +3,6 @@ Functions for creating new character sheets
 """
 
 import re
-from os import path
 
 from npc import settings
 from npc.util import result
@@ -248,9 +247,9 @@ def _cp_template_for_char(name, character, prefs, fn=None):
     # get path for the new file
     target_path = create_path_from_character(character, prefs=prefs)
 
-    filename = name + path.splitext(template_path)[1]
-    target_path = path.join(target_path, filename)
-    if path.exists(target_path):
+    filename = name + template_path.suffix
+    target_path = target_path.joinpath(filename)
+    if target_path.exists():
         return result.FSError(errmsg="Character '{}' already exists!".format(name))
 
     # Add tags

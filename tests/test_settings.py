@@ -1,6 +1,5 @@
 import pytest
 import npc
-import os
 from datetime import datetime
 from tests.util import fixture_dir
 
@@ -21,13 +20,13 @@ def test_nested_null_get(prefs):
     assert prefs.get('listing.templates.markdown.header.foobar') == None
 
 def test_get_settings_path(prefs):
-    assert prefs.get_settings_path('default') == os.path.join(prefs.default_settings_path, 'settings-default.json')
-    assert prefs.get_settings_path('campaign') == os.path.join(prefs.campaign_settings_path, 'settings.json')
+    assert prefs.get_settings_path('default') == prefs.default_settings_path.joinpath('settings-default.json')
+    assert prefs.get_settings_path('campaign') == prefs.campaign_settings_path.joinpath('settings.json')
 
 @pytest.mark.parametrize('settings_type', ['changeling', 'werewolf'])
 def test_get_typed_settings_path(prefs, settings_type):
     fetched_path = prefs.get_settings_path('default', settings_type)
-    assert fetched_path == os.path.join(prefs.default_settings_path, 'settings-{}.json'.format(settings_type))
+    assert fetched_path == prefs.default_settings_path.joinpath('settings-{}.json'.format(settings_type))
 
 def test_expanded_paths(prefs):
     """Paths loaded from additional files should be expanded relative to that file"""

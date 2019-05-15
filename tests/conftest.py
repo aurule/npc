@@ -1,6 +1,7 @@
 import npc
 import pytest
 import os
+from pathlib import Path
 from tests.util import fixture_dir
 from distutils import dir_util
 
@@ -50,7 +51,7 @@ class Campaign:
 
 @pytest.fixture
 def campaign(tmp_path, request, prefs):
-    base = os.path.dirname(os.path.realpath(__file__))
+    base = Path(__file__).resolve().parent
     os.chdir(str(tmp_path))
     def fin():
         os.chdir(base)

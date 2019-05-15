@@ -1,5 +1,5 @@
 
-from os import path, walk
+from os import walk
 from pathlib import Path
 from contextlib import contextmanager
 import sys
@@ -160,7 +160,7 @@ def create_path_from_character(character: Character, *, base_path=None, hierarch
                     key=tag_name,
                     default=placeholder(tag_name)))
 
-    return str(target_path)
+    return target_path
 
 def find_empty_dirs(root):
     """

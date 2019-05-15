@@ -41,11 +41,11 @@ def test_flatten():
 class TestFindCampaignRoot:
     def test_with_npc_dir(self, campaign):
         campaign.populate_from_fixture_dir('util', 'campaign_root', 'initialized')
-        assert util.find_campaign_root() == str(campaign.basedir)
+        assert util.find_campaign_root() == campaign.basedir
 
     def test_no_npc_dir(self, campaign):
         campaign.populate_from_fixture_dir('util', 'campaign_root', 'empty')
-        assert util.find_campaign_root() == str(campaign.basedir)
+        assert util.find_campaign_root() == campaign.basedir
 
 def test_open_files(prefs):
     override_path = fixture_dir('util', 'open_files', 'settings-echo.json')

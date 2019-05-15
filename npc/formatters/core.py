@@ -118,7 +118,7 @@ class TemplateFormatter:
                 if not body_file:
                     return result.ConfigError(errmsg="Cannot find default character template for {list_format} listing".format(list_format=self.list_format))
 
-                body_template = Template(filename=body_file, module_directory=tempdir, **self.encoding_options)
+                body_template = Template(filename=str(body_file), module_directory=tempdir, **self.encoding_options)
                 _out_write(body_template.render(**self.char_args(char)))
                 self.update_progress(index + 1, total)
 
@@ -149,7 +149,7 @@ class TemplateFormatter:
         if not header_file:
             return result.OptionError(errmsg="Unrecognized metadata format '{}'".format(self.metadata_format))
 
-        header_template = Template(filename=header_file, **self.encoding_options)
+        header_template = Template(filename=str(header_file), **self.encoding_options)
         outstream.write(header_template.render(**self.header_args))
 
         return result.Success()
@@ -170,9 +170,9 @@ class TemplateFormatter:
             return
 
         footer_template = Template(
-            filename=self.prefs.get(
+            filename=str(self.prefs.get(
                 "listing.templates.{list_format}.footer".format(
-                    list_format=self.list_format)),
+                    list_format=self.list_format))),
             **self.encoding_options)
         outstream.write(footer_template.render())
 

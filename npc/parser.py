@@ -8,6 +8,7 @@ parse a single file, use parse_character instead.
 import re
 import itertools
 from os import path, walk
+from pathlib import Path
 from .character import Character
 
 VALID_EXTENSIONS = ('.nwod', '.dnd3', '.dfrpg')
@@ -72,7 +73,7 @@ def _parse_path(start_path, ignore_paths=None, include_bare=False):
                 characters.append(data)
     return characters
 
-def _walk_ignore(root, ignore):
+def _walk_ignore(root: str, ignore):
     """
     Recursively traverse a directory tree while ignoring certain paths.
 
@@ -83,7 +84,7 @@ def _walk_ignore(root, ignore):
     Yields:
         A tuple (path, [dirs], [files]) as from `os.walk`.
     """
-    def should_search(base, check):
+    def should_search(base: str, check: str) -> bool:
         """
         Determine whether a path should be searched
 
@@ -104,7 +105,7 @@ def _walk_ignore(root, ignore):
         dirnames[:] = [d for d in dirnames if should_search(dirpath, d)]
         yield dirpath, dirnames, filenames
 
-def parse_character(char_file_path: str) -> Character:
+def parse_character(char_file_path) -> Character:
     """
     Parse a single character file
 

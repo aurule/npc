@@ -161,11 +161,10 @@ class BaseSectioner:
             return self.templates_cache[output_format]
 
         template_path = str(
-            Path(
-                self.prefs.get(
-                    "listing.templates.{output_format}.sections.{template_key}".format(
-                        output_format=output_format,
-                        template_key=self.template_key))))
+            self.prefs.get(
+                "listing.templates.{output_format}.sections.{template_key}".format(
+                    output_format=output_format,
+                    template_key=self.template_key)))
         self.templates_cache[output_format] = Template(filename=template_path, module_directory=self.tempdir.name, **encoding_options)
         return self.templates_cache[output_format]
 

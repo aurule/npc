@@ -5,10 +5,10 @@ Also has a helper function to check loaded settings for faults.
 """
 
 import json
-from os import path
 from datetime import datetime
 from collections import OrderedDict
 from copy import deepcopy
+from pathlib import Path
 
 import npc
 from npc import util
@@ -55,12 +55,12 @@ class Settings:
                 be reported.
         """
 
-        self.module_base = path.dirname(path.realpath(__file__))
-        self.install_base = path.dirname(self.module_base)
+        self.module_base = Path(__file__).parent
+        self.install_base = Path(self.module_base).parent
 
         self.default_settings_path = self.module_base
-        self.user_settings_path = path.expanduser('~/.config/npc/')
-        self.campaign_settings_path = '.npc/'
+        self.user_settings_path = Path('~/.config/npc/').expanduser()
+        self.campaign_settings_path = Path('.npc/')
 
         self.settings_files = [
             'settings.json',
@@ -71,7 +71,7 @@ class Settings:
         self.settings_paths = [self.default_settings_path, self.user_settings_path, self.campaign_settings_path]
 
         self.verbose = verbose
-        loaded_data = util.load_json(path.join(self.default_settings_path, 'settings-default.json'))
+        loaded_data = util.load_json(self.default_settings_path.joinpath('settings-default.json'))
 
         # massage template names into real paths
         self.data = self._expand_templates(base_path=self.install_base, settings_data=loaded_data)
@@ -80,7 +80,7 @@ class Settings:
         for settings_path in self.settings_paths:
             for file in self.settings_files:
                 try:
-                    self.load_more(path.join(settings_path, file))
+                    self.load_more(settings_path.joinpath(file))
                 except OSError as err:
                     # All of these files are optional, so normally we silently
                     # ignore these errors
@@ -101,7 +101,7 @@ class Settings:
 
         def expand_filenames(data):
             def expanded_path(value):
-                return path.join(base_path, path.expanduser(value))
+                return base_path.joinpath(value).expanduser().resolve()
 
             outdata = {}
             for key, value in data.items():
@@ -129,7 +129,7 @@ class Settings:
         for typekey, _ in get(working_data, 'types', {}).items():
             type_path = get(working_data, "types.{}.sheet_template".format(typekey))
             if type_path:
-                working_data['types'][typekey]['sheet_template'] = path.join(base_path, path.expanduser(type_path))
+                working_data['types'][typekey]['sheet_template'] = base_path.joinpath(type_path).expanduser()
 
         # story.templates.*
         story_templates = get(working_data, 'story.templates')
@@ -166,7 +166,7 @@ class Settings:
             return
 
         # paths should be evaluated relative to the settings file in settings_path
-        absolute_path_base = path.dirname(path.realpath(settings_path))
+        absolute_path_base = Path(settings_path).resolve().parent
         loaded = self._expand_templates(absolute_path_base, loaded)
 
         self._merge_settings(loaded)
@@ -251,7 +251,7 @@ class Settings:
             else:
                 filename = 'settings.json'
 
-        return path.join(base_path, filename)
+        return base_path.joinpath(filename)
 
     def get(self, key, default=None):
         """
