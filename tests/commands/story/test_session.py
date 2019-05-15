@@ -14,6 +14,32 @@ def test_requires_session_history_path(campaign):
     result = npc.commands.story.session()
     assert not result.success
 
+def test_plot_has_no_number(campaign, prefs):
+    """When plot template has no NNN"""
+
+    campaign.mkdir('Session History')
+    campaign.mkdir('Plot')
+    prefs.update_key('story.templates.plot', 'plot.md')
+    result = npc.commands.story.session(prefs=prefs)
+    assert not result.success
+
+def test_session_has_no_number(campaign, prefs):
+    """When session template has no NNN"""
+
+    campaign.mkdir('Session History')
+    campaign.mkdir('Plot')
+    prefs.update_key('story.templates.session', 'session.md')
+    result = npc.commands.story.session(prefs=prefs)
+    assert not result.success
+
+def test_extra_has_no_number(campaign, prefs, capsys):
+    campaign.mkdir('Session History')
+    campaign.mkdir('Plot')
+    prefs.update_key('story.templates.session_extras', 'extra.md')
+    npc.commands.story.session(prefs=prefs)
+    _, err = capsys.readouterr()
+    assert 'no number placeholder' in err
+
 class TestBalancedFiles:
     """Old plot and session both exist, with matching numbers"""
 

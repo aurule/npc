@@ -7,7 +7,7 @@ from os import path, scandir
 from shutil import copy as shcopy
 
 from npc import settings
-from npc.util import result, flatten
+from npc.util import result, flatten, print_err
 
 SEQUENCE_KEYWORD = 'NNN'
 COPY_KEYWORD = '((COPY))'
@@ -40,10 +40,14 @@ def session(**kwargs):
         return result.FSError(errmsg="Cannot access session path '{}'".format(session_dir))
 
     plot_template = prefs.get('story.templates.plot')
+    if SEQUENCE_KEYWORD not in plot_template:
+        return result.ConfigError(errmsg="Plot template has no number placeholder ({})".format(SEQUENCE_KEYWORD))
     plot_regex = regex_from_template(plot_template)
     latest_plot = latest_file(plot_dir, plot_regex)
 
     session_template = prefs.get('story.templates.session')
+    if SEQUENCE_KEYWORD not in session_template:
+        return result.ConfigError(errmsg="Session template has no number placeholder ({})".format(SEQUENCE_KEYWORD))
     session_regex = regex_from_template(session_template)
     latest_session = latest_file(session_dir, session_regex)
 
@@ -71,6 +75,10 @@ def session(**kwargs):
                 return ''
 
         for template_path in templates:
+            if SEQUENCE_KEYWORD not in template_path:
+                print_err("Template {} has no number placeholder ({})".format(template_path, SEQUENCE_KEYWORD))
+                continue
+
             new_file_name = path.basename(template_path).replace(SEQUENCE_KEYWORD, str(new_number))
             destination = path.join(dest_dir, new_file_name)
             if path.exists(destination):
