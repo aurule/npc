@@ -1,7 +1,5 @@
 import npc
 import pytest
-import os
-import re
 
 def test_creates_character(campaign):
     result = npc.commands.create_character.werewolf('werewolf mann', 'cahalith')

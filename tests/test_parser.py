@@ -1,6 +1,5 @@
 import npc
 import pytest
-import os
 from tests.util import fixture_dir
 
 def test_remove_filename_comments():

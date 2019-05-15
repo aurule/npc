@@ -1,6 +1,5 @@
 import npc
 import pytest
-import os
 
 def test_missing_template(campaign):
     result = npc.commands.create_character.standard('noname', 'notfound')

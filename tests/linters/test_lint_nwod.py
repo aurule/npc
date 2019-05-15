@@ -2,7 +2,6 @@
 
 import npc
 import pytest
-import os
 from tests.util import fixture_dir
 
 def test_has_virtue():

@@ -2,8 +2,6 @@
 
 import npc
 import pytest
-import os
-import functools
 from tests.util import fixture_dir
 
 def lint_changeling(filename, **kwargs):
