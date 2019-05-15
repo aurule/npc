@@ -10,6 +10,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 * The `session` command can now create additional files alongside the plot and session log
 * New `employer` group-like tag
+* Internal caching in the template formatter should speed up generating large character lists
 
 ### Changed
 

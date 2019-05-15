@@ -11,6 +11,7 @@ sometimes available.
 import tempfile
 from mako.template import Template
 from markdown import Markdown
+from functools import lru_cache
 
 from npc.util import result
 
@@ -66,8 +67,16 @@ class TemplateFormatter:
 
     @property
     def list_format(self):
-        raise NotImplementedError
+        """
+        Format key for this template formatter
 
+        Key string to use when looking up this formatter's templates in
+        settings. Must be defined by subclasses.
+
+        Raises:
+            NotImplementedError -- Subclasses are responsible for implementing this property
+        """
+        raise NotImplementedError
 
     def render(self, characters, outstream):
         """
@@ -81,13 +90,19 @@ class TemplateFormatter:
             A util.Result object. Openable will not be set.
         """
 
+        @lru_cache(maxsize=32)
+        def _prefs_cache(key):
+            """
+            Cache template paths
+            """
+            return self.prefs.get(key)
+
         header_result = self.render_header(outstream)
         if not header_result:
             return header_result
 
         with tempfile.TemporaryDirectory() as tempdir:
             # directly access certain functions for speed
-            _prefs_get = self.prefs.get
             _out_write = outstream.write
 
             total = len(characters)
@@ -97,9 +112,9 @@ class TemplateFormatter:
                     if sectioner.would_change(char):
                         sectioner.update_text(char)
                         _out_write(sectioner.render_template(self.list_format, **self.encoding_options))
-                body_file = _prefs_get("listing.templates.{list_format}.character.{type}".format(list_format=self.list_format, type=char.type_key))
+                body_file = _prefs_cache("listing.templates.{list_format}.character.{type}".format(list_format=self.list_format, type=char.type_key))
                 if not body_file:
-                    body_file = _prefs_get("listing.templates.{list_format}.character.default".format(list_format=self.list_format))
+                    body_file = _prefs_cache("listing.templates.{list_format}.character.default".format(list_format=self.list_format))
                 if not body_file:
                     return result.ConfigError(errmsg="Cannot find default character template for {list_format} listing".format(list_format=self.list_format))
 
