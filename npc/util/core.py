@@ -5,8 +5,8 @@ Helper functions shared between the other modules
 import re
 import json
 import sys
+import subprocess
 from os import getcwd, path
-from subprocess import run
 
 def load_json(filename):
     """
@@ -145,13 +145,38 @@ def open_files(*files, prefs=None):
     Open a list of files with the configured editor
 
     Args:
-        files (str): List of file paths to open
+        files (list): List of file paths to open
         prefs (Settings): Settings object to supply the editor name
 
     Returns:
         CompletedProcess object as per subprocess.run
     """
-    return run(args=[prefs.get("editor"), *files])
+    editor = determine_editor(sys.platform, prefs=prefs)
+
+    return subprocess.run(args=[editor, *files])
+
+def determine_editor(platform, prefs=None):
+    """
+    Figure out which editor to use for the system
+
+    If an editor is set in settings, use that over all else. Otherwise, ask the
+    OS to use its default program.
+
+    Args:
+        platform (str): Name of the current platform, as from sys.platform
+        prefs (Settings): Settings object to supply the editor name
+
+    Returns:
+        String with the editor program to invoke
+    """
+    if prefs.get('editor'):
+        return prefs.get('editor')
+    elif 'linux' in platform:
+        return 'xdg-open'
+    elif 'darwin' in platform:
+        return 'open'
+    else:
+        return 'start'
 
 class Singleton(type):
     """

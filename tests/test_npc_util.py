@@ -129,3 +129,17 @@ class TestListifyArgs:
     def test_removes_empties(self):
         args = util.listify_args('list', **{'list': ',', 'not_list': 'hammer, spanner, prybar'})
         assert args['list'] == []
+
+class TestDetermineEditor:
+    def test_editor_from_prefs(self, prefs):
+        prefs.update_key('editor', 'vim')
+        assert util.determine_editor('asdf', prefs=prefs) == 'vim'
+
+    def test_linux_editor(self, prefs):
+        assert util.determine_editor('linux', prefs=prefs) == 'xdg-open'
+
+    def test_mac_editor(self, prefs):
+        assert util.determine_editor('darwin', prefs=prefs) == 'open'
+
+    def test_windows_editor(self, prefs):
+        assert util.determine_editor('asdf', prefs=prefs) == 'start'

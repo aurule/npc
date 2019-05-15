@@ -74,6 +74,8 @@ These common options are available for every command:
 * `--debug`: Forces NPC to show every error that occurs, even when those errors are harmless. Useful for figuring out settings problems.
 * `--batch`: By default, NPC will open whatever files are relevant to the subcommand. The `--batch` switch prevents that from happening.
 
+Commands which open a file will attempt to use the default program for that file type as set in your OS. To force a particular editor, set the `"editor"` value in your settings.
+
 ## Set Up Directories
 
 The `init` command creates the basic directories that NPC expects to find. Every directory under the `paths` key in the settings file is created, along with the special `.npc` directory.

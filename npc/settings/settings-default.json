@@ -14,8 +14,9 @@
     "campaign_name": "My Campaign",
 
     // Command to invoke your text editor of choice. This command must accept a
-    // list of files as its command line arguments.
-    "editor": "subl",
+    // list of files as its command line arguments. If blank, the system default
+    // will be used.
+    "editor": "",
 
     // These are the root paths which NPC will use when finding campaign files.
     "paths": {
