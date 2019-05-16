@@ -273,7 +273,7 @@ def open_settings(location, show_defaults=False, settings_type=None, **kwargs):
             settings_file.write('{}')
 
     if show_defaults:
-        openable = [prefs.get_settings_path('default', settings_type), target_path]
+        openable = [prefs.get_settings_path('default', settings_type, target_path.suffix), target_path]
     else:
         openable = [target_path]
     return result.Success(openable=openable)

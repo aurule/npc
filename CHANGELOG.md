@@ -25,6 +25,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 * The `latest` command no longer requires the input "both" to return all the latest files. Instead, all files are returned by default and using a keyword limits what is returned. The function argument is now optional.
 * Description lines are now stored in an array. A string representation can be accessed with the `description` property.
 * Files are opened by the system default editor for that type, falling back on the "editor" value from settings.
+* The `settings` command now detects which format is in use
 
 ## 1.4.0
 

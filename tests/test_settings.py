@@ -19,15 +19,6 @@ def test_nested_null_get(prefs):
     """A null key in the middle of a path should still just return None"""
     assert prefs.get('listing.templates.markdown.header.foobar') == None
 
-def test_get_settings_path(prefs):
-    assert prefs.get_settings_path('default') == prefs.default_settings_path.joinpath('settings-default.json')
-    assert prefs.get_settings_path('campaign') == prefs.campaign_settings_path.joinpath('settings.json')
-
-@pytest.mark.parametrize('settings_type', ['changeling', 'werewolf'])
-def test_get_typed_settings_path(prefs, settings_type):
-    fetched_path = prefs.get_settings_path('default', settings_type)
-    assert fetched_path == prefs.default_settings_path.joinpath('settings-{}.json'.format(settings_type))
-
 def test_expanded_paths(prefs):
     """Paths loaded from additional files should be expanded relative to that file"""
     override_path = fixture_dir('settings', 'settings-paths.json')
@@ -46,6 +37,19 @@ def test_available_types(prefs):
 def test_update_key(prefs):
     prefs.update_key('paths.required.characters', 'nothing here')
     assert prefs.get('paths.required.characters') == 'nothing here'
+
+class TestGetSettingsPath:
+    def test_get_settings_path(self, prefs):
+        assert prefs.get_settings_path('default') == prefs.default_settings_path.joinpath('settings-default.json')
+        assert prefs.get_settings_path('campaign') == prefs.campaign_settings_path.joinpath('settings.json')
+
+    @pytest.mark.parametrize('settings_type', ['changeling', 'werewolf'])
+    def test_get_typed_settings_path(self, prefs, settings_type):
+        fetched_path = prefs.get_settings_path('default', settings_type)
+        assert fetched_path == prefs.default_settings_path.joinpath('settings-{}.json'.format(settings_type))
+
+    def test_get_with_suffix(self, prefs):
+        assert prefs.get_settings_path('default', suffix='.yaml') == prefs.default_settings_path.joinpath('settings-default.yaml')
 
 class TestMetadata:
     """Tests the correctness of the metadata hash"""

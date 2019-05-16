@@ -246,7 +246,7 @@ class Settings:
 
         self.data = merge_dict(new_data, self.data)
 
-    def get_settings_path(self, location, settings_type=None):
+    def get_settings_path(self, location, settings_type=None, suffix=None):
         """
         Get a settings file path
 
@@ -271,14 +271,20 @@ class Settings:
             base_path = self.campaign_settings_path
 
         if settings_type and settings_type != 'base':
-            filename = "settings-{}.json".format(settings_type)
+            filename = "settings-{}".format(settings_type)
         else:
             if location == 'default':
-                filename = 'settings-default.json'
+                filename = 'settings-default'
             else:
-                filename = 'settings.json'
+                filename = 'settings'
 
-        return base_path.joinpath(filename)
+        if suffix is None:
+            try:
+                return self._best_settings_path(base_path, filename)
+            except OSError:
+                return base_path.joinpath(filename).with_suffix(self.settings_file_suffixes[0])
+        else:
+            return base_path.joinpath(filename).with_suffix(suffix)
 
     def get(self, key, default=None):
         """
