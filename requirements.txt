@@ -3,4 +3,5 @@ Markdown==2.6.9
 MarkupSafe==1.0
 py==1.5.3
 PyQt5==5.7.1
+PyYAML==5.1
 sip==4.19

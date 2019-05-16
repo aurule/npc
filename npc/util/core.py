@@ -6,14 +6,57 @@ import re
 import json
 import sys
 import subprocess
+import yaml
+from . import errors
 from os import getcwd
 from pathlib import Path
 
+def load_settings(file_path):
+    """
+    Load a supported settings file
+
+    Checks the file suffix of file_path and calls the appropriate loader. No
+    special checking is done on the file's contents.
+
+    Args:
+        file_path (Path): Path to the settings file to load
+
+    Raises:
+        FormatError when the suffix is not recognized
+    """
+    if file_path.suffix == '.yaml':
+        return load_yaml(file_path)
+    if file_path.suffix == '.json':
+        return load_json(file_path)
+
+    raise errors.FormatError("Unrecognized format for {}".format(file_path))
+
+def load_yaml(filename):
+    """
+    Parse a YAML file
+
+    Args:
+        filename (str): Path of the file to load
+
+    Returns:
+        List or dict from `yaml.safe_load()`
+    """
+    with open(filename, 'r') as f:
+        try:
+            return yaml.safe_load(f)
+        except yaml.parser.ParserError as err:
+            nicestr = "Bad syntax in '{0}' line {2} column {3}: {1}"
+            nicemsg = nicestr.format(filename, err.problem, err.problem_mark.line, err.problem_mark.column)
+            raise errors.ParseError(nicemsg, filename, err.problem_mark.line, err.problem_mark.column)
+
+
 def load_json(filename):
     """
-    Parse a JSON file
+    Parse a JSON-like file with non-standard syntax
 
-    First remove all comments, then use the standard json package
+    Two cleaning steps are done before parsing with the standard json package:
+    1. Remove all comments
+    2. Remove trailing commas from the last element of an object or list
 
     Comments look like :
         // ...
@@ -64,10 +107,10 @@ def load_json(filename):
             return json.loads(content)
         except json.decoder.JSONDecodeError as err:
             nicestr = "Bad syntax in '{0}' line {2} column {3}: {1}"
-            err.nicemsg = nicestr.format(filename, err.msg, err.lineno, err.colno)
-            raise err
+            nicemsg = nicestr.format(filename, err.msg, err.lineno, err.colno)
+            raise errors.ParseError(nicemsg, filename, err.lineno, err.colno)
         except OSError as err:
-            err.nicemsg = "Could not load '{0}': {1}".format(filename, err.strerror)
+            err.strerror = "Could not load '{0}': {1}".format(filename, err.strerror)
             raise err
 
 class PathEncoder(json.JSONEncoder):

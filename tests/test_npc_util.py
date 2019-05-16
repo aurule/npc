@@ -21,9 +21,16 @@ class TestJsonLoading:
 
     def test_bad_syntax(self):
         filepath = fixture_dir('util', 'load_json', 'bad_syntax.json')
-        with pytest.raises(json.decoder.JSONDecodeError) as err:
+        with pytest.raises(util.errors.ParseError) as err:
             loaded = util.load_json(filepath)
-        assert "Bad syntax" in err.value.nicemsg
+        assert "Bad syntax" in err.value.strerror
+
+class TestYamlLoading:
+    def test_bad_syntax(self):
+        filepath = fixture_dir('util', 'load_yaml', 'bad_syntax.yaml')
+        with pytest.raises(util.errors.ParseError) as err:
+            loaded = util.load_yaml(filepath)
+        assert "Bad syntax" in err.value.strerror
 
 def test_error_printer(capsys):
     util.print_err("Catchphrase!")
