@@ -4,7 +4,6 @@ Handle settings storage and fetching
 Also has a helper function to check loaded settings for faults.
 """
 
-import json
 from datetime import datetime
 from collections import OrderedDict
 from copy import deepcopy
@@ -160,9 +159,9 @@ class Settings:
             settings_path (str): Path to the new json file to load
         """
         try:
-            loaded = util.load_json(settings_path)
-        except json.decoder.JSONDecodeError as err:
-            util.print_err(err.nicemsg)
+            loaded = util.load_settings(settings_path)
+        except util.errors.ParseError as err:
+            util.print_err(err.strerror)
             return
 
         # paths should be evaluated relative to the settings file in settings_path
