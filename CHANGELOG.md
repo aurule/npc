@@ -11,6 +11,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 * The `session` command can now create additional files alongside the plot and session log
 * New `employer` group-like tag
 * Internal caching in the template formatter should speed up generating large character lists
+* YAML is now supported for configuration files alongside JSON. If a JSON file and a YAML file are both present with the same name other than the file extension, the JSON file will take precedence. This is due to the massively slower parsing speed of YAML files. All configuration files are present in both formats for reference.
 
 ### Changed
 

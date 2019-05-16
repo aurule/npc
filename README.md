@@ -131,8 +131,8 @@ The `changeling` command has a few more arguments than the simple characters, to
 
 Options:
 
-* `seeming`: Name of the changeling's Seeming. This will be added to the character's stats with notes about the Seeming Blessing and Curse, if the seeming is found in `support/seeming-kith.json`.
-* `kith`: Name of their Kith. Also added to the character's stats with notes about the Kith Blessing, if the kith is found in `support/seeming-kith.json`.
+* `seeming`: Name of the changeling's Seeming. This will be added to the character's stats with notes about the Seeming Blessing and Curse, if the seeming is found in `settings-changeling`.
+* `kith`: Name of their Kith. Also added to the character's stats with notes about the Kith Blessing, if the kith is found in `settings-changeling`.
 * `--court`: Name of the changeling's court, if they have one. This is the first "group" checked when creating the path.
 * `--motley`: Name of the changeling's motley, if known. This does not affect the path, but is added to the file as a tag.
 
@@ -304,7 +304,7 @@ The `--search` and `--ignore` options interact in the following ways:
 
 # Configuration
 
-NPC reads config values from three separate files. These settings files use the json syntax and allow comments.
+NPC reads config values from a few separate files. These settings files use the [JSON](https://www.tutorialspoint.com/json/json_syntax.htm) or [YAML](https://docs.ansible.com/ansible/latest/reference_appendices/YAMLSyntax.html) syntaxes. JSON files allow comments and are lenient about having a comma in the last element of a collection. Default configuration files exist in both formats for reference. When two files with the same name, except for their extension, are found, NPC defaults to the JSON file for speed. Since NPC uses JSON files by default, all examples here will use the `json` suffix.
 
 Default values are loaded from `support/settings-default.json` within the install directory. This file has extensive documentation of the available settings.
 
@@ -331,6 +331,10 @@ Changing the blessing and curse text is less arduous. To add a new blessing or c
 Every seeming *must* have a corresponding entry in both the `blessings` and `curses` dicts. Every kith *must* have a corresponding entry in the `blessings` dict. Kith curses are not supported by NPC and will be ignored.
 
 Since both seemings and kiths share the same blessings and curses dictionaries, all seeming and kith names *should* be unique. If a seeming and kith have the same name, then both will have the same blessing. That's probably not what you want.
+
+### Other Settings
+
+The `npc-gui` program has its own unique settings in `settings-gui.json`. These are ignored unless you're running the gui.
 
 # Testing and Development
 
