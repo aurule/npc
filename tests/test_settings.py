@@ -92,3 +92,13 @@ class TestIgnoredPaths:
         prefs.update_key('paths.ignore.always', ['abc123'])
         prefs.update_key('paths.ignore.dne', ['something else'])
         assert set(prefs.get_ignored_paths('dne')) == set(['abc123', 'something else'])
+
+@pytest.mark.parametrize('file_name', [
+                                        'settings-default',
+                                        'settings-changeling',
+                                        'settings-werewolf',
+                                        'settings-gui'])
+def test_default_files_match(prefs, file_name):
+    settings_file_base = prefs.default_settings_path.joinpath(file_name)
+    loaded = [npc.util.load_settings(settings_file_base.with_suffix(s)) for s in prefs.settings_file_suffixes]
+    assert loaded[1:] == loaded[:-1]
