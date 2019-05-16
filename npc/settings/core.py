@@ -29,7 +29,7 @@ class Settings:
         user_settings_path (str): Path to the user settings directory for the
             current user. Only correct on *nix systems.
         campaign_settings_path (str): Path to the campaign settings directory.
-        settings_files (list): List of allowed settings file names.
+        settings_file_names (list): List of allowed settings file names.
         settings_paths (list): List of allowed settings paths.
         data (dict): Dictionary of settings data. Should not be referenced
             directly. Instead, use the get() method.
@@ -61,30 +61,58 @@ class Settings:
         self.user_settings_path = Path('~/.config/npc/').expanduser()
         self.campaign_settings_path = Path('.npc/')
 
-        self.settings_files = [
-            'settings.json',
-            'settings-changeling.json',
-            'settings-werewolf.json',
-            'settings-gui.json'
+        self.settings_file_names = [
+            'settings',
+            'settings-changeling',
+            'settings-werewolf',
+            'settings-gui'
         ]
+        self.settings_file_suffixes = ['.json', '.yaml']
         self.settings_paths = [self.default_settings_path, self.user_settings_path, self.campaign_settings_path]
 
         self.verbose = verbose
-        loaded_data = util.load_json(self.default_settings_path.joinpath('settings-default.json'))
+
+        loaded_data = util.load_settings(self._best_settings_path(self.default_settings_path, 'settings-default'))
 
         # massage template names into real paths
         self.data = self._expand_templates(base_path=self.install_base, settings_data=loaded_data)
 
         # merge additional settings files
         for settings_path in self.settings_paths:
-            for file in self.settings_files:
+            for file in self.settings_file_names:
                 try:
-                    self.load_more(settings_path.joinpath(file))
+                    self.load_more(self._best_settings_path(settings_path, file))
                 except OSError as err:
                     # All of these files are optional, so normally we silently
                     # ignore these errors
                     if self.verbose:
                         util.print_err(err.strerror, err.filename)
+
+    def _best_settings_path(self, dir_name, file_name):
+        """
+        Get the most preferred path to a settings file based on suffix
+
+        The list of suffixes in `self.settings_file_suffixes` is in order of
+        preference, so we want to check them in that order. If both files exist,
+        only the most preferred should be returned.
+
+        Args:
+            dir_name (Path): Directory name to search in
+            file_name (PathLike): Settings file bare name. Any suffix present
+                will be ignored.
+
+        Returns:
+            Path object for the best file that could be found
+
+        Raises:
+            OSError if no file exists with any usable suffix
+        """
+        base_path = dir_name.joinpath(file_name)
+        for suffix in self.settings_file_suffixes:
+            attempt = base_path.with_suffix(suffix)
+            if attempt.exists():
+                return attempt
+        raise OSError(2, 'No yaml or json found', base_path)
 
     def _expand_templates(self, base_path, settings_data):
         """
