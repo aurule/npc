@@ -134,29 +134,29 @@ def _process_directives(characters):
 
     for char in characters:
         # skip if asked
-        if 'skip' in char:
+        if 'skip' in char.tags:
             continue
 
         # remove named fields
-        for fieldname in char['hide']:
-            if fieldname in char:
-                del char[fieldname]
+        for fieldname in char.tags['hide']:
+            if fieldname in char.tags:
+                del char.tags[fieldname]
 
         # remove named groups
-        for groupname in char['hidegroup']:
-            char['group'].remove(groupname)
+        for groupname in char.tags['hidegroup']:
+            char.tags['group'].remove(groupname)
 
         # remove all ranks for named groups
-        for groupname in char['hideranks']:
-            if groupname in char['rank']:
-                del char['rank'][groupname]
+        for groupname in char.tags['hideranks']:
+            if groupname in char.tags['rank']:
+                del char.tags['rank'][groupname]
 
         # use fake types if present
-        if 'faketype' in char:
-            char['type'] = char['faketype']
+        if 'faketype' in char.tags:
+            char.tags['type'] = char.tags['faketype']
 
         # Use a placeholder for unknown type
-        if 'type' not in char:
-            char['type'] = 'Unknown'
+        if 'type' not in char.tags:
+            char.tags['type'] = 'Unknown'
 
         yield char

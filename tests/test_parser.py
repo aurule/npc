@@ -5,29 +5,29 @@ from tests.util import fixture_dir
 def test_remove_filename_comments():
     parseables = fixture_dir('parsing', 'characters', 'Fetches', 'macho mannersson - faker.nwod')
     characters = list(npc.parser.get_characters(search_paths=[parseables]))
-    assert characters[0]['name'][0] == 'macho mannersson'
+    assert characters[0].get_first('name') == 'macho mannersson'
 
 class TestSpecialCharacters:
 
     def test_allow_apostrophes_in_names(self):
         parseables = fixture_dir('parsing', 'characters', 'Fetches', "manny o'mann - super faker.nwod")
         characters = list(npc.parser.get_characters(search_paths=[parseables]))
-        assert characters[0]['name'][0] == "manny o'mann"
+        assert characters[0].get_first('name') == "manny o'mann"
 
     def test_allow_periods_in_names(self):
         parseables = fixture_dir('parsing', 'characters', 'Fetches', "Dr. Manny Mann - fakier.nwod")
         characters = list(npc.parser.get_characters(search_paths=[parseables]))
-        assert characters[0]['name'][0] == "Dr. Manny Mann"
+        assert characters[0].get_first('name') == "Dr. Manny Mann"
 
     def test_allow_hyphens_in_names(self):
         parseables = fixture_dir('parsing', 'characters', 'Fetches', "Manny Manly-Mann - fakiest.nwod")
         characters = list(npc.parser.get_characters(search_paths=[parseables]))
-        assert characters[0]['name'][0] == "Manny Manly-Mann"
+        assert characters[0].get_first('name') == "Manny Manly-Mann"
 
     def test_allow_commas_in_names(self):
         parseables = fixture_dir('parsing', 'characters', 'Fetches', "Manners Mann, Ph.D. - fakierest.nwod")
         characters = list(npc.parser.get_characters(search_paths=[parseables]))
-        assert characters[0]['name'][0] == "Manners Mann, Ph.D."
+        assert characters[0].get_first('name') == "Manners Mann, Ph.D."
 
 class TestInclusion:
     """Tests which files are included in the parsed data"""
@@ -44,7 +44,7 @@ class TestInclusion:
         ignore_me = fixture_dir('parsing', 'characters', 'Changelings', 'Kabana Matansa.nwod')
         characters = npc.parser.get_characters(search_paths=[parseables], ignore_paths=[ignore_me])
         for c in characters:
-            assert 'Kabana Matansa' not in c['name']
+            assert 'Kabana Matansa' not in c.tags['name']
 
     def test_conflict_dir(self):
         """Ignore a directory when it is in both the search and ignore lists"""
@@ -80,43 +80,43 @@ class TestTags:
 
     def test_simple_tag(self, basic_character):
         """Tags should be added by name"""
-        assert 'appearance' in basic_character
+        assert 'appearance' in basic_character.tags
 
     def test_unknown_tag(self, basic_character):
         """Unknown tags should be added"""
-        assert 'unrecognized' in basic_character
+        assert 'unrecognized' in basic_character.tags
 
     def test_bare_tag(self, basic_character):
         """Tags with no data should be added"""
-        assert 'skip' in basic_character
+        assert 'skip' in basic_character.tags
 
     def test_comment(self, basic_character):
-        assert '#comment' not in basic_character
+        assert '#comment' not in basic_character.tags
 
     def test_foreign(self, basic_character):
-        assert 'foreign' in basic_character
+        assert 'foreign' in basic_character.tags
 
     def test_changeling_shortcut(self, character):
         """@changeling should set type, seeming, and kith"""
         c = character('Changeling Tag.nwod')
-        assert c['type'][0] == 'Changeling'
-        assert c['seeming'][0] == 'Beast'
-        assert c['kith'][0] == 'Hunterheart'
+        assert c.get_first('type') == 'Changeling'
+        assert c.get_first('seeming') == 'Beast'
+        assert c.get_first('kith') == 'Hunterheart'
 
     def test_realname(self, character):
         """@realname should overwrite the first name entry"""
         c = character('File Name.nwod')
-        assert c['name'][0] == 'Real Name'
+        assert c.get_first('name') == 'Real Name'
 
     def test_group_rank(self, character):
         """@rank should scope its value to the most recent @group"""
         c = character('Group Rank.nwod')
-        assert c['rank'] == {'Frat': ['Brother']}
+        assert c.tags['rank'] == {'Frat': ['Brother']}
 
     def test_bare_rank(self, character):
         """@rank should not be added without a prior @group"""
         c = character('Bare Rank.nwod')
-        assert not c['rank']
+        assert not c.tags['rank']
 
 class TestNames:
     """Tests the way character names are grabbed from filenames"""

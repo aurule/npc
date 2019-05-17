@@ -1,12 +1,12 @@
 <%page args="character, header_level, mdconv"/>
 <%def name="make_ranks(group_name)">\
-    %if group_name in character['rank']:
- (${', '.join(character['rank'][group_name])})\
+    %if group_name in character.tags['rank']:
+ (${', '.join(character.tags['rank'][group_name])})\
     %endif
 </%def>\
 ${"<h{}>".format(header_level)}\
 ${character.get_first('name')}\
-%if 'dead' in character:
+%if 'dead' in character.tags:
  (Deceased)\
 %endif
 ${"</h{}>".format(header_level)}
@@ -15,16 +15,16 @@ ${"</h{}>".format(header_level)}
 <div><em>AKA ${', '.join(character.get_remaining('name'))}</em></div>
 %endif
 %if character.has_items('title'):
-<div>${', '.join(character['title'])}</div>
+<div>${', '.join(character.tags['title'])}</div>
 %endif
 \
-<div>${'/'.join(character['type'])}\
+<div>${'/'.join(character.tags['type'])}\
 %if character.has_locations:
  in ${' and '.join(character.locations)}\
 %elif character.has_items('foreign'):
  (foreign)
 %endif
-%if 'wanderer' in character:
+%if 'wanderer' in character.tags:
 , Wanderer\
 %endif
 %if character.has_items('group'):
@@ -50,15 +50,15 @@ ${', '}
 %endif
 \
 %if character.has_items('appearance'):
-${mdconv('*Appearance:* ' + ' '.join(character['appearance']))}
+${mdconv('*Appearance:* ' + ' '.join(character.tags['appearance']))}
 %endif
 \
 %if character.has_items('ban'):
-${mdconv('*Ban:* ' + ' '.join(character['ban']))}
+${mdconv('*Ban:* ' + ' '.join(character.tags['ban']))}
 %endif
 \
 ${mdconv('*Notes:* ' + character.description)}
 \
 %if character.has_items('dead'):
-${mdconv('*Dead:* ' + ' '.join(character['dead']))}
+${mdconv('*Dead:* ' + ' '.join(character.tags['dead']))}
 %endif

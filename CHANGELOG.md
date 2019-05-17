@@ -26,6 +26,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 * Description lines are now stored in an array. A string representation can be accessed with the `description` property.
 * Files are opened by the system default editor for that type, falling back on the "editor" value from settings.
 * The `settings` command now detects which format is in use
+* Character objects now store their tags in `self.tags` instead of directly on the object
 
 ## 1.4.0
 

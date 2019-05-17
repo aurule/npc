@@ -162,7 +162,7 @@ def parse_character(char_file_path) -> Character:
 
                 # replace first name
                 if tag == 'realname':
-                    parsed_char['name'][0] = value
+                    parsed_char.tags['name'][0] = value
                     continue
 
                 # handle rank logic for group tags

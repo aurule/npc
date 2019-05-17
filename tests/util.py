@@ -16,5 +16,5 @@ def fixture_dir(*dirnames):
     return base.joinpath('fixtures', *dirnames)
 
 def load_json(pathlib_path):
-    with open(pathlib_path) as f:
+    with open(pathlib_path, 'r') as f:
         return json.load(f)

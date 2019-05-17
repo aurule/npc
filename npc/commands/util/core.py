@@ -139,12 +139,12 @@ def create_path_from_character(character: Character, *, base_path=None, hierarch
                 target_path = add_path_if_exists(target_path, rank)
         elif tag_name == 'groups':
             # iterate all group values and try to add each one as a folder
-            for group in character['group']:
+            for group in character.tags['group']:
                 target_path = add_path_if_exists(target_path, group)
         elif tag_name == 'groups+ranks':
             # Iterate all groups, add each as a folder, then iterate all ranks
             # for that group and add each of those as folders
-            for group in character['group']:
+            for group in character.tags['group']:
                 target_path = add_path_if_exists(target_path, group)
                 for rank in character.get_ranks(group):
                     target_path = add_path_if_exists(target_path, rank)

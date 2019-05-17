@@ -58,13 +58,13 @@ def reorg(*search, ignore=None, purge=False, verbose=False, commit=False, **kwar
         changelog.append("Move characters")
     for parsed_character in parser.get_characters(flatten(search), ignore):
         new_path = Path(util.create_path_from_character(parsed_character, base_path=base_path))
-        parsed_path = Path(parsed_character['path'])
+        parsed_path = Path(parsed_character.tags['path'])
         if not new_path.resolve().samefile(parsed_path.resolve()):
             if show_changes:
-                changelog.append("* Move {} to {}".format(parsed_character['path'], new_path))
+                changelog.append("* Move {} to {}".format(parsed_path, new_path))
             if commit:
                 try:
-                    shmove(parsed_character['path'], new_path)
+                    shmove(str(parsed_path), new_path)
                 except OSError as e:
                     if show_changes:
                         changelog.append("\t- dest path already exists; skipping")
@@ -110,6 +110,8 @@ def dump(*search, ignore=None, do_sort=False, metadata=False, outfile=None, **kw
     if do_sort:
         sorter = util.character_sorter.CharacterSorter(sort_by, prefs=prefs)
         characters = sorter.sort(characters)
+
+    characters = [c.tags for c in characters]
 
     # make some json
     if metadata:
@@ -167,14 +169,15 @@ def lint(*search, ignore=None, fix=False, strict=False, report=False, **kwargs):
 
         # Report problems on one line if possible, or as a block if there's more than one
         if not character.valid:
+            charpath = character.tags['path']
             if not report:
-                openable.append(character['path'])
+                openable.append(charpath)
             if len(character.problems) > 1:
-                printable.append("File '{}':".format(character['path']))
+                printable.append("File '{}':".format(charpath))
                 for detail in character.problems:
                     printable.append("    {}".format(detail))
             else:
-                printable.append("{} in '{}'".format(character.problems[0], character['path']))
+                printable.append("{} in '{}'".format(character.problems[0], charpath))
 
     return result.Success(openable=openable, printables=printable)
 
@@ -318,7 +321,7 @@ def report(*tags, search=None, ignore=None, fmt=None, outfile=None, **kwargs):
     # Construct a dict keyed by tag name whose values are Counters. Each Counter
     # is initialized with a flattened list of lists and we let it count the
     # duplicates.
-    table_data = {tag : Counter(flatten([c.get(tag, 'None') for c in characters])) for tag in flatten(tags)}
+    table_data = {tag : Counter(flatten([c.tags.get(tag, 'None') for c in characters])) for tag in flatten(tags)}
 
     formatter = formatters.get_report_formatter(fmt)
     if not formatter:

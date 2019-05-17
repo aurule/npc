@@ -11,25 +11,25 @@ class TestAppend:
     def test_normal(self):
         char = npc.Character()
         char.append("title", "The Stern")
-        assert char["title"] == ["The Stern"]
+        assert char.tags["title"] == ["The Stern"]
 
     @pytest.mark.parametrize('field', npc.Character.STRING_FIELDS)
     def test_string_fields(self, field):
         char = npc.Character()
         char.append(field, "Hello hello")
         char.append(field, " baby, you called")
-        assert char[field] == "Hello hello baby, you called"
+        assert char.tags[field] == "Hello hello baby, you called"
 
     def test_append_rank(self):
         char = npc.Character()
         char.append_rank("Knights of the Round Table", "Dancer")
-        assert char["rank"]["Knights of the Round Table"] == ["Dancer"]
+        assert char.tags["rank"]["Knights of the Round Table"] == ["Dancer"]
 
     def test_append_list(self):
         char = npc.Character()
         char.append("title", "The Stern")
         char.append("title", ["The Drunk", "The Wise"])
-        assert char["title"] == ["The Stern", "The Drunk", "The Wise"]
+        assert char.tags["title"] == ["The Stern", "The Drunk", "The Wise"]
 
 def test_merge_all():
     char = npc.Character()
@@ -38,7 +38,7 @@ def test_merge_all():
 
     more_tags = {'title': 'The Stern', 'location': 'Nothingtown'}
     char.merge_all(more_tags)
-    assert char['title'] == ['The Wise', 'The Stern']
+    assert char.tags['title'] == ['The Wise', 'The Stern']
 
 class TestGetFirst:
     def test_normal(self):

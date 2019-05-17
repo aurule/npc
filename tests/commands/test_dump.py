@@ -19,7 +19,8 @@ def test_valid_json(list_json_output):
 def test_dump_matches_internal(list_json_output):
     dump_data = list_json_output()
     raw_data = npc.parser.get_characters(search_paths=[fixture_dir('dump')])
-    assert dump_data == list(raw_data)
+    tag_data = [c.tags for c in raw_data]
+    assert dump_data == list(tag_data)
 
 def test_metadata(list_json_output):
     """The json output should include an object with metadata keys when the

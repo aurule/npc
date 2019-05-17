@@ -1,7 +1,7 @@
 from collections import defaultdict
 from .util import OutOfBoundsError, flatten, merge_to_dict
 
-class Character(defaultdict):
+class Character:
     """
     Object to hold and access data for a single character
 
@@ -68,14 +68,14 @@ class Character(defaultdict):
                 Character. Keys here will overwrite keys of the same name from
                 the `attributes` arg.
         """
-        super().__init__(list)
+        self.tags = defaultdict(list)
         for key in self.STRING_FIELDS:
-            self[key] = ''
-        self['rank'] = defaultdict(list)
+            self.tags[key] = ''
+        self.tags['rank'] = defaultdict(list)
 
         if attributes is not None:
-            self.update(attributes)
-        self.update(kwargs)
+            self.tags.update(attributes)
+        self.tags.update(kwargs)
         self.problems = ['Not validated']
 
     @property
@@ -108,14 +108,14 @@ class Character(defaultdict):
         """
         bool: Whether this character has a path
         """
-        return 'path' in self and self['path']
+        return 'path' in self.tags and self.tags['path']
 
     @property
     def locations(self):
         """
         iter: Non-empty foreign and location names
         """
-        return filter(bool, self['foreign'] + self['location'])
+        return filter(bool, self.tags['foreign'] + self.tags['location'])
 
     @property
     def has_locations(self):
@@ -129,7 +129,7 @@ class Character(defaultdict):
         """
         str: All description lines joined by newlines.
         """
-        return "\n".join(self['description'])
+        return "\n".join(self.tags['description'])
 
 
     def get_first(self, key, default=None):
@@ -149,14 +149,14 @@ class Character(defaultdict):
             differently. Passing "path" will return the entire path value, and
             passing "ranks" will return the default.
         """
-        if key not in self or key == 'rank':
+        if key not in self.tags or key == 'rank':
             return default
 
         if key in self.STRING_FIELDS:
-            return self[key]
+            return self.tags[key]
 
         try:
-            return self[key][0]
+            return self.tags[key][0]
         except IndexError:
             return default
 
@@ -175,13 +175,13 @@ class Character(defaultdict):
             differently. Passing "path" will return the entire path value, and
             passing "ranks" will return an empty array.
         """
-        if key not in self or key == 'rank':
+        if key not in self.tags or key == 'rank':
             return []
 
         if key in self.STRING_FIELDS:
-            return self[key]
+            return self.tags[key]
 
-        return self[key][1:]
+        return self.tags[key][1:]
 
     def get_ranks(self, group_name):
         """
@@ -195,7 +195,7 @@ class Character(defaultdict):
         """
 
         try:
-            return self['rank'][group_name]
+            return self.tags['rank'][group_name]
         except KeyError:
             return []
 
@@ -213,22 +213,22 @@ class Character(defaultdict):
         Returns:
             True if key has an entry that contains value, False if not.
         """
-        if key not in self:
+        if key not in self.tags:
             return False
 
         wildcard_search = value == '*'
 
         if key in self.STRING_FIELDS:
-            if wildcard_search and len(self[key]) > 0:
+            if wildcard_search and len(self.tags[key]) > 0:
                 return True
-            return value in self[key].casefold()
+            return value in self.tags[key].casefold()
 
         if key == 'rank':
-            searchme = flatten([self['rank'][g] for g in self['rank']])
+            searchme = flatten([self.tags['rank'][g] for g in self.tags['rank']])
             if wildcard_search and len(list(searchme)) > 0:
                 return True
         else:
-            searchme = self[key]
+            searchme = self.tags[key]
             if wildcard_search:
                 return True
 
@@ -254,9 +254,9 @@ class Character(defaultdict):
             This character object. Convenient for chaining.
         """
         if key in self.STRING_FIELDS:
-            self[key] += value
+            self.tags[key] += value
         else:
-            merge_to_dict(self, key, value)
+            merge_to_dict(self.tags, key, value)
 
         return self
 
@@ -271,7 +271,7 @@ class Character(defaultdict):
         Returns:
             This character object. Convenient for chaining.
         """
-        self['rank'][group].append(value)
+        self.tags['rank'][group].append(value)
         return self
 
     def merge_all(self, other_dict: dict):
@@ -295,7 +295,7 @@ class Character(defaultdict):
         for key, value in other_dict.items():
             if key == 'rank':
                 for group_name, group_rank in value.items():
-                    merge_to_dict(self['rank'], group_name, group_rank)
+                    merge_to_dict(self.tags['rank'], group_name, group_rank)
             else:
                 self.append(key, value)
 
@@ -328,7 +328,7 @@ class Character(defaultdict):
             tag (str): Tag name to check
         """
         if self.has_items(tag, 2):
-            self.problems.append("Multiple {}s: {}".format(tag, ', '.join(self[tag])))
+            self.problems.append("Multiple {}s: {}".format(tag, ', '.join(self.tags[tag])))
 
     def validate(self, strict=False):
         """
@@ -360,7 +360,7 @@ class Character(defaultdict):
         self.validate_tag_present_and_filled('name')
 
         if strict:
-            unknown_tags = [tag for tag in set(self.keys()) - set(self.KNOWN_TAGS)]
+            unknown_tags = [tag for tag in set(self.tags.keys()) - set(self.KNOWN_TAGS)]
             if unknown_tags:
                 self.problems.append("Unrecognized tags: {}".format(', '.join(unknown_tags)))
 
@@ -431,7 +431,7 @@ class Character(defaultdict):
         if threshold < 1:
             raise OutOfBoundsError
 
-        return len(self.get(key, [])) >= threshold
+        return len(self.tags.get(key, [])) >= threshold
 
     def copy_and_alter(self, func):
         """
@@ -449,7 +449,7 @@ class Character(defaultdict):
             altered by func.
         """
         new_char = Character()
-        for attr, values in self.items():
+        for attr, values in self.tags.items():
             if attr == 'rank':
                 for group, ranks in values.items():
                     for item in ranks:
@@ -474,22 +474,22 @@ class Character(defaultdict):
 
         def tags_for_all(attrname):
             """Add a tag for every value in attrname"""
-            lines.extend(["@{} {}".format(attrname, val) for val in self.get(attrname, [])])
+            lines.extend(["@{} {}".format(attrname, val) for val in self.tags.get(attrname, [])])
 
         def buffered(attrname, fn):
             """Insert a newline before running fn, but only if attrname exists"""
-            if attrname in self:
+            if attrname in self.tags:
                 lines.append("")
                 fn(attrname)
 
         def add_flag(attrname):
             """Add a bare tag, with no value, as long as attrname exists"""
-            if attrname in self:
+            if attrname in self.tags:
                 lines.append("@{}".format(attrname))
 
         def tags_or_flag(attrname):
             """Add tags or a flag for attrname, whichever is more appropriate."""
-            if attrname in self:
+            if attrname in self.tags:
                 if self.has_items(attrname):
                     tags_for_all(attrname)
                 else:
@@ -498,22 +498,22 @@ class Character(defaultdict):
         add_flag('skip')
 
         first_name = self.get_first('name')
-        path = self.get('path')
+        path = self.tags.get('path')
         if first_name and first_name not in path:
             lines.append("@realname {}".format(first_name))
         lines.extend(["@name {}".format(val) for val in self.get_remaining('name')])
 
         if self.type_key == 'changeling':
-            if 'seeming' in self and 'kith' in self:
+            if 'seeming' in self.tags and 'kith' in self.tags:
                 lines.append("@changeling {} {}".format(self.get_first('seeming'), self.get_first('kith')))
             else:
                 lines.append("@type Changeling")
-                if 'seeming' in self:
+                if 'seeming' in self.tags:
                     lines.append("@seeming {}".format(self.get_first('seeming')))
-                if 'kith' in self:
+                if 'kith' in self.tags:
                     lines.append("@kith {}".format(self.get_first('kith')))
         elif self.type_key == 'werewolf':
-            if 'auspice' in self:
+            if 'auspice' in self.tags:
                 lines.append("@werewolf {}".format(self.get_first('auspice')))
             else:
                 lines.append("@type Werewolf")
@@ -530,10 +530,10 @@ class Character(defaultdict):
         tags_for_all('freehold')
 
         for tagname in self.GROUP_TAGS:
-            for groupname in self[tagname]:
+            for groupname in self.tags[tagname]:
                 lines.append("@{} {}".format(tagname, groupname))
-                if groupname in self['rank']:
-                    lines.extend(["@rank {}".format(rank) for rank in self['rank'][groupname]])
+                if groupname in self.tags['rank']:
+                    lines.extend(["@rank {}".format(rank) for rank in self.tags['rank'][groupname]])
 
         buffered('dead', tags_or_flag)
         buffered('appearance', tags_for_all)

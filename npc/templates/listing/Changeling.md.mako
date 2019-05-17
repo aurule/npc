@@ -1,7 +1,7 @@
 <%page args="character, header_level"/>\
 <%def name="make_ranks(group_name)">\
-    % if group_name in character['rank']:
- (${', '.join(character['rank'][group_name])})\
+    % if group_name in character.tags['rank']:
+ (${', '.join(character.tags['rank'][group_name])})\
     % endif
 </%def>\
 ${'#' * header_level} ${character.get_first('name')}\
@@ -15,7 +15,7 @@ ${'#' * header_level} ${character.get_first('name')}\
 % endif
 \
 % if character.has_items('title'):
-${', '.join(character['title'])}
+${', '.join(character.tags['title'])}
 % endif
 \
 ${character.get_first('type')}\
@@ -24,7 +24,7 @@ ${character.get_first('type')}\
 %elif character.has_items('foreign'):
  (foreign)
 %endif
-% if 'wanderer' in character:
+% if 'wanderer' in character.tags:
 , Wanderer\
 % endif
 % if character.has_items('motley'):
@@ -46,13 +46,13 @@ has_kith = character.has_items('kith')
 % if has_seeming or has_kith:
 
     % if has_seeming:
-${'/'.join(character['seeming'])}\
+${'/'.join(character.tags['seeming'])}\
     % endif
     % if has_seeming and has_kith:
 ${' '}\
     % endif
     % if has_kith:
-${'/'.join(character['kith'])}\
+${'/'.join(character.tags['kith'])}\
     % endif
 \
 % endif
@@ -81,7 +81,7 @@ ${character.get_first('entitlement')}${make_ranks(character.get_first('entitleme
 % endif
 % if character.has_items('group'):
 
-    % for group in character['group']:
+    % for group in character.tags['group']:
 ${group}${make_ranks(group)}\
         % if not loop.last:
 , \
@@ -91,20 +91,20 @@ ${group}${make_ranks(group)}\
 
 % if character.has_items('appearance'):
 
-*Appearance:* ${' '.join(character['appearance'])}
+*Appearance:* ${' '.join(character.tags['appearance'])}
 % endif
 % if character.has_items('mien'):
 
-*Mien:* ${' '.join(character['mien'])}
+*Mien:* ${' '.join(character.tags['mien'])}
 % endif
 % if character.has_items('mask'):
 
-*Mask:* ${' '.join(character['mask'])}
+*Mask:* ${' '.join(character.tags['mask'])}
 % endif
 
 *Notes:* ${character.description}
 % if character.has_items('dead'):
 
-*Dead:* ${' '.join(character['dead'])}
+*Dead:* ${' '.join(character.tags['dead'])}
 % endif
 

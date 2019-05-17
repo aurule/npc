@@ -31,6 +31,8 @@ def listing(characters, outstream, *, metadata_format=False, metadata=None, **kw
     if not metadata:
         metadata = {}
 
+    characters = [c.tags for c in characters]
+
     if metadata_format:
         meta = {'meta': True, **metadata}
         characters = [meta] + characters

@@ -1,11 +1,11 @@
 <%page args="character, header_level"/>\
 <%def name="make_ranks(group_name)">\
-    % if group_name in character['rank']:
- (${', '.join(character['rank'][group_name])})\
+    % if group_name in character.tags['rank']:
+ (${', '.join(character.tags['rank'][group_name])})\
     % endif
 </%def>\
 ${'#' * header_level} ${character.get_first('name')}\
-% if 'dead' in character:
+% if 'dead' in character.tags:
  (Deceased)\
 % endif
 
@@ -15,7 +15,7 @@ ${'#' * header_level} ${character.get_first('name')}\
 % endif
 \
 % if character.has_items('title'):
-${', '.join(character['title'])}
+${', '.join(character.tags['title'])}
 % endif
 \
 ${character.get_first('type')}\
@@ -24,7 +24,7 @@ ${character.get_first('type')}\
 %elif character.has_items('foreign'):
  (foreign)
 %endif
-% if 'wanderer' in character:
+% if 'wanderer' in character.tags:
 , Wanderer\
 % endif
 
@@ -39,7 +39,7 @@ ${character.get_first('pack')} Pack${make_ranks(character.get_first('pack'))}\
 \
 % if character.has_items('auspice'):
 
-${'/'.join(character['auspice'])}\
+${'/'.join(character.tags['auspice'])}\
 % endif
 \
 % if character.has_items('lodge'):
@@ -48,7 +48,7 @@ ${character.get_first('lodge')}${make_ranks(character.get_first('lodge'))}\
 % endif
 % if character.has_items('group'):
 
-    % for group in character['group']:
+    % for group in character.tags['group']:
 ${group}${make_ranks(group)}\
         % if not loop.last:
 , \
@@ -58,12 +58,12 @@ ${group}${make_ranks(group)}\
 
 % if character.has_items('appearance'):
 
-*Appearance:* ${' '.join(character['appearance'])}
+*Appearance:* ${' '.join(character.tags['appearance'])}
 % endif
 
 *Notes:* ${character.description}
 % if character.has_items('dead'):
 
-*Dead:* ${' '.join(character['dead'])}
+*Dead:* ${' '.join(character.tags['dead'])}
 % endif
 
