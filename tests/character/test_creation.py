@@ -17,6 +17,10 @@ class TestCreation:
         assert char.tags["name"] == ["nope"]
         assert char.tags["profession"] == ["tailor"]
 
+    def test_handles_bare_strings(self):
+        char = npc.Character({"name": "hello"})
+        assert char.tags["name"] == ["hello"]
+
 class TestCopyAndAlter:
     def titleize(self, text):
         return text.title()

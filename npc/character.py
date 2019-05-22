@@ -51,7 +51,7 @@ class Character:
     """tuple (str): All recognized tags. Other, unrecognized tags are fine to
         add and will be ignored by methods that don't know how to handle them."""
 
-    def __init__(self, attributes=None, **kwargs):
+    def __init__(self, attributes: dict = None, **kwargs):
         """
         Create a new Character object.
 
@@ -63,17 +63,30 @@ class Character:
 
         Args:
             attributes (dict): Dictionary of attributes to insert into the
-                Character.
+                Character. If a value is a bare string, it will be converted to
+                a list containing that string.
             **kwargs: Named arguments will be added verbatim to the new
                 Character. Keys here will overwrite keys of the same name from
-                the `attributes` arg.
+                the `attributes` arg. The values here are not altered at all.
         """
+        def wrap_strings(attributes: dict):
+            wrapped_attributes = {}
+            for key, val in attributes.items():
+                if isinstance(val, dict):
+                    wrapped_attributes[key] = wrap_strings(val)
+                elif isinstance(val, str):
+                    wrapped_attributes[key] = [val]
+                else:
+                    wrapped_attributes[key] = val
+            return wrapped_attributes
+
         self.tags = defaultdict(list)
         for key in self.STRING_FIELDS:
             self.tags[key] = ''
         self.tags['rank'] = defaultdict(list)
 
-        if attributes is not None:
+        if attributes:
+            attributes = wrap_strings(attributes)
             self.tags.update(attributes)
         self.tags.update(kwargs)
         self.problems = ['Not validated']

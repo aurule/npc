@@ -27,6 +27,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 * Files are opened by the system default editor for that type, falling back on the "editor" value from settings.
 * The `settings` command now detects which format is in use
 * Character objects now store their tags in `self.tags` instead of directly on the object
+* New character objects won't choke on a non-list attribute value
 
 ## 1.4.0
 

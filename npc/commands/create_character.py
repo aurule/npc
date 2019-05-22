@@ -85,7 +85,7 @@ def changeling(name, seeming, kith, *,
     """
     prefs = kwargs.get('prefs', settings.InternalSettings())
     groups = kwargs.get('groups', [])
-    location = kwargs.get('location', None)
+    location = kwargs.get('location', False)
 
     # build minimal Character
     temp_char = _minimal_character(
@@ -163,7 +163,7 @@ def werewolf(name, auspice, *, tribe=None, pack=None, **kwargs):
     """
     prefs = kwargs.get('prefs', settings.InternalSettings())
     groups = kwargs.get('groups', [])
-    location = kwargs.get('location', None)
+    location = kwargs.get('location', False)
     dead = kwargs.get('dead', False)
     foreign = kwargs.get('foreign', False)
 
@@ -183,7 +183,7 @@ def werewolf(name, auspice, *, tribe=None, pack=None, **kwargs):
 
     return _cp_template_for_char(name, temp_char, prefs)
 
-def _minimal_character(ctype: str, groups, dead, foreign, location, prefs):
+def _minimal_character(ctype: str, groups: list, dead, foreign, location, prefs):
     """
     Create a minimal character object
 
@@ -203,23 +203,21 @@ def _minimal_character(ctype: str, groups, dead, foreign, location, prefs):
     Returns:
         Character object
     """
-    temp_char = Character()
-
-    tags = {}
-    tags['description'] = [prefs.get('character_header')]
-    tags['type'] = ctype.title()
+    attributes = prefs.get('tag_defaults')
+    attributes['description'] = [prefs.get('character_header')]
+    attributes['type'] = ctype.title()
     if groups:
-        tags['group'] = groups
+        attributes['group'] = groups
     if dead is not False:
-        tags['dead'] = dead
+        if dead is True:
+            dead = ''
+        attributes['dead'] = dead
     if foreign is not False:
-        tags['foreign'] = foreign
+        attributes['foreign'] = foreign
     if location is not False:
-        tags['location'] = location
+        attributes['location'] = location
 
-    temp_char.merge_all({**prefs.get('tag_defaults'), **tags})
-
-    return temp_char
+    return Character(attributes)
 
 def _cp_template_for_char(name, character, prefs, fn=None):
     """
