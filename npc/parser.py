@@ -9,7 +9,7 @@ import re
 import itertools
 from os import path, walk
 from pathlib import Path
-from .character import Character
+from npc import character
 
 VALID_EXTENSIONS = ('.nwod', '.dnd3', '.dfrpg')
 """tuple: file extensions that should be parsed"""
@@ -105,7 +105,7 @@ def _walk_ignore(root: str, ignore):
         dirnames[:] = [d for d in dirnames if should_search(dirpath, d)]
         yield dirpath, dirnames, filenames
 
-def parse_character(char_file_path) -> Character:
+def parse_character(char_file_path) -> character.Character:
     """
     Parse a single character file
 
@@ -123,7 +123,7 @@ def parse_character(char_file_path) -> Character:
     name = path.splitext(basename)[0].split(' - ', 1)[0]
 
     # instantiate new character
-    parsed_char = Character(
+    parsed_char = character.Character(
         name=[name],
         path=char_file_path
     )
@@ -166,7 +166,7 @@ def parse_character(char_file_path) -> Character:
                     continue
 
                 # handle rank logic for group tags
-                if tag in Character.GROUP_TAGS:
+                if tag in character.Character.GROUP_TAGS:
                     last_group = value
                 if tag == 'rank':
                     if last_group:
@@ -188,4 +188,4 @@ def parse_character(char_file_path) -> Character:
 
             parsed_char.append(tag, value)
 
-    return parsed_char
+    return character.build(other_char=parsed_char)

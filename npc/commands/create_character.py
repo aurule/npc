@@ -4,9 +4,8 @@ Functions for creating new character sheets
 
 import re
 
-from npc import settings
+from npc import settings, character
 from npc.util import result
-from npc.character import Character
 
 from .util import create_path_from_character
 
@@ -46,7 +45,7 @@ def standard(name, ctype, *, dead=False, foreign=False, **kwargs):
 
     # build minimal character
     temp_char = _minimal_character(
-        ctype=ctype.title(),
+        ctype=ctype,
         groups=groups,
         dead=dead,
         foreign=foreign,
@@ -205,7 +204,7 @@ def _minimal_character(ctype: str, groups: list, dead, foreign, location, prefs)
     """
     attributes = prefs.get('tag_defaults')
     attributes['description'] = [prefs.get('character_header')]
-    attributes['type'] = ctype.title()
+    attributes['type'] = [ctype.title()]
     if groups:
         attributes['group'] = groups
     if dead is not False:
@@ -217,7 +216,7 @@ def _minimal_character(ctype: str, groups: list, dead, foreign, location, prefs)
     if location is not False:
         attributes['location'] = location
 
-    return Character(attributes)
+    return character.build(attributes=attributes)
 
 def _cp_template_for_char(name, character, prefs, fn=None):
     """
