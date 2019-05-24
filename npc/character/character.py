@@ -52,9 +52,15 @@ class Character:
     """tuple (str): All recognized tags. Other, unrecognized tags are fine to
         add and will be ignored by methods that don't know how to handle them."""
 
-    def __init__(self, attributes: dict = None, **kwargs):
+    def __init__(self, attributes: dict=None, other_char=None, **kwargs):
         """
         Create a new Character object.
+
+        Initial tag values can be supplied in three ways depending on what's
+        most convenient: an existing character, a dict of attributes, and misc
+        keyword arguments. Character tags are copied first, then overwritten by
+        values from the attributes dict, then overwritten by values from
+        individual keyword args.
 
         When supplying values through `attributes` or `**kwargs`, remember that
         almost everything needs to be in a list. The exceptions are the "path"
@@ -66,6 +72,8 @@ class Character:
             attributes (dict): Dictionary of attributes to insert into the
                 Character. If a value is a bare string, it will be converted to
                 a list containing that string.
+            other_char (Character): Existing character object to copy. Tags from
+                that object will be copied verbatim with no changes.
             **kwargs: Named arguments will be added verbatim to the new
                 Character. Keys here will overwrite keys of the same name from
                 the `attributes` arg. The values here are not altered at all.
@@ -86,10 +94,15 @@ class Character:
             self.tags[key] = ''
         self.tags['rank'] = defaultdict(list)
 
+        if other_char:
+            self.tags.update(other_char.tags)
+
         if attributes:
             attributes = wrap_strings(attributes)
             self.tags.update(attributes)
+
         self.tags.update(kwargs)
+
         self.problems = ['Not validated']
 
     @property
