@@ -88,3 +88,9 @@ class TestValid:
         char = Character()
         char.validate()
         assert not char.valid
+
+def test_wrong_class():
+    char = Character(type=['changeling'])
+    char.validate(strict=True)
+    assert not char.valid
+    assert "Incorrect type 'changeling' for class 'Character': implies class 'Changeling'" in char.problems

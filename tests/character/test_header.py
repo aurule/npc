@@ -3,7 +3,7 @@
 import re
 
 import npc
-from npc.character import Character
+from npc.character import *
 import pytest
 
 class TestName:
@@ -25,23 +25,34 @@ class TestName:
         for name in names[1:]:
             assert "@name {}".format(name) in header
 
-class TestShortcuts:
+class TestChangelingHeaders:
     def test_seeming_and_kith(self):
-        char = Character(type=['Changeling'], seeming=['Beast'], kith=['Swimmerskin'])
+        char = Changeling(type=['Changeling'], seeming=['Beast'], kith=['Swimmerskin'])
         header = char.build_header()
         assert "@changeling Beast Swimmerskin" in header
 
     def test_no_seeming(self):
-        char = Character(type=['Changeling'], kith=['Swimmerskin'])
+        char = Changeling(type=['Changeling'], kith=['Swimmerskin'])
         header = char.build_header()
         assert "@type Changeling" in header
         assert "@kith Swimmerskin" in header
 
     def test_no_kith(self):
-        char = Character(type=['Changeling'], seeming=['Beast'])
+        char = Changeling(type=['Changeling'], seeming=['Beast'])
         header = char.build_header()
         assert "@type Changeling" in header
         assert "@seeming Beast" in header
+
+class TestWerewolfHeaders:
+    def test_no_auspice(self):
+        char = Werewolf(type=['Werewolf'])
+        header = char.build_header()
+        assert '@type Werewolf' in header
+
+    def test_with_auspice(self):
+        char = Werewolf(type=['Werewolf'], auspice=['Cahalith'])
+        header = char.build_header()
+        assert '@werewolf Cahalith' in header
 
 @pytest.mark.parametrize('flag', Character.BARE_FLAGS)
 def test_bare_flag(flag):
