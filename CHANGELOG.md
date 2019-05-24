@@ -12,6 +12,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 * New `employer` group-like tag
 * Internal caching in the template formatter should speed up generating large character lists
 * YAML is now supported for configuration files alongside JSON. If a JSON file and a YAML file are both present with the same name other than the file extension, the JSON file will take precedence. This is due to the massively slower parsing speed of YAML files. All configuration files are present in both formats for reference.
+* Discrete classes for more involved character types: Changeling and Werewolf
 
 ### Changed
 
@@ -28,6 +29,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 * The `settings` command now detects which format is in use
 * Character objects now store their tags in `self.tags` instead of directly on the object
 * New character objects won't choke on a non-list attribute value
+* Strict character validation now flags the class type if there's a mismatch
 
 ## 1.4.0
 
