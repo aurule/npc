@@ -1,6 +1,7 @@
 """Tests the changeling-specific validations"""
 
 import npc
+from npc.character import Character
 import pytest
 
 only_one = [
@@ -11,6 +12,6 @@ only_one = [
 ]
 @pytest.mark.parametrize('key, values', only_one)
 def test_single_tags(key, values):
-    char = npc.Character(type=['werewolf'], **{key: values})
+    char = Character(type=['werewolf'], **{key: values})
     char.validate()
     assert 'Multiple {key}s: {vals}'.format(key=key, vals=", ".join(values)) in char.problems

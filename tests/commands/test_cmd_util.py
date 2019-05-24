@@ -7,6 +7,7 @@ tests in `test_pathing.py`.
 
 import npc
 from npc.commands import util
+from npc.character import Character
 
 import pytest
 from tests.util import fixture_dir
@@ -24,9 +25,9 @@ class TestSortCharacters:
     @pytest.fixture
     def characters(self):
         return [
-            npc.Character(name=['Alfred Lisbon'], group=['High Rollers'], type=['changeling'], motley=['dudes2']),
-            npc.Character(name=['Baldy Parson'], group=['High Rollers'], type=['changeling'], motley=['dudes1']),
-            npc.Character(name=['Zach Albright'], group=['Low Rollers'], type=['changeling'], motley=['dudes3'])
+            Character(name=['Alfred Lisbon'], group=['High Rollers'], type=['changeling'], motley=['dudes2']),
+            Character(name=['Baldy Parson'], group=['High Rollers'], type=['changeling'], motley=['dudes1']),
+            Character(name=['Zach Albright'], group=['Low Rollers'], type=['changeling'], motley=['dudes3'])
         ]
 
     def test_last(self, characters):

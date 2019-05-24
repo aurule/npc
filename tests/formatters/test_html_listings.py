@@ -26,7 +26,7 @@ class Listing:
     def build_characters(self, names=None):
         if not names:
             names = self.CHARACTER_NAMES
-        return [npc.Character({'name': [name]}) for name in names]
+        return [npc.character.Character({'name': [name]}) for name in names]
 
     def names_from_output(self):
         return set(re.findall(self.CHARACTER_NAME_REGEX, self.output, re.MULTILINE))

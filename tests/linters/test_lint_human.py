@@ -12,7 +12,7 @@ def lint_human(filename, **kwargs):
     return problems
 
 def test_requires_path():
-    character = npc.Character()
+    character = npc.character.Character()
     problems = npc.linters.human.lint(character)
     assert 'Missing path' in problems
 

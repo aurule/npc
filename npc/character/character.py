@@ -1,5 +1,5 @@
 from collections import defaultdict
-from .util import OutOfBoundsError, flatten, merge_to_dict
+from npc.util import OutOfBoundsError, flatten, merge_to_dict
 
 class Character:
     """
@@ -43,7 +43,8 @@ class Character:
 
     TAGS = (
         'name', 'type', 'faketype', 'title', 'appearance', 'hide', 'hidegroup', 'hideranks', # universal
-        'seeming', 'kith', 'mask', 'mien')                                                   # changeling
+        'seeming', 'kith', 'mask', 'mien'                                                    # changeling
+        )
     """tuple (str): Tags that must have a value. Shortcuts, like @changeling,
         are expanded during parsing and do not appear literally."""
 

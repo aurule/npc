@@ -13,7 +13,7 @@ def lint_changeling(filename, **kwargs):
 
 def test_no_path():
     prefs = npc.settings.Settings()
-    character = npc.Character({"type": ['changeling'], "kith": ['nope'], "seeming": ['nope']})
+    character = npc.character.Character({"type": ['changeling'], "kith": ['nope'], "seeming": ['nope']})
     problems = npc.linters.changeling.lint(character, sk_data=prefs.get('changeling'))
     assert problems
 
