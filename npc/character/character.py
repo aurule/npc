@@ -1,5 +1,7 @@
-from collections import defaultdict
+import npc
 from npc.util import OutOfBoundsError, flatten, merge_to_dict
+
+from collections import defaultdict
 
 class Character:
     """
@@ -365,6 +367,7 @@ class Character:
             * Description have non-whitespace text
             * Type must have a non-whitespace value
             * (strict) Type cannot have more than one value
+            * (strict) Type must be for our class
             * Name must have a non-whitespace value
             * (strict) Tags not in KNOWN_TAGS cannot be present
 
@@ -383,6 +386,10 @@ class Character:
 
         if strict:
             self.validate_tag_appears_once('type')
+            right_class = npc.character.character_klass_from_type(self.type_key).__name__
+            current_class = self.__class__.__name__
+            if right_class != current_class:
+                self.problems.append("Incorrect type '{}' for class '{}': implies class '{}'".format(self.type_key, current_class, right_class))
 
         self.validate_tag_present_and_filled('name')
 
@@ -391,54 +398,24 @@ class Character:
             if unknown_tags:
                 self.problems.append("Unrecognized tags: {}".format(', '.join(unknown_tags)))
 
-        if self.type_key == "changeling":
-            self._validate_changeling(strict=strict)
-        if self.type_key == 'werewolf':
-            self._validate_werewolf(strict=strict)
+        self.type_validations(strict=strict)
 
         return self.valid
 
-    def _validate_changeling(self, strict=False):
+    def type_validations(self, strict=False):
         """
-        Validate the basic elements of a changeling file
+        Validate additional elements based on type
 
-        Validations:
-            * Seeming is present
-            * Kith is present
-            * Zero or one court is present
-            * Zero or one motley is present
-            * Zero or one entitlement is present
+        Subclasses should implement this method as needed, calling the existing
+        validate_* methods and/or adding error messages to self.problems.
 
         Args:
             strict (bool): Whether to report non-critical errors and omissions
 
-        Any errors are added to the problems list.
-
         Returns:
             None
         """
-
-        self.validate_tag_present_and_filled('seeming')
-        self.validate_tag_present_and_filled('kith')
-        self.validate_tag_appears_once('court')
-        self.validate_tag_appears_once('motley')
-        self.validate_tag_appears_once('entitlement')
-
-    def _validate_werewolf(self, strict=False):
-        """
-        Validate the basics of a werewolf character
-
-        Validations:
-        * Zero or one auspice
-        * Zero or one tribe
-        * Zero or one pack
-        * Zero or one lodge
-        """
-
-        self.validate_tag_appears_once('auspice')
-        self.validate_tag_appears_once('tribe')
-        self.validate_tag_appears_once('pack')
-        self.validate_tag_appears_once('lodge')
+        pass
 
     def has_items(self, key, threshold=1):
         """
@@ -530,22 +507,8 @@ class Character:
             lines.append("@realname {}".format(first_name))
         lines.extend(["@name {}".format(val) for val in self.get_remaining('name')])
 
-        if self.type_key == 'changeling':
-            if 'seeming' in self.tags and 'kith' in self.tags:
-                lines.append("@changeling {} {}".format(self.get_first('seeming'), self.get_first('kith')))
-            else:
-                lines.append("@type Changeling")
-                if 'seeming' in self.tags:
-                    lines.append("@seeming {}".format(self.get_first('seeming')))
-                if 'kith' in self.tags:
-                    lines.append("@kith {}".format(self.get_first('kith')))
-        elif self.type_key == 'werewolf':
-            if 'auspice' in self.tags:
-                lines.append("@werewolf {}".format(self.get_first('auspice')))
-            else:
-                lines.append("@type Werewolf")
-        else:
-            lines.append("@type {}".format(self.get_first('type')))
+        # get type line(s)
+        lines.extend(self.type_header())
 
         tags_for_all('faketype')
 
@@ -572,3 +535,16 @@ class Character:
         tags_for_all('hideranks')
 
         return self.description + "\n".join(lines)
+
+    def type_header(self):
+        """
+        Create type-specific header lines
+
+        This implementation creates a plain '@type' tag and should should be
+        implemented by subclasses as needed.
+
+        Returns:
+            List of strings describing the type-specific tags for this
+            character.
+        """
+        return ["@type {}".format(self.get_first('type'))]
