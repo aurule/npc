@@ -9,7 +9,7 @@ class Changeling(Character):
         """
         Set the default character type
         """
-        self.tags['type'][0] = 'changeling'
+        self.tags['type'] = ['changeling']
 
     def type_validations(self, strict=False):
         """

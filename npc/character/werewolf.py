@@ -9,7 +9,7 @@ class Werewolf(Character):
         """
         Set the default character type
         """
-        self.tags['type'][0] = 'werewolf'
+        self.tags['type'] = ['werewolf']
 
     def type_validations(self, strict=False):
         """
