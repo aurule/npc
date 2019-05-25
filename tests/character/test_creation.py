@@ -1,5 +1,5 @@
 import npc
-from npc.character import Character
+from npc.character import Character, Changeling, Werewolf
 import pytest
 
 class TestCreation:
