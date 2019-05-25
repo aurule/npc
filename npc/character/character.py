@@ -96,6 +96,8 @@ class Character:
             self.tags[key] = ''
         self.tags['rank'] = defaultdict(list)
 
+        self._set_default_type()
+
         if other_char:
             self.tags.update(other_char.tags)
 
@@ -106,6 +108,17 @@ class Character:
         self.tags.update(kwargs)
 
         self.problems = ['Not validated']
+
+    def _set_default_type(self):
+        """
+        Set the default character type
+
+        This is usually a no-op, but subclasses can implement this to set their
+        native type.
+
+        After being set, this value will be overwritten by arguments to init.
+        """
+        pass
 
     @property
     def valid(self):

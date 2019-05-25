@@ -52,3 +52,13 @@ class TestCopyAndAlter:
         char.append_rank('restaurant', 'newb')
         new_char = char.copy_and_alter(self.titleize)
         assert new_char.tags.get('rank') == {'restaurant': ['Chef', 'Newb']}
+
+class TestChangelingDefaults:
+    def test_default_type(self):
+        char = Changeling()
+        assert char.type_key == 'changeling'
+
+class TestWerewolfDefaults:
+    def test_default_type(self):
+        char = Werewolf()
+        assert char.type_key == 'werewolf'

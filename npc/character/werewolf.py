@@ -5,6 +5,12 @@ class Werewolf(Character):
     Special handling for werewolf-type characters
     """
 
+    def _set_default_type(self):
+        """
+        Set the default character type
+        """
+        self.tags['type'][0] = 'werewolf'
+
     def type_validations(self, strict=False):
         """
         Validate the basics of a werewolf character

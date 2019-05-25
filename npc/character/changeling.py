@@ -5,6 +5,12 @@ class Changeling(Character):
     Special handling for changeling-type characters
     """
 
+    def _set_default_type(self):
+        """
+        Set the default character type
+        """
+        self.tags['type'][0] = 'changeling'
+
     def type_validations(self, strict=False):
         """
         Validate the basic elements of a changeling file
