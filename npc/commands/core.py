@@ -26,8 +26,6 @@ def reorg(*search, ignore=None, purge=False, verbose=False, commit=False, **kwar
     Character files are moved so that their path matches the ideal path as
     closely as possible. No new directories are created.
 
-    This function ignores tags not found in Character.KNOWN_TAGS.
-
     Args:
         search (list): Paths to search for character files. Items can be strings
             or lists of strings.
@@ -136,7 +134,8 @@ def lint(*search, ignore=None, fix=False, strict=False, report=False, **kwargs):
     applies extra checking for some character types. See util.Character.validate
     for details.
 
-    This function ignores tags not found in Character.KNOWN_TAGS.
+    This command normally ignores unknown tags. In strict mode, it will report
+    the presence of any tag not in Character.KNOWN_TAGS.
 
     Args:
         search (list): Paths to search for character files. Items can be strings
