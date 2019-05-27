@@ -19,7 +19,7 @@ class Character:
     STRING_FIELDS = ('path',)
     """
     tuple (Str): String-only data. These are stored as plain strings and do not
-        come from a tag.
+        use the normal tag storage of an internal list.
     """
 
     IMPLICIT_FIELDS = ('description',)
@@ -34,23 +34,23 @@ class Character:
     """tuple (str): Group-like tags. These all accept an accompanying `rank`
         tag."""
 
-    BARE_FLAGS = ('wanderer', 'skip')
+    ADDON_TAGS = ('rank',)
+    """tuple (str): Tags whose value relates to a previous tag"""
+
+    FLAGS = ('wanderer', 'skip')
     """tuple (str): Flags whose value is ignored"""
 
     DATA_FLAGS = ('foreign', 'dead')
     """tuple (str): Flags that can accept an optional value"""
 
-    ADDON_TAGS = ('rank',)
-    """tuple (str): Tags whose value relates to a previous tag"""
-
-    TAGS = (
+    VALUE_TAGS = (
         'name', 'type', 'faketype', 'title', 'appearance', 'hide', 'hidegroup', 'hideranks', # universal
         'seeming', 'kith', 'mask', 'mien'                                                    # changeling
         )
     """tuple (str): Tags that must have a value. Shortcuts, like @changeling,
         are expanded during parsing and do not appear literally."""
 
-    KNOWN_TAGS = STRING_FIELDS + IMPLICIT_FIELDS + GROUP_TAGS + BARE_FLAGS + DATA_FLAGS + ADDON_TAGS + TAGS
+    KNOWN_TAGS = STRING_FIELDS + IMPLICIT_FIELDS + GROUP_TAGS + FLAGS + DATA_FLAGS + ADDON_TAGS + VALUE_TAGS
     """tuple (str): All recognized tags. Other, unrecognized tags are fine to
         add and will be ignored by methods that don't know how to handle them."""
 

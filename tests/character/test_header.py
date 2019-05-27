@@ -54,7 +54,7 @@ class TestWerewolfHeaders:
         header = char.build_header()
         assert '@werewolf Cahalith' in header
 
-@pytest.mark.parametrize('flag', Character.BARE_FLAGS)
+@pytest.mark.parametrize('flag', Character.FLAGS)
 def test_bare_flag(flag):
     char = Character()
     char.append(flag, None)
@@ -70,7 +70,7 @@ def test_data_flag(flag):
     assert re.search(r'@{} datas$'.format(flag), char.build_header(), re.MULTILINE)
 
 singletons = ('name', 'type', 'seeming', 'kith')
-@pytest.mark.parametrize('tag', [tag for tag in Character.TAGS if tag not in singletons])
+@pytest.mark.parametrize('tag', [tag for tag in Character.VALUE_TAGS if tag not in singletons])
 def test_tag_for_all(tag):
     char = Character()
     bits = ['some', 'words', 'and', 'stuff']
