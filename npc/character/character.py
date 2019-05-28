@@ -536,3 +536,16 @@ class Character:
             character.
         """
         return ["@type {}".format(self.get_first('type'))]
+
+    def dump(self):
+        """
+        Create a single dict that represents all the data for this character
+
+        The generated dict is the tag data combined with the file path.
+
+        Returns:
+            Dict containing all data for this character
+        """
+        dump = self.tags
+        dump['path'] = self.path
+        return dump

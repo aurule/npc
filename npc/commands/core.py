@@ -109,7 +109,7 @@ def dump(*search, ignore=None, do_sort=False, metadata=False, outfile=None, **kw
         sorter = util.character_sorter.CharacterSorter(sort_by, prefs=prefs)
         characters = sorter.sort(characters)
 
-    characters = [c.tags for c in characters]
+    characters = [c.dump() for c in characters]
 
     # make some json
     if metadata:
