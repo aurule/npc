@@ -92,11 +92,11 @@ def lint(character, fix=False, *, strict=False, sk_data=None):
             problems.append("Unrecognized @kith '{}'".format(kith_name))
 
     # If the character has no sheet, we're done
-    if not character.has_path:
+    if not character.path:
         return problems
 
     # Load the sheet for deep linting
-    with open(character.tags['path'], 'r') as char_file:
+    with open(character.path, 'r') as char_file:
         data = char_file.read()
 
     # STRICT: Check that they have a virtue and a vice
@@ -255,7 +255,7 @@ def lint(character, fix=False, *, strict=False, sk_data=None):
                             problems[-1] += ' (can fix)'
 
     if dirty and data:
-        with open(character.tags['path'], 'w') as char_file:
+        with open(character.path, 'w') as char_file:
             char_file.write(data)
 
     return problems

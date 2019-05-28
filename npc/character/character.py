@@ -16,12 +16,6 @@ class Character:
     preserve the internal structure of the dict.
     """
 
-    STRING_FIELDS = ('path',)
-    """
-    tuple (Str): String-only data. These are stored as plain strings and do not
-        use the normal tag storage of an internal list.
-    """
-
     IMPLICIT_FIELDS = ('description',)
     """
     tuple (Str): Fields without an explicit tag.
@@ -50,11 +44,11 @@ class Character:
     """tuple (str): Tags that must have a value. Shortcuts, like @changeling,
         are expanded during parsing and do not appear literally."""
 
-    KNOWN_TAGS = STRING_FIELDS + IMPLICIT_FIELDS + GROUP_TAGS + FLAGS + DATA_FLAGS + ADDON_TAGS + VALUE_TAGS
+    KNOWN_TAGS = IMPLICIT_FIELDS + GROUP_TAGS + FLAGS + DATA_FLAGS + ADDON_TAGS + VALUE_TAGS
     """tuple (str): All recognized tags. Other, unrecognized tags are fine to
         add and will be ignored by methods that don't know how to handle them."""
 
-    def __init__(self, attributes: dict=None, other_char=None, **kwargs):
+    def __init__(self, attributes: dict=None, other_char=None, path=None, **kwargs):
         """
         Create a new Character object.
 
@@ -76,6 +70,7 @@ class Character:
                 a list containing that string.
             other_char (Character): Existing character object to copy. Tags from
                 that object will be copied verbatim with no changes.
+            path (pathlike): Path to the file this character object represents
             **kwargs: Named arguments will be added verbatim to the new
                 Character. Keys here will overwrite keys of the same name from
                 the `attributes` arg. The values here are not altered at all.
@@ -92,20 +87,23 @@ class Character:
             return wrapped_attributes
 
         self.tags = defaultdict(list)
-        for key in self.STRING_FIELDS:
-            self.tags[key] = ''
         self.tags['rank'] = defaultdict(list)
+        self.path = path
 
         self._set_default_type()
 
         if other_char:
             self.tags.update(other_char.tags)
+            self.path = other_char.path
 
         if attributes:
             attributes = wrap_strings(attributes)
             self.tags.update(attributes)
 
         self.tags.update(kwargs)
+
+        if self.path is None:
+            self.path = ''
 
         self.problems = ['Not validated']
 
@@ -144,13 +142,6 @@ class Character:
         bool: Whether this character has data in its foreign or wanderer tags
         """
         return self.has_items('foreign') or self.has_items('wanderer')
-
-    @property
-    def has_path(self):
-        """
-        bool: Whether this character has a path
-        """
-        return 'path' in self.tags and self.tags['path']
 
     @property
     def locations(self):
@@ -194,9 +185,6 @@ class Character:
         if key not in self.tags or key == 'rank':
             return default
 
-        if key in self.STRING_FIELDS:
-            return self.tags[key]
-
         try:
             return self.tags[key][0]
         except IndexError:
@@ -219,9 +207,6 @@ class Character:
         """
         if key not in self.tags or key == 'rank':
             return []
-
-        if key in self.STRING_FIELDS:
-            return self.tags[key]
 
         return self.tags[key][1:]
 
@@ -260,11 +245,6 @@ class Character:
 
         wildcard_search = value == '*'
 
-        if key in self.STRING_FIELDS:
-            if wildcard_search and len(self.tags[key]) > 0:
-                return True
-            return value in self.tags[key].casefold()
-
         if key == 'rank':
             searchme = flatten([self.tags['rank'][g] for g in self.tags['rank']])
             if wildcard_search and len(list(searchme)) > 0:
@@ -295,10 +275,7 @@ class Character:
         Returns:
             This character object. Convenient for chaining.
         """
-        if key in self.STRING_FIELDS:
-            self.tags[key] += value
-        else:
-            merge_to_dict(self.tags, key, value)
+        merge_to_dict(self.tags, key, value)
 
         return self
 
@@ -466,13 +443,12 @@ class Character:
             altered by func.
         """
         new_char = Character()
+        new_char.path = self.path
         for attr, values in self.tags.items():
             if attr == 'rank':
                 for group, ranks in values.items():
                     for item in ranks:
                         new_char.append_rank(group, func(item))
-            elif attr in self.STRING_FIELDS:
-                new_char.append(attr, func(values))
             else:
                 for item in values:
                     new_char.append(attr, func(item))
@@ -515,8 +491,7 @@ class Character:
         add_flag('skip')
 
         first_name = self.get_first('name')
-        path = self.tags.get('path')
-        if first_name and first_name not in path:
+        if first_name and first_name not in self.path:
             lines.append("@realname {}".format(first_name))
         lines.extend(["@name {}".format(val) for val in self.get_remaining('name')])
 

@@ -56,7 +56,7 @@ def reorg(*search, ignore=None, purge=False, verbose=False, commit=False, **kwar
         changelog.append("Move characters")
     for parsed_character in parser.get_characters(flatten(search), ignore):
         new_path = Path(util.create_path_from_character(parsed_character, base_path=base_path))
-        parsed_path = Path(parsed_character.tags['path'])
+        parsed_path = Path(parsed_character.path)
         if not new_path.resolve().samefile(parsed_path.resolve()):
             if show_changes:
                 changelog.append("* Move {} to {}".format(parsed_path, new_path))
@@ -168,7 +168,7 @@ def lint(*search, ignore=None, fix=False, strict=False, report=False, **kwargs):
 
         # Report problems on one line if possible, or as a block if there's more than one
         if not character.valid:
-            charpath = character.tags['path']
+            charpath = character.path
             if not report:
                 openable.append(charpath)
             if len(character.problems) > 1:

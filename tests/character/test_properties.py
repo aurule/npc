@@ -14,13 +14,6 @@ class TestAppend:
         char.append("title", "The Stern")
         assert char.tags["title"] == ["The Stern"]
 
-    @pytest.mark.parametrize('field', Character.STRING_FIELDS)
-    def test_string_fields(self, field):
-        char = Character()
-        char.append(field, "Hello hello")
-        char.append(field, " baby, you called")
-        assert char.tags[field] == "Hello hello baby, you called"
-
     def test_append_rank(self):
         char = Character()
         char.append_rank("Knights of the Round Table", "Dancer")
@@ -46,13 +39,6 @@ class TestGetFirst:
         char = Character(name=["hello", "goodbye"])
         assert char.get_first('name') == 'hello'
 
-    @pytest.mark.parametrize('keyname', Character.STRING_FIELDS)
-    def test_string_tags(self, keyname):
-        char = Character()
-        char.append(keyname, "hello")
-        char.append(keyname, " friend")
-        assert char.get_first(keyname) == "hello friend"
-
     def test_missing(self):
         char = Character()
         assert char.get_first('nope', 'negative') == 'negative'
@@ -62,13 +48,6 @@ class TestGetRemaining:
     def test_normal(self):
         char = Character(name=["hello", "goodbye"])
         assert char.get_remaining('name') == ['goodbye']
-
-    @pytest.mark.parametrize('keyname', Character.STRING_FIELDS)
-    def test_string_tags(self, keyname):
-        char = Character()
-        char.append(keyname, "hello")
-        char.append(keyname, " friend")
-        assert char.get_remaining(keyname) == "hello friend"
 
     def test_missing(self):
         char = Character()
@@ -101,12 +80,6 @@ class TestTagContains:
     def test_no_tag(self):
         char = Character()
         assert not char.tag_contains('status', 'baller')
-
-    @pytest.mark.parametrize('keyname', Character.STRING_FIELDS)
-    def test_string_tags(self, keyname):
-        char = Character()
-        char.append(keyname, "hello friend")
-        assert char.tag_contains(keyname, 'friend')
 
     def test_rank(self):
         char = Character()

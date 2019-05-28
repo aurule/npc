@@ -30,6 +30,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 * Character objects now store their tags in `self.tags` instead of directly on the object
 * New character objects won't choke on a non-list attribute value
 * Strict character validation now flags the class type if there's a mismatch
+* Character path is now accessed through the `path` attribute, not through `tags['path']`
+    - The `has_path` property has been removed. Test path presence by testing `character.path` directly
 
 ## 1.4.0
 

@@ -22,6 +22,10 @@ class TestCreation:
         char = Character({"name": "hello"})
         assert char.tags["name"] == ["hello"]
 
+    def test_explicit_path(self):
+        char = Character(path='Characters/test')
+        assert char.path == 'Characters/test'
+
 class TestCopyAndAlter:
     def titleize(self, text):
         return text.title()
@@ -38,13 +42,6 @@ class TestCopyAndAlter:
         char.append('hands', 'jazzy')
         new_char = char.copy_and_alter(self.titleize)
         assert new_char.tags.get('hands') == ['Raised', 'Jazzy']
-
-    @pytest.mark.parametrize('keyname', Character.STRING_FIELDS)
-    def test_string_fields(self, keyname):
-        char = Character()
-        char.append(keyname, 'hello hello')
-        new_char = char.copy_and_alter(self.titleize)
-        assert new_char.tags.get(keyname) == "Hello Hello"
 
     def test_rank(self):
         char = Character()
