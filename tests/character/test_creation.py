@@ -26,6 +26,10 @@ class TestCreation:
         char = Character(path='Characters/test')
         assert char.path == 'Characters/test'
 
+    def test_unknown_tag(self):
+        char = Character(snoot=["booped"])
+        assert char.tags["snoot"] == ["booped"]
+
 class TestCopyAndAlter:
     def titleize(self, text):
         return text.title()
