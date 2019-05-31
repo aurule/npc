@@ -5,6 +5,7 @@ Module for all character objects.
 from .character import Character
 from .changeling import Changeling
 from .werewolf import Werewolf
+from . import tags
 
 def build(attributes: dict = None, other_char: Character = None):
     """
