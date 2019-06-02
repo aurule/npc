@@ -30,10 +30,10 @@ class Tag(UserList):
         super().__init__(args)
 
     def __repr__(self):
-        return "{}({}, {}, required={}, hidden={}, limit={})".format(
+        return "{}('{}', {}, required={}, hidden={}, limit={})".format(
             type(self).__name__,
             self.name,
-            *self.data,
+            self.data,
             self.required,
             self.hidden,
             self.limit

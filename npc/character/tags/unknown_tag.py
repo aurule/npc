@@ -28,7 +28,7 @@ class UnknownTag(Flag):
         self._present = True
 
     def __repr__(self):
-        return "{}({}, {}, hidden={}, limit={})".format(
+        return "{}('{}', {}, hidden={}, limit={})".format(
             type(self).__name__,
             self.name,
             *self.data,
