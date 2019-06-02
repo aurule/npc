@@ -10,6 +10,8 @@ class Tag(UserList):
         Create a new Tag object
 
         Args:
+            name (str): This tag's name
+            args (str): Initial values to populate for this tag
             required (bool): Whether this tag must be present for the character
                 to be valid.
             hidden (bool): Whether this tag should be displayed in character
@@ -18,7 +20,6 @@ class Tag(UserList):
             limit (int): Maximum number of values allowed in the tag. Passing a
                 negative number allows an infinite number of values to be
                 stored.
-            values (list): Initial values to save
         """
         self.name = name
         self.required = required
@@ -56,7 +57,7 @@ class Tag(UserList):
         """
         return len(self.problems) == 0
 
-    def validate(self, strict=False):
+    def validate(self, strict: bool=False):
         """
         Validate this tag's attributes
 
