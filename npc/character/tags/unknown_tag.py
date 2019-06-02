@@ -1,6 +1,6 @@
-from .tag import Tag
+from .flag import Flag
 
-class UnknownTag(Tag):
+class UnknownTag(Flag):
     """
     Defines a mult-value unrecognized tag object
 
@@ -24,6 +24,7 @@ class UnknownTag(Tag):
             values (list): Initial values to save
         """
         super().__init__(name, *args, required=False, hidden=hidden, limit=limit)
+        self._present = True
 
     def __repr__(self):
         return "{}({}, {}, hidden={}, limit={})".format(
@@ -49,31 +50,9 @@ class UnknownTag(Tag):
         Returns:
             True if this tag has no validation problems, false if not
         """
-        super().validate(strict=strict)
-
         if strict:
             self.problems.append("Unrecognized tag '{}'".format(self.name))
+            if self.limit > -1 and len(self.data) > self.limit:
+                self.problems.append("Too many values for tag '{}'. Limit of {}".format(self.name, self.limit))
 
         return self.valid
-
-    def to_header(self):
-        """
-        Generate a text header representation of this tag
-
-        This creates the appropriate `@tag value` lines that, when parsed, will
-        recreate the data of this tag. If the tag is marked as hidden, an
-        additional `@hide tag` will be appended.
-
-        If `.present` is false, a simple `@tag` line is returned. This is
-        because UnknownTag objects are intended to represent unexpected tags
-        parsed out of a document. Their presence always reflects intent from the
-        document's creator, so they should always show up in the header.
-
-        Returns:
-            A string of the header lines needed to create this tag, or an empty
-            string if the present is false.
-        """
-        if not self.present:
-            return "@{}".format(self.name)
-
-        return super().to_header()
