@@ -22,7 +22,7 @@ class DescriptionTag(Tag):
         If the description is empty, return an empty string. Otherwise, the raw
         data is joined together and returned with no '@tag' components.
         """
-        if not self.present:
+        if not self.filled:
             return ''
 
         return "\n".join(self.data)

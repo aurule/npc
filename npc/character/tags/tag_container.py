@@ -1,4 +1,5 @@
 from collections import UserDict
+from copy import copy
 
 from . import *
 
@@ -16,10 +17,10 @@ class TagContainer(UserDict):
         consistency.
         """
         super().__init__()
-        self.__add_taglike(DescriptionTag)
+        self._add_taglike(DescriptionTag)
         self.problems = []
 
-    def __call__(self, tag_name):
+    def __call__(self, tag_name: str):
         """
         Get a tag by its name
 
@@ -52,9 +53,19 @@ class TagContainer(UserDict):
 
         self.data[tag.name] = tag
 
-    def __iter__(self):
+    def update(self, values: dict):
         """
-        Iterate over the stored tag objects, not their names
+        Update multiple tags using data from the values dict
+
+        Args:
+            values (dict): Dictionary of lists whose keys are tag names
+        """
+        for key, data in values.items():
+            self(key).update(data)
+
+    def all(self):
+        """
+        Iterate over the stored tag objects
 
         Returns:
             Iterator for the stored tag objects
@@ -72,16 +83,16 @@ class TagContainer(UserDict):
 
     def present(self):
         """
-        Iterate over the tags marked as present
+        Create a new container with only the tags marked as present
 
-        Yields:
-            Tag objects with present being true
+        Returns:
+            TagContainer object with only present tags
         """
-        for tag in self:
-            if tag.present:
-                yield tag
+        new_container = copy(self)
+        new_container.data = {k: v for k, v in self.data.items() if v.present}
+        return new_container
 
-    def __add_taglike(self, klass, *args, **kwargs):
+    def _add_taglike(self, klass, *args, **kwargs):
         """
         Internal method to create and append a new tag
 
@@ -95,19 +106,19 @@ class TagContainer(UserDict):
         """
         Add a new tag
         """
-        self.__add_taglike(Tag, *args, **kwargs)
+        self._add_taglike(Tag, *args, **kwargs)
 
     def add_flag(self, *args, **kwargs):
         """
         Add a new flag
         """
-        self.__add_taglike(Flag, *args, **kwargs)
+        self._add_taglike(Flag, *args, **kwargs)
 
     def add_group(self, *args, **kwargs):
         """
         Add a new group tag
         """
-        self.__add_taglike(GroupTag, *args, **kwargs)
+        self._add_taglike(GroupTag, *args, **kwargs)
 
     @property
     def valid(self):
@@ -131,9 +142,18 @@ class TagContainer(UserDict):
         self.problems = []
 
         for key, tag in self.data.items():
-            tag.validate()
+            tag.validate(strict=strict)
             self.problems.extend(tag.problems)
             if key != tag.name:
                 self.problems.append("Tag '{}' has wrong key: '{}'".format(tag.name, key))
 
         return self.valid
+
+    def remove_hidden(self):
+        """
+        Ask all tags to remove their hidden values
+
+        Calls hide_values on each tag
+        """
+        for tag in self.values():
+            tag.hide_values()

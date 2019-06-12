@@ -21,6 +21,41 @@ class Flag(Tag):
         super().__init__(*args, **kwargs)
         self._present = False
 
+    def update(self, values):
+        """
+        Add the strings in values to our own list of values
+
+        Always set our presence to true when updating
+
+        Args:
+            values (list[str]): List of string values to add to this tag
+        """
+        if type(values) is bool:
+            self.touch(values)
+        else:
+            self.touch()
+            super().update(values)
+
+    def append(self, value: str):
+        """
+        Append a value to the tag
+
+        Always set our presence to true when appending. If the value is blank,
+        skip it.
+
+        Args:
+            value (str): The value to append
+        """
+        self.touch()
+        super().append(value)
+
+    def clear(self):
+        """
+        Clear out all stored values and reset presence to false
+        """
+        self._present = False
+        super().clear()
+
     @property
     def present(self):
         """
@@ -42,7 +77,7 @@ class Flag(Tag):
         Returns:
             None
         """
-        self._present = present
+        self._present = (True and present)
 
     def validate(self, strict: bool=False):
         """
@@ -85,7 +120,7 @@ class Flag(Tag):
             A string of the header lines needed to create this flag, or an empty
             string if the present is false.
         """
-        if self.present and not self.data:
+        if self.present and not self.filled:
             return "@{}".format(self.name)
 
         return super().to_header()
