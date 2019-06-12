@@ -12,7 +12,7 @@ def lint_werewolf(filename, **kwargs):
     return problems
 
 def test_requires_path(prefs):
-    character = npc.character.Character()
+    character = npc.character.Werewolf()
     problems = npc.linters.werewolf.lint(character, prefs=prefs)
     assert 'Missing path' in problems
 
