@@ -193,7 +193,7 @@ class TagSectioner(BaseSectioner):
             First value for our tag in the passed character.
         """
         tag = self.prefs.translate_tag_for_character_type(character.type_key, self.tag_name)
-        return character.get_first(tag, None)
+        return character.tags(tag).first_value()
 
 class LastInitialSectioner(BaseSectioner):
     def text_for(self, character):
@@ -208,7 +208,7 @@ class LastInitialSectioner(BaseSectioner):
             First character of the last word in the character's first value for
             the name tag.
         """
-        full_name = character.get_first('name')
+        full_name = character.tags('name').first_value()
         try:
             return None if full_name is None else full_name.split(' ')[-1][0]
         except IndexError as e:
