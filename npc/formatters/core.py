@@ -190,7 +190,7 @@ class TemplateFormatter:
             Dict of arguments
         """
         return {
-            "character": character,
+            "tags": character.tags.present(),
             "header_level": self.character_header_level
         }
 
@@ -302,7 +302,7 @@ class HtmlFormatter(TemplateFormatter):
             Dict of arguments
         """
         return {
-            "character": character,
+            "tags": character.tags.present(),
             "header_level": self.character_header_level,
             "mdconv": self._clean_conv().convert
         }

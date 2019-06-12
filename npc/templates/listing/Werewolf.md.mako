@@ -1,69 +1,75 @@
-<%page args="character, header_level"/>\
-<%def name="make_ranks(group_name)">\
-    % if group_name in character.tags['rank']:
- (${', '.join(character.tags['rank'][group_name])})\
-    % endif
+<%page args="tags, header_level"/>\
+<%def name="make_ranks(group_tag, subtag_name=None)">\
+<%
+    if not subtag_name:
+        subtag_name = group_tag.first_value()
+    %>\
+    %if group_tag.subtag(subtag_name).filled:
+<% return ' (' + ', '.join(group_tag.subtag(subtag_name)) + ')' %>\
+    %endif
 </%def>\
-${'#' * header_level} ${character.get_first('name')}\
-% if 'dead' in character.tags:
+<%def name="locations()">\
+<%
+    return tags('foreign').filled_data + tags('location').filled_data
+    %>
+</%def>\
+${'#' * header_level} ${tags('name').first_value()}\
+% if tags('dead').present:
  (Deceased)\
 % endif
 
 
-% if character.has_items('name', 2):
-*AKA ${', '.join(character.get_remaining('name'))}*
+% if tags('name').remaining().filled:
+*AKA ${', '.join(tags('name').remaining())}*
+% endif
+% if tags('title').filled:
+${', '.join(tags('title'))}
 % endif
 \
-% if character.has_items('title'):
-${', '.join(character.tags['title'])}
-% endif
-\
-${character.get_first('type')}\
-%if character.has_locations:
- in ${' and '.join(character.locations)}\
-%elif character.has_items('foreign'):
- (foreign)
+${'/'.join(tags('type'))}\
+%if locations():
+ in ${' and '.join(locations())}\
+%elif 'foreign' in tags:
+ (foreign)\
 %endif
-% if 'wanderer' in character.tags:
+% if tags('wanderer').present:
 , Wanderer\
 % endif
 
-%if character.has_items('pack'):
-${character.get_first('pack')} Pack${make_ranks(character.get_first('pack'))}\
+%if tags('pack').filled:
+${tags('pack').first_value()} Pack${make_ranks(tags('pack'), tags('pack').first_value())}, \
 %endif
-%if character.has_items('tribe'):
-, ${character.get_first('tribe')} Tribe${make_ranks(character.get_first('tribe'))}\
+%if tags('tribe').filled:
+${tags('tribe').first_value()} Tribe${make_ranks(tags('tribe'), tags('tribe').first_value())}\
 %else:
-, Ghost Wolf
+Ghost Wolf
 %endif
 \
-% if character.has_items('auspice'):
+% if tags('auspice').filled:
 
-${'/'.join(character.tags['auspice'])}\
+${'/'.join(tags('auspice'))}\
 % endif
 \
-% if character.has_items('lodge'):
+% if tags('lodge').filled:
 
-${character.get_first('lodge')}${make_ranks(character.get_first('lodge'))}\
+${tags('lodge').first_value()}${make_ranks(tags('lodge'), tags('lodge').first_value())}\
 % endif
-% if character.has_items('group'):
+% if tags('group').filled:
 
-    % for group in character.tags['group']:
-${group}${make_ranks(group)}\
-        % if not loop.last:
-, \
-        % endif
-    % endfor
+${', '.join(["{}{}".format(g, make_ranks(tags('group'), g)) for g in tags('group')])}\
 % endif
 
-% if character.has_items('appearance'):
+% if tags('appearance').filled:
 
-*Appearance:* ${' '.join(character.tags['appearance'])}
+*Appearance:* ${' '.join(tags('appearance'))}
 % endif
+%if tags('description').filled:
 
-*Notes:* ${character.description}
-% if character.has_items('dead'):
+*Notes:* ${"\n".join(tags('description'))}
+% endif
+\
+% if tags('dead').filled:
 
-*Dead:* ${' '.join(character.tags['dead'])}
+*Dead:* ${' '.join(tags('dead'))}
 % endif
 
