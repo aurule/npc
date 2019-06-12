@@ -79,16 +79,19 @@ def lint(character, fix=False, *, strict=False, sk_data=None):
     problems = []
     dirty = False
 
+    if character.type_key != 'changeling':
+        problems.append('Attempting to lint non-changeling character using changeling linter')
+        return problems
+
     # Check that seeming tag exists and is valid
-    for seeming_name in character.tags['seeming']:
+    for seeming_name in character.tags('seeming'):
         if seeming_name.lower() not in sk_data['seemings']:
             problems.append("Unrecognized @seeming '{}'".format(seeming_name))
 
     # Check that kith tag exists and is valid
     all_kiths = flatten(sk_data['kiths'].values())
-    for kith_name in character.tags['kith']:
+    for kith_name in character.tags('kith'):
         if kith_name.lower() not in all_kiths:
-            print(sk_data['kiths'].values())
             problems.append("Unrecognized @kith '{}'".format(kith_name))
 
     # If the character has no sheet, we're done
@@ -103,9 +106,13 @@ def lint(character, fix=False, *, strict=False, sk_data=None):
     if strict:
         problems.extend(nwod.lint_vice_virtue(data))
 
+    # Get court for later
+    court = character.tags('court').first_value()
+    if not court:
+        court = 'none'
+
     # Check that the mantle matches the court if given
-    court = character.get_first('court')
-    court_key = court.lower() if court else 'none'
+    court_key = court.lower()
     mantle_courts = _get_mantle(data)
     mantle_court_keys = [c.lower() for c in mantle_courts]
     if mantle_courts:
