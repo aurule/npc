@@ -4,6 +4,6 @@ import pytest
 @pytest.fixture(scope="module")
 def character():
     char = npc.character.Character()
-    char.append('description', 'Fee fie foe fum')
-    char.append('type', 'human')
+    char.tags('description').append('Fee fie foe fum')
+    char.tags('type').append('human')
     return char
