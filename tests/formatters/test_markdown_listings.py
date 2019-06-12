@@ -70,23 +70,3 @@ class TestPartialOption:
         listing = Listing(metadata_format='mmd', metadata=self.metadata, partial=True)
         assert listing.result
         assert "friend" not in listing.output
-
-# class TestSectioner:
-#     def test_no_default_sections(self):
-#         listing = Listing()
-#         assert listing.result
-#         assert len(listing.sections) == 0
-
-#     def test_sectioner_is_inserted(self):
-#         listing = Listing(sectioners=[npc.commands.listing.get_sectioner('last')])
-#         assert listing.result
-#         assert len(listing.sections) == 5
-
-# class TestProgressBar:
-#     def record_progress(self, num, total):
-#         self.progress_num = num
-
-#     def test_progress_per_character(self):
-#         """The progress meter should be updated once for each character"""
-#         listing = Listing(progress=self.record_progress)
-#         assert self.progress_num == len(Listing.CHARACTER_NAMES)

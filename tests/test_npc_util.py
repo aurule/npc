@@ -54,13 +54,6 @@ class TestFindCampaignRoot:
         campaign.populate_from_fixture_dir('util', 'campaign_root', 'empty')
         assert util.find_campaign_root() == campaign.basedir
 
-def test_open_files(prefs):
-    override_path = fixture_dir('util', 'open_files', 'settings-echo.json')
-    prefs.load_more(override_path)
-    result = util.open_files('not a real path', 'seriously, no', prefs=prefs)
-    assert 'not a real path' in result.args
-    assert 'seriously, no' in result.args
-
 class TestResult:
     def test_str_success(self):
         result = util.result.Result(True)
