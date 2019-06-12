@@ -198,7 +198,7 @@ def open_files(*files, prefs=None):
     Open a list of files with the configured editor
 
     Args:
-        files (list): List of file paths to open
+        files (list[str]): List of file paths to open
         prefs (Settings): Settings object to supply the editor name
 
     Returns:
@@ -206,7 +206,9 @@ def open_files(*files, prefs=None):
     """
     editor = determine_editor(sys.platform, prefs=prefs)
 
-    return subprocess.run(args=[editor, *files])
+    for file_path in files:
+        path_to_open = Path(file_path)
+        subprocess.run(args=[editor, path_to_open])
 
 def determine_editor(platform, prefs=None):
     """
