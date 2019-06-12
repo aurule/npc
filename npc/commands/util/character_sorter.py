@@ -49,16 +49,29 @@ class CharacterSorter:
         self.prefs = prefs
 
         self.comparers = []
+
+        def first(c):
+            n = c.tags('name').first_value()
+            if not n:
+                n = ''
+            return n.split(' ')[0]
+
+        def last(c):
+            n = c.tags('name').first_value()
+            if not n:
+                n = ''
+            return n.split(' ')[-1]
+
         self.functions = {
-            'first': lambda c: c.get_first('name', '').split(' ')[0],
-            'last': lambda c: c.get_first('name', '').split(' ')[-1]
+            'first': first,
+            'last': last
         }
 
     def generic_get(self, tag_name):
         def _get(character, tag_name=tag_name):
             if self.prefs is not None:
                 tag_name = self.prefs.translate_tag_for_character_type(character.type_key, tag_name)
-            return character.get_first(tag_name)
+            return character.tags(tag_name).first_value()
         return _get
 
     def sort(self, characters):

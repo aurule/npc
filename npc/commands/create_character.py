@@ -94,12 +94,12 @@ def changeling(name, seeming, kith, *,
         foreign=foreign,
         location=location,
         prefs=prefs)
-    temp_char.append('seeming', seeming.title())
-    temp_char.append('kith', kith.title())
+    temp_char.tags('seeming').append(seeming.title())
+    temp_char.tags('kith').append(kith.title())
     if court:
-        temp_char.append('court', court.title())
+        temp_char.tags('court').append(court.title())
     if motley:
-        temp_char.append('motley', motley)
+        temp_char.tags('motley').append(motley)
 
     def _insert_sk_data(data):
         """Insert seeming and kith in the advantages block of a template"""
@@ -113,7 +113,7 @@ def changeling(name, seeming, kith, *,
             re.MULTILINE | re.IGNORECASE
         )
 
-        seeming_name = temp_char.get_first('seeming')
+        seeming_name = temp_char.tags('seeming').first_value()
         seeming_key = seeming.lower()
         if seeming_key in prefs.get('changeling.seemings'):
             seeming_notes = "{}; {}".format(
@@ -123,7 +123,7 @@ def changeling(name, seeming, kith, *,
                 r"\g<1>Seeming\g<2>{} ({})".format(seeming_name, seeming_notes),
                 data
             )
-        kith_name = temp_char.get_first('kith')
+        kith_name = temp_char.tags('kith').first_value()
         kith_key = kith.lower()
         if kith_key in prefs.get('changeling.kiths.{}'.format(seeming_key)):
             kith_notes = prefs.get("changeling.blessings.{}".format(kith_key))
@@ -174,11 +174,11 @@ def werewolf(name, auspice, *, tribe=None, pack=None, **kwargs):
         foreign=foreign,
         location=location,
         prefs=prefs)
-    temp_char.append('auspice', auspice.title())
+    temp_char.tags('auspice').append(auspice.title())
     if tribe:
-        temp_char.append('tribe', tribe.title())
+        temp_char.tags('tribe').append(tribe.title())
     if pack:
-        temp_char.append('pack', pack)
+        temp_char.tags('pack').append(pack)
 
     return _cp_template_for_char(name, temp_char, prefs)
 

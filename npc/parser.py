@@ -129,7 +129,7 @@ def parse_character(char_file_path) -> character.Character:
     )
 
     with open(char_file_path, 'r') as char_file:
-        last_group = ''
+        subtag_registry = {}
         previous_line_empty = False
 
         for line in char_file:
@@ -150,28 +150,37 @@ def parse_character(char_file_path) -> character.Character:
                 if tag == 'changeling':
                     # grab attributes from compound tag
                     bits = value.split(maxsplit=1)
-                    parsed_char.append('type', 'Changeling')
+                    parsed_char.tags('type').append('Changeling')
                     if len(bits):
-                        parsed_char.append('seeming', bits[0])
+                        parsed_char.tags('seeming').append(bits[0])
                     if len(bits) > 1:
-                        parsed_char.append('kith', bits[1])
+                        parsed_char.tags('kith').append(bits[1])
                     continue
                 elif tag == 'werewolf':
-                    parsed_char.append('type', 'Werewolf')
-                    parsed_char.append('auspice', value)
+                    parsed_char.tags('type').append('Werewolf')
+                    parsed_char.tags('auspice').append(value)
+                    continue
 
                 # replace first name
                 if tag == 'realname':
-                    parsed_char.tags['name'][0] = value
+                    parsed_char.tags('name')[0] = value
                     continue
 
                 # handle rank logic for group tags
-                if tag in character.Character.GROUP_TAGS:
-                    last_group = value
-                if tag == 'rank':
-                    if last_group:
-                        parsed_char.append_rank(last_group, value)
+                if parsed_char.tags(tag).subtag_name:
+                    subtag_registry[parsed_char.tags(tag).subtag_name] = (tag, value)
+                if tag in subtag_registry:
+                    supertag, supervalue = subtag_registry[tag]
+                    parsed_char.tags(supertag)[supervalue].append(value)
                     continue
+
+                # mark tags hidden as needed
+                if tag == 'hide':
+                    parsed_char.tags(value).hidden = True
+                    continue
+
+                parsed_char.tags(tag).append(value)
+                print(parsed_char.tags(tag))
             else:
                 # Ignore second empty description line in a row
                 if line == "\n":
@@ -183,9 +192,7 @@ def parse_character(char_file_path) -> character.Character:
                     previous_line_empty = False
 
                 # all remaining text goes in the description
-                parsed_char.append('description', line.strip())
+                parsed_char.tags('description').append(line.strip())
                 continue
 
-            parsed_char.append(tag, value)
-
-    return character.build(other_char=parsed_char)
+    return parsed_char

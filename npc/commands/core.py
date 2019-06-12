@@ -14,8 +14,8 @@ import itertools
 
 import npc
 from npc import formatters, linters, parser, settings
-from npc.util import flatten, result, PathEncoder
-from npc.character import Character
+from npc.util import flatten, result
+from npc.character import Character, CharacterEncoder
 
 from . import create_character, listing, util, story
 
@@ -120,7 +120,7 @@ def dump(*search, ignore=None, do_sort=False, metadata=False, outfile=None, **kw
         characters = itertools.chain([meta], characters)
 
     with util.smart_open(outfile) as outstream:
-        json.dump([c for c in characters], outstream, cls=PathEncoder)
+        json.dump([c for c in characters], outstream, cls=CharacterEncoder)
 
     openable = [outfile] if outfile and outfile != '-' else None
 
@@ -375,7 +375,7 @@ def find(*rules, search=None, ignore=None, **kwargs):
 
     filtered_chars = find_characters(rules, characters=characters)
 
-    paths = [char.get('path') for char in filtered_chars]
+    paths = [char.path for char in filtered_chars]
 
     if dryrun:
         openable = []
@@ -431,7 +431,7 @@ def find_characters(rules, characters):
         tag = 'name'
         text = parts[0].strip().casefold()
 
-    filtered_chars = [char for char in characters if mod(char.tag_contains(tag, text))]
+    filtered_chars = [char for char in characters if mod(char.tags(tag).contains(text))]
 
     if not rules:
         return filtered_chars
