@@ -4,10 +4,10 @@ Formatter for creating json exports of a set of characters.
 The functions in this module are very barebones and rely on json.dump to handle
 the actual output. At most, they add some keys to the data first.
 """
-
 import json
 import npc
 from npc.util import result
+from npc.character import CharacterEncoder
 
 def listing(characters, outstream, *, metadata_format=False, metadata=None, **kwargs):
     """
@@ -38,7 +38,7 @@ def listing(characters, outstream, *, metadata_format=False, metadata=None, **kw
         characters = [meta] + characters
 
     try:
-        json.dump(characters, outstream)
+        json.dump(characters, outstream, cls=CharacterEncoder)
     except TypeError as err:
         return result.Failure(errmsg=err)
     return result.Success()
