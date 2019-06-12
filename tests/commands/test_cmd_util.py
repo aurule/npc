@@ -32,23 +32,23 @@ class TestSortCharacters:
 
     def test_last(self, characters):
         result = util.character_sorter.CharacterSorter(['last']).sort(characters)
-        assert list(map(lambda c: c.get_first('name'), result)) == ['Zach Albright', 'Alfred Lisbon', 'Baldy Parson']
+        assert list(map(lambda c: c.tags('name').first_value(), result)) == ['Zach Albright', 'Alfred Lisbon', 'Baldy Parson']
 
     def test_first(self, characters):
         result = util.character_sorter.CharacterSorter(['first']).sort(characters)
-        assert list(map(lambda c: c.get_first('name'), result)) == ['Alfred Lisbon', 'Baldy Parson', 'Zach Albright']
+        assert list(map(lambda c: c.tags('name').first_value(), result)) == ['Alfred Lisbon', 'Baldy Parson', 'Zach Albright']
 
     def test_reverse(self, characters):
         result = util.character_sorter.CharacterSorter(['-first']).sort(characters)
-        assert list(map(lambda c: c.get_first('name'), result)) == ['Zach Albright', 'Baldy Parson', 'Alfred Lisbon']
+        assert list(map(lambda c: c.tags('name').first_value(), result)) == ['Zach Albright', 'Baldy Parson', 'Alfred Lisbon']
 
     def test_multiple_tags(self, characters):
         result = util.character_sorter.CharacterSorter(['group', '-last']).sort(characters)
-        assert list(map(lambda c: c.get_first('name'), result)) == ['Baldy Parson', 'Alfred Lisbon', 'Zach Albright']
+        assert list(map(lambda c: c.tags('name').first_value(), result)) == ['Baldy Parson', 'Alfred Lisbon', 'Zach Albright']
 
     def test_translated_sort(self, characters, prefs):
         result = util.character_sorter.CharacterSorter(['type-unit'], prefs=prefs).sort(characters)
-        assert list(map(lambda c: c.get_first('name'), result)) == ['Baldy Parson', 'Alfred Lisbon', 'Zach Albright']
+        assert list(map(lambda c: c.tags('name').first_value(), result)) == ['Baldy Parson', 'Alfred Lisbon', 'Zach Albright']
 
 class TestSmartOpen:
     def test_with_named_file(self, tmpdir):

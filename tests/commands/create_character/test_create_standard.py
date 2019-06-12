@@ -14,6 +14,13 @@ def test_creates_character(campaign, chartype):
     assert character.exists()
     assert campaign.get_absolute(result.openable[0]) == str(character)
 
+def test_create_character_with_notes(campaign):
+    result = npc.commands.create_character.standard('testmann - masterful mann', 'human')
+    character = campaign.get_character('testmann - masterful mann.nwod')
+    assert result.success
+    assert character.exists()
+    assert campaign.get_absolute(result.openable[0]) == str(character)
+
 def test_duplicate_character(campaign):
     npc.commands.create_character.standard('testmann', 'human')
     result = npc.commands.create_character.standard('testmann', 'human')
@@ -23,7 +30,7 @@ def test_duplicate_character(campaign):
 def test_adds_group_tags(campaign):
     npc.commands.create_character.standard('testmann', 'human', groups=['fork', 'spoon'])
     data = campaign.get_character_data('testmann.nwod')
-    assert data.tags['group'] == ['fork', 'spoon']
+    assert list(data.tags('group').keys()) == ['fork', 'spoon']
 
 def test_adds_filled_foreign_tag(campaign):
     """With just --foreign, add the tag with notes"""
@@ -56,16 +63,16 @@ class TestDead:
         """Characters shouldn't be dead without the command"""
         npc.commands.create_character.standard('testmann', 'human')
         data = campaign.get_character_data('testmann.nwod')
-        assert 'dead' not in data.tags
+        assert not data.tags('dead').present
 
     def test_bare_dead_tag(self, campaign):
         """With just --dead, add the tag and no notes"""
-        npc.commands.create_character.standard('testmann', 'human', dead='')
+        npc.commands.create_character.standard('testmann', 'human', dead=[''])
         data = campaign.get_character_data('testmann.nwod')
-        assert data.tags['dead'] == ['']
+        assert data.tags('dead').present
 
     def test_dead_tag_with_notes(self, campaign):
         """With just --dead, add the tag and no notes"""
         npc.commands.create_character.standard('testmann', 'human', dead='Died in a tragic toast accident')
         data = campaign.get_character_data('testmann.nwod')
-        assert data.tags['dead'] == ['Died in a tragic toast accident']
+        assert data.tags('dead').first_value() == 'Died in a tragic toast accident'

@@ -20,13 +20,13 @@ class TestPathLiteral:
 class TestTagPresence:
     """Test that tag presence is checked correctly"""
 
-    def test_tag_presence_false(self, tmp_path):
+    def test_tag_presence_false_leaves_out_path(self, tmp_path):
         char = Character(type=['human'])
         tmp_path.joinpath('Bros').mkdir()
         result = util.create_path_from_character(char, base_path=tmp_path, hierarchy='{school?Bros}')
         assert result == tmp_path
 
-    def test_tag_presence_true(self, tmp_path):
+    def test_tag_presence_true_appends_path(self, tmp_path):
         char = Character(type=['human'], school=['U of Bros'])
         tmp_path.joinpath('Bros').mkdir()
         result = util.create_path_from_character(char, base_path=tmp_path, hierarchy='{school?Bros}')
@@ -47,6 +47,7 @@ class TestTagPresence:
     def test_wanderer_presence_true(self, tmp_path):
         """The foreign? check should include wanderer tag contents"""
         char = Character(type=['human'], wanderer=[''])
+        char.tags('wanderer').touch()
         tmp_path.joinpath('Bros').mkdir()
         result = util.create_path_from_character(char, base_path=tmp_path, hierarchy='{foreign?Bros}')
         assert result == tmp_path.joinpath('Bros')
@@ -106,7 +107,8 @@ class TestTagInsertion:
         assert result == tmp_path.joinpath('First')
 
     def test_group_rank(self, tmp_path):
-        char = Character(type=['human'], group=['First', 'Second'], rank={'First': ['A', 'B']})
+        char = Character(type=['human'], group=['First', 'Second'])
+        char.tags('group').subtag('First').update(['A', 'B'])
         first = tmp_path / 'First'
         first.mkdir()
         first.joinpath('A').mkdir()
@@ -124,7 +126,8 @@ class TestTagInsertion:
         assert result == tmp_path.joinpath('First').joinpath('Second')
 
     def test_groups_and_ranks(self, tmp_path):
-        char = Character(type=['human'], group=['First', 'Second'], rank={'First': ['A', 'B']})
+        char = Character(type=['human'], group=['First', 'Second'])
+        char.tags('group').subtag('First').update(['A', 'B'])
         first = tmp_path / 'First'
         first.mkdir()
         second = first / 'Second'

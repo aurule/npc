@@ -11,7 +11,8 @@ def test_creates_character(campaign):
 def test_adds_group_tags(campaign):
     npc.commands.create_character.changeling('changeling mann', 'Beast', 'Hunterheart', groups=['fork', 'spoon'])
     data = campaign.get_character_data('changeling mann.nwod')
-    assert data.tags['group'] == ['fork', 'spoon']
+    assert 'fork' in data.tags('group')
+    assert 'spoon' in data.tags('group')
 
 def test_duplicate_character(campaign):
     npc.commands.create_character.changeling('changeling mann', 'Beast', 'Hunterheart')

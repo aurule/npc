@@ -5,7 +5,12 @@ def test_present_with_no_values():
     flag.touch()
     assert flag.present
 
-def test_header_present_with_no_values():
+def test_not_filled_with_no_values():
+    flag = Flag('wanderer')
+    flag.touch()
+    assert not flag.filled
+
+def test_header_filled_with_no_values():
     flag = Flag('wanderer')
     flag.touch()
     header = flag.to_header()
@@ -43,3 +48,32 @@ class TestStrictValidation:
         tag = Flag('type', 'asdf', '1234', limit=-1)
         tag.validate(strict=True)
         assert tag.valid
+
+class TestUpdate:
+    def test_update_marks_presence_true(self):
+        tag = Flag('wanderer')
+        tag.update('')
+        assert tag.present
+
+    def test_update_with_boolean_assigns_presence(self):
+        tag = Flag('wanderer')
+        tag.update(True)
+        assert tag.present
+
+def test_append_marks_presence_true():
+    tag = Flag('wanderer')
+    tag.append('')
+    assert tag.present
+
+def test_clear_resets_presence():
+    tag = Flag('wanderer')
+    tag.touch()
+    assert tag.present
+    tag.clear()
+    assert not tag.present
+
+def test_bool_truthy_when_present():
+    tag = Flag('foreign')
+    assert not tag
+    tag.touch()
+    assert tag

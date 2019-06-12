@@ -20,6 +20,24 @@ class TestAppend:
 
         assert container('type') == tag1
 
+class TestUpdate:
+    def test_updates_all_tags(self):
+        container = TagContainer()
+        container.add_tag('type')
+        container.update({'type': ['human']})
+        assert 'human' in container('type')
+
+    def test_updates_from_tag_container(self):
+        container1 = TagContainer()
+        container1.add_tag('type')
+        container2 = TagContainer()
+        container2.add_tag('type')
+        container2('type').append('human')
+
+        container1.update(container2)
+
+        assert 'human' in container1('type')
+
 class TestCall:
     def test_gets_existing_tag(self):
         container = TagContainer()
@@ -33,13 +51,13 @@ class TestCall:
         container.append(tag)
         assert type(container('asdf')) is UnknownTag
 
-def test_iterate_yields_values():
+def test_iterate_all_yields_values():
     container = TagContainer()
     tag1 = Tag('type')
     tag2 = Tag('name')
     container.append(tag1)
     container.append(tag2)
-    tag_list = list(container)
+    tag_list = list(container.all())
     assert tag1 in tag_list
     assert tag2 in tag_list
 
@@ -61,9 +79,9 @@ def test_present_includes_only_present_tags():
     container.append(tag1)
     container.append(tag2)
 
-    present_tags = list(container.present())
-    assert tag1 in present_tags
-    assert tag2 not in present_tags
+    present_tags = container.present()
+    assert 'type' in present_tags
+    assert 'name' not in present_tags
 
 class TestTagCreationHelpers:
     def test_add_tag_creates_tag_object(self):

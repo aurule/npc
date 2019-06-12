@@ -30,6 +30,7 @@ class TestChangelingHeaders:
         char = Changeling(type=['Changeling'], seeming=['Beast'], kith=['Swimmerskin'])
         header = char.build_header()
         assert "@changeling Beast Swimmerskin" in header
+        assert "@type Changeling" not in header
 
     def test_no_seeming(self):
         char = Changeling(type=['Changeling'], kith=['Swimmerskin'])
@@ -53,39 +54,14 @@ class TestWerewolfHeaders:
         char = Werewolf(type=['Werewolf'], auspice=['Cahalith'])
         header = char.build_header()
         assert '@werewolf Cahalith' in header
-
-@pytest.mark.parametrize('flag', Character.FLAGS)
-def test_bare_flag(flag):
-    char = Character()
-    char.append(flag, None)
-    header = char.build_header()
-    assert re.search(r'@{}$'.format(flag), header, re.MULTILINE)
-
-@pytest.mark.parametrize('flag', Character.DATA_FLAGS)
-def test_data_flag(flag):
-    char = Character()
-    char.append(flag, None)
-    assert re.search(r'@{}$'.format(flag), char.build_header(), re.MULTILINE)
-    char.append(flag, 'datas')
-    assert re.search(r'@{} datas$'.format(flag), char.build_header(), re.MULTILINE)
-
-singletons = ('name', 'type', 'seeming', 'kith')
-@pytest.mark.parametrize('tag', [tag for tag in Character.VALUE_TAGS if tag not in singletons])
-def test_tag_for_all(tag):
-    char = Character()
-    bits = ['some', 'words', 'and', 'stuff']
-    for bit in bits:
-        char.append(tag, bit)
-    header = char.build_header()
-    for bit in bits:
-        assert '@{} {}'.format(tag, bit) in header
+        assert '@type Werewolf' not in header
 
 def test_rank():
     char = Character()
-    char.append('group', 'Townies')
+    char.tags('group').append('Townies')
     ranks = ['Foozer', 'Roz', 'Bazanger']
     for rank in ranks:
-        char.append_rank('Townies', rank)
+        char.tags('group').subtag('Townies').append(rank)
     header = char.build_header()
     for rank in ranks:
         assert '@rank {}'.format(rank) in header

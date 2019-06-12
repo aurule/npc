@@ -28,7 +28,6 @@ def test_move_by_group(campaign, new_path):
 
     campaign.populate_from_fixture_dir('reorg', 'by_group')
     result = do_reorg(verbose=True)
-    print(result.printables)
     character = campaign.get_character(new_path)
     assert character.exists()
 

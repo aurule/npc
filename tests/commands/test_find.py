@@ -33,7 +33,7 @@ class TestWildcard:
         char2 = Character(name=["char2"], )
         char3 = Character(name=["char3"], court=['summer'])
         raw_res = npc.commands.find_characters(["court: *"], [char1, char2, char3])
-        res = list(map(lambda x: x.get_first('name'), raw_res))
+        res = list(map(lambda x: x.tags('name').first_value(), raw_res))
         assert 'char1' in res
         assert 'char2' not in res
         assert 'char3' in res
@@ -43,17 +43,17 @@ class TestWildcard:
         char2 = Character(name=["char2"])
         char3 = Character(name=["char3"], group=['summer'], rank={'summer': ['hobnob']})
         raw_res = npc.commands.find_characters(["rank: *"], [char1, char2, char3])
-        res = list(map(lambda x: x.get_first('name'), raw_res))
+        res = list(map(lambda x: x.tags('name').first_value(), raw_res))
         assert 'char1' in res
         assert 'char2' not in res
         assert 'char3' in res
 
     def test_text_tag(self):
         char1 = Character(name=["char1"], description=["hello"])
-        char2 = Character(name=["char2"], description=[""])
+        char2 = Character(name=["char2"], description=["x"])
         char3 = Character(name=["char3"])
         raw_res = npc.commands.find_characters(["description: *"], [char1, char2, char3])
-        res = list(map(lambda x: x.get_first('name'), raw_res))
+        res = list(map(lambda x: x.tags('name').first_value(), raw_res))
         assert 'char1' in res
         assert 'char2' in res
         assert 'char3' not in res
