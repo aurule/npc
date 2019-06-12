@@ -1,6 +1,8 @@
 """
 Module for all character objects.
 """
+import json
+from pathlib import Path
 
 from .character import Character
 from .changeling import Changeling
@@ -64,3 +66,18 @@ def character_klass_from_type(ctype: str):
             return Spirit
 
     return Character
+
+class CharacterEncoder(json.JSONEncoder):
+    """
+    Properly encode pathlib objects by casting to strings
+    """
+    def default(self, o):
+        if isinstance(o, Path):
+            return str(o)
+        if isinstance(o, tags.TagContainer):
+            return o.data
+        if isinstance(o, tags.Tag):
+            return o.data
+        if isinstance(o, tags.GroupTag):
+            return o.data
+        return json.JSONEncoder.default(self, o)

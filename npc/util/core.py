@@ -113,15 +113,6 @@ def load_json(filename):
             err.strerror = "Could not load '{0}': {1}".format(filename, err.strerror)
             raise err
 
-class PathEncoder(json.JSONEncoder):
-    """
-    Properly encode pathlib objects by casting to strings
-    """
-    def default(self, o):
-        if isinstance(o, Path):
-            return str(o)
-        return json.JSONEncoder.default(self, o)
-
 def print_err(*args, **kwargs):
     """
     Print a message to stderr.
