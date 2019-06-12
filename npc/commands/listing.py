@@ -59,7 +59,7 @@ def make_list(*search, ignore=None, fmt=None, metadata=None, title=None, outfile
     sort_order = kwargs.get('sort_by', prefs.get('listing.sort_by')) if do_sort else []
     headings = kwargs.get('headings', sort_order)
 
-    characters = _process_directives(parser.get_characters(flatten(search), ignore))
+    characters = _refine_characters(parser.get_characters(flatten(search), ignore))
     if do_sort:
         sorter = util.character_sorter.CharacterSorter(sort_order, prefs=prefs)
         characters = sorter.sort(characters)
@@ -109,7 +109,7 @@ def make_list(*search, ignore=None, fmt=None, metadata=None, title=None, outfile
 
     return result.Success(openable=openable)
 
-def _process_directives(characters):
+def _refine_characters(characters):
     """
     Alter character records for output.
 
@@ -134,29 +134,30 @@ def _process_directives(characters):
 
     for char in characters:
         # skip if asked
-        if 'skip' in char.tags:
+        if char.tags('skip').present:
             continue
 
-        # remove named fields
-        for fieldname in char.tags['hide']:
-            if fieldname in char.tags:
-                del char.tags[fieldname]
+        # remove hidden fields
+        for tag in char.tags.values():
+            tag.hide_values()
 
-        # remove named groups
-        for groupname in char.tags['hidegroup']:
-            char.tags['group'].remove(groupname)
+        # # remove named groups
+        # TODO
+        # for groupname in char.tags['hidegroup']:
+        #     char.tags['group'].remove(groupname)
 
-        # remove all ranks for named groups
-        for groupname in char.tags['hideranks']:
-            if groupname in char.tags['rank']:
-                del char.tags['rank'][groupname]
+        # # remove all ranks for named groups
+        # TODO
+        # for groupname in char.tags['hideranks']:
+        #     if groupname in char.tags['rank']:
+        #         del char.tags['rank'][groupname]
 
         # use fake types if present
         if 'faketype' in char.tags:
             char.tags['type'] = char.tags['faketype']
 
         # Use a placeholder for unknown type
-        if 'type' not in char.tags:
-            char.tags['type'] = 'Unknown'
+        if not char.tags('type').filled:
+            char.tags('type').append('Unknown')
 
         yield char
