@@ -5,6 +5,8 @@ Module for all character objects.
 from .character import Character
 from .changeling import Changeling
 from .werewolf import Werewolf
+from .spirit import Spirit
+
 from . import tags
 
 def build(attributes: dict = None, other_char: Character = None):
@@ -58,5 +60,7 @@ def character_klass_from_type(ctype: str):
             return Changeling
         if ctype == 'werewolf':
             return Werewolf
+        if ctype == 'spirit':
+            return Spirit
 
     return Character
