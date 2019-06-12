@@ -4,51 +4,45 @@ class Werewolf(Character):
     """
     Special handling for werewolf-type characters
     """
-
-    def _set_default_type(self):
+    def __init__(self, *args, **kwargs):
         """
-        Set the default character type
+        Create a new Werewolf object
+
+        Ensures that the default type value is applied if it's missing
         """
-        self.tags['type'] = ['werewolf']
+        super().__init__(*args, **kwargs)
 
-    def type_validations(self, strict=False):
+        if not self.tags('type').filled:
+            self.tags('type').append('werewolf')
+
+    def _add_default_tags(self):
         """
-        Validate the basics of a werewolf character
+        Add additional type-specific tags
+        """
+        self.tags.add_tag('auspice', limit=1)
+        self.tags.add_group('pack', limit=1)
+        self.tags.add_group('tribe', limit=1)
+        self.tags.add_group('lodge', limit=1)
 
-        Validations:
-            * Zero or one auspice
-            * Zero or one tribe
-            * Zero or one pack
-            * Zero or one lodge
-
-        Any errors are added to the problems list.
+    def add_compound_tags(self, tags):
+        """
+        Create the @werewolf compound tag
 
         Args:
-            strict (bool): Whether to report non-critical errors and omissions
+            tags (TagContainer): Container of filled tags that can be modified
 
         Returns:
-            None
+            TagContainer with its contents modified as needed
         """
-        self.validate_tag_appears_once('auspice')
-        self.validate_tag_appears_once('tribe')
-        self.validate_tag_appears_once('pack')
-        self.validate_tag_appears_once('lodge')
+        if self.type_key != 'werewolf':
+            return tags
 
-    def type_header(self):
-        """
-        Create werewolf-specific header lines
+        if 'auspice' not in tags:
+            return tags
 
-        If auspice is present, adds a compound `@werewolf` line. Otherwise, it
-        adds a simple `@type` line.
+        first_auspice = tags('auspice').first_value()
+        tags.add_tag('werewolf', first_auspice)
+        tags['auspice'] = tags('auspice').remaining()
+        tags['type'] = tags('type').remaining()
 
-        Returns:
-            List of strings describing the werewolf-specific tags for this
-            character.
-        """
-        lines = []
-        if 'auspice' in self.tags:
-            lines.append("@werewolf {}".format(self.get_first('auspice')))
-        else:
-            lines.append("@type Werewolf")
-
-        return lines
+        return tags

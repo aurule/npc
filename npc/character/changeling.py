@@ -4,58 +4,51 @@ class Changeling(Character):
     """
     Special handling for changeling-type characters
     """
-
-    def _set_default_type(self):
+    def __init__(self, *args, **kwargs):
         """
-        Set the default character type
+        Create a new Changeling object
+
+        Ensures that the default type value is applied if it's missing
         """
-        self.tags['type'] = ['changeling']
+        super().__init__(*args, **kwargs)
 
-    def type_validations(self, strict=False):
+        if not self.tags('type').filled:
+            self.tags('type').append('changeling')
+
+    def _add_default_tags(self):
         """
-        Validate the basic elements of a changeling file
+        Add additional type-specific tags
+        """
+        self.tags.add_tag('seeming', required=True)
+        self.tags.add_tag('kith', required=True)
+        self.tags.add_tag('mask')
+        self.tags.add_tag('mien')
+        self.tags.add_tag('freehold')
+        self.tags.add_group('court', limit=1)
+        self.tags.add_group('motley', limit=1)
+        self.tags.add_group('entitlement', limit=1)
 
-        Validations:
-            * Seeming is present
-            * Kith is present
-            * Zero or one court is present
-            * Zero or one motley is present
-            * Zero or one entitlement is present
-
-        Any errors are added to the problems list.
+    def add_compound_tags(self, tags):
+        """
+        Create the @changeling tag
 
         Args:
-            strict (bool): Whether to report non-critical errors and omissions
+            tags (TagContainer): Container of filled tags that can be modified
 
         Returns:
-            None
+            TagContainer with its contents modified
         """
-        self.validate_tag_present_and_filled('seeming')
-        self.validate_tag_present_and_filled('kith')
-        self.validate_tag_appears_once('court')
-        self.validate_tag_appears_once('motley')
-        self.validate_tag_appears_once('entitlement')
+        if self.type_key != 'changeling':
+            return tags
 
-    def type_header(self):
-        """
-        Create changeling-specific header lines
+        if 'seeming' not in tags:
+            return tags
+        if 'kith' not in tags:
+            return tags
 
-        If both seeming and kith are present, adds a compound `@changeling`
-        line. Otherwise, it lists type and seeming or kith as available.
+        first_seeming = tags('seeming').first_value()
+        first_kith = tags('kith').first_value()
+        tags.add_tag('changeling', ' '.join([first_seeming, first_kith]))
+        tags['type'] = tags('type').remaining()
 
-        Returns:
-            List of strings describing the changeling-specific tags for this
-            character.
-        """
-        lines = []
-
-        if 'seeming' in self.tags and 'kith' in self.tags:
-            lines.append("@changeling {} {}".format(self.get_first('seeming'), self.get_first('kith')))
-        else:
-            lines.append("@type Changeling")
-            if 'seeming' in self.tags:
-                lines.append("@seeming {}".format(self.get_first('seeming')))
-            if 'kith' in self.tags:
-                lines.append("@kith {}".format(self.get_first('kith')))
-
-        return lines
+        return tags
