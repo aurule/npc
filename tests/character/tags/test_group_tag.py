@@ -208,3 +208,9 @@ class TestHideValues:
         tag.subtag('value1').hidden = True
         tag.hide_values()
         assert not tag.subtag('value1')
+
+def test_touch_shows_error(capsys):
+    tag = GroupTag('group')
+    tag.touch()
+    _, err = capsys.readouterr()
+    assert "Calling touch() on non-flag class GroupTag object 'group'" in err

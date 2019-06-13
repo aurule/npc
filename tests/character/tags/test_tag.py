@@ -173,3 +173,9 @@ class TestHideValues:
         tag = Tag('type', 'value1', 'value2', 'value3', hidden=False)
         tag.hide_values()
         assert tag.data == ['value1', 'value2', 'value3']
+
+def test_touch_shows_error(capsys):
+    tag = Tag('type')
+    tag.touch()
+    _, err = capsys.readouterr()
+    assert "Calling touch() on non-flag class Tag object 'type'" in err

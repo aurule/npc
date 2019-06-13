@@ -1,5 +1,6 @@
 from collections import UserDict
 from copy import copy
+from npc.util import print_err
 
 from .tag import Tag
 
@@ -101,6 +102,19 @@ class GroupTag(UserDict):
         Delegate truthyness to the `present` property
         """
         return True and self.present
+
+    def touch(self, present: bool = True):
+        """
+        No-op for compatibility with Flag class
+
+        Args:
+            present (bool): Whether to mark the flag present or not present.
+                Defaults to True.
+
+        Returns:
+            None
+        """
+        print_err("Calling touch() on non-flag class {} object '{}'".format(type(self).__name__, self.name))
 
     def append(self, val: str):
         """
