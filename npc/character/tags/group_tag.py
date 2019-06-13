@@ -274,9 +274,8 @@ class GroupTag(UserDict):
         for real_value in self:
             if value in real_value.casefold():
                 return True
-            for subvalue in self[real_value]:
-                if value in subvalue.casefold():
-                    return True
+            if self[real_value].contains(value):
+                return True
 
         return False
 
