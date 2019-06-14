@@ -31,6 +31,8 @@ class TestChangelingHeaders:
         header = char.build_header()
         assert "@changeling Beast Swimmerskin" in header
         assert "@type Changeling" not in header
+        assert '@seeming Beast' not in header
+        assert '@kith Swimmerskin' not in header
 
     def test_no_seeming(self):
         char = Changeling(type=['Changeling'], kith=['Swimmerskin'])
@@ -55,6 +57,7 @@ class TestWerewolfHeaders:
         header = char.build_header()
         assert '@werewolf Cahalith' in header
         assert '@type Werewolf' not in header
+        assert '@auspice Cahalith' not in header
 
 def test_rank():
     char = Character()

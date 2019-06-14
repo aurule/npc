@@ -50,5 +50,7 @@ class Changeling(Character):
         first_kith = tags('kith').first_value()
         tags.add_tag('changeling', ' '.join([first_seeming, first_kith]))
         tags['type'] = tags('type').remaining()
+        tags['seeming'] = tags('seeming').remaining()
+        tags['kith'] = tags('kith').remaining()
 
         return tags
