@@ -12,7 +12,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 * New `employer` group-like tag
 * Internal caching in the template formatter should speed up generating large character lists
 * YAML is now supported for configuration files alongside JSON. If a JSON file and a YAML file are both present with the same name other than the file extension, the JSON file will take precedence. This is due to the massively slower parsing speed of YAML files. All configuration files are present in both formats for reference.
-* Discrete classes for more involved character types: Changeling and Werewolf
+* Discrete classes for more involved character types: Changeling, Werewolf, and Spirit
 
 ### Changed
 
@@ -24,14 +24,19 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
     - Templates can have special "NNN" and "((COPY))" keywords that get replaced on file creation
 * The `latest` command now reports which path was missing if either the plot path or session path are not accessible
 * The `latest` command no longer requires the input "both" to return all the latest files. Instead, all files are returned by default and using a keyword limits what is returned. The function argument is now optional.
-* Description lines are now stored in an array. A string representation can be accessed with the `description` property.
-* Files are opened by the system default editor for that type, falling back on the "editor" value from settings.
+* Files are opened by the system default editor for that type, or the "editor" value from settings.
 * The `settings` command now detects which format is in use
 * Character objects now store their tags in `self.tags` instead of directly on the object
-* New character objects won't choke on a non-list attribute value
+    - Tag getting and setting has been moved from Character objects to their TagContainer and stored Tag objects
 * Strict character validation now flags the class type if there's a mismatch
 * Character path is now accessed through the `path` attribute, not through `tags['path']`
     - The `has_path` property has been removed. Test path presence by testing `character.path` directly
+* Each character type can have its own list of supported tags
+    - This improves the support for oddball or unique tags, like auspice and ban, and allows more accurate linting
+
+### Fixed
+
+* New character objects won't choke on a non-list attribute value
 
 ## 1.4.0
 
