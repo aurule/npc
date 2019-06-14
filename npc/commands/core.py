@@ -135,7 +135,7 @@ def lint(*search, ignore=None, fix=False, strict=False, report=False, **kwargs):
     for details.
 
     This command normally ignores unknown tags. In strict mode, it will report
-    the presence of any tag not in Character.KNOWN_TAGS.
+    the presence of any tag not expected by the character class.
 
     Args:
         search (list): Paths to search for character files. Items can be strings

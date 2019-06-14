@@ -11,7 +11,8 @@ def make_list(*search, ignore=None, fmt=None, metadata=None, title=None, outfile
     """
     Generate a listing of NPCs.
 
-    The default listing templates ignore tags not found in Character.KNOWN_TAGS.
+    The default listing templates ignore tags that are not expected for that
+    character class.
 
     Args:
         search (list): Paths to search for character files. Items can be strings

@@ -18,38 +18,6 @@ class Character:
     preserve the internal structure of the dict.
     """
 
-    IMPLICIT_FIELDS = ('description',)
-    """
-    tuple (Str): Fields without an explicit tag.
-    """
-
-    GROUP_TAGS = (
-        'court', 'motley', 'entitlement', # changeling
-        'pack', 'tribe', 'lodge',         # werewolf
-        'group')                          # universal
-    """tuple (str): Group-like tags. These all accept an accompanying `rank`
-        tag."""
-
-    ADDON_TAGS = ('rank',)
-    """tuple (str): Tags whose value relates to a previous tag"""
-
-    FLAGS = ('wanderer', 'skip')
-    """tuple (str): Flags whose value is ignored"""
-
-    DATA_FLAGS = ('foreign', 'dead')
-    """tuple (str): Flags that can accept an optional value"""
-
-    VALUE_TAGS = (
-        'name', 'type', 'faketype', 'title', 'appearance', 'hide', 'hidegroup', 'hideranks', # universal
-        'seeming', 'kith', 'mask', 'mien'                                                    # changeling
-        )
-    """tuple (str): Tags that must have a value. Shortcuts, like @changeling,
-        are expanded during parsing and do not appear literally."""
-
-    KNOWN_TAGS = IMPLICIT_FIELDS + GROUP_TAGS + FLAGS + DATA_FLAGS + ADDON_TAGS + VALUE_TAGS
-    """tuple (str): All recognized tags. Other, unrecognized tags are fine to
-        add and will be ignored by methods that don't know how to handle them."""
-
     def __init__(self, attributes: dict=None, other_char=None, path=None, **kwargs):
         """
         Create a new Character object.
