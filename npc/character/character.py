@@ -9,13 +9,7 @@ class Character:
     """
     Object to hold and access data for a single character
 
-    Can be accessed like a dictionary where missing keys will return an empty
-    array instead of throwing an exception. The "path" key is special: it will
-    always contain a string.
-
-    While values can be accessed directly, it's better practice to use the
-    getter and setter methods that are provided, since they automatically
-    preserve the internal structure of the dict.
+    Tag data is stored in a TagContainer object.
     """
 
     def __init__(self, attributes: dict=None, other_char=None, path=None, **kwargs):
@@ -36,14 +30,15 @@ class Character:
 
         Args:
             attributes (dict): Dictionary of attributes to insert into the
-                Character. If a value is a bare string, it will be converted to
-                a list containing that string.
+                character's tags. If a value is a bare string, it will be
+                converted to a list containing only that string.
             other_char (Character): Existing character object to copy. Tags from
                 that object will be copied verbatim with no changes.
-            path (pathlike): Path to the file this character object represents
+            path (pathlike): Path to the file this character object represents.
             **kwargs: Named arguments will be added verbatim to the new
-                Character. Keys here will overwrite keys of the same name from
-                the `attributes` arg. The values here are not altered at all.
+                character's tags. Keys here will overwrite keys of the same name
+                from the `attributes` arg. The values here are not altered at
+                all.
         """
         def wrap_strings(attributes: dict):
             wrapped_attributes = {}

@@ -7,7 +7,11 @@ class TagContainer(UserDict):
     """
     Manages a coherent group of tags
 
-    Instances are callable
+    Instances are callable. That syntax is the preferred way to get a tag, since
+    it will always return a tag object. Accessing an undeclared tag in this way
+    will return an UnknownTag object instead of raising an error.
+
+    This object can also be accessed like a normal dict.
     """
     def __init__(self):
         """
