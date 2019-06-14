@@ -250,7 +250,7 @@ def _cp_template_for_char(name, character, prefs, fn=None):
         return result.FSError(errmsg="Character '{}' already exists!".format(name))
 
     # Add tags
-    header = character.build_header() + '\n\n'
+    header = '\n\n' + character.build_header() + '\n\n'
 
     # Copy template
     try:
