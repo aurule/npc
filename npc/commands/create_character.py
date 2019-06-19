@@ -5,7 +5,7 @@ Functions for creating new character sheets
 import re
 
 from npc import settings, character
-from npc.util import result
+from npc.util import result, print_err
 
 from .util import create_path_from_character
 
@@ -123,14 +123,20 @@ def changeling(name, seeming, kith, *,
                 r"\g<1>Seeming\g<2>{} ({})".format(seeming_name, seeming_notes),
                 data
             )
+        else:
+            print_err("Unrecognized seeming '{}'".format(seeming_name))
+
         kith_name = temp_char.tags('kith').first_value()
         kith_key = kith.lower()
-        if kith_key in prefs.get('changeling.kiths.{}'.format(seeming_key)):
+        if kith_key in prefs.get('changeling.kiths.{}'.format(seeming_key), []):
             kith_notes = prefs.get("changeling.blessings.{}".format(kith_key))
             data = kith_re.sub(
                 r"\g<1>Kith\g<2>{} ({})".format(kith_name, kith_notes),
                 data
             )
+        else:
+            print_err("Unrecognized kith '{}' for seeming '{}'".format(kith_name, seeming_name))
+
         return data
 
     return _cp_template_for_char(name, temp_char, prefs, fn=_insert_sk_data)
