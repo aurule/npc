@@ -76,6 +76,10 @@ def changeling(name, seeming, kith, *,
             exclude the @location tag.
         groups (list): One or more names of groups the character belongs to.
             Used to derive path.
+        freehold (str): Name of the freehold the changeling belongs to. Leave
+            empty to exclude @freehold tag.
+        entitlement (str): Name of the entitlement the changeling belongs to.
+            Leave empty to exclude @entitlement tag.
         prefs (Settings): Settings object to use. Uses internal settings by
             default.
 
@@ -85,6 +89,8 @@ def changeling(name, seeming, kith, *,
     prefs = kwargs.get('prefs', settings.InternalSettings())
     groups = kwargs.get('groups', [])
     location = kwargs.get('location', False)
+    freehold = kwargs.get('freehold', None)
+    entitlement = kwargs.get('entitlement', None)
 
     # build minimal Character
     temp_char = _minimal_character(
@@ -100,6 +106,10 @@ def changeling(name, seeming, kith, *,
         temp_char.tags('court').append(court.title())
     if motley:
         temp_char.tags('motley').append(motley)
+    if freehold:
+        temp_char.tags('freehold').append(freehold)
+    if entitlement:
+        temp_char.tags('entitlement').append(entitlement)
 
     def _insert_sk_data(data):
         """Insert seeming and kith in the advantages block of a template"""

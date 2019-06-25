@@ -74,3 +74,13 @@ def test_adds_motley(campaign):
     npc.commands.create_character.changeling('changeling mann', 'Beast', 'Hunterheart', motley='Funny Bones Men')
     data = campaign.get_character_data('changeling mann.nwod')
     assert 'Funny Bones Men' in data.tags['motley']
+
+def test_adds_freehold(campaign):
+    npc.commands.create_character.changeling('changeling mann', 'Beast', 'Hunterheart', freehold='Funny Bones Men')
+    data = campaign.get_character_data('changeling mann.nwod')
+    assert 'Funny Bones Men' in data.tags['freehold']
+
+def test_adds_entitlement(campaign):
+    npc.commands.create_character.changeling('changeling mann', 'Beast', 'Hunterheart', entitlement='Funny Bones Men')
+    data = campaign.get_character_data('changeling mann.nwod')
+    assert 'Funny Bones Men' in data.tags['entitlement']

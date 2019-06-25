@@ -135,6 +135,8 @@ Options:
 * `kith`: Name of their Kith. Also added to the character's stats with notes about the Kith Blessing, if the kith is found in `settings-changeling`.
 * `--court`: Name of the changeling's court, if they have one. This is the first "group" checked when creating the path.
 * `--motley`: Name of the changeling's motley, if known. This does not affect the path, but is added to the file as a tag.
+* `--entitlement`: Name of the character's entitlement, if they have one. Added as a tag.
+* `--freehold`: Name of the freehold the character belongs to. Added as a tag.
 
 Note: The `changeling` command is not the only way to create a changeling character. If you just want to make a new sheet without specifying the seeming or kith, and without using the changeling-specific options, you can do so by running `npc new changeling [name]`.
 

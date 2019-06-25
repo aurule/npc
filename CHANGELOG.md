@@ -14,6 +14,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 * YAML is now supported for configuration files alongside JSON. If a JSON file and a YAML file are both present with the same name other than the file extension, the JSON file will take precedence. This is due to the massively slower parsing speed of YAML files. All configuration files are present in both formats for reference.
 * Discrete classes for more involved character types: Changeling, Werewolf, and Spirit
 * New `@keep` directive flag to prevent a character from being moved by the reorg command
+* The `changeling` command accepts two new arguments: `--freehold` and `--entitlement`. These set the new character's freehold name and entitlement name, respectively.
 
 ### Changed
 
