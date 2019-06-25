@@ -180,17 +180,19 @@ class Character:
             A string containing tags that when parsed will recreate the data in
             this character object.
         """
-        filled_tags = self.tags.present()
+        header_tags = self.tags.present()
 
-        if 'name' in filled_tags:
-            first_name = filled_tags('name').first_value()
+        # add realname tag if needed
+        if 'name' in header_tags:
+            first_name = header_tags('name').first_value()
             if first_name not in self.path:
-                filled_tags.add_tag('realname', first_name)
-                filled_tags['name'] = filled_tags('name').remaining()
+                header_tags.add_tag('realname', first_name)
+                header_tags['name'] = header_tags('name').remaining()
 
-        filled_tags = self.add_compound_tags(filled_tags).present()
+        # add compound tags as needed
+        header_tags = self.add_compound_tags(header_tags).present()
 
-        lines = [tag.to_header() for tag in filled_tags.values()]
+        lines = [tag.to_header() for tag in header_tags.values()]
         return "\n".join(lines)
 
     def add_compound_tags(self, tags: TagContainer):
