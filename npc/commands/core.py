@@ -55,6 +55,8 @@ def reorg(*search, ignore=None, purge=False, verbose=False, commit=False, **kwar
     if show_changes:
         changelog.append("Move characters")
     for parsed_character in parser.get_characters(flatten(search), ignore):
+        if parsed_character.tags('keep').present:
+            continue
         new_path = Path(util.create_path_from_character(parsed_character, base_path=base_path))
         parsed_path = Path(parsed_character.path)
         if not new_path.resolve().samefile(parsed_path.resolve()):

@@ -261,7 +261,7 @@ The `reorg` command builds default paths for all the characters and then moves t
 
 For an explanation of the default paths, see [Create a Character](#create-a-character).
 
-Characters are always placed within the default characters path, regardless of the `search` argument.
+Characters are always placed within the default characters path, regardless of the `search` argument. Any character with the `@keep` directive is not moved, regardless of its current path.
 
 Options:
 

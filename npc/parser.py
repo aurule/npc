@@ -180,7 +180,6 @@ def parse_character(char_file_path) -> character.Character:
                     continue
 
                 parsed_char.tags(tag).append(value)
-                print(parsed_char.tags(tag))
             else:
                 # Ignore second empty description line in a row
                 if line == "\n":

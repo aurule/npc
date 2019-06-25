@@ -62,6 +62,7 @@ class Character:
         self.tags.add_flag('foreign')
         self.tags.add_flag('wanderer')
         self.tags.add_flag('skip')
+        self.tags.add_flag('keep')
         self.tags.add_flag('dead')
         self.tags.add_group('group')
 

@@ -46,6 +46,12 @@ def test_commit(campaign):
     character = campaign.get_character('Alpha Mann.nwod')
     assert character.exists()
 
+def test_ignores_with_keep_flag(campaign):
+    campaign.populate_from_fixture_dir('reorg', 'keep')
+    do_reorg()
+    character = campaign.get_character('Alpha Mann.nwod')
+    assert character.exists()
+
 class TestPurge:
     def test_removes_directories(self, campaign):
         """Removes empty directories with purge option"""
