@@ -165,7 +165,7 @@ def _make_parser():
     parser_changeling.add_argument('-c', '--court', help="Name of the character's Court", metavar='court')
     parser_changeling.add_argument('-m', '--motley', help="Name of the character's Motley", metavar='motley')
     parser_changeling.add_argument('-e', '--entitlement', help="Name of the character's entitlement", metavar='entitlement')
-    parser_changeling.add_argument('--freehold', help="Name of the character's freehold", metavar='freehold')
+    parser_changeling.add_argument('-f', '--freehold', help="Name of the character's freehold", metavar='freehold')
     parser_changeling.set_defaults(func=commands.create_changeling)
 
     # Subcommand for making changelings, with their unique options
