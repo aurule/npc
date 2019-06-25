@@ -128,7 +128,7 @@ def dump(*search, ignore=None, do_sort=False, metadata=False, outfile=None, **kw
 
     return result.Success(openable=openable)
 
-def lint(*search, ignore=None, fix=False, strict=False, report=False, **kwargs):
+def lint(*search, ignore=None, fix=False, strict=False, report=True, **kwargs):
     """
     Check character files for completeness and correctness.
 

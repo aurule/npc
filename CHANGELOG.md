@@ -34,6 +34,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
     - The `has_path` property has been removed. Test path presence by testing `character.path` directly
 * Each character type can have its own list of supported tags
     - This improves the support for oddball or unique tags, like auspice and ban, and allows more accurate linting
+* The `list` command no longer automatically opens all files. Instead, there's a new `--open` option to do that. The old `--report` option has been removed.
 
 ### Fixed
 
