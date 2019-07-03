@@ -2,7 +2,7 @@ from collections import UserDict
 from copy import copy
 from npc.util import print_err
 
-from .tag import Tag
+from .sub_tag import SubTag
 
 class GroupTag(UserDict):
     """
@@ -41,6 +41,7 @@ class GroupTag(UserDict):
         self.name = name
         self.required = required
         self.hidden = hidden
+        self.hidden_values = []
         self.limit = limit
         self.problems = []
         self.subtag_name = subtag
@@ -76,7 +77,7 @@ class GroupTag(UserDict):
                 self.data[key] = subtag
         else:
             for val in values:
-                self.data[val] = Tag(self.subtag_name)
+                self.data[val] = SubTag(self.subtag_name)
 
     @property
     def filled(self):
@@ -130,9 +131,18 @@ class GroupTag(UserDict):
         if val in self.data:
             return
 
-        self.data[val] = Tag(self.subtag_name)
+        self.data[val] = SubTag(self.subtag_name)
 
     def subtag(self, val: str):
+        """
+        Get the subtag object for a given group name value
+
+        Args:
+            val (str): Group name
+
+        Returns
+            SubTag object for the named subtag
+        """
         return self.data[val]
 
     @property
@@ -151,6 +161,8 @@ class GroupTag(UserDict):
         Validations:
             * If required is set, at least one value must be filled
             * Required is incompatible with a limit of zero
+            * Hidden values must exist
+            * Subtags must have the correct name
             * (strict) If limit is non-negative, the total values must be <= limit
 
         Args:
@@ -166,6 +178,9 @@ class GroupTag(UserDict):
 
         if self.required and self.limit == 0:
             self.problems.append("Tag '{}' is required but limited to zero values".format(self.name))
+
+        for value in [v for v in self.hidden_values if not v in self.data]:
+            self.problems.append("Value '{}' for tag '{}' cannot be hidden, because it does not exist".format(value, self.name))
 
         for value, subtag in self.data.items():
             if subtag.name != self.subtag_name:
@@ -196,7 +211,9 @@ class GroupTag(UserDict):
         header_lines = []
         for val, subtag in self.data.items():
             header_lines.append("@{} {}".format(self.name, val))
-            header_lines.append(subtag.to_header())
+            if val in self.hidden_values:
+                header_lines.append("@hide {} >> {}".format(self.name, val))
+            header_lines.append(subtag.to_header(self.name, val))
 
         if self.hidden:
             header_lines.append("@hide {}".format(self.name))
@@ -293,7 +310,19 @@ class GroupTag(UserDict):
 
         return False
 
-    def hide_values(self):
+    def hide_value(self, value):
+        """
+        Hide a single value for this tag
+
+        Hiding will only work if the value to be hidden exactly matches a value
+        present in this tag's data.
+
+        Args:
+            value (str): The value to hide
+        """
+        self.hidden_values.append(value)
+
+    def sanitize(self):
         """
         Remove this tag's values if the tag is marked hidden
         Also asks subtags to hide themselves if needed
@@ -301,5 +330,11 @@ class GroupTag(UserDict):
         if self.hidden:
             self.clear()
 
+        for value in self.hidden_values:
+            try:
+                del self.data[value]
+            except KeyError:
+                continue
+
         for subtag in self.values():
-            subtag.hide_values()
+            subtag.sanitize()

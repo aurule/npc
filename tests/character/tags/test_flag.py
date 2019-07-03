@@ -33,6 +33,13 @@ class TestValidation:
         tag.validate()
         assert tag.valid
 
+    def test_hidden_values_must_exist(self):
+        tag = Flag('type', 'value1')
+        tag.hide_value('value2')
+        tag.validate()
+        assert not tag.valid
+        assert "Value 'value2' for tag 'type' cannot be hidden, because it does not exist" in tag.problems
+
 class TestStrictValidation:
     def test_limit_exceeded(self):
         tag = Flag('type', 'asdf', '1234', limit=1)

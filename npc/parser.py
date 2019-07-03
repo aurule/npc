@@ -10,13 +10,16 @@ import itertools
 from os import path, walk
 from pathlib import Path
 from npc import character
+from npc.util import print_err
 
 VALID_EXTENSIONS = ('.nwod', '.dnd3', '.dfrpg')
 """tuple: file extensions that should be parsed"""
 
+DEPRECATED_TAGS = ('hidegroup', 'hideranks')
 
 SECTION_RE = re.compile(r'^--.+--\s*$')
 TAG_RE = re.compile(r'^@(?P<tag>#\w+|\w+)\s+(?P<value>.*)$')
+HIDE_RE = re.compile(r'\s*>>\s*')
 
 def get_characters(search_paths=None, ignore_paths=None):
     """
@@ -176,8 +179,32 @@ def parse_character(char_file_path) -> character.Character:
 
                 # mark tags hidden as needed
                 if tag == 'hide':
+                    parts = HIDE_RE.split(value)
+
+                    tagname = parts.pop(0)
+                    if not parts:
+                        parsed_char.tags(tagname).hidden = True
+                        continue
+
+                    first_value = parts.pop(0)
+                    if not parts:
+                        parsed_char.tags(tagname).hide_value(first_value)
+                        continue
+
+                    second_value = parts.pop(0)
+                    if not parts:
+                        if second_value == 'subtags':
+                            parsed_char.tags(tagname).subtag(first_value).hidden = True
+                        else:
+                            parsed_char.tags(tagname).subtag(first_value).hide_value(second_value)
+                        continue
+
+                    # If we can't parse the hide string, add the whole thing as
+                    # a tag and let the Character object deal with it.
                     parsed_char.tags(value).hidden = True
-                    continue
+
+                if tag in DEPRECATED_TAGS:
+                    print_err("The tag '{}' in `{}` is deprecated and will stop working in the future".format(tag, char_file_path))
 
                 parsed_char.tags(tag).append(value)
             else:

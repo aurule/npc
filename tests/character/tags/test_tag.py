@@ -68,6 +68,13 @@ class TestValidation:
         assert not tag.valid
         assert "Tag 'type' is required but limited to zero values" in tag.problems
 
+    def test_hidden_values_must_exist(self):
+        tag = Tag('type', 'value1')
+        tag.hide_value('value2')
+        tag.validate()
+        assert not tag.valid
+        assert "Value 'value2' for tag 'type' cannot be hidden, because it does not exist" in tag.problems
+
 class TestStrictValidation:
     def test_limit_exceeded(self):
         tag = Tag('type', 'asdf', '1234', limit=1)
@@ -104,6 +111,12 @@ class TestHeader:
         tag = Tag('type', 'value', hidden=True)
         header = tag.to_header()
         assert '@hide type' in header
+
+    def test_hides_values_when_marked(self):
+        tag = Tag('type', 'value1', 'value2', hidden=False)
+        tag.hide_value('value2')
+        header = tag.to_header()
+        assert '@hide type >> value2' in header
 
     def test_has_one_line_per_value(self):
         tag = Tag('type', 'value1', 'value2', 'value3')
@@ -163,15 +176,33 @@ def test_bool_truthy_when_present():
     tag.append('human')
     assert tag
 
-class TestHideValues:
+class TestSanitize:
     def test_when_hidden_removes_all_values(self):
         tag = Tag('type', 'value1', 'value2', 'value3', hidden=True)
-        tag.hide_values()
+        tag.sanitize()
         assert not tag
 
     def test_when_not_hidden_removes_nothing(self):
         tag = Tag('type', 'value1', 'value2', 'value3', hidden=False)
-        tag.hide_values()
+        tag.sanitize()
+        assert tag.data == ['value1', 'value2', 'value3']
+
+    def test_hide_present_value_removes_value(self):
+        tag = Tag('type', 'value1', 'value2', 'value3', hidden=False)
+        tag.hide_value('value2')
+        tag.sanitize()
+        assert tag.data == ['value1', 'value3']
+
+    def test_hide_missing_value_does_nothing(self):
+        tag = Tag('type', 'value1', 'value2', 'value3', hidden=False)
+        tag.hide_value('valuex')
+        tag.sanitize()
+        assert tag.data == ['value1', 'value2', 'value3']
+
+    def test_hide_partial_value_does_nothing(self):
+        tag = Tag('type', 'value1', 'value2', 'value3', hidden=False)
+        tag.hide_value('val')
+        tag.sanitize()
         assert tag.data == ['value1', 'value2', 'value3']
 
 def test_touch_shows_error(capsys):

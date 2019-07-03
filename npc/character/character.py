@@ -223,3 +223,26 @@ class Character:
         dump = self.tags
         dump['path'] = self.path
         return dump
+
+    def sanitize(self):
+        """
+        Hide and obfuscate this character for generating a listing
+
+        Sanitize does these steps:
+        1. Remove all hidden tag values
+        2. Replace real type with false type if present
+        3. Use a placeholder for unknown type
+
+        This is a destructive operation which changes the character's data!
+        """
+
+        # Remove all hidden tag values
+        self.tags.sanitize()
+
+        # Replace real type with false type if present
+        if 'faketype' in self.tags:
+            self.tags['type'] = self.tags['faketype']
+
+        # Use a placeholder for unknown type
+        if not self.tags('type').filled:
+            self.tags('type').append('Unknown')

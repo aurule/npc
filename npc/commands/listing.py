@@ -120,8 +120,6 @@ def _refine_characters(characters):
 
     * skip: remove the character from the list
     * hide: remove the named fields from the character
-    * hidegroup: remove the named group from the character
-    * hideranks: remove the character's ranks in the named group
     * faketype: replace the character's type with a new string
 
     It also inserts a placeholder type if one was not specified.
@@ -138,27 +136,7 @@ def _refine_characters(characters):
         if char.tags('skip').present:
             continue
 
-        # remove hidden fields
-        for tag in char.tags.values():
-            tag.hide_values()
-
-        # # remove named groups
-        # TODO
-        # for groupname in char.tags['hidegroup']:
-        #     char.tags['group'].remove(groupname)
-
-        # # remove all ranks for named groups
-        # TODO
-        # for groupname in char.tags['hideranks']:
-        #     if groupname in char.tags['rank']:
-        #         del char.tags['rank'][groupname]
-
-        # use fake types if present
-        if 'faketype' in char.tags:
-            char.tags['type'] = char.tags['faketype']
-
-        # Use a placeholder for unknown type
-        if not char.tags('type').filled:
-            char.tags('type').append('Unknown')
+        # clean up the character's data
+        char.sanitize()
 
         yield char

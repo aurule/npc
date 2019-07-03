@@ -40,8 +40,7 @@ class UnknownTag(Flag):
         Validate this tag's attributes
 
         Validations:
-            * Required is incompatible with a limit of zero
-            * (strict) If limit is non-negative, the total values must be <= limit
+            * Hidden values must exist
             * (strict) This tag is always invalid in strict mode
 
         Args:
@@ -50,6 +49,10 @@ class UnknownTag(Flag):
         Returns:
             True if this tag has no validation problems, false if not
         """
+
+        for value in [v for v in self.hidden_values if not v in self.data]:
+            self.problems.append("Value '{}' for tag '{}' cannot be hidden, because it does not exist".format(value, self.name))
+
         if strict:
             self.problems.append("Unrecognized tag '{}'".format(self.name))
             if self.limit > -1 and len(self.data) > self.limit:

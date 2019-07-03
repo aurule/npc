@@ -80,6 +80,13 @@ class TestValidation:
         assert not tag.valid
         assert "Tag 'employer' uses subtag 'job', but found 'rank' for 'bobsburgers'" in tag.problems
 
+    def test_hidden_values_must_exist(self):
+        tag = GroupTag('employer', 'value1')
+        tag.hide_value('value2')
+        tag.validate()
+        assert not tag.valid
+        assert "Value 'value2' for tag 'employer' cannot be hidden, because it does not exist" in tag.problems
+
 class TestAppend:
     def test_adds_value_to_keys(self):
         tag = GroupTag('employer')
@@ -127,6 +134,27 @@ class TestHeader:
         tag = GroupTag('type', 'value', hidden=True)
         header = tag.to_header()
         assert '@hide type' in header
+
+    def test_hides_values_when_marked(self):
+        tag = GroupTag('type', 'value1', 'value2', hidden=False)
+        tag.hide_value('value2')
+        header = tag.to_header()
+        assert '@hide type >> value2' in header
+
+    def test_hides_subvalues(self):
+        tag = GroupTag('type', 'value1', 'value2', hidden=False)
+        tag.subtag('value2').append('cart')
+        tag.subtag('value2').hidden = True
+        header = tag.to_header()
+        assert '@hide type >> value2 >> subtags' in header
+
+    def test_hides_single_subvalue(self):
+        tag = GroupTag('type', 'value1', 'value2', hidden=False)
+        tag.subtag('value2').append('cart')
+        tag.subtag('value2').append('blart')
+        tag.subtag('value2').hide_value('cart')
+        header = tag.to_header()
+        assert '@hide type >> value2 >> cart' in header
 
     def test_has_one_line_per_value(self):
         tag = GroupTag('type', 'value1', 'value2', 'value3')
@@ -191,23 +219,42 @@ def test_bool_truthy_when_present():
     tag.append('human')
     assert tag
 
-class TestHideValues:
+class TestSanitize:
     def test_when_hidden_removes_all_values(self):
         tag = GroupTag('group', 'value1', 'value2', 'value3', hidden=True)
-        tag.hide_values()
+        tag.sanitize()
         assert not tag
 
     def test_when_not_hidden_removes_nothing(self):
         tag = GroupTag('group', 'value1', 'value2', 'value3', hidden=False)
-        tag.hide_values()
+        tag.sanitize()
         assert list(tag) == ['value1', 'value2', 'value3']
 
-    def test_hides_subtags(self):
+    def test_hides_all_subtags(self):
         tag = GroupTag('group', 'value1', 'value2', 'value3', hidden=False)
         tag.subtag('value1').append('subvalue')
         tag.subtag('value1').hidden = True
-        tag.hide_values()
+        tag.sanitize()
         assert not tag.subtag('value1')
+
+    def test_hide_present_value_removes_value(self):
+        tag = GroupTag('group', 'value1', 'value2', 'value3', hidden=False)
+        tag.hide_value('value2')
+        tag.sanitize()
+        assert list(tag) == ['value1', 'value3']
+
+    def test_hide_missing_value_does_nothing(self):
+        tag = GroupTag('group', 'value1', 'value2', 'value3', hidden=False)
+        tag.hide_value('valuex')
+        tag.sanitize()
+        assert list(tag) == ['value1', 'value2', 'value3']
+
+    def test_hide_partial_value_does_nothing(self):
+        tag = GroupTag('group', 'value1', 'value2', 'value3', hidden=False)
+        tag.hide_value('val')
+        tag.sanitize()
+        assert list(tag) == ['value1', 'value2', 'value3']
+
 
 def test_touch_shows_error(capsys):
     tag = GroupTag('group')

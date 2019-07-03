@@ -151,3 +151,19 @@ class TestHiding:
     def test_hide_marks_right_tag_as_hidden(self, character):
         c = character('Hidden Dead.nwod')
         assert c.tags('dead').hidden
+
+    def test_hide_single_tag_value(self, character):
+        c = character('Hidden Tags.nwod')
+        assert c.tags('title').hidden_values == ['Yer Majesty']
+
+    def test_hide_single_group(self, character):
+        c = character('Hidden Tags.nwod')
+        assert c.tags('group').hidden_values == ['Frat']
+
+    def test_hide_group_subtags(self, character):
+        c = character('Hidden Tags.nwod')
+        assert c.tags('group').subtag('Divers').hidden == True
+
+    def test_hide_single_subtag(self, character):
+        c = character('Hidden Tags.nwod')
+        assert c.tags('group').subtag('Seamen').hidden_values == ['Rower']

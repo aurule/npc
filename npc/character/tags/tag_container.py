@@ -153,11 +153,11 @@ class TagContainer(UserDict):
 
         return self.valid
 
-    def remove_hidden(self):
+    def sanitize(self):
         """
         Ask all tags to remove their hidden values
 
-        Calls hide_values on each tag
+        Calls sanitize on each tag
         """
         for tag in self.values():
-            tag.hide_values()
+            tag.sanitize()

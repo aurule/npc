@@ -15,6 +15,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 * Discrete classes for more involved character types: Changeling, Werewolf, and Spirit
 * New `@keep` directive flag to prevent a character from being moved by the reorg command
 * The `changeling` command accepts two new arguments: `--freehold` and `--entitlement`. These set the new character's freehold name and entitlement name, respectively.
+* It's now possible to hide a single tag value
 
 ### Changed
 
@@ -36,10 +37,16 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 * Each character type can have its own list of supported tags
     - This improves the support for oddball or unique tags, like auspice and ban, and allows more accurate linting
 * The `list` command no longer automatically opens all files. Instead, there's a new `--open` option to do that. The old `--report` option has been removed.
+* The `@hide` directive can now hide a tag, a single tag value, all the subvalues for a group value, or a single subvalue for a single group value. The syntax is straightforward: `@hide tagname >> tag value >> subvalue`.
+    - The special `subtags` element hides the subtag entirely, so `@hide group >> Orchestra >> subtags` will hide all `rank` elements for the `Orchestra` group.
 
 ### Fixed
 
 * New character objects won't choke on a non-list attribute value
+
+### Removed
+
+* The `@hidegroup` and `@hideranks` directives are deprecated and should be replaced using the new syntax
 
 ## 1.4.0
 

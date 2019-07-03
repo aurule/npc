@@ -15,6 +15,14 @@ def test_present_with_no_values():
     assert not tag.present
     assert not tag.filled
 
+class TestValidation:
+    def test_hidden_values_must_exist(self):
+        tag = UnknownTag('type', 'value1')
+        tag.hide_value('value2')
+        tag.validate()
+        assert not tag.valid
+        assert "Value 'value2' for tag 'type' cannot be hidden, because it does not exist" in tag.problems
+
 class TestStrictValidation:
     def test_always_invalid(self):
         tag = UnknownTag('type', 'asdf', '1234')

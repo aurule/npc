@@ -85,6 +85,7 @@ class Flag(Tag):
 
         Validations:
             * If required is set, at least one value must be present
+            * Hidden values must exist
             * (strict) If limit is non-negative, the total values must be <= limit
 
         Args:
@@ -97,6 +98,9 @@ class Flag(Tag):
 
         if self.required and not self.present:
             self.problems.append("No values for flag '{}'".format(self.name))
+
+        for value in [v for v in self.hidden_values if not v in self.data]:
+            self.problems.append("Value '{}' for tag '{}' cannot be hidden, because it does not exist".format(value, self.name))
 
         if strict:
             if self.limit > -1 and len(self.data) > self.limit:

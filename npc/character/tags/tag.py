@@ -25,6 +25,7 @@ class Tag(UserList):
         self.name = name
         self.required = required
         self.hidden = hidden
+        self.hidden_values = []
         self.limit = limit
         self.problems = []
         self.subtag_name = None
@@ -125,6 +126,7 @@ class Tag(UserList):
         Validations:
             * If required is set, at least one value must be filled
             * Required is incompatible with a limit of zero
+            * Hidden values must exist
             * (strict) If limit is non-negative, the total values must be <= limit
 
         Args:
@@ -140,6 +142,9 @@ class Tag(UserList):
 
         if self.required and self.limit == 0:
             self.problems.append("Tag '{}' is required but limited to zero values".format(self.name))
+
+        for value in [v for v in self.hidden_values if not v in self.data]:
+            self.problems.append("Value '{}' for tag '{}' cannot be hidden, because it does not exist".format(value, self.name))
 
         if strict:
             if self.limit > -1 and len(self.data) > self.limit:
@@ -166,6 +171,8 @@ class Tag(UserList):
         header_lines = []
         for val in self.data:
             header_lines.append("@{} {}".format(self.name, val))
+            if val in self.hidden_values:
+                header_lines.append("@hide {} >> {}".format(self.name, val))
 
         if self.hidden:
             header_lines.append("@hide {}".format(self.name))
@@ -252,9 +259,27 @@ class Tag(UserList):
 
         return False
 
-    def hide_values(self):
+    def hide_value(self, value):
+        """
+        Hide a single value for this tag
+
+        Hiding will only work if the value to be hidden exactly matches a value
+        present in this tag's data.
+
+        Args:
+            value (str): The value to hide
+        """
+        self.hidden_values.append(value)
+
+    def sanitize(self):
         """
         Remove this tag's values if the tag is marked hidden
         """
         if self.hidden:
             self.clear()
+
+        for value in self.hidden_values:
+            try:
+                self.data.remove(value)
+            except ValueError:
+                continue
