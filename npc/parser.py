@@ -199,7 +199,7 @@ def parse_character(char_file_path) -> character.Character:
                             parsed_char.tags(tagname).subtag(first_value).hide_value(second_value)
                         continue
 
-                    # If we can't parse the hide string, add the whole thing as
+                    # If we can't parse the hide string, hide the whole thing as
                     # a tag and let the Character object deal with it.
                     parsed_char.tags(value).hidden = True
 
@@ -221,4 +221,4 @@ def parse_character(char_file_path) -> character.Character:
                 parsed_char.tags('description').append(line.strip())
                 continue
 
-    return parsed_char
+    return character.build(other_char=parsed_char)
