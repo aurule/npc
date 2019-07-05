@@ -23,7 +23,7 @@ ${"</h{}>".format(header_level)}
 %if tags('name').remaining().filled:
 <div><em>AKA ${', '.join(tags('name').remaining())}</em></div>
 %endif
-%if 'title' in tags:
+%if tags('title').filled:
 <div>${', '.join(tags('title'))}</div>
 %endif
 \

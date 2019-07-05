@@ -29,7 +29,7 @@ ${', '.join(tags('title'))}
 ${'/'.join(tags('type'))}\
 %if locations():
  in ${' and '.join(locations())}\
-%elif 'foreign' in tags:
+%elif tags('foreign').present:
  (foreign)\
 %endif
 % if tags('wanderer').present:
