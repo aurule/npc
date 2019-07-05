@@ -202,6 +202,7 @@ def parse_character(char_file_path) -> character.Character:
                     # If we can't parse the hide string, hide the whole thing as
                     # a tag and let the Character object deal with it.
                     parsed_char.tags(value).hidden = True
+                    continue
 
                 if tag in DEPRECATED_TAGS:
                     print_err("The tag '{}' in `{}` is deprecated and will stop working in the future".format(tag, char_file_path))
