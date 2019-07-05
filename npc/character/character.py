@@ -240,7 +240,7 @@ class Character:
         self.tags.sanitize()
 
         # Replace real type with false type if present
-        if 'faketype' in self.tags:
+        if self.tags('faketype').filled:
             self.tags['type'] = self.tags['faketype']
 
         # Use a placeholder for unknown type
