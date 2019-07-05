@@ -32,6 +32,9 @@ class Flag(Tag):
         """
         if type(values) is bool:
             self.touch(values)
+        elif type(values) is Flag:
+            self.touch(values.present)
+            super().update(values)
         else:
             self.touch()
             super().update(values)
