@@ -110,6 +110,18 @@ class Tag(UserList):
         """
         print_err("Calling touch() on non-flag class {} object '{}'".format(type(self).__name__, self.name))
 
+    def subtag(self, val: str):
+        """
+        No-op for compatibility with GroupTag class
+
+        Args:
+            val (str): Group name
+
+        Returns:
+            None
+        """
+        print_err("Calling touch() on non-flag class {} object '{}'".format(type(self).__name__, self.name))
+
     @property
     def valid(self):
         """
