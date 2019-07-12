@@ -33,13 +33,14 @@ class Tag(UserList):
         super().__init__(args)
 
     def __repr__(self):
-        return "{}('{}', {}, required={}, hidden={}, limit={})".format(
-            type(self).__name__,
-            self.name,
-            self.data,
-            self.required,
-            self.hidden,
-            self.limit
+        return "{cls}('{name}', {data}, required={req}, hidden={hidden}, hidden_values={hidden_vals}, limit={limit})".format(
+            cls=type(self).__name__,
+            name=self.name,
+            data=self.data,
+            req=self.required,
+            hidden=self.hidden,
+            hidden_vals=self.hidden_values,
+            limit=self.limit
         )
 
     def update(self, values: list):
