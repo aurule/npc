@@ -58,6 +58,11 @@ class TestStrict:
         char.validate(strict=True)
         assert "Unrecognized tag 'head'" in char.problems
 
+    def test_nolint_without_skip(self):
+        char = Character(nolint=True)
+        char.validate(strict=True)
+        assert 'Linting disabled, but character is visible in lists' in char.problems
+
 class TestValid:
     """Tests for the correctness of the `valid` getter"""
 

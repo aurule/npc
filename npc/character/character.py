@@ -62,6 +62,7 @@ class Character:
         self.tags.add_flag('foreign')
         self.tags.add_flag('wanderer')
         self.tags.add_flag('skip')
+        self.tags.add_flag('nolint')
         self.tags.add_flag('keep')
         self.tags.add_flag('dead')
         self.tags.add_group('group')
@@ -153,6 +154,9 @@ class Character:
             current_class = self.__class__.__name__
             if right_class != current_class:
                 self.problems.append("Incorrect type '{}' for class '{}': implies class '{}'".format(self.type_key, current_class, right_class))
+
+            if self.tags('nolint').present and not self.tags('skip').present:
+                self.problems.append("Linting disabled, but character is visible in lists")
 
         self.type_validations(strict=strict)
 

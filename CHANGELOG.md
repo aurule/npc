@@ -16,6 +16,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 * New `@keep` directive flag to prevent a character from being moved by the reorg command
 * The `changeling` command accepts two new arguments: `--freehold` and `--entitlement`. These set the new character's freehold name and entitlement name, respectively.
 * It's now possible to hide a single tag value
+* New `@nolint` directive flag to exclude a character from linting
 
 ### Changed
 

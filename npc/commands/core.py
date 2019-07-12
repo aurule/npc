@@ -165,6 +165,9 @@ def lint(*search, ignore=None, fix=False, strict=False, report=True, **kwargs):
     # check each character
     characters = parser.get_characters(flatten(search), ignore)
     for character in characters:
+        if character.tags('nolint').present:
+            continue
+
         character.validate(strict)
         character.problems.extend(linters.lint(character, fix=fix, strict=strict, prefs=prefs))
 
