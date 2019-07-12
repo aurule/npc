@@ -67,6 +67,20 @@ class TestUpdate:
         tag.update(True)
         assert tag.present
 
+    def test_update_from_flag_copies_presence(self):
+        copyable = Flag('wanderer')
+        copyable.touch()
+        tag = Flag('wanderer')
+        tag.update(copyable)
+        assert tag.present
+
+    def test_update_from_flag_copies_data(self):
+        copyable = Flag('wanderer')
+        copyable.append('lost')
+        tag = Flag('wanderer')
+        tag.update(copyable)
+        assert tag.data == ['lost']
+
 def test_append_marks_presence_true():
     tag = Flag('wanderer')
     tag.append('')

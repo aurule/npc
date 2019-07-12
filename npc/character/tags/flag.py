@@ -34,7 +34,7 @@ class Flag(Tag):
             self.touch(values)
         elif type(values) is Flag:
             self.touch(values.present)
-            super().update(values)
+            super().update(values.data)
         else:
             self.touch()
             super().update(values)
