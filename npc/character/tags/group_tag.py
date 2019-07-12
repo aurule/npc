@@ -51,14 +51,15 @@ class GroupTag(UserDict):
         self.update(args)
 
     def __repr__(self):
-        return "{}('{}', {}, required={}, hidden={}, limit={}, subtag='{}')".format(
-            type(self).__name__,
-            self.name,
-            self.data,
-            self.required,
-            self.hidden,
-            self.limit,
-            self.subtag_name
+        return "{cls}('{name}', {data}, required={req}, hidden={hidden}, hidden_values={hidden_vals}, limit={limit}, subtag='{subtag}')".format(
+            cls=type(self).__name__,
+            name=self.name,
+            data=self.data,
+            req=self.required,
+            hidden=self.hidden,
+            hidden_vals=self.hidden_values,
+            limit=self.limit,
+            subtag=self.subtag_name
         )
 
     def update(self, values):
