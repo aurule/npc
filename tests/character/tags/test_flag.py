@@ -57,11 +57,6 @@ class TestStrictValidation:
         assert tag.valid
 
 class TestUpdate:
-    def test_update_marks_presence_true(self):
-        tag = Flag('wanderer')
-        tag.update('')
-        assert tag.present
-
     def test_update_with_boolean_assigns_presence(self):
         tag = Flag('wanderer')
         tag.update(True)

@@ -30,8 +30,9 @@ class Flag(Tag):
         Args:
             values (list[str]): List of string values to add to this tag
         """
-        self.touch(values != False)
-        super().update(values)
+        self.touch(bool(values))
+        if type(values) != bool:
+            super().update(values)
 
     def append(self, value: str):
         """

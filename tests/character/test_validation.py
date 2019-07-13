@@ -66,12 +66,11 @@ class TestStrict:
 class TestValid:
     """Tests for the correctness of the `valid` getter"""
 
-    def test_initial_state(self):
+    def test_invalid_until_validate_called(self):
         """Character should be invalid before first call to validate()"""
         char = Character(type=['human'], description='hi there', name=['dude'])
         assert not char.valid
         char.validate()
-        print(char.problems)
         assert char.valid
 
     def test_with_errors(self):

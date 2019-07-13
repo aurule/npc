@@ -1,3 +1,5 @@
+from npc.util import flatten
+
 from .tag import Tag
 
 class DescriptionTag(Tag):
@@ -14,6 +16,10 @@ class DescriptionTag(Tag):
         Descriptions are always required, never hidden, and never limited.
         """
         super().__init__('description', *args, required=True, hidden=False, limit=-1)
+
+    def update(self, values):
+        values = flatten([values])
+        super().update(list(values))
 
     def to_header(self):
         """

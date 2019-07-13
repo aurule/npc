@@ -53,10 +53,11 @@ class Tag(UserList):
         if hasattr(values, 'hidden'):
             self.hidden = values.hidden
         if hasattr(values, 'hidden_values'):
-            self.hidden_values = values.hidden_values
+            self.hidden_values.extend(values.hidden_values)
+
         if hasattr(values, 'data'):
             self.data = values.data
-        else isinstance(values, list):
+        else:
             self.data = values
 
     def append(self, value: str):
