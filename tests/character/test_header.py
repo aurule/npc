@@ -72,5 +72,4 @@ def test_rank():
 def test_description():
     desc = 'Fee fie fo fum! I smell the blood of an Englishman!'
     char = Character(description=[desc])
-    print(char.tags('description'))
     assert desc in char.build_header()
