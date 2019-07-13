@@ -43,14 +43,21 @@ class Tag(UserList):
             limit=self.limit
         )
 
-    def update(self, values: list):
+    def update(self, values):
         """
         Add the strings in values to our own list of values
 
         Args:
             values (list[str]): List of string values to add to this tag
         """
-        self.data = values
+        if hasattr(values, 'hidden'):
+            self.hidden = values.hidden
+        if hasattr(values, 'hidden_values'):
+            self.hidden_values = values.hidden_values
+        if hasattr(values, 'data'):
+            self.data = values.data
+        else isinstance(values, list):
+            self.data = values
 
     def append(self, value: str):
         """

@@ -71,6 +71,7 @@ class TestValid:
         char = Character(type=['human'], description='hi there', name=['dude'])
         assert not char.valid
         char.validate()
+        print(char.problems)
         assert char.valid
 
     def test_with_errors(self):

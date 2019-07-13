@@ -30,14 +30,8 @@ class Flag(Tag):
         Args:
             values (list[str]): List of string values to add to this tag
         """
-        if type(values) is bool:
-            self.touch(values)
-        elif type(values) is Flag:
-            self.touch(values.present)
-            super().update(values.data)
-        else:
-            self.touch()
-            super().update(values)
+        self.touch(values != False)
+        super().update(values)
 
     def append(self, value: str):
         """
@@ -80,7 +74,7 @@ class Flag(Tag):
         Returns:
             None
         """
-        self._present = (True and present)
+        self._present = bool(present)
 
     def validate(self, strict: bool=False):
         """

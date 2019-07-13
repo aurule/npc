@@ -73,7 +73,12 @@ class GroupTag(UserDict):
         Args:
             values (list[str]|GroupTag): Values to add to this tag
         """
-        if type(values) == GroupTag:
+        if hasattr(values, 'hidden'):
+            self.hidden = values.hidden
+        if hasattr(values, 'hidden_values'):
+            self.hidden_values = values.hidden_values
+
+        if isinstance(values, GroupTag):
             for key, subtag in values.items():
                 self.data[key] = subtag
         else:

@@ -18,6 +18,21 @@ class TestUpdate:
         assert 'human' in tag
         assert 'werewolf' not in tag
 
+    def test_updates_hidden_from_tag(self):
+        origin_tag = Tag('type')
+        origin_tag.hidden = True
+        tag = Tag('type')
+        tag.update(origin_tag)
+        assert tag.hidden
+
+    def test_updates_hidden_values_from_tag(self):
+        origin_tag = Tag('type', 'human', 'werewolf')
+        origin_tag.hidden_values.append('werewolf')
+        tag = Tag('type')
+        tag.update(origin_tag)
+        assert 'werewolf' in tag.hidden_values
+
+
 def test_append_ignores_empty_values():
     tag = Tag('type')
     tag.append(' \t ')
