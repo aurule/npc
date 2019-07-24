@@ -73,8 +73,8 @@ ${', '.join(["{} Court{}".format(g, make_ranks(tags('court'), g)) for g in tags(
 
 ${', '.join(["{} Motley{}".format(g, make_ranks(tags('motley'), g)) for g in tags('motley').remaining()])}\
 % endif
-
 % if tags('entitlement').filled:
+
 ${tags('entitlement').first_value()}${make_ranks(tags('entitlement'), tags('entitlement').first_value())}\
 % endif
 % if tags('group').filled:
@@ -94,7 +94,6 @@ ${', '.join(["{}{}".format(g, make_ranks(tags('group'), g)) for g in tags('group
 
 *Mask:* ${' '.join(tags('mask'))}
 % endif
-
 %if tags('description').filled:
 
 *Notes:* ${"\n".join(tags('description'))}

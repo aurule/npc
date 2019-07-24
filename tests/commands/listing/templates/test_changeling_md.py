@@ -273,7 +273,6 @@ Testers (Chief Marshall), Croquet Team (Water Boy)
 
 *Mask:* Always has a sunburn.
 
-
 *Notes:* Outgoing fella with a shady hobby and no fear of death.
 
 *Dead:* Perished in a teleporter accident.
