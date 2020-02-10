@@ -16,7 +16,7 @@ def test_calls_correct_function(tmp_path, mocker):
     npc.commands.init.assert_called_once()
 
 class TestCampaignNameArg:
-    def test_defaults_to_false(self, tmp_path, mocker):
+    def test_defaults_to_none(self, tmp_path, mocker):
         mocker.patch('npc.commands.init', autospec=True)
 
         run_init(tmp_path)
