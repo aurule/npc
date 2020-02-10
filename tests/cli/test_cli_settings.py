@@ -35,7 +35,7 @@ class TestLocationOption:
             assert 'location' in err
 
     @pytest.mark.parametrize('location', ['user', 'campaign'])
-    def test_accepts_valid_locations(self, location, tmp_path, mocker, capsys):
+    def test_accepts_valid_locations(self, location, tmp_path, mocker):
         mocker.patch('npc.commands.open_settings', autospec=True)
 
         run_settings(tmp_path, location)
@@ -62,7 +62,7 @@ class TestSettingsTypeOption:
             assert 'badtype' in err
 
     @pytest.mark.parametrize('settings_type', ['base', 'changeling'])
-    def test_accepts_valid_locations(self, settings_type, tmp_path, mocker, capsys):
+    def test_accepts_valid_locations(self, settings_type, tmp_path, mocker):
         mocker.patch('npc.commands.open_settings', autospec=True)
 
         run_settings(tmp_path, 'user', '-t', settings_type)
