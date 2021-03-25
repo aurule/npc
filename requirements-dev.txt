@@ -18,7 +18,7 @@ pytest==4.5.0
 pytest-cov==2.7.1
 pytest-mock==2.0.0
 pytest-qt==3.2.2
-PyYAML==5.1
+PyYAML==5.4
 sip==4.19.8
 six==1.11.0
 stdeb==0.8.5
