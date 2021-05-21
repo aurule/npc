@@ -1,49 +1,42 @@
+"""Test different character instantiation behaviors"""
 import npc
+from npc.character import Character, Changeling, Werewolf, Spirit
 import pytest
 
-class TestCreation:
-    """Test different instantiation behaviors"""
+def test_dict():
+    char = Character({"name": ["hello"]})
+    assert char.tags("name") == ["hello"]
 
-    def test_dict(self):
-        char = npc.Character({"name": ["hello"]})
-        assert char["name"] == ["hello"]
+def test_kwargs():
+    char = Character(name=["hello"])
+    assert char.tags("name") == ["hello"]
 
-    def test_kwargs(self):
-        char = npc.Character(name=["hello"])
-        assert char["name"] == ["hello"]
+def test_with_both_kwargs_wins():
+    char = Character({"name": ["hello"], "profession": ["tailor"]}, name=["nope"])
+    assert char.tags("name") == ["nope"]
+    assert char.tags("profession") == ["tailor"]
 
-    def test_both(self):
-        char = npc.Character({"name": ["hello"], "profession": ["tailor"]}, name=["nope"])
-        assert char["name"] == ["nope"]
-        assert char["profession"] == ["tailor"]
+def test_handles_bare_strings():
+    char = Character({"name": "hello"})
+    assert char.tags("name") == ["hello"]
 
-class TestCopyAndAlter:
-    def titleize(self, text):
-        return text.title()
+def test_explicit_path():
+    char = Character(path='Characters/test')
+    assert char.path == 'Characters/test'
 
-    def test_custom_single(self):
-        char = npc.Character()
-        char.append('snoot', 'booped')
-        new_char = char.copy_and_alter(self.titleize)
-        assert new_char.get('snoot') == ['Booped']
+def test_unknown_tag():
+    char = Character(snoot=["booped"])
+    assert char.tags("snoot") == ["booped"]
 
-    def test_custom_multiple(self):
-        char = npc.Character()
-        char.append('hands', 'raised')
-        char.append('hands', 'jazzy')
-        new_char = char.copy_and_alter(self.titleize)
-        assert new_char.get('hands') == ['Raised', 'Jazzy']
+class TestDefaultTypes:
+    def test_default_changeling_type(self):
+        char = Changeling()
+        assert char.type_key == 'changeling'
 
-    @pytest.mark.parametrize('keyname', npc.Character.STRING_FIELDS)
-    def test_string_fields(self, keyname):
-        char = npc.Character()
-        char.append(keyname, 'hello hello')
-        new_char = char.copy_and_alter(self.titleize)
-        assert new_char.get(keyname) == "Hello Hello"
+    def test_default_werewolf_type(self):
+        char = Werewolf()
+        assert char.type_key == 'werewolf'
 
-    def test_rank(self):
-        char = npc.Character()
-        char.append_rank('restaurant', 'chef')
-        char.append_rank('restaurant', 'newb')
-        new_char = char.copy_and_alter(self.titleize)
-        assert new_char.get('rank') == {'restaurant': ['Chef', 'Newb']}
+    def test_default_spirit_type(self):
+        char = Spirit()
+        assert char.type_key == 'spirit'

@@ -22,7 +22,7 @@ resources: $(COMPILED_RESOURCE_FILES)
 
 .PHONY: test
 test:
-	python3 -m pytest
+	python3 -m pytest --tb=no
 
 .PHONY: coverage
 coverage:
@@ -49,15 +49,21 @@ clean:
 	find . -name '__pycache__' -type d | xargs rm -fr
 	find . -name '.cache' -type d | xargs rm -fr
 	find . -name '<Temp*' -type d -print0 | xargs -0 rm -fr
-	rm -fr deb_dist dist npc.egg-info
+	rm -fr deb_dist dist npc.egg-info .pytest_cache htmlcov .coverage
 
 .PHONY: clean-all
 clean-all: clean
 	rm -fr $(COMPILED_UI_FILES) $(COMPILED_RESOURCE_FILES)
 
+.PHONY: freeze
+freeze:
+	pip freeze | grep -v "pkg-resources" > requirements-dev.txt
+
 .PHONY: deb
 deb:
 	python3 setup.py --command-packages=stdeb.command bdist_deb
+
+h: help
 
 .PHONY: help
 help:

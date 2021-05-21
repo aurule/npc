@@ -1,34 +1,35 @@
 import npc
 import pytest
-import os
 from tests.util import fixture_dir
+
+from npc.character.tags import UnknownTag
 
 def test_remove_filename_comments():
     parseables = fixture_dir('parsing', 'characters', 'Fetches', 'macho mannersson - faker.nwod')
     characters = list(npc.parser.get_characters(search_paths=[parseables]))
-    assert characters[0]['name'][0] == 'macho mannersson'
+    assert characters[0].tags('name')[0] == 'macho mannersson'
 
 class TestSpecialCharacters:
 
     def test_allow_apostrophes_in_names(self):
         parseables = fixture_dir('parsing', 'characters', 'Fetches', "manny o'mann - super faker.nwod")
         characters = list(npc.parser.get_characters(search_paths=[parseables]))
-        assert characters[0]['name'][0] == "manny o'mann"
+        assert characters[0].tags('name')[0] == "manny o'mann"
 
     def test_allow_periods_in_names(self):
         parseables = fixture_dir('parsing', 'characters', 'Fetches', "Dr. Manny Mann - fakier.nwod")
         characters = list(npc.parser.get_characters(search_paths=[parseables]))
-        assert characters[0]['name'][0] == "Dr. Manny Mann"
+        assert characters[0].tags('name')[0] == "Dr. Manny Mann"
 
     def test_allow_hyphens_in_names(self):
         parseables = fixture_dir('parsing', 'characters', 'Fetches', "Manny Manly-Mann - fakiest.nwod")
         characters = list(npc.parser.get_characters(search_paths=[parseables]))
-        assert characters[0]['name'][0] == "Manny Manly-Mann"
+        assert characters[0].tags('name')[0] == "Manny Manly-Mann"
 
     def test_allow_commas_in_names(self):
         parseables = fixture_dir('parsing', 'characters', 'Fetches', "Manners Mann, Ph.D. - fakierest.nwod")
         characters = list(npc.parser.get_characters(search_paths=[parseables]))
-        assert characters[0]['name'][0] == "Manners Mann, Ph.D."
+        assert characters[0].tags('name')[0] == "Manners Mann, Ph.D."
 
 class TestInclusion:
     """Tests which files are included in the parsed data"""
@@ -38,14 +39,14 @@ class TestInclusion:
         ignore_me = fixture_dir('parsing', 'characters', 'Fetches')
         characters = npc.parser.get_characters(search_paths=[parseables], ignore_paths=[ignore_me])
         for c in characters:
-            assert c.get_first('type') != 'Fetch'
+            assert c.tags('type')[0] != 'Fetch'
 
     def test_ignore_file(self):
         parseables = fixture_dir('parsing', 'characters')
         ignore_me = fixture_dir('parsing', 'characters', 'Changelings', 'Kabana Matansa.nwod')
         characters = npc.parser.get_characters(search_paths=[parseables], ignore_paths=[ignore_me])
         for c in characters:
-            assert 'Kabana Matansa' not in c['name']
+            assert 'Kabana Matansa' not in c.tags['name']
 
     def test_conflict_dir(self):
         """Ignore a directory when it is in both the search and ignore lists"""
@@ -81,43 +82,43 @@ class TestTags:
 
     def test_simple_tag(self, basic_character):
         """Tags should be added by name"""
-        assert 'appearance' in basic_character
+        assert 'appearance' in basic_character.tags
 
     def test_unknown_tag(self, basic_character):
         """Unknown tags should be added"""
-        assert 'unrecognized' in basic_character
+        assert 'unrecognized' in basic_character.tags
 
     def test_bare_tag(self, basic_character):
         """Tags with no data should be added"""
-        assert 'skip' in basic_character
+        assert 'skip' in basic_character.tags
 
     def test_comment(self, basic_character):
-        assert '#comment' not in basic_character
+        assert '#comment' not in basic_character.tags
 
     def test_foreign(self, basic_character):
-        assert 'foreign' in basic_character
+        assert 'foreign' in basic_character.tags
 
     def test_changeling_shortcut(self, character):
         """@changeling should set type, seeming, and kith"""
         c = character('Changeling Tag.nwod')
-        assert c['type'][0] == 'Changeling'
-        assert c['seeming'][0] == 'Beast'
-        assert c['kith'][0] == 'Hunterheart'
+        assert c.tags('type')[0] == 'Changeling'
+        assert c.tags('seeming')[0] == 'Beast'
+        assert c.tags('kith')[0] == 'Hunterheart'
 
     def test_realname(self, character):
         """@realname should overwrite the first name entry"""
         c = character('File Name.nwod')
-        assert c['name'][0] == 'Real Name'
+        assert c.tags('name')[0] == 'Real Name'
 
     def test_group_rank(self, character):
         """@rank should scope its value to the most recent @group"""
         c = character('Group Rank.nwod')
-        assert c['rank'] == {'Frat': ['Brother']}
+        assert 'Brother' in c.tags('group')['Frat']
 
     def test_bare_rank(self, character):
-        """@rank should not be added without a prior @group"""
+        """when there's a bare rank with no group, it gets added to the top level as an UnknownTag"""
         c = character('Bare Rank.nwod')
-        assert not c['rank']
+        assert type(c.tags['rank']) == UnknownTag
 
 class TestNames:
     """Tests the way character names are grabbed from filenames"""
@@ -132,8 +133,37 @@ class TestNames:
 
     def test_notes(self, character):
         c = character('Standard Dude - dude man.nwod')
-        assert c.get_first('name') == 'Standard Dude'
+        assert c.tags('name')[0] == 'Standard Dude'
 
     def test_doctor(self, character):
         c = character('Dr. Manly Mann.nwod')
-        assert c.get_first('name') == "Dr. Manly Mann"
+        assert c.tags('name')[0] == "Dr. Manly Mann"
+
+class TestHiding:
+    @pytest.fixture
+    def character(self):
+        def make_character(filename):
+            parseables = fixture_dir('parsing', 'tags', filename)
+            characters = list(npc.parser.get_characters(search_paths=[parseables]))
+            return characters[0]
+        return make_character
+
+    def test_hide_marks_right_tag_as_hidden(self, character):
+        c = character('Hidden Dead.nwod')
+        assert c.tags('dead').hidden
+
+    def test_hide_single_tag_value(self, character):
+        c = character('Hidden Tags.nwod')
+        assert c.tags('title').hidden_values == ['Yer Majesty']
+
+    def test_hide_single_group(self, character):
+        c = character('Hidden Tags.nwod')
+        assert c.tags('group').hidden_values == ['Frat']
+
+    def test_hide_group_subtags(self, character):
+        c = character('Hidden Tags.nwod')
+        assert c.tags('group').subtag('Divers').hidden == True
+
+    def test_hide_single_subtag(self, character):
+        c = character('Hidden Tags.nwod')
+        assert c.tags('group').subtag('Seamen').hidden_values == ['Rower']

@@ -2,8 +2,6 @@
 
 import npc
 import pytest
-import os
-import functools
 from tests.util import fixture_dir
 
 def lint_werewolf(filename, **kwargs):
@@ -14,7 +12,7 @@ def lint_werewolf(filename, **kwargs):
     return problems
 
 def test_requires_path(prefs):
-    character = npc.Character()
+    character = npc.character.Werewolf()
     problems = npc.linters.werewolf.lint(character, prefs=prefs)
     assert 'Missing path' in problems
 

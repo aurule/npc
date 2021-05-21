@@ -1,5 +1,6 @@
 
-from os import path, walk
+from os import walk
+from pathlib import Path
 from contextlib import contextmanager
 import sys
 
@@ -90,12 +91,12 @@ def create_path_from_character(character: Character, *, base_path=None, hierarch
     if not hierarchy:
         hierarchy = prefs.get('paths.hierarchy')
 
-    target_path = base_path
+    target_path = Path(base_path)
 
     def add_path_if_exists(base, potential):
         """Add a directory to the base path if that directory exists."""
-        test_path = path.join(base, potential)
-        if path.exists(test_path):
+        test_path = base.joinpath(potential)
+        if test_path.exists():
             return test_path
         return base
 
@@ -121,7 +122,7 @@ def create_path_from_character(character: Character, *, base_path=None, hierarch
                 # "foreign?" gets special handling to check the wanderer tag as well
                 if character.foreign:
                     target_path = add_path_if_exists(target_path, literal)
-            elif character.has_items(tag_name):
+            elif character.tags(tag_name).present:
                 target_path = add_path_if_exists(target_path, literal)
             continue
 
@@ -131,33 +132,40 @@ def create_path_from_character(character: Character, *, base_path=None, hierarch
             target_path = add_path_if_exists(target_path, prefs.get('types.{}.type_path'.format(character.type_key), placeholder('type')))
         elif tag_name == 'group':
             # get just the first group
-            target_path = add_path_if_exists(target_path, character.get_first('group'))
+            target_path = add_path_if_exists(target_path, character.tags('group').first_value())
         elif tag_name in ['rank', 'ranks']:
             # iterate all ranks for the first group and add each one as a folder
-            for rank in character.get_ranks(character.get_first('group')):
+            val = character.tags('group').first_value()
+            for rank in character.tags('group').subtag(val):
                 target_path = add_path_if_exists(target_path, rank)
         elif tag_name == 'groups':
             # iterate all group values and try to add each one as a folder
-            for group in character['group']:
-                target_path = add_path_if_exists(target_path, group)
+            for group_name in character.tags('group'):
+                target_path = add_path_if_exists(target_path, group_name)
         elif tag_name == 'groups+ranks':
             # Iterate all groups, add each as a folder, then iterate all ranks
             # for that group and add each of those as folders
-            for group in character['group']:
-                target_path = add_path_if_exists(target_path, group)
-                for rank in character.get_ranks(group):
+            for group_name in character.tags('group'):
+                target_path = add_path_if_exists(target_path, group_name)
+                for rank in character.tags('group').subtag(group_name):
                     target_path = add_path_if_exists(target_path, rank)
         elif tag_name == 'locations':
             # use the first location entry, or foreign entry
-            target_path = add_path_if_exists(target_path, character.get_first('location', placeholder('location')))
-            target_path = add_path_if_exists(target_path, character.get_first('foreign', placeholder('foreign')))
+            location_value = character.tags('location').first_value()
+            if not location_value:
+                location_value = placeholder('location')
+            target_path = add_path_if_exists(target_path, location_value)
+
+            foreign_value = character.tags('foreign').first_value()
+            if not foreign_value:
+                foreign_value = placeholder('foreign')
+            target_path = add_path_if_exists(target_path, foreign_value)
         else:
             # every other tag gets to use its first value
-            target_path = add_path_if_exists(
-                target_path,
-                character.get_first(
-                    key=tag_name,
-                    default=placeholder(tag_name)))
+            val = character.tags(tag_name).first_value()
+            if not val:
+                val = placeholder(tag_name)
+            target_path = add_path_if_exists(target_path, val)
 
     return target_path
 

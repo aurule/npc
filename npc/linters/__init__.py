@@ -37,7 +37,7 @@ def lint(character, fix=False, prefs=None, strict=False):
         prefs = settings.InternalSettings()
 
     problems = []
-    all_types = [t.lower() for t in character['type']]
+    all_types = [t.lower() for t in character.tags['type']]
 
     if 'changeling' in all_types:
         problems.extend(

@@ -11,6 +11,7 @@ sometimes available.
 import tempfile
 from mako.template import Template
 from markdown import Markdown
+from functools import lru_cache
 
 from npc.util import result
 
@@ -46,7 +47,6 @@ class TemplateFormatter:
             prefs (Settings): Settings object. Used to get the location of
                 template files.
         """
-        self.list_format = None # Override this!
 
         self.metadata = kwargs.get('metadata', {})
         self.metadata_format = kwargs.get('metadata_format')
@@ -65,6 +65,19 @@ class TemplateFormatter:
         else:
             self.character_header_level = 1
 
+    @property
+    def list_format(self):
+        """
+        Format key for this template formatter
+
+        Key string to use when looking up this formatter's templates in
+        settings. Must be defined by subclasses.
+
+        Raises:
+            NotImplementedError -- Subclasses are responsible for implementing this property
+        """
+        raise NotImplementedError
+
     def render(self, characters, outstream):
         """
         Create a listing
@@ -76,8 +89,13 @@ class TemplateFormatter:
         Returns:
             A util.Result object. Openable will not be set.
         """
-        if self.list_format is None:
-            raise NotImplementedError
+
+        @lru_cache(maxsize=32)
+        def _prefs_cache(key):
+            """
+            Cache template paths
+            """
+            return self.prefs.get(key)
 
         header_result = self.render_header(outstream)
         if not header_result:
@@ -85,7 +103,6 @@ class TemplateFormatter:
 
         with tempfile.TemporaryDirectory() as tempdir:
             # directly access certain functions for speed
-            _prefs_get = self.prefs.get
             _out_write = outstream.write
 
             total = len(characters)
@@ -95,13 +112,13 @@ class TemplateFormatter:
                     if sectioner.would_change(char):
                         sectioner.update_text(char)
                         _out_write(sectioner.render_template(self.list_format, **self.encoding_options))
-                body_file = _prefs_get("listing.templates.{list_format}.character.{type}".format(list_format=self.list_format, type=char.type_key))
+                body_file = _prefs_cache("listing.templates.{list_format}.character.{type}".format(list_format=self.list_format, type=char.type_key))
                 if not body_file:
-                    body_file = _prefs_get("listing.templates.{list_format}.character.default".format(list_format=self.list_format))
+                    body_file = _prefs_cache("listing.templates.{list_format}.character.default".format(list_format=self.list_format))
                 if not body_file:
                     return result.ConfigError(errmsg="Cannot find default character template for {list_format} listing".format(list_format=self.list_format))
 
-                body_template = Template(filename=body_file, module_directory=tempdir, **self.encoding_options)
+                body_template = Template(filename=str(body_file), module_directory=tempdir, **self.encoding_options)
                 _out_write(body_template.render(**self.char_args(char)))
                 self.update_progress(index + 1, total)
 
@@ -132,7 +149,7 @@ class TemplateFormatter:
         if not header_file:
             return result.OptionError(errmsg="Unrecognized metadata format '{}'".format(self.metadata_format))
 
-        header_template = Template(filename=header_file, **self.encoding_options)
+        header_template = Template(filename=str(header_file), **self.encoding_options)
         outstream.write(header_template.render(**self.header_args))
 
         return result.Success()
@@ -153,9 +170,9 @@ class TemplateFormatter:
             return
 
         footer_template = Template(
-            filename=self.prefs.get(
+            filename=str(self.prefs.get(
                 "listing.templates.{list_format}.footer".format(
-                    list_format=self.list_format)),
+                    list_format=self.list_format))),
             **self.encoding_options)
         outstream.write(footer_template.render())
 
@@ -173,7 +190,7 @@ class TemplateFormatter:
             Dict of arguments
         """
         return {
-            "character": character,
+            "tags": character.tags.present(),
             "header_level": self.character_header_level
         }
 
@@ -210,13 +227,15 @@ class MarkdownFormatter(TemplateFormatter):
         """
         super().__init__(**kwargs)
 
-        self.list_format = 'markdown'
-
         # coerce metadata format to canonical form
         if self.metadata_format == "yaml":
             self.metadata_format = "yfm"
         elif self.metadata_format == "multimarkdown":
             self.metadata_format = 'mmd'
+
+    @property
+    def list_format(self):
+        return 'markdown'
 
 class HtmlFormatter(TemplateFormatter):
     """
@@ -250,8 +269,6 @@ class HtmlFormatter(TemplateFormatter):
         """
         super().__init__(**kwargs)
 
-        self.list_format = 'html'
-
         self.encoding = kwargs.get('encoding', self.prefs.get('listing.html_encoding'))
         self.encoding_options = {
             'output_encoding': self.encoding,
@@ -268,6 +285,10 @@ class HtmlFormatter(TemplateFormatter):
         self.md_converter = Markdown(extensions=['markdown.extensions.smarty'])
         self._clean_conv = self.md_converter.reset
 
+    @property
+    def list_format(self):
+        return 'html'
+
     def char_args(self, character):
         """
         Create template keyword args for a character suitable for html templates
@@ -281,7 +302,7 @@ class HtmlFormatter(TemplateFormatter):
             Dict of arguments
         """
         return {
-            "character": character,
+            "tags": character.tags.present(),
             "header_level": self.character_header_level,
             "mdconv": self._clean_conv().convert
         }

@@ -3,7 +3,7 @@ import pytest
 
 @pytest.fixture(scope="module")
 def character():
-    char = npc.Character()
-    char.append('description', 'Fee fie foe fum')
-    char.append('type', 'human')
+    char = npc.character.Character()
+    char.tags('description').append('Fee fie foe fum')
+    char.tags('type').append('human')
     return char

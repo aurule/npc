@@ -6,7 +6,7 @@ Provides the cli method for interpreting commandline arguments.
 
 import argparse
 import sys
-from os import chdir, getcwd, path
+from os import chdir
 
 # local packages
 from npc import util, settings
@@ -162,8 +162,10 @@ def _make_parser():
     parser_changeling.add_argument('name', help="Character name", metavar='name')
     parser_changeling.add_argument('seeming', help="The character's Seeming", metavar='seeming')
     parser_changeling.add_argument('kith', help="The character's Kith", metavar='kith')
-    parser_changeling.add_argument('-c', '--court', help="The character's Court", metavar='court')
-    parser_changeling.add_argument('-m', '--motley', help="The character's Motley", metavar='motley')
+    parser_changeling.add_argument('-c', '--court', help="Name of the character's Court", metavar='court')
+    parser_changeling.add_argument('-m', '--motley', help="Name of the character's Motley", metavar='motley')
+    parser_changeling.add_argument('-e', '--entitlement', help="Name of the character's entitlement", metavar='entitlement')
+    parser_changeling.add_argument('-f', '--freehold', help="Name of the character's freehold", metavar='freehold')
     parser_changeling.set_defaults(func=commands.create_changeling)
 
     # Subcommand for making changelings, with their unique options
@@ -177,7 +179,7 @@ def _make_parser():
     # Subcommand for linting characer files
     parser_lint = subparsers.add_parser('lint', parents=[common_options, paths_parser], help="Check the character files for minimum completeness")
     parser_lint.add_argument('-f', '--fix', action='store_true', default=False, help="Automatically fix certain problems")
-    parser_lint.add_argument('-p', '--report', action='store_true', default=False, help="Display a report of problems, but do not open the related files")
+    parser_lint.add_argument('-o', '--open', action='store_false', dest='report', default=True, help="Open all offending files")
     parser_lint.add_argument('--strict', action='store_true', default=False, help="Include all optional and non-critical errors")
     parser_lint.set_defaults(func=commands.lint)
 

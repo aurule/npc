@@ -4,11 +4,10 @@ Handle settings storage and fetching
 Also has a helper function to check loaded settings for faults.
 """
 
-import json
-from os import path
 from datetime import datetime
 from collections import OrderedDict
 from copy import deepcopy
+from pathlib import Path
 
 import npc
 from npc import util
@@ -30,7 +29,7 @@ class Settings:
         user_settings_path (str): Path to the user settings directory for the
             current user. Only correct on *nix systems.
         campaign_settings_path (str): Path to the campaign settings directory.
-        settings_files (list): List of allowed settings file names.
+        settings_file_names (list): List of allowed settings file names.
         settings_paths (list): List of allowed settings paths.
         data (dict): Dictionary of settings data. Should not be referenced
             directly. Instead, use the get() method.
@@ -55,37 +54,65 @@ class Settings:
                 be reported.
         """
 
-        self.module_base = path.dirname(path.realpath(__file__))
-        self.install_base = path.dirname(self.module_base)
+        self.module_base = Path(__file__).parent
+        self.install_base = Path(self.module_base).parent
 
         self.default_settings_path = self.module_base
-        self.user_settings_path = path.expanduser('~/.config/npc/')
-        self.campaign_settings_path = '.npc/'
+        self.user_settings_path = Path('~/.config/npc/').expanduser()
+        self.campaign_settings_path = Path('.npc/')
 
-        self.settings_files = [
-            'settings.json',
-            'settings-changeling.json',
-            'settings-werewolf.json',
-            'settings-gui.json'
+        self.settings_file_names = [
+            'settings',
+            'settings-changeling',
+            'settings-werewolf',
+            'settings-gui'
         ]
+        self.settings_file_suffixes = ['.json', '.yaml']
         self.settings_paths = [self.default_settings_path, self.user_settings_path, self.campaign_settings_path]
 
         self.verbose = verbose
-        loaded_data = util.load_json(path.join(self.default_settings_path, 'settings-default.json'))
+
+        loaded_data = util.load_settings(self._best_settings_path(self.default_settings_path, 'settings-default'))
 
         # massage template names into real paths
         self.data = self._expand_templates(base_path=self.install_base, settings_data=loaded_data)
 
         # merge additional settings files
         for settings_path in self.settings_paths:
-            for file in self.settings_files:
+            for file in self.settings_file_names:
                 try:
-                    self.load_more(path.join(settings_path, file))
+                    self.load_more(self._best_settings_path(settings_path, file))
                 except OSError as err:
                     # All of these files are optional, so normally we silently
                     # ignore these errors
                     if self.verbose:
                         util.print_err(err.strerror, err.filename)
+
+    def _best_settings_path(self, dir_name, file_name):
+        """
+        Get the most preferred path to a settings file based on suffix
+
+        The list of suffixes in `self.settings_file_suffixes` is in order of
+        preference, so we want to check them in that order. If both files exist,
+        only the most preferred should be returned.
+
+        Args:
+            dir_name (Path): Directory name to search in
+            file_name (PathLike): Settings file bare name. Any suffix present
+                will be ignored.
+
+        Returns:
+            Path object for the best file that could be found
+
+        Raises:
+            OSError if no file exists with any usable suffix
+        """
+        base_path = dir_name.joinpath(file_name)
+        for suffix in self.settings_file_suffixes:
+            attempt = base_path.with_suffix(suffix)
+            if attempt.exists():
+                return attempt
+        raise OSError(2, 'No yaml or json found', base_path)
 
     def _expand_templates(self, base_path, settings_data):
         """
@@ -100,12 +127,17 @@ class Settings:
         """
 
         def expand_filenames(data):
+            def expanded_path(value):
+                return base_path.joinpath(value).expanduser().resolve()
+
             outdata = {}
             for key, value in data.items():
                 if isinstance(value, dict):
                     outdata[key] = expand_filenames(value)
+                elif isinstance(value, list):
+                    outdata[key] = [expanded_path(v) for v in value]
                 else:
-                    outdata[key] = path.join(base_path, path.expanduser(value))
+                    outdata[key] = expanded_path(value)
             return outdata
 
         def get(data, key, default=None):
@@ -124,12 +156,12 @@ class Settings:
         for typekey, _ in get(working_data, 'types', {}).items():
             type_path = get(working_data, "types.{}.sheet_template".format(typekey))
             if type_path:
-                working_data['types'][typekey]['sheet_template'] = path.join(base_path, path.expanduser(type_path))
+                working_data['types'][typekey]['sheet_template'] = base_path.joinpath(type_path).expanduser()
 
-        # story.session_template
-        session_path = get(working_data, 'story.session_template')
-        if session_path:
-            working_data['story']['session_template'] = path.join(base_path, path.expanduser(session_path))
+        # story.templates.*
+        story_templates = get(working_data, 'story.templates')
+        if story_templates:
+            working_data['story']['templates'] = expand_filenames(story_templates)
 
         # report.templates.*
         report_templates = get(working_data, 'report.templates')
@@ -155,13 +187,13 @@ class Settings:
             settings_path (str): Path to the new json file to load
         """
         try:
-            loaded = util.load_json(settings_path)
-        except json.decoder.JSONDecodeError as err:
-            util.print_err(err.nicemsg)
+            loaded = util.load_settings(settings_path)
+        except util.errors.ParseError as err:
+            util.print_err(err.strerror)
             return
 
         # paths should be evaluated relative to the settings file in settings_path
-        absolute_path_base = path.dirname(path.realpath(settings_path))
+        absolute_path_base = Path(settings_path).resolve().parent
         loaded = self._expand_templates(absolute_path_base, loaded)
 
         self._merge_settings(loaded)
@@ -214,7 +246,7 @@ class Settings:
 
         self.data = merge_dict(new_data, self.data)
 
-    def get_settings_path(self, location, settings_type=None):
+    def get_settings_path(self, location, settings_type=None, suffix=None):
         """
         Get a settings file path
 
@@ -239,14 +271,20 @@ class Settings:
             base_path = self.campaign_settings_path
 
         if settings_type and settings_type != 'base':
-            filename = "settings-{}.json".format(settings_type)
+            filename = "settings-{}".format(settings_type)
         else:
             if location == 'default':
-                filename = 'settings-default.json'
+                filename = 'settings-default'
             else:
-                filename = 'settings.json'
+                filename = 'settings'
 
-        return path.join(base_path, filename)
+        if suffix is None:
+            try:
+                return self._best_settings_path(base_path, filename)
+            except OSError:
+                return base_path.joinpath(filename).with_suffix(self.settings_file_suffixes[0])
+        else:
+            return base_path.joinpath(filename).with_suffix(suffix)
 
     def get(self, key, default=None):
         """

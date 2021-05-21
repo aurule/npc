@@ -1,92 +1,99 @@
-<%page args="character, header_level, mdconv"/>
-<%def name="make_ranks(group_name)">\
-    %if group_name in character['rank']:
- (${', '.join(character['rank'][group_name])})\
+<%page args="tags, header_level, mdconv"/>\
+<%def name="make_ranks(group_tag, subtag_name=None)">\
+<%
+    if not subtag_name:
+        subtag_name = group_tag.first_value()
+    %>\
+    %if group_tag.subtag(subtag_name).filled:
+<% return ' (' + ', '.join(group_tag.subtag(subtag_name)) + ')' %>\
     %endif
 </%def>\
+<%def name="locations()">\
+<%
+    return tags('foreign').filled_data + tags('location').filled_data
+    %>
+</%def>\
 ${"<h{}>".format(header_level)}\
-${character.get_first('name')}\
-%if 'dead' in character:
+${tags('name').first_value()}\
+%if tags('dead').present:
  (Deceased)\
 %endif
 ${"</h{}>".format(header_level)}
 
-%if character.has_items('name', 2):
-<div><em>AKA ${', '.join(character.get_remaining('name'))}</em></div>
+%if tags('name').remaining().filled:
+<div><em>AKA ${', '.join(tags('name').remaining())}</em></div>
 %endif
-%if character.has_items('title'):
-<div>${', '.join(character['title'])}</div>
+%if tags('title').filled:
+<div>${', '.join(tags('title'))}</div>
 %endif
 \
-<div>${'/'.join(character['type'])}\
-%if character.has_locations:
- in ${' and '.join(character.locations)}\
-%elif character.has_items('foreign'):
- (foreign)
+<div>${'/'.join(tags('type'))}\
+%if locations():
+ in ${' and '.join(locations())}\
+%elif tags('foreign').present:
+ (foreign)\
 %endif
-%if 'wanderer' in character:
+%if tags('wanderer').present:
 , Wanderer\
 %endif
-%if character.has_items('motley'):
-, ${character.get_first('motley')} Motley${make_ranks(character.get_first('motley'))}\
+%if tags('motley').filled:
+, ${tags('motley').first_value()} Motley${make_ranks(tags('motley'), tags('motley').first_value())}\
 %endif
-%if character.has_items('court'):
-, ${character.get_first('court')} Court${make_ranks(character.get_first('court'))}\
+%if tags('court').filled:
+, ${tags('court').first_value()} Court${make_ranks(tags('court'), tags('court').first_value())}\
 %else:
-, Courtless
+, Courtless\
 %endif
-%if character.has_items('freehold'):
- (${character.get_first('freehold')})
+%if tags('freehold').filled:
+ (${tags('freehold').first_value()})\
 %endif
 </div>
 \
 <%
-has_seeming = character.has_items('seeming')
-has_kith = character.has_items('kith')
+has_seeming = tags('seeming').filled
+has_kith = tags('kith').filled
 %>\
-%if has_seeming or has_kith:
+% if has_seeming or has_kith:
 <div>\
-    %if has_seeming:
-${'/'.join(character['seeming'])}\
+    % if has_seeming:
+${'/'.join(tags('seeming'))}\
         %if has_kith:
 ${' '}\
         %endif
     %endif
-    %if has_kith:
-${'/'.join(character['kith'])}\
+    % if has_kith:
+${'/'.join(tags('kith'))}\
     %endif
 </div>
 %endif
 \
-%if character.has_items('entitlement'):
+%if tags('entitlement').filled:
 <div>\
-${character.get_first('entitlement')}${make_ranks(character.get_first('entitlement'))}
+${tags('entitlement').first_value()}${make_ranks(tags('entitlement'))}\
 </div>
 %endif
 \
-%if character.has_items('group'):
+% if tags('group').filled:
 <div>\
-%for g in character['group']:
-${g}${make_ranks(g)}\
-    %if not loop.last:
-${', '}
-    %endif
-%endfor
+${', '.join(["{}{}".format(g, make_ranks(tags('group'), g)) for g in tags('group')])}\
 </div>
 %endif
 \
-%if character.has_items('appearance'):
-${mdconv('*Appearance:* ' + ' '.join(character['appearance']))}
-%endif
-%if character.has_items('mien'):
-${mdconv('*Mien:* ' + ' '.join(character['mien']))}
-%endif
-%if character.has_items('mask'):
-${mdconv('*Mask:* ' + ' '.join(character['mask']))}
+%if tags('appearance').filled:
+${mdconv('*Appearance:* ' + ' '.join(tags('appearance')))}
 %endif
 \
-${mdconv('*Notes:* ' + character['description'])}
+%if tags('mien').filled:
+${mdconv('*Mien:* ' + ' '.join(tags('mien')))}
+%endif
+%if tags('mask').filled:
+${mdconv('*Mask:* ' + ' '.join(tags('mask')))}
+%endif
 \
-%if character.has_items('dead'):
-${mdconv('*Dead:* ' + ' '.join(character['dead']))}
+%if tags('description').filled:
+${mdconv('*Notes:* ' + "\n".join(tags('description')))}
+%endif
+\
+%if tags('dead').filled:
+${mdconv('*Dead:* ' + ' '.join(tags('dead')))}
 %endif

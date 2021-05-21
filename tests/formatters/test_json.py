@@ -5,12 +5,11 @@ import json
 
 class TestListing:
     def test_listing_is_correct(self, character):
-        characters = [character]
         data_out = io.StringIO()
-        assert npc.formatters.json.listing(characters, data_out)
+        assert npc.formatters.json.listing([character], data_out)
 
         parsed_data = json.loads(data_out.getvalue())
-        assert parsed_data == characters
+        assert parsed_data == [character.tags]
 
     def test_metadata_included(self, character):
         metadata = {'hello': 'friend'}
@@ -19,7 +18,7 @@ class TestListing:
 
         metadata['meta'] = True
         parsed_data = json.loads(data_out.getvalue())
-        assert parsed_data == [metadata, character]
+        assert parsed_data == [metadata, character.tags]
 
 class TestReport:
     def test_report_is_correct(self):

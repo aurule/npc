@@ -1,4 +1,5 @@
-import os
+from pathlib import Path
+import json
 
 def fixture_dir(*dirnames):
     """
@@ -11,5 +12,9 @@ def fixture_dir(*dirnames):
         Path object
     """
 
-    base = os.path.dirname(os.path.realpath(__file__))
-    return os.path.join(base, 'fixtures', *dirnames)
+    base = Path(__file__).resolve().parent
+    return base.joinpath('fixtures', *dirnames)
+
+def load_json(pathlib_path):
+    with open(pathlib_path, 'r') as f:
+        return json.load(f)

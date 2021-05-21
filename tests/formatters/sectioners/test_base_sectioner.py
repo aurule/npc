@@ -10,7 +10,7 @@ def fake_text_for(self, character):
 
 def test_text_for():
     sectioner = BaseSectioner(1, None)
-    char = npc.Character()
+    char = npc.character.Character()
     with pytest.raises(NotImplementedError):
         sectioner.text_for(char)
 
@@ -60,4 +60,4 @@ class TestTemplate:
             template = sectioner.template('html')
 
             assert isinstance(template, mako.template.Template)
-            assert template.filename == prefs.get('listing.templates.html.sections.simple')
+            assert template.filename == str(prefs.get('listing.templates.html.sections.simple'))

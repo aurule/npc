@@ -35,16 +35,20 @@ def lint(character, fix=False, *, strict=False, prefs=None):
     problems = []
     dirty = False
 
+    if character.type_key != 'werewolf':
+        problems.append('Attempting to lint non-werewolf character using werewolf linter')
+        return problems
+
     # Ensure that tribe and auspice are correct
     problems.extend(lint_tribe(character, prefs))
 
     # If the character has no sheet, we cannot proceed
-    if not character.has_path:
+    if not character.path:
         problems.append('Missing path')
         return problems
 
     # Load the sheet for deep linting
-    with open(character['path'], 'r') as char_file:
+    with open(character.path, 'r') as char_file:
         data = char_file.read()
 
     # Check that they have a vice and a virtue
@@ -52,7 +56,7 @@ def lint(character, fix=False, *, strict=False, prefs=None):
         problems.extend(nwod.lint_vice_virtue(data))
 
     if dirty and data:
-        with open(character['path'], 'w') as char_file:
+        with open(character.path, 'w') as char_file:
             char_file.write(data)
 
     return problems
@@ -65,18 +69,17 @@ def lint_tribe(character, prefs):
     all_tribes = prefs.get('werewolf.tribes.moon') + prefs.get('werewolf.tribes.pure')
 
     # Make sure tribe is present and recognized
-    tribe = character.get_first('tribe')
-    if not tribe:
+    if not character.tags('tribe').filled:
         return problems
 
+    tribe = character.tags('tribe').first_value()
     tribe_key = tribe.lower()
     if not tribe_key in all_tribes:
         problems.append("Unrecognized tribe '{}'".format(tribe))
 
     # Get auspice
-    auspice = character.get_first('auspice')
-
-    if auspice:
+    if character.tags('auspice').filled:
+        auspice = character.tags('auspice')[0]
         # Pure should not have an auspice
         if tribe_key in prefs.get('werewolf.tribes.pure'):
             problems.append('Auspice present, but werewolf is Pure')

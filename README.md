@@ -74,6 +74,8 @@ These common options are available for every command:
 * `--debug`: Forces NPC to show every error that occurs, even when those errors are harmless. Useful for figuring out settings problems.
 * `--batch`: By default, NPC will open whatever files are relevant to the subcommand. The `--batch` switch prevents that from happening.
 
+Commands which open a file will attempt to use the default program for that file type as set in your OS. To force a particular editor, set the `"editor"` value in your settings.
+
 ## Set Up Directories
 
 The `init` command creates the basic directories that NPC expects to find. Every directory under the `paths` key in the settings file is created, along with the special `.npc` directory.
@@ -87,15 +89,19 @@ Options:
 
 ## Create Session Files
 
-The `session` command creates the files that I need at the very start of a gaming session. It looks for the last session log and plot file, named `Session Log \d+` and `Plot \d+` respectively, and extracts their sequence number. It increments that to get the number for the new files, then copies the old plot file to its new location, and copies the session log template to its new location. It will open all four files.
+The `session` command creates the files that I need at the very start of a gaming session. It looks for the last session log and plot file, named `Session Log \d+` and `Plot \d+` by default, and extracts their sequence number. It increments that to get the number for the new files, then copies all session and plot templates into the new locations. Anywhere that "NNN" appears, either in a template name or contents, iot's replaced with the new sequence number. If "((COPY))" appears in a template's contents, it's replaced with the entire contents of the previous file matching that template. By default, this happens with the plot file: when creating plot 2, it copies the contents of plot 1. When done, the new session log and plot file are opened as well as the old session log and plot file. Other files are created, but not opened.
 
-If anything goes wrong in this process (like malformatted file names) it will yell about it. Everything in a file name after "` - `" is ignored.
+If one of the new plot or session files already exists, it won't be overwritten. This lets me plan ahead with the next plot file without creating the other stuff until game night.
+
+The template names are turned into regexes to find the latest files. "Session NNN.md" will find "Session 1.md", "Session 2.md", etc. The number is what's extracted.
+
+If anything goes wrong in this process (like malformatted file names) it will yell about it.
 
 ## Open Latest Plot and Session Files
 
 The `latest` command opens the most recent plot and/or session file, so that I can easily find it without digging through a crowded folder.
 
-The only option is what kind of file to open. Passing `session` opens the latest session; `plot` opens the latest plot; and `both` opens the latest plot and session together.
+The only option is what kind of file to open. With no option, it opens the latest plot and session together. Passing `session` opens the latest session and passing `plot` opens the latest plot. Passing anything else also opens both files.
 
 ## Create a Character
 
@@ -125,10 +131,12 @@ The `changeling` command has a few more arguments than the simple characters, to
 
 Options:
 
-* `seeming`: Name of the changeling's Seeming. This will be added to the character's stats with notes about the Seeming Blessing and Curse, if the seeming is found in `support/seeming-kith.json`.
-* `kith`: Name of their Kith. Also added to the character's stats with notes about the Kith Blessing, if the kith is found in `support/seeming-kith.json`.
+* `seeming`: Name of the changeling's Seeming. This will be added to the character's stats with notes about the Seeming Blessing and Curse, if the seeming is found in `settings-changeling`.
+* `kith`: Name of their Kith. Also added to the character's stats with notes about the Kith Blessing, if the kith is found in `settings-changeling`.
 * `--court`: Name of the changeling's court, if they have one. This is the first "group" checked when creating the path.
 * `--motley`: Name of the changeling's motley, if known. This does not affect the path, but is added to the file as a tag.
+* `--entitlement`: Name of the character's entitlement, if they have one. Added as a tag.
+* `--freehold`: Name of the freehold the character belongs to. Added as a tag.
 
 Note: The `changeling` command is not the only way to create a changeling character. If you just want to make a new sheet without specifying the seeming or kith, and without using the changeling-specific options, you can do so by running `npc new changeling [name]`.
 
@@ -173,7 +181,7 @@ Options:
 * `--search`: Only look in these files and directories. Defaults to the base characters path.
 * `--ignore`: Ignore these files and directories. By default, nothing is ignored. Added to the default ignore paths from settings
 * `--fix`: Automatically fix a few problems. Most require manual fixing, though.
-* `--report`: Only list the problems found and do not open the problematic files.
+* `--open`: Open all offending files.
 * `--strict`: Include optional checks.
 
 Every character file is checked for these problems:
@@ -255,7 +263,7 @@ The `reorg` command builds default paths for all the characters and then moves t
 
 For an explanation of the default paths, see [Create a Character](#create-a-character).
 
-Characters are always placed within the default characters path, regardless of the `search` argument.
+Characters are always placed within the default characters path, regardless of the `search` argument. Any character with the `@keep` directive is not moved, regardless of its current path.
 
 Options:
 
@@ -298,7 +306,7 @@ The `--search` and `--ignore` options interact in the following ways:
 
 # Configuration
 
-NPC reads config values from three separate files. These settings files use the json syntax and allow comments.
+NPC reads config values from a few separate files. These settings files use the [JSON](https://www.tutorialspoint.com/json/json_syntax.htm) or [YAML](https://docs.ansible.com/ansible/latest/reference_appendices/YAMLSyntax.html) syntaxes. JSON files allow comments and are lenient about having a comma in the last element of a collection. Default configuration files exist in both formats for reference. When two files with the same name, except for their extension, are found, NPC defaults to the JSON file for speed. Since NPC uses JSON files by default, all examples here will use the `json` suffix.
 
 Default values are loaded from `support/settings-default.json` within the install directory. This file has extensive documentation of the available settings.
 
@@ -326,6 +334,10 @@ Every seeming *must* have a corresponding entry in both the `blessings` and `cur
 
 Since both seemings and kiths share the same blessings and curses dictionaries, all seeming and kith names *should* be unique. If a seeming and kith have the same name, then both will have the same blessing. That's probably not what you want.
 
+### Other Settings
+
+The `npc-gui` program has its own unique settings in `settings-gui.json`. These are ignored unless you're running the gui.
+
 # Testing and Development
 
 To set up the development environment, create and activate a venv and run `bin/setup`. It'll ensure everything is installed and ready to go.
@@ -339,6 +351,12 @@ To set up the development environment, create and activate a venv and run `bin/s
 * [stdeb](https://pypi.python.org/pypi/stdeb) 0.8.5 - optional: only for building debian packages
 
 These can all be installed with `pip install -r requirements-dev.txt`.
+
+After cloning, I like using [virtualenvwrapper](https://virtualenvwrapper.readthedocs.io/en/latest/) to manage the venv:
+
+`mkvirtualenv -p /usr/bin/python3 -a ~/Workspace/npc -r requirements-dev.txt npc`
+
+Then call `workon npc` to launch into the venv.
 
 ## Running Tests
 

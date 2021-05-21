@@ -11,7 +11,8 @@ def make_list(*search, ignore=None, fmt=None, metadata=None, title=None, outfile
     """
     Generate a listing of NPCs.
 
-    The default listing templates ignore tags not found in Character.KNOWN_TAGS.
+    The default listing templates ignore tags that are not expected for that
+    character class.
 
     Args:
         search (list): Paths to search for character files. Items can be strings
@@ -59,7 +60,7 @@ def make_list(*search, ignore=None, fmt=None, metadata=None, title=None, outfile
     sort_order = kwargs.get('sort_by', prefs.get('listing.sort_by')) if do_sort else []
     headings = kwargs.get('headings', sort_order)
 
-    characters = _process_directives(parser.get_characters(flatten(search), ignore))
+    characters = _refine_characters(parser.get_characters(flatten(search), ignore))
     if do_sort:
         sorter = util.character_sorter.CharacterSorter(sort_order, prefs=prefs)
         characters = sorter.sort(characters)
@@ -109,7 +110,7 @@ def make_list(*search, ignore=None, fmt=None, metadata=None, title=None, outfile
 
     return result.Success(openable=openable)
 
-def _process_directives(characters):
+def _refine_characters(characters):
     """
     Alter character records for output.
 
@@ -119,8 +120,6 @@ def _process_directives(characters):
 
     * skip: remove the character from the list
     * hide: remove the named fields from the character
-    * hidegroup: remove the named group from the character
-    * hideranks: remove the character's ranks in the named group
     * faketype: replace the character's type with a new string
 
     It also inserts a placeholder type if one was not specified.
@@ -134,29 +133,10 @@ def _process_directives(characters):
 
     for char in characters:
         # skip if asked
-        if 'skip' in char:
+        if char.tags('skip').present:
             continue
 
-        # remove named fields
-        for fieldname in char['hide']:
-            if fieldname in char:
-                del char[fieldname]
-
-        # remove named groups
-        for groupname in char['hidegroup']:
-            char['group'].remove(groupname)
-
-        # remove all ranks for named groups
-        for groupname in char['hideranks']:
-            if groupname in char['rank']:
-                del char['rank'][groupname]
-
-        # use fake types if present
-        if 'faketype' in char:
-            char['type'] = char['faketype']
-
-        # Use a placeholder for unknown type
-        if 'type' not in char:
-            char['type'] = 'Unknown'
+        # clean up the character's data
+        char.sanitize()
 
         yield char

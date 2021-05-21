@@ -3,11 +3,9 @@ Functions for creating new character sheets
 """
 
 import re
-from os import path
 
-from npc import settings
-from npc.util import result
-from npc.character import Character
+from npc import settings, character
+from npc.util import result, print_err
 
 from .util import create_path_from_character
 
@@ -47,7 +45,7 @@ def standard(name, ctype, *, dead=False, foreign=False, **kwargs):
 
     # build minimal character
     temp_char = _minimal_character(
-        ctype=ctype.title(),
+        ctype=ctype,
         groups=groups,
         dead=dead,
         foreign=foreign,
@@ -78,6 +76,10 @@ def changeling(name, seeming, kith, *,
             exclude the @location tag.
         groups (list): One or more names of groups the character belongs to.
             Used to derive path.
+        freehold (str): Name of the freehold the changeling belongs to. Leave
+            empty to exclude @freehold tag.
+        entitlement (str): Name of the entitlement the changeling belongs to.
+            Leave empty to exclude @entitlement tag.
         prefs (Settings): Settings object to use. Uses internal settings by
             default.
 
@@ -86,7 +88,9 @@ def changeling(name, seeming, kith, *,
     """
     prefs = kwargs.get('prefs', settings.InternalSettings())
     groups = kwargs.get('groups', [])
-    location = kwargs.get('location', None)
+    location = kwargs.get('location', False)
+    freehold = kwargs.get('freehold', None)
+    entitlement = kwargs.get('entitlement', None)
 
     # build minimal Character
     temp_char = _minimal_character(
@@ -96,12 +100,16 @@ def changeling(name, seeming, kith, *,
         foreign=foreign,
         location=location,
         prefs=prefs)
-    temp_char.append('seeming', seeming.title())
-    temp_char.append('kith', kith.title())
+    temp_char.tags('seeming').append(seeming.title())
+    temp_char.tags('kith').append(kith.title())
     if court:
-        temp_char.append('court', court.title())
+        temp_char.tags('court').append(court.title())
     if motley:
-        temp_char.append('motley', motley)
+        temp_char.tags('motley').append(motley)
+    if freehold:
+        temp_char.tags('freehold').append(freehold)
+    if entitlement:
+        temp_char.tags('entitlement').append(entitlement)
 
     def _insert_sk_data(data):
         """Insert seeming and kith in the advantages block of a template"""
@@ -115,7 +123,7 @@ def changeling(name, seeming, kith, *,
             re.MULTILINE | re.IGNORECASE
         )
 
-        seeming_name = temp_char.get_first('seeming')
+        seeming_name = temp_char.tags('seeming').first_value()
         seeming_key = seeming.lower()
         if seeming_key in prefs.get('changeling.seemings'):
             seeming_notes = "{}; {}".format(
@@ -125,14 +133,20 @@ def changeling(name, seeming, kith, *,
                 r"\g<1>Seeming\g<2>{} ({})".format(seeming_name, seeming_notes),
                 data
             )
-        kith_name = temp_char.get_first('kith')
+        else:
+            print_err("Unrecognized seeming '{}'".format(seeming_name))
+
+        kith_name = temp_char.tags('kith').first_value()
         kith_key = kith.lower()
-        if kith_key in prefs.get('changeling.kiths.{}'.format(seeming_key)):
+        if kith_key in prefs.get('changeling.kiths.{}'.format(seeming_key), []):
             kith_notes = prefs.get("changeling.blessings.{}".format(kith_key))
             data = kith_re.sub(
                 r"\g<1>Kith\g<2>{} ({})".format(kith_name, kith_notes),
                 data
             )
+        else:
+            print_err("Unrecognized kith '{}' for seeming '{}'".format(kith_name, seeming_name))
+
         return data
 
     return _cp_template_for_char(name, temp_char, prefs, fn=_insert_sk_data)
@@ -164,7 +178,7 @@ def werewolf(name, auspice, *, tribe=None, pack=None, **kwargs):
     """
     prefs = kwargs.get('prefs', settings.InternalSettings())
     groups = kwargs.get('groups', [])
-    location = kwargs.get('location', None)
+    location = kwargs.get('location', False)
     dead = kwargs.get('dead', False)
     foreign = kwargs.get('foreign', False)
 
@@ -176,15 +190,15 @@ def werewolf(name, auspice, *, tribe=None, pack=None, **kwargs):
         foreign=foreign,
         location=location,
         prefs=prefs)
-    temp_char.append('auspice', auspice.title())
+    temp_char.tags('auspice').append(auspice.title())
     if tribe:
-        temp_char.append('tribe', tribe.title())
+        temp_char.tags('tribe').append(tribe.title())
     if pack:
-        temp_char.append('pack', pack)
+        temp_char.tags('pack').append(pack)
 
     return _cp_template_for_char(name, temp_char, prefs)
 
-def _minimal_character(ctype: str, groups, dead, foreign, location, prefs):
+def _minimal_character(ctype: str, groups: list, dead, foreign, location, prefs):
     """
     Create a minimal character object
 
@@ -204,23 +218,21 @@ def _minimal_character(ctype: str, groups, dead, foreign, location, prefs):
     Returns:
         Character object
     """
-    temp_char = Character()
-
-    tags = {}
-    tags['description'] = prefs.get('character_header')
-    tags['type'] = ctype.title()
+    attributes = prefs.get('tag_defaults')
+    attributes['description'] = [prefs.get('character_header')]
+    attributes['type'] = [ctype.title()]
     if groups:
-        tags['group'] = groups
+        attributes['group'] = groups
     if dead is not False:
-        tags['dead'] = dead
+        if dead is True:
+            dead = ''
+        attributes['dead'] = dead
     if foreign is not False:
-        tags['foreign'] = foreign
+        attributes['foreign'] = foreign
     if location is not False:
-        tags['location'] = location
+        attributes['location'] = location
 
-    temp_char.merge_all({**prefs.get('tag_defaults'), **tags})
-
-    return temp_char
+    return character.build(attributes=attributes)
 
 def _cp_template_for_char(name, character, prefs, fn=None):
     """
@@ -248,13 +260,13 @@ def _cp_template_for_char(name, character, prefs, fn=None):
     # get path for the new file
     target_path = create_path_from_character(character, prefs=prefs)
 
-    filename = name + path.splitext(template_path)[1]
-    target_path = path.join(target_path, filename)
-    if path.exists(target_path):
+    filename = name + template_path.suffix
+    target_path = target_path.joinpath(filename)
+    if target_path.exists():
         return result.FSError(errmsg="Character '{}' already exists!".format(name))
 
     # Add tags
-    header = character.build_header() + '\n\n'
+    header = '\n\n' + character.build_header() + '\n\n'
 
     # Copy template
     try:

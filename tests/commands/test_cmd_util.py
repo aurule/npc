@@ -7,47 +7,48 @@ tests in `test_pathing.py`.
 
 import npc
 from npc.commands import util
+from npc.character import Character
 
 import pytest
 from tests.util import fixture_dir
 
-def test_find_empty_dirs(tmpdir):
-    tmpdir.mkdir('empty1')
-    tmpdir.mkdir('empty2')
-    tmpdir.mkdir('not_empty')
-    tmpdir.join('not_empty', 'test.txt').write_text('.', 'utf-8')
-    result = list(util.find_empty_dirs(str(tmpdir)))
-    assert str(tmpdir.join('empty1')) in result
-    assert str(tmpdir.join('empty2')) in result
+def test_find_empty_dirs(tmp_path):
+    tmp_path.joinpath('empty1').mkdir()
+    tmp_path.joinpath('empty2').mkdir()
+    tmp_path.joinpath('not_empty').mkdir()
+    tmp_path.joinpath('not_empty', 'test.txt').write_text('.', 'utf-8')
+    result = list(util.find_empty_dirs(str(tmp_path)))
+    assert str(tmp_path / 'empty1') in result
+    assert str(tmp_path / 'empty2') in result
 
 class TestSortCharacters:
     @pytest.fixture
     def characters(self):
         return [
-            npc.Character(name=['Alfred Lisbon'], group=['High Rollers'], type=['changeling'], motley=['dudes2']),
-            npc.Character(name=['Baldy Parson'], group=['High Rollers'], type=['changeling'], motley=['dudes1']),
-            npc.Character(name=['Zach Albright'], group=['Low Rollers'], type=['changeling'], motley=['dudes3'])
+            Character(name=['Alfred Lisbon'], group=['High Rollers'], type=['changeling'], motley=['dudes2']),
+            Character(name=['Baldy Parson'], group=['High Rollers'], type=['changeling'], motley=['dudes1']),
+            Character(name=['Zach Albright'], group=['Low Rollers'], type=['changeling'], motley=['dudes3'])
         ]
 
     def test_last(self, characters):
         result = util.character_sorter.CharacterSorter(['last']).sort(characters)
-        assert list(map(lambda c: c.get_first('name'), result)) == ['Zach Albright', 'Alfred Lisbon', 'Baldy Parson']
+        assert list(map(lambda c: c.tags('name').first_value(), result)) == ['Zach Albright', 'Alfred Lisbon', 'Baldy Parson']
 
     def test_first(self, characters):
         result = util.character_sorter.CharacterSorter(['first']).sort(characters)
-        assert list(map(lambda c: c.get_first('name'), result)) == ['Alfred Lisbon', 'Baldy Parson', 'Zach Albright']
+        assert list(map(lambda c: c.tags('name').first_value(), result)) == ['Alfred Lisbon', 'Baldy Parson', 'Zach Albright']
 
     def test_reverse(self, characters):
         result = util.character_sorter.CharacterSorter(['-first']).sort(characters)
-        assert list(map(lambda c: c.get_first('name'), result)) == ['Zach Albright', 'Baldy Parson', 'Alfred Lisbon']
+        assert list(map(lambda c: c.tags('name').first_value(), result)) == ['Zach Albright', 'Baldy Parson', 'Alfred Lisbon']
 
     def test_multiple_tags(self, characters):
         result = util.character_sorter.CharacterSorter(['group', '-last']).sort(characters)
-        assert list(map(lambda c: c.get_first('name'), result)) == ['Baldy Parson', 'Alfred Lisbon', 'Zach Albright']
+        assert list(map(lambda c: c.tags('name').first_value(), result)) == ['Baldy Parson', 'Alfred Lisbon', 'Zach Albright']
 
     def test_translated_sort(self, characters, prefs):
         result = util.character_sorter.CharacterSorter(['type-unit'], prefs=prefs).sort(characters)
-        assert list(map(lambda c: c.get_first('name'), result)) == ['Baldy Parson', 'Alfred Lisbon', 'Zach Albright']
+        assert list(map(lambda c: c.tags('name').first_value(), result)) == ['Baldy Parson', 'Alfred Lisbon', 'Zach Albright']
 
 class TestSmartOpen:
     def test_with_named_file(self, tmpdir):

@@ -8,14 +8,18 @@ parse a single file, use parse_character instead.
 import re
 import itertools
 from os import path, walk
-from .character import Character
+from pathlib import Path
+from npc import character
+from npc.util import print_err
 
 VALID_EXTENSIONS = ('.nwod', '.dnd3', '.dfrpg')
 """tuple: file extensions that should be parsed"""
 
+DEPRECATED_TAGS = ('hidegroup', 'hideranks')
 
 SECTION_RE = re.compile(r'^--.+--\s*$')
 TAG_RE = re.compile(r'^@(?P<tag>#\w+|\w+)\s+(?P<value>.*)$')
+HIDE_RE = re.compile(r'\s*>>\s*')
 
 def get_characters(search_paths=None, ignore_paths=None):
     """
@@ -72,7 +76,7 @@ def _parse_path(start_path, ignore_paths=None, include_bare=False):
                 characters.append(data)
     return characters
 
-def _walk_ignore(root, ignore):
+def _walk_ignore(root: str, ignore):
     """
     Recursively traverse a directory tree while ignoring certain paths.
 
@@ -83,7 +87,7 @@ def _walk_ignore(root, ignore):
     Yields:
         A tuple (path, [dirs], [files]) as from `os.walk`.
     """
-    def should_search(base, check):
+    def should_search(base: str, check: str) -> bool:
         """
         Determine whether a path should be searched
 
@@ -104,7 +108,7 @@ def _walk_ignore(root, ignore):
         dirnames[:] = [d for d in dirnames if should_search(dirpath, d)]
         yield dirpath, dirnames, filenames
 
-def parse_character(char_file_path: str) -> Character:
+def parse_character(char_file_path) -> character.Character:
     """
     Parse a single character file
 
@@ -113,7 +117,7 @@ def parse_character(char_file_path: str) -> Character:
 
     Returns:
         Character object. Most keys store a list of values from the character.
-        The `description` key stores a simple string, and the `rank` key stores
+        The string keys store a simple string, and the `rank` key stores
         a dict of list entries. Those keys are individual group names.
     """
 
@@ -122,13 +126,13 @@ def parse_character(char_file_path: str) -> Character:
     name = path.splitext(basename)[0].split(' - ', 1)[0]
 
     # instantiate new character
-    parsed_char = Character(
+    parsed_char = character.Character(
         name=[name],
         path=char_file_path
     )
 
     with open(char_file_path, 'r') as char_file:
-        last_group = ''
+        subtag_registry = {}
         previous_line_empty = False
 
         for line in char_file:
@@ -149,30 +153,63 @@ def parse_character(char_file_path: str) -> Character:
                 if tag == 'changeling':
                     # grab attributes from compound tag
                     bits = value.split(maxsplit=1)
-                    parsed_char.append('type', 'Changeling')
+                    parsed_char.tags('type').append('Changeling')
                     if len(bits):
-                        parsed_char.append('seeming', bits[0])
+                        parsed_char.tags('seeming').append(bits[0])
                     if len(bits) > 1:
-                        parsed_char.append('kith', bits[1])
+                        parsed_char.tags('kith').append(bits[1])
                     continue
                 elif tag == 'werewolf':
-                    parsed_char.append('type', 'Werewolf')
-                    parsed_char.append('auspice', value)
+                    parsed_char.tags('type').append('Werewolf')
+                    parsed_char.tags('auspice').append(value)
+                    continue
 
                 # replace first name
                 if tag == 'realname':
-                    parsed_char['name'][0] = value
+                    parsed_char.tags('name')[0] = value
                     continue
 
                 # handle rank logic for group tags
-                if tag in Character.GROUP_TAGS:
-                    last_group = value
-                if tag == 'rank':
-                    if last_group:
-                        parsed_char.append_rank(last_group, value)
+                if parsed_char.tags(tag).subtag_name:
+                    subtag_registry[parsed_char.tags(tag).subtag_name] = (tag, value)
+                if tag in subtag_registry:
+                    supertag, supervalue = subtag_registry[tag]
+                    parsed_char.tags(supertag)[supervalue].append(value)
                     continue
+
+                # mark tags hidden as needed
+                if tag == 'hide':
+                    parts = HIDE_RE.split(value)
+
+                    tagname = parts.pop(0)
+                    if not parts:
+                        parsed_char.tags(tagname).hidden = True
+                        continue
+
+                    first_value = parts.pop(0)
+                    if not parts:
+                        parsed_char.tags(tagname).hide_value(first_value)
+                        continue
+
+                    second_value = parts.pop(0)
+                    if not parts:
+                        if second_value == 'subtags':
+                            parsed_char.tags(tagname).subtag(first_value).hidden = True
+                        else:
+                            parsed_char.tags(tagname).subtag(first_value).hide_value(second_value)
+                        continue
+
+                    # If we can't parse the hide string, hide the whole thing as
+                    # a tag and let the Character object deal with it.
+                    parsed_char.tags(value).hidden = True
+                    continue
+
+                if tag in DEPRECATED_TAGS:
+                    print_err("The tag '{}' in `{}` is deprecated and will stop working in the future".format(tag, char_file_path))
+
+                parsed_char.tags(tag).append(value)
             else:
-                # don't add double newlines to the description text
+                # Ignore second empty description line in a row
                 if line == "\n":
                     if previous_line_empty:
                         continue
@@ -182,11 +219,7 @@ def parse_character(char_file_path: str) -> Character:
                     previous_line_empty = False
 
                 # all remaining text goes in the description
-                parsed_char.append('description', line)
+                parsed_char.tags('description').append(line.strip())
                 continue
 
-            parsed_char.append(tag, value)
-
-    # clean up leading and trailing whitespace
-    parsed_char['description'] = parsed_char['description'].strip()
-    return parsed_char
+    return character.build(other_char=parsed_char)

@@ -73,7 +73,7 @@ def report(tables, outstream, **kwargs):
     prefs = kwargs.get('prefs', settings.InternalSettings())
 
     with tempfile.TemporaryDirectory() as tempdir:
-        table_template = Template(filename=prefs.get("report.templates.markdown"), module_directory=tempdir)
+        table_template = Template(filename=str(prefs.get("report.templates.markdown")), module_directory=tempdir)
 
         for key, table in tables.items():
             outstream.write(table_template.render(data=table, tag=key))

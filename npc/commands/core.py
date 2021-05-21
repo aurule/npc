@@ -7,14 +7,15 @@ without going through the CLI.
 
 import json
 from collections import Counter
-from os import path, makedirs, rmdir, getcwd
+from os import makedirs, rmdir, getcwd
+from pathlib import Path
 from shutil import move as shmove
 import itertools
 
 import npc
 from npc import formatters, linters, parser, settings
 from npc.util import flatten, result
-from npc.character import Character
+from npc.character import Character, CharacterEncoder
 
 from . import create_character, listing, util, story
 
@@ -24,8 +25,6 @@ def reorg(*search, ignore=None, purge=False, verbose=False, commit=False, **kwar
 
     Character files are moved so that their path matches the ideal path as
     closely as possible. No new directories are created.
-
-    This function ignores tags not found in Character.KNOWN_TAGS.
 
     Args:
         search (list): Paths to search for character files. Items can be strings
@@ -49,20 +48,23 @@ def reorg(*search, ignore=None, purge=False, verbose=False, commit=False, **kwar
 
     changelog = []
 
-    base_path = prefs.get('paths.required.characters')
-    if not path.exists(base_path):
+    base_path = Path(prefs.get('paths.required.characters'))
+    if not base_path.exists():
         return result.FSError(errmsg="Cannot access '{}'".format(base_path))
 
     if show_changes:
         changelog.append("Move characters")
     for parsed_character in parser.get_characters(flatten(search), ignore):
-        new_path = util.create_path_from_character(parsed_character, base_path=base_path)
-        if path.normcase(path.normpath(new_path)) != path.normcase(path.normpath(path.dirname(parsed_character['path']))):
+        if parsed_character.tags('keep').present:
+            continue
+        new_path = Path(util.create_path_from_character(parsed_character, base_path=base_path))
+        parsed_path = Path(parsed_character.path)
+        if not new_path.resolve().samefile(parsed_path.resolve()):
             if show_changes:
-                changelog.append("* Move {} to {}".format(parsed_character['path'], new_path))
+                changelog.append("* Move {} to {}".format(parsed_path, new_path))
             if commit:
                 try:
-                    shmove(parsed_character['path'], new_path)
+                    shmove(str(parsed_path), new_path)
                 except OSError as e:
                     if show_changes:
                         changelog.append("\t- dest path already exists; skipping")
@@ -109,6 +111,8 @@ def dump(*search, ignore=None, do_sort=False, metadata=False, outfile=None, **kw
         sorter = util.character_sorter.CharacterSorter(sort_by, prefs=prefs)
         characters = sorter.sort(characters)
 
+    characters = [c.dump() for c in characters]
+
     # make some json
     if metadata:
         meta = {
@@ -118,13 +122,13 @@ def dump(*search, ignore=None, do_sort=False, metadata=False, outfile=None, **kw
         characters = itertools.chain([meta], characters)
 
     with util.smart_open(outfile) as outstream:
-        json.dump([c for c in characters], outstream)
+        json.dump([c for c in characters], outstream, cls=CharacterEncoder)
 
     openable = [outfile] if outfile and outfile != '-' else None
 
     return result.Success(openable=openable)
 
-def lint(*search, ignore=None, fix=False, strict=False, report=False, **kwargs):
+def lint(*search, ignore=None, fix=False, strict=False, report=True, **kwargs):
     """
     Check character files for completeness and correctness.
 
@@ -132,7 +136,8 @@ def lint(*search, ignore=None, fix=False, strict=False, report=False, **kwargs):
     applies extra checking for some character types. See util.Character.validate
     for details.
 
-    This function ignores tags not found in Character.KNOWN_TAGS.
+    This command normally ignores unknown tags. In strict mode, it will report
+    the presence of any tag not expected by the character class.
 
     Args:
         search (list): Paths to search for character files. Items can be strings
@@ -160,19 +165,23 @@ def lint(*search, ignore=None, fix=False, strict=False, report=False, **kwargs):
     # check each character
     characters = parser.get_characters(flatten(search), ignore)
     for character in characters:
+        if character.tags('nolint').present:
+            continue
+
         character.validate(strict)
         character.problems.extend(linters.lint(character, fix=fix, strict=strict, prefs=prefs))
 
         # Report problems on one line if possible, or as a block if there's more than one
         if not character.valid:
+            charpath = character.path
             if not report:
-                openable.append(character['path'])
+                openable.append(charpath)
             if len(character.problems) > 1:
-                printable.append("File '{}':".format(character['path']))
+                printable.append("File '{}':".format(charpath))
                 for detail in character.problems:
                     printable.append("    {}".format(detail))
             else:
-                printable.append("{} in '{}'".format(character.problems[0], character['path']))
+                printable.append("{} in '{}'".format(character.problems[0], charpath))
 
     return result.Success(openable=openable, printables=printable)
 
@@ -201,7 +210,7 @@ def init(create_types=False, create_all=False, **kwargs):
         Result object. Openable will be empty.
     """
     prefs = kwargs.get('prefs', settings.InternalSettings())
-    campaign_name = kwargs.get('campaign_name', path.basename(getcwd()))
+    campaign_name = kwargs.get('campaign_name', Path.cwd().name)
     dryrun = kwargs.get('dryrun', False)
     verbose = kwargs.get('verbose', False)
 
@@ -223,7 +232,7 @@ def init(create_types=False, create_all=False, **kwargs):
                 new_dir(extra_path)
             continue
         new_dir(required_path)
-    if not path.exists(prefs.get_settings_path('campaign')):
+    if not prefs.get_settings_path('campaign').exists():
         new_dir('.npc')
         log_change(prefs.get_settings_path('campaign'))
         if not dryrun:
@@ -231,9 +240,9 @@ def init(create_types=False, create_all=False, **kwargs):
                 json.dump({'campaign_name': campaign_name}, settings_file, indent=4)
 
     if create_types or create_all:
-        cbase = prefs.get('paths.required.characters')
+        cbase = Path(prefs.get('paths.required.characters'))
         for type_path in prefs.get_type_paths():
-            new_dir(path.join(cbase, type_path))
+            new_dir(cbase.joinpath(type_path))
 
     return result.Success(printables=changelog)
 
@@ -264,14 +273,14 @@ def open_settings(location, show_defaults=False, settings_type=None, **kwargs):
         settings_type = settings_type.lower()
 
     target_path = prefs.get_settings_path(location, settings_type)
-    if not path.exists(target_path):
-        dirname = path.dirname(target_path)
+    if not target_path.exists():
+        dirname = target_path.parent
         makedirs(dirname, mode=0o775, exist_ok=True)
         with open(target_path, 'a') as settings_file:
             settings_file.write('{}')
 
     if show_defaults:
-        openable = [prefs.get_settings_path('default', settings_type), target_path]
+        openable = [prefs.get_settings_path('default', settings_type, target_path.suffix), target_path]
     else:
         openable = [target_path]
     return result.Success(openable=openable)
@@ -316,7 +325,7 @@ def report(*tags, search=None, ignore=None, fmt=None, outfile=None, **kwargs):
     # Construct a dict keyed by tag name whose values are Counters. Each Counter
     # is initialized with a flattened list of lists and we let it count the
     # duplicates.
-    table_data = {tag : Counter(flatten([c.get(tag, 'None') for c in characters])) for tag in flatten(tags)}
+    table_data = {tag : Counter(flatten([c.tags.get(tag, 'None') for c in characters])) for tag in flatten(tags)}
 
     formatter = formatters.get_report_formatter(fmt)
     if not formatter:
@@ -371,7 +380,7 @@ def find(*rules, search=None, ignore=None, **kwargs):
 
     filtered_chars = find_characters(rules, characters=characters)
 
-    paths = [char.get('path') for char in filtered_chars]
+    paths = [char.path for char in filtered_chars]
 
     if dryrun:
         openable = []
@@ -427,7 +436,7 @@ def find_characters(rules, characters):
         tag = 'name'
         text = parts[0].strip().casefold()
 
-    filtered_chars = [char for char in characters if mod(char.tag_contains(tag, text))]
+    filtered_chars = [char for char in characters if mod(char.tags(tag).contains(text))]
 
     if not rules:
         return filtered_chars

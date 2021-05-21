@@ -18,24 +18,24 @@ def test_json_metadata(list_json_output, metaformat):
             assert 'created' in c
 
 @pytest.mark.parametrize('metaformat', ['mmd', 'multimarkdown'])
-def test_md_mmd_metadata(tmpdir, metaformat):
+def test_md_mmd_metadata(tmp_path, metaformat):
     """The 'mmd' and 'multimarkdown' metadata args should prepend multi-markdown
     metadata tags to the markdown output."""
 
-    outfile = tmpdir.join("output.md")
+    outfile = tmp_path / 'output.md'
     search = fixture_dir('listing', 'valid-json')
     npc.commands.listing.make_list(search, fmt='markdown', metadata=metaformat, outfile=str(outfile))
-    assert 'Title: NPC Listing' in outfile.read()
+    assert 'Title: NPC Listing' in outfile.read_text()
 
 @pytest.mark.parametrize('metaformat', ['yfm', 'yaml'])
-def test_md_yfm_metadata(metaformat, tmpdir):
+def test_md_yfm_metadata(metaformat, tmp_path):
     """The 'yfm' and 'yaml' metadata args should both result in YAML front
     matter being prepended to markdown output."""
 
-    outfile = tmpdir.join("output.md")
+    outfile = tmp_path / 'output.md'
     search = fixture_dir('listing', 'valid-json')
     npc.commands.listing.make_list(search, fmt='markdown', metadata=metaformat, outfile=str(outfile))
-    match = re.match(r'(?sm)\s*---(.*)---\s*', outfile.read())
+    match = re.match(r'(?sm)\s*---(.*)---\s*', outfile.read_text())
     assert match is not None
     assert 'title: NPC Listing' in match.group(1)
 
@@ -49,17 +49,17 @@ def test_extra_json_metadata(list_json_output, prefs):
             assert c['test-type'] == 'json'
 
 @pytest.mark.parametrize('metaformat', ['multimarkdown', 'mmd', 'yfm', 'yaml'])
-def test_extra_md_metadata(prefs, metaformat, tmpdir):
+def test_extra_md_metadata(prefs, metaformat, tmp_path):
     """All metadata formats for the markdown type should show the extra
     metadata for the markdown type from the imported settings."""
 
-    outfile = tmpdir.join("output.md")
+    outfile = tmp_path / 'output.md'
     prefs.load_more(fixture_dir('listing', 'settings-metadata.json'))
     search = fixture_dir('listing', 'valid-json')
     result = npc.commands.listing.make_list(search, fmt='markdown', metadata=metaformat, outfile=str(outfile), prefs=prefs)
     assert result.errmsg == ''
     assert result.success == True
-    assert 'test-type: markdown' in outfile.read().lower()
+    assert 'test-type: markdown' in outfile.read_text().lower()
 
 def test_invalid_metadata_arg():
     """Using metadata formats other than yfm and mmd is not supported for

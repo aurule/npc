@@ -5,14 +5,58 @@ Helper functions shared between the other modules
 import re
 import json
 import sys
-from os import getcwd, path
-from subprocess import run
+import subprocess
+import yaml
+from . import errors
+from os import getcwd
+from pathlib import Path
+
+def load_settings(file_path):
+    """
+    Load a supported settings file
+
+    Checks the file suffix of file_path and calls the appropriate loader. No
+    special checking is done on the file's contents.
+
+    Args:
+        file_path (Path): Path to the settings file to load
+
+    Raises:
+        FormatError when the suffix is not recognized
+    """
+    if file_path.suffix == '.yaml':
+        return load_yaml(file_path)
+    if file_path.suffix == '.json':
+        return load_json(file_path)
+
+    raise errors.FormatError("Unrecognized format for {}".format(file_path))
+
+def load_yaml(filename):
+    """
+    Parse a YAML file
+
+    Args:
+        filename (str): Path of the file to load
+
+    Returns:
+        List or dict from `yaml.safe_load()`
+    """
+    with open(filename, 'r') as f:
+        try:
+            return yaml.safe_load(f)
+        except yaml.parser.ParserError as err:
+            nicestr = "Bad syntax in '{0}' line {2} column {3}: {1}"
+            nicemsg = nicestr.format(filename, err.problem, err.problem_mark.line, err.problem_mark.column)
+            raise errors.ParseError(nicemsg, filename, err.problem_mark.line, err.problem_mark.column)
+
 
 def load_json(filename):
     """
-    Parse a JSON file
+    Parse a JSON-like file with non-standard syntax
 
-    First remove all comments, then use the standard json package
+    Two cleaning steps are done before parsing with the standard json package:
+    1. Remove all comments
+    2. Remove trailing commas from the last element of an object or list
 
     Comments look like :
         // ...
@@ -63,10 +107,10 @@ def load_json(filename):
             return json.loads(content)
         except json.decoder.JSONDecodeError as err:
             nicestr = "Bad syntax in '{0}' line {2} column {3}: {1}"
-            err.nicemsg = nicestr.format(filename, err.msg, err.lineno, err.colno)
-            raise err
+            nicemsg = nicestr.format(filename, err.msg, err.lineno, err.colno)
+            raise errors.ParseError(nicemsg, filename, err.lineno, err.colno)
         except OSError as err:
-            err.nicemsg = "Could not load '{0}': {1}".format(filename, err.strerror)
+            err.strerror = "Could not load '{0}': {1}".format(filename, err.strerror)
             raise err
 
 def print_err(*args, **kwargs):
@@ -130,13 +174,13 @@ def find_campaign_root():
     Returns:
         Directory path to the campaign.
     """
-    current_dir = getcwd()
-    base = current_dir
-    old_base = ''
-    while not path.isdir(path.join(base, '.npc')):
+    current_dir = Path.cwd()
+    base = current_dir.resolve()
+    old_base = Path('')
+    while not base.joinpath('.npc').is_dir():
         old_base = base
-        base = path.abspath(path.join(base, path.pardir))
-        if old_base == base:
+        base = base.parent.resolve()
+        if old_base.samefile(base):
             return current_dir
     return base
 
@@ -145,13 +189,40 @@ def open_files(*files, prefs=None):
     Open a list of files with the configured editor
 
     Args:
-        files (str): List of file paths to open
+        files (list[str]): List of file paths to open
         prefs (Settings): Settings object to supply the editor name
 
     Returns:
         CompletedProcess object as per subprocess.run
     """
-    return run(args=[prefs.get("editor"), *files])
+    editor = determine_editor(sys.platform, prefs=prefs)
+
+    for file_path in files:
+        path_to_open = Path(file_path)
+        subprocess.run(args=[editor, path_to_open])
+
+def determine_editor(platform, prefs=None):
+    """
+    Figure out which editor to use for the system
+
+    If an editor is set in settings, use that over all else. Otherwise, ask the
+    OS to use its default program.
+
+    Args:
+        platform (str): Name of the current platform, as from sys.platform
+        prefs (Settings): Settings object to supply the editor name
+
+    Returns:
+        String with the editor program to invoke
+    """
+    if prefs.get('editor'):
+        return prefs.get('editor')
+    elif 'linux' in platform:
+        return 'xdg-open'
+    elif 'darwin' in platform:
+        return 'open'
+    else:
+        return 'start'
 
 class Singleton(type):
     """

@@ -26,7 +26,7 @@ class Listing:
     def build_characters(self, names=None):
         if not names:
             names = self.CHARACTER_NAMES
-        return [npc.Character({'name': [name]}) for name in names]
+        return [npc.character.Character({'name': [name]}) for name in names]
 
     def names_from_output(self):
         return set(re.findall(self.CHARACTER_NAME_REGEX, self.output, re.MULTILINE))
@@ -70,23 +70,3 @@ class TestPartialOption:
         listing = Listing(metadata_format='meta', metadata=self.metadata, partial=True)
         assert listing.result
         assert "friend" not in listing.output
-
-# class TestSectioner:
-#     def test_no_default_sections(self):
-#         listing = Listing()
-#         assert listing.result
-#         assert len(listing.sections) == 0
-
-#     def test_sectioner_is_inserted(self):
-#         listing = Listing(sectioners=[lambda c: c.get_first('name', '').split(' ')[-1][0]])
-#         assert listing.result
-#         assert len(listing.sections) == 4
-
-# class TestProgressBar:
-#     def record_progress(self, num, total):
-#         self.progress_num = num
-
-#     def test_progress_per_character(self):
-#         """The progress meter should be updated once for each character"""
-#         listing = Listing(progress=self.record_progress)
-#         assert self.progress_num == 4

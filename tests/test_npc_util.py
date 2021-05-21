@@ -21,9 +21,16 @@ class TestJsonLoading:
 
     def test_bad_syntax(self):
         filepath = fixture_dir('util', 'load_json', 'bad_syntax.json')
-        with pytest.raises(json.decoder.JSONDecodeError) as err:
+        with pytest.raises(util.errors.ParseError) as err:
             loaded = util.load_json(filepath)
-        assert "Bad syntax" in err.value.nicemsg
+        assert "Bad syntax" in err.value.strerror
+
+class TestYamlLoading:
+    def test_bad_syntax(self):
+        filepath = fixture_dir('util', 'load_yaml', 'bad_syntax.yaml')
+        with pytest.raises(util.errors.ParseError) as err:
+            loaded = util.load_yaml(filepath)
+        assert "Bad syntax" in err.value.strerror
 
 def test_error_printer(capsys):
     util.print_err("Catchphrase!")
@@ -46,13 +53,6 @@ class TestFindCampaignRoot:
     def test_no_npc_dir(self, campaign):
         campaign.populate_from_fixture_dir('util', 'campaign_root', 'empty')
         assert util.find_campaign_root() == campaign.basedir
-
-def test_open_files(prefs):
-    override_path = fixture_dir('util', 'open_files', 'settings-echo.json')
-    prefs.load_more(override_path)
-    result = util.open_files('not a real path', 'seriously, no', prefs=prefs)
-    assert 'not a real path' in result.args
-    assert 'seriously, no' in result.args
 
 class TestResult:
     def test_str_success(self):
@@ -129,3 +129,20 @@ class TestListifyArgs:
     def test_removes_empties(self):
         args = util.listify_args('list', **{'list': ',', 'not_list': 'hammer, spanner, prybar'})
         assert args['list'] == []
+
+class TestDetermineEditor:
+    def test_editor_from_prefs(self, prefs):
+        prefs.update_key('editor', 'vim')
+        assert util.determine_editor('asdf', prefs=prefs) == 'vim'
+
+    def test_linux_editor(self, prefs):
+        prefs.update_key('editor', '')
+        assert util.determine_editor('linux', prefs=prefs) == 'xdg-open'
+
+    def test_mac_editor(self, prefs):
+        prefs.update_key('editor', '')
+        assert util.determine_editor('darwin', prefs=prefs) == 'open'
+
+    def test_windows_editor(self, prefs):
+        prefs.update_key('editor', '')
+        assert util.determine_editor('asdf', prefs=prefs) == 'start'

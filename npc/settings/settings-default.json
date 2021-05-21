@@ -14,8 +14,9 @@
     "campaign_name": "My Campaign",
 
     // Command to invoke your text editor of choice. This command must accept a
-    // list of files as its command line arguments.
-    "editor": "subl",
+    // list of files as its command line arguments. If blank, the system default
+    // will be used.
+    "editor": "",
 
     // These are the root paths which NPC will use when finding campaign files.
     "paths": {
@@ -163,16 +164,54 @@
         "spirit": {
             "type_path": "Spirits",
             "sheet_template": "templates/Spirit Character Sheet.nwod"
+        },
+
+        // Settings for vampire characters
+        "vampire": {
+            "type_path": "Vampires",
+            "sheet_template": "templates/Vampire Character Sheet.nwod",
+            "tag_names": {
+                "type-unit": "",
+                "type-social": "",
+                "type-political": "",
+                "type-groups": ""
+            },
+            "missing_values": {}
         }
     },
 
+    // Settings for the story commands 'session' and 'latest'
     "story": {
 
-        // Session template used for making new session entries
-        "session_template": "templates/Session Log.md",
+        // Templates used for session and plot files.
+        //
+        // Each template name is also used to locate existing files that match
+        // its format, substituting "NNN" for any number. When a template is
+        // used to create a new file, a few substitutions happen in its
+        // contents:
+        //
+        // 1. The string "NNN" is replaced with the current file number. This
+        //    lets you reference the session number within a new session file,
+        //    for example.
+        // 2. The string "((COPY))" is replaced with the *entire* contents of
+        //    the most recent file that matches the template name's format. If
+        //    there is no such file, the placeholder will be deleted.
+        "templates": {
 
-        // Default file extension for the first plot file of a new campaign.
-        "plot_ext": ".md"
+            // Main session template. This is required.
+            "session": "templates/Session NNN.md",
+
+            // Additional, optional templates to create within the session
+            // directory.
+            "session_extras": [],
+
+            // Main plot template. This is required.
+            "plot": "templates/Plot NNN.md",
+
+            // Additional, optional templates to create within the plot
+            // directory.
+            "plot_extras": []
+        }
     },
 
     // Text to add to the beginning of new character files.
@@ -185,7 +224,7 @@
         // Use the tag name as the key and the desired value as the value.
         // "location": "New London, CT"
 
-        // To give multiple default values for a single tag, you can includ the
+        // To give multiple default values for a single tag, you can include the
         // tag more than once:
         //
         // "group": "Rough Boys",

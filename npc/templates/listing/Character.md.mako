@@ -1,53 +1,64 @@
-<%page args="character, header_level"/>\
-<%def name="make_ranks(group_name)">\
-    % if group_name in character['rank']:
- (${', '.join(character['rank'][group_name])})\
-    % endif
+<%page args="tags, header_level"/>\
+<%def name="make_ranks(group_tag, subtag_name=None)">\
+<%
+    if not subtag_name:
+        subtag_name = group_tag.first_value()
+    %>\
+    %if group_tag.subtag(subtag_name).filled:
+<% return ' (' + ', '.join(group_tag.subtag(subtag_name)) + ')' %>\
+    %endif
 </%def>\
-${'#' * header_level} ${character.get_first('name')}\
-% if 'dead' in character:
+<%def name="locations()">\
+<%
+    return tags('foreign').filled_data + tags('location').filled_data
+    %>
+</%def>\
+${'#' * header_level} ${tags('name').first_value()}\
+% if tags('dead').present:
  (Deceased)\
 % endif
 
 
-% if character.has_items('name', 2):
-*AKA ${', '.join(character.get_remaining('name'))}*
+% if tags('name').remaining().filled:
+*AKA ${', '.join(tags('name').remaining())}*
 % endif
-% if character.has_items('title'):
-${', '.join(character['title'])}
+% if tags('title').filled:
+${', '.join(tags('title'))}
 % endif
 \
-${'/'.join(character['type'])}\
-%if character.has_locations:
- in ${' and '.join(character.locations)}\
-%elif character.has_items('foreign'):
- (foreign)
+${'/'.join(tags('type'))}\
+%if locations():
+ in ${' and '.join(locations())}\
+%elif tags('foreign').present:
+ (foreign)\
 %endif
-% if 'wanderer' in character:
+% if tags('wanderer').present:
 , Wanderer\
 % endif
-% if character.has_items('group'):
-, ${character.get_first('group')}${make_ranks(character.get_first('group'))}\
+% if tags('group').filled:
+, ${tags('group').first_value()}${make_ranks(tags('group'))}\
 % endif
 \
-% if character.has_items('motley'):
-${', '.join(["{} Motley{}".format(m, make_ranks(m)) for m in character['motley']])}\
+% if 'motley' in tags:
+, ${tags('motley').first_value()} Motley${make_ranks(tags('motley'))}\
 % endif
 \
-% if character.has_items('group', 2):
+% if tags('group').remaining().filled:
 
-${', '.join(["{}{}".format(g, make_ranks(g)) for g in character.get_remaining('group')])}\
+${', '.join(["{}{}".format(g, make_ranks(tags('group'), g)) for g in tags('group').remaining()])}\
 % endif
 
-% if character.has_items('appearance'):
+% if tags('appearance').filled:
 
-*Appearance:* ${' '.join(character['appearance'])}
+*Appearance:* ${' '.join(tags('appearance'))}
 % endif
+%if tags('description').filled:
 
-*Notes:* ${character['description']}
+*Notes:* ${"\n".join(tags('description'))}
+% endif
 \
-% if character.has_items('dead'):
+% if tags('dead').filled:
 
-*Dead:* ${' '.join(character['dead'])}
+*Dead:* ${' '.join(tags('dead'))}
 % endif
 
