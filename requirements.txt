@@ -1,7 +1,7 @@
 Mako==1.0.7
 Markdown==2.6.9
 MarkupSafe==1.0
-py==1.5.3
+py==1.10.0
 PyQt5==5.7.1
 PyYAML==5.4
 sip==4.19
