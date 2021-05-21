@@ -11,7 +11,10 @@ from npc import settings
 from npc.util import result, flatten, print_err
 
 SEQUENCE_KEYWORD = 'NNN'
+"""string: placeholder for the filename sequence number"""
+
 COPY_KEYWORD = '((COPY))'
+"""string: placeholder for where to copy old file contents"""
 
 def session(**kwargs):
     """

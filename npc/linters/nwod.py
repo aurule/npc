@@ -8,7 +8,10 @@ can be shared by other New World of Darkness character type linters.
 import re
 
 VICE_REGEX = r'^\s+vice\s+(?P<vice>\w+)$'
+"""regex: regex for parsing the vice stat line"""
+
 VIRTUE_REGEX = r'^\s+virtue\s+(?P<virtue>\w+)$'
+"""regex: regex for parsing the virtue stat line"""
 
 def lint_vice_virtue(character_data):
     """

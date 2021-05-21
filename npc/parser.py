@@ -16,10 +16,16 @@ VALID_EXTENSIONS = ('.nwod', '.dnd3', '.dfrpg')
 """tuple: file extensions that should be parsed"""
 
 DEPRECATED_TAGS = ('hidegroup', 'hideranks')
+"""tuple: tags and directives that should not be used"""
 
 SECTION_RE = re.compile(r'^--.+--\s*$')
+"""regex: regex for recognizing section headers"""
+
 TAG_RE = re.compile(r'^@(?P<tag>#\w+|\w+)\s+(?P<value>.*)$')
+"""regex: regex for parsing and labeling tag names and values"""
+
 HIDE_RE = re.compile(r'\s*>>\s*')
+"""regex: regex for recognizing delimiters for the hide tag"""
 
 def get_characters(search_paths=None, ignore_paths=None):
     """
