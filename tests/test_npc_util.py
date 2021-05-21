@@ -136,10 +136,13 @@ class TestDetermineEditor:
         assert util.determine_editor('asdf', prefs=prefs) == 'vim'
 
     def test_linux_editor(self, prefs):
+        prefs.update_key('editor', '')
         assert util.determine_editor('linux', prefs=prefs) == 'xdg-open'
 
     def test_mac_editor(self, prefs):
+        prefs.update_key('editor', '')
         assert util.determine_editor('darwin', prefs=prefs) == 'open'
 
     def test_windows_editor(self, prefs):
+        prefs.update_key('editor', '')
         assert util.determine_editor('asdf', prefs=prefs) == 'start'
