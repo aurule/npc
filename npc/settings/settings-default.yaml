@@ -19,9 +19,11 @@ editor: ""
 
 # These are the root paths which NPC will use when finding campaign files.
 paths:
+
     # Paths that will be ignored for individual commands. Evaluated
     # relative to the campaign root.
     ignore:
+
         # Paths that will be ignored for all commands.
         always: []
 
@@ -32,6 +34,7 @@ paths:
         report: []
         find: []
         listing: []
+
     # The hierarchy describes how to build a path from character tags. Each
     # component must be separated by a '/' character.
     hierarchy: '{type}/{type-social}/{type-political}/{type-unit}/{groups}'
@@ -87,6 +90,7 @@ types:
             # folder when court is requested in the path, instead of
             # placed in the parent folder.
             court: Courtless
+
     # Settings for fetch characters
     fetch:
         type_path: Fetches
