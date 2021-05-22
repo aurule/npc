@@ -10,15 +10,13 @@ NPC is a tool to make my life easier when I'm running tabletop RPG games. It aut
 
 NPC is very much a personal project. It works well enough for me to use at my weekly game, but that's it. That said, if you use it and come up with suggestions or bugs, open an issue! I'll at least take a look!
 
-Contents
-------------------------------
-
 .. toctree::
    :maxdepth: 2
-   :caption: Contents:
+   :caption: Contents
 
    invocation
    commands
+   settings
 
 Indices and tables
 ==================
