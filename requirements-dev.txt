@@ -16,4 +16,5 @@ pytest-cov==2.12.0
 pytest-mock==3.6.1
 pytest-qt==3.3.0
 PyYAML==5.4.1
+Sphinx==4.0.2
 toml==0.10.2
