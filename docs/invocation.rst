@@ -10,18 +10,21 @@ Command Line Interface
 
 The CLI is the main way to use NPC. Once installed, invoke it with ``npc [command]``. There are only a few universal options.
 
---campaign DIR
-~~~~~~~~~~~~~~
+Arguments
+~~~~~~~~~
+
+--campaign <directory>
+""""""""""""""""""""""
 
 Change to the passed directory before running the command.
 
---help
-~~~~~~
+-h, --help
+""""""""""
 
 Show a help message and exit. This is supported for each command as well.
 
 --version
-~~~~~~~~~
+"""""""""
 
 Print the current program version and exit. Prevents any commands from running.
 
