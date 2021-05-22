@@ -10,7 +10,9 @@ Welcome to NPC's documentation!
    :maxdepth: 2
    :caption: Contents:
 
+NPC is a tool to make my life easier when I'm running tabletop RPG games. It automates and streamlines a few tedious tasks like creating new session logs and character sheets.
 
+NPC is very much a personal project. It works well enough for me to use at my weekly game, but that's it. That said, if you use it and come up with suggestions or bugs, open an issue! I'll at least take a look!
 
 Indices and tables
 ==================
