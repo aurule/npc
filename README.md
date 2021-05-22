@@ -35,7 +35,7 @@ NPC is a tool to make my life easier when I'm running tabletop RPG games. It aut
 
 NPC is very much a personal project. It works well enough for me to use at my weekly game, but that's it. That said, if you use it and come up with suggestions or bugs, open an issue! I'll at least take a look :smiley:
 
-This readme and the [project's wiki](https://github.com/aurule/npc/wiki) are the main documentation for the project. The source code is pretty thoroughly documented, too.
+This readme and the [project's ReadTheDocs](https://npc.readthedocs.io/) are the main documentation for the project. The source code is pretty thoroughly documented, too.
 
 All code is [hosted on github](https://github.com/aurule/npc).
 

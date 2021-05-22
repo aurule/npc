@@ -6,7 +6,9 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ## 1.4.2 [unreleased]
 
-...
+### Changed
+
+* Improved documentation
 
 ## 1.4.1
 
