@@ -16,7 +16,4 @@ Character Templates
 Listing Templates
 -----------------
 
-References
-----------
-
 .. _`Mako`: https://docs.makotemplates.org/en/latest/
