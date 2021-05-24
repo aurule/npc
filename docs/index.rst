@@ -12,11 +12,12 @@ NPC is very much a personal project. It works well enough for me to use at my we
 
 .. toctree::
    :maxdepth: 2
-   :caption: Contents
+   :hidden:
 
    invocation
    commands
    settings
+   templates
 
 Indices and tables
 ==================

@@ -58,7 +58,7 @@ Options
 settings
 -------------------------------
 
-Open a settings file and optionally also its corresponding defaults.
+Open a settings file and optionally also its corresponding defaults. See :ref:`settings` for an overview of what each file can configure.
 
 Options
 ~~~~~~~
@@ -86,13 +86,13 @@ latest
 new
 -------------------------------
 
-human
+h, human
 -------------------------------
 
-changeling
+c, changeling
 -------------------------------
 
-werewolf
+w, werewolf
 -------------------------------
 
 lint
@@ -100,6 +100,8 @@ lint
 
 reorg
 -------------------------------
+
+.. _cmd-list
 
 list
 -------------------------------

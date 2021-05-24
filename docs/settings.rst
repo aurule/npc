@@ -1,7 +1,5 @@
 .. Settings documentation
 
-.. _settings
-
 Settings
 ===============================
 
@@ -38,7 +36,7 @@ These settings apply to the entirety of NPC. You can set all kinds of options in
 
 * The paths used for character, session, and other campaign files
 * Define character types
-* Set up session and plot file templates
+* Set up session and plot file :ref:`templates`
 * Set properties for reports and listings
 
 GUI Settings
