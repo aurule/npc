@@ -8,8 +8,10 @@ These are the commands available in NPC. They share a few common options.
 All Commands
 ------------
 
-Common Arguments
-~~~~~~~~~~~~~~~~
+All NPC commands share these common options.
+
+Common Options
+~~~~~~~~~~~~~~
 
 -h, --help
 	Show help information for the command.
@@ -31,10 +33,10 @@ Set up a folder for use by NPC. This creates a blank settings file along with a 
 	Plot/
 	Session History/
 
-Every directory listed under ``paths.required`` in the settings is created as well as the special ``.npc`` configuration directory.
+Every directory listed under ``paths.required`` in the :ref:`settings` is created as well as the special ``.npc`` configuration directory.
 
-Arguments
-~~~~~~~~~
+Options
+~~~~~~~
 
 -n <campaign name>, --name <campaign name>
 	Set the name for the campaign. This is saved in ``.npc/settings.json``. Without this option, the value ``null`` will be used instead.
@@ -56,10 +58,10 @@ Arguments
 settings
 -------------------------------
 
-Open a settings file
+Open a settings file and optionally also its corresponding defaults.
 
-Arguments
-~~~~~~~~~
+Options
+~~~~~~~
 
 -t <type>, --type <type>
 	Open a supplementary settings file. Options are:
@@ -73,6 +75,8 @@ Arguments
 
 session
 -------------------------------
+
+Create and open the files for a new game session.
 
 latest
 -------------------------------
