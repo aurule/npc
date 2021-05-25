@@ -17,6 +17,9 @@ NPC is very much a personal project. It works well enough for me to use at my we
    invocation
    commands
    settings
+   characters
+   directives
+   core-tags
    templates
 
 Indices and tables
