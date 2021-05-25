@@ -6,6 +6,9 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ## 1.4.2 [unreleased]
 
+### Added
+
+* The `race`, `age`, and `employer` tags will no longer give an "unrecognized tag" error when linting
 ### Changed
 
 * Improved documentation
