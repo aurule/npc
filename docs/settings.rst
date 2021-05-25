@@ -1,5 +1,7 @@
 .. Settings documentation
 
+.. _settings:
+
 Settings
 ===============================
 
@@ -49,7 +51,24 @@ Changeling Settings
 
 These settings only affect the creation and linting of changeling type characters. It is designed around :t:`Changeling: The Lost`. You can set the allowed seemings and their kiths, as well as written descriptions of the blessings for both seemings and kiths, and the curses for seemings.
 
+Validity
+~~~~~~~~
+
+Changeling settings have a few additional checks to make sure that they're usable. Any errors will show up when NPC is run and must be fixed before it will do anything.
+
+* All seemings must have an entry under ``blessings``
+* All seemings must have an entry under ``curses``
+* All kiths must have an entry under ``blessings``
+* Each kith must appear under exactly one seeming
+
 Werewolf Settings
 -----------------
 
 These settings only affect the creation and linting of werewolf type characters. It is designed around :t:`Werewolf: The Forsaken`. You can set the allowed auspices, tribes of the moon, and pure tribes.
+
+Validity
+~~~~~~~~
+
+Werewolf settings have a few additional checks to make sure that they're usable. Any errors will show up when NPC is run and must be fixed before it will do anything.
+
+* Each tribe name must appear under exactly one of ``moon`` or ``pure``
