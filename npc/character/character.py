@@ -55,7 +55,7 @@ class Character:
         self.tags = TagContainer()
         self.tags.add_tag('type', required=True, limit=1)
         self.tags.add_tag('name', required=True)
-        self.tags.add_tag('faketype')
+        self.tags.add_tag('faketype', limit=1)
         self.tags.add_tag('title')
         self.tags.add_tag('appearance')
         self.tags.add_tag('location')

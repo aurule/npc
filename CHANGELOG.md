@@ -9,6 +9,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 ### Changed
 
 * Improved documentation
+* The `faketype` tag can now only appear once
 
 ## 1.4.1
 
