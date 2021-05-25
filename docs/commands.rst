@@ -180,6 +180,27 @@ dump
 report
 -------------------------------
 
+.. code-block:: bash
+
+	npc report location
+
+Create a tabular report on the values of one or more tags across all character files.
+
+Options
+~~~~~~~
+
+-t, --format
+	The format for the report. Default value is in the settings as ``report.default_format``.
+
+-o, --outfile
+	File where the generated report will be output. Defaults to the special hyphen value ``-``, which prints the report to the console.
+
+--search <paths>
+	Look in these paths for character files. Individual files are loaded directly, and directories are searched recursively.
+
+--ignore <paths>
+	Skip these paths when looking for character files.
+
 find
 -------------------------------
 
