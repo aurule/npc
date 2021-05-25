@@ -1,11 +1,13 @@
 .. Templates documentation
 
+.. _templates:
+
 Templates
 =========
 
 NPC makes extensive use of templates for generating new files. Some templates are plain text files with one or two keywords that NPC understands, while the templates used to make listings (see :ref:`cmd-list`) are full `Mako`_ templates.
 
-.. _session-templates
+.. _session-templates:
 
 Plot and Session Templates
 --------------------------
