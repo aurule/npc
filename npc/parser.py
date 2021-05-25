@@ -12,7 +12,7 @@ from pathlib import Path
 from npc import character
 from npc.util import print_err
 
-VALID_EXTENSIONS = ('.nwod', '.dnd3', '.dfrpg')
+VALID_EXTENSIONS = ('.nwod', '.dnd3', '.fate', '.npc')
 """tuple: file extensions that should be parsed"""
 
 DEPRECATED_TAGS = ('hidegroup', 'hideranks')

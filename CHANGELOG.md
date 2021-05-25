@@ -9,10 +9,16 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 ### Added
 
 * The `race`, `age`, and `employer` tags will no longer give an "unrecognized tag" error when linting
+* Now recognizes `.fate` and `.npc` file extensions
+
 ### Changed
 
 * Improved documentation
 * The `faketype` tag can now only appear once
+
+### Removed
+
+* No longer recognizes `.dfrpg` file extension. Use `.fate` instead.
 
 ## 1.4.1
 
