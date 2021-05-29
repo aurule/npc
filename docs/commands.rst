@@ -149,7 +149,7 @@ reorg
 
 Reorganize character files by moving them to their most appropriate directory. Because this command can make files hard to find, it does not move anything by default. Instead, it shows a rundown of what it would do. When you're satisfied, use the ``--commit`` option to move the files.
 
-Character paths are chosen based on the path hierarchy defined in the settings under ``paths.hierarchy``.
+Character paths are chosen based on the path hierarchy defined in the settings under ``paths.hierarchy``. Characters with the :ref:`tag-keep` directive are ignored and never moved.
 
 Options
 ~~~~~~~
