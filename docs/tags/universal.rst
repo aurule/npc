@@ -3,7 +3,13 @@
 Core Tags
 =========
 
-Tags are the main way that NPC stores information about a character. These tags are valid for all character files, regardless of type or system.
+Tags are the main way that NPC stores information about a character.
+
+Tags (and :ref:`directives`) always start with a ``@`` character and are a single word. Everything after the tag name are its parameters::
+
+	@tagname value
+
+These universal tags are valid for all character files, regardless of type or system.
 
 .. _tag-type:
 
@@ -33,14 +39,20 @@ Tags are the main way that NPC stores information about a character. These tags 
 @age
 -------------------------------
 
+.. _tag-group:
+
 @group
 -------------------------------
 
 @rank
 -------------------------------
 
+.. _tag-location:
+
 @location
 -------------------------------
+
+.. _tag-foreign:
 
 @foreign
 -------------------------------
@@ -48,8 +60,15 @@ Tags are the main way that NPC stores information about a character. These tags 
 @wanderer
 -------------------------------
 
+.. _tag-dead:
+
 @dead
 -------------------------------
 
 @employer
 -------------------------------
+
+Unrecognized tags
+-----------------
+
+All other tags are classified as an unrecognized tag. They're still stored in the parsed character, but will be flagged by the :ref:`cmd-lint` command. Other character types can define their own tags which will be recognized appropriately.

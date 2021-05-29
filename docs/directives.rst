@@ -1,5 +1,7 @@
 .. Directive documentation
 
+.. _directives:
+
 Directives
 ==========
 

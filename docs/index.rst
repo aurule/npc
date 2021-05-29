@@ -13,13 +13,14 @@ NPC is very much a personal project. It works well enough for me to use at my we
 .. toctree::
    :maxdepth: 2
    :hidden:
+   :glob:
 
    invocation
    commands
    settings
    characters
    directives
-   core-tags
+   tags/*
    templates
 
 Indices and tables
