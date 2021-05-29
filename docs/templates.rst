@@ -15,6 +15,8 @@ Plot and Session Templates
 Character Templates
 -------------------
 
+.. _listing-templates:
+
 Listing Templates
 -----------------
 
