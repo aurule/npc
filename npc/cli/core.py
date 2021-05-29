@@ -106,9 +106,9 @@ def _make_parser():
     # is never exposed directly.
     character_options = argparse.ArgumentParser(add_help=False)
     character_options.add_argument('-g', '--groups', default=None, nargs="*", help='Name of a group that counts the character as a member', metavar='group')
+    character_options.add_argument('--location', default=False, help="Where the character is located within the main setting", metavar='place')
     character_options.add_argument('--dead', default=False, const='', nargs='?', help='Mark that the character has died, with optional notes', metavar='notes')
     character_options.add_argument('--foreign', default=False, const='', nargs='?', help="Mark that the character is foreign to the main campaign setting, with optional notes on where they're from", metavar='place')
-    character_options.add_argument('--location', default=False, help="Where the character is located within the main setting", metavar='place')
 
     # Parent parser for shared pathing options
     paths_parser = argparse.ArgumentParser(add_help=False)
