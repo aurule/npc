@@ -11,6 +11,8 @@ Tags (and :ref:`directives`) always start with a ``@`` character and are a singl
 
 Each tag can appear more than once, with each additional value being stored alongside the first. :ref:`listing-templates` may or may not use the additional values for each tag, but they can be customized if you want those values to appear.
 
+All tags that accept an arbitrary description support Markdown formatting. They are marked here for clarity.
+
 These universal tags are valid for all character files, regardless of type or system.
 
 .. _tag-type:
@@ -50,6 +52,8 @@ An honorific for the character. It's for things like "Blessed of Chireus" or "Th
 
 @appearance
 -------------------------------
+
+*markdown*
 
 Description of the character's appearance.
 
@@ -105,7 +109,7 @@ Indicates that the character is itinerant or otherwise has no permanent home. If
 @dead
 -------------------------------
 
-*does not need a value*
+*markdown, does not need a value*
 
 Indicates that the character is dead. Optionally, a description can be given for how they died.
 
@@ -113,6 +117,15 @@ Indicates that the character is dead. Optionally, a description can be given for
 -------------------------------
 
 Names the character's place of work.
+
+.. _tag-desc:
+
+Description Tag
+-------------------------------
+
+*markdown*
+
+The description tag does not appear explicitly within character files. Instead, it serves as a hidden tag which accepts all of the untagged text within the file's :ref:`sheet-tags`. It can still be hidden with ``@hide description`` if desired.
 
 Unrecognized tags
 -----------------
