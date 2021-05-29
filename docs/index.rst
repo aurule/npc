@@ -19,8 +19,8 @@ NPC is very much a personal project. It works well enough for me to use at my we
    commands
    settings
    characters
-   directives
    tags/*
+   directives
    templates
 
 Indices and tables

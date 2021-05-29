@@ -169,6 +169,8 @@ Options
 --strict
 	Be more stringent about minor or inconsequential errors and warnings. With this option, more files will be flagged.
 
+.. _cmd-reorg:
+
 reorg
 -------------------------------
 
