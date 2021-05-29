@@ -30,6 +30,23 @@ Finally, to remove a single rank from a named group, use::
 
 	@hide group >> group name >> rank name
 
+@hidegroup
+-------------------------------
+
+Hide a single named group.
+
+.. deprecated:: 1.4.1
+	Use ``@hide group >> group name`` instead
+
+@hideranks
+-------------------------------
+
+Hide all the ranks for a particular named group.
+
+.. deprecated:: 1.4.1
+	Use ``@hide group >> group name >> subtags`` instead
+
+
 .. _tag-skip:
 
 @skip
