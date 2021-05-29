@@ -110,6 +110,29 @@ Arguments
 new
 -------------------------------
 
+.. code-block:: bash
+
+    npc new human "Ted Fishman"
+
+Create a new character file. The first argument is the template name to use. The template *must* be configured under the ``types`` key in settings. The second argument is the name of the new file. This is also the default character name. The suffix of the template file is used for the new character file.
+
+Character names can have an optional comment that is ignored by NPC when loading the file. The format is ``character name - comment string``.
+
+Options
+~~~~~~~
+
+-g, --groups <group[,group2]>
+	Add a :ref:`tag-group` tag for each named group.
+
+--dead [reason]
+	Add the :ref:`tag-dead` tag. If a reason string is given, it is added to the tag.
+
+--foreign [place]
+	Add the :ref:`tag-foreign` tag. If a place name is given, it is added to the tag.
+
+--location <place>
+	Add the :ref:`tag-location` tag with the given place name.
+
 h, human
 -------------------------------
 
@@ -118,6 +141,8 @@ c, changeling
 
 w, werewolf
 -------------------------------
+
+.. _cmd-lint:
 
 lint
 -------------------------------
