@@ -174,6 +174,65 @@ Options
 list
 -------------------------------
 
+Generate a human-readable listing of all characters. The listing is generated using the :ref:`listing-templates` for the chosen format. The default format is in the settings under ``listing.default_format``. They are sorted by the tags in ``listing.sort_by``. Format-appropriate headers are also generated for the tag names in ``listing.sort_by``.
+
+Each character is pre-processed to apply directives and special tags. The pro-processing does the following:
+
+* Omit the character if it has :ref:`tag-skip`
+* Remove all hidden tag values from :ref:`tag-hide`
+* Replace the real type with the value from :ref:`tag-faketype`
+* Insert the placeholder value of ``"Unknown"`` if the character has no :ref:`tag-type`.
+
+A template is chosen for each character based on the output type and the character's processed :ref:`tag-type`. See the :ref:`listing-templates` section for details on how this works.
+
+The command:
+
+.. code-block:: bash
+
+    npc list -o "markdown-listing.md" --sort_by "type, name" --headings "type" --metadata "mmd"
+
+results in this output:
+
+.. literalinclude:: examples/markdown-listing.md
+	:language: markdown
+
+Options
+~~~~~~~
+
+-t, --format <format>
+	Override the default output format. Must be one of
+
+	* ``markdown`` or ``md`` to use MarkDown
+	* ``json`` to use JSON
+	* ``htm`` or ``html`` to use HTML
+
+-m, --metadata [type]
+	Include a metadata section as part of the output. It's formatted appropriately for the chosen output format. You can pass an explicit ``type`` to override the default metadata format.
+
+--title <title>
+	Override the title of the generated listing.
+
+-o, --outfile <file path>
+	Save the output to the given file. Besides a path, this option accepts a single hyphen (``-``) which writes the output to stdout, usable for piping into another command.
+
+--sort_by <tag[,tag2]>
+	Override the default sort order. Requires a comma-separated list of tag names.
+
+--headings <tag[,tag2]>
+	Override the default headings and generate headings for these tags instead. This will be very busy unless the tags are also used to sort the characters.
+
+--no-sort
+	Do not sort the characters before generating the listing. This prevents headings from being created, as the characters are not meaningfully grouped.
+
+--partial
+	Instead of generating a complete file, the listing will only contain the body content. For the HTML type, this means there will be no ``<head>`` section or ``<body>`` tags. Other types may behave differently or ignore this option.
+
+--search <paths>
+	Look in these paths for character files. Individual files are loaded directly, and directories are searched recursively.
+
+--ignore <paths>
+	Skip these paths when looking for character files.
+
 dump
 -------------------------------
 
@@ -183,7 +242,7 @@ dump
 
 Export all parsed characters as a json file. This file contains all of the parsed tags, but nothing from the rest of the file contents.
 
-Each character entry is an object with the character file's path and an object containing its tags.
+Each character entry is an object with the character file's path and an object containing its tags. The entries contain every tag and directive with no alterations by things like :ref:`tag-hide` or :ref:`tag-faketype`, although these are included in the entry verbatim.
 
 .. code-block:: json
 
@@ -193,7 +252,8 @@ Each character entry is an object with the character file's path and an object c
     		"type": "changeling",
     		"name": "Talon Bronzeheart",
     		"seeming": "Fairest",
-    		"kith": "Draconic"
+    		"kith": "Draconic",
+    		"description": "A fiery fellow"
     	}
     }
 
@@ -214,7 +274,7 @@ Options
 -s, --do_sort
 	Sort the characters before exporting them. The default sort order is from the settings value ``dump.sort_by``.
 
---sort_by <tag[, tag2]>
+--sort_by <tag[,tag2]>
 	Override the default sort order. Requires a comma-separated list of tag names.
 
 -m, --metadata
@@ -222,6 +282,12 @@ Options
 
 -o, --outfile <file path>
 	Save the output to the given file. Besides a path, this option accepts a single hyphen (``-``) which writes the output to stdout, usable for piping into another command.
+
+--search <paths>
+	Look in these paths for character files. Individual files are loaded directly, and directories are searched recursively.
+
+--ignore <paths>
+	Skip these paths when looking for character files.
 
 report
 -------------------------------
