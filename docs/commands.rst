@@ -177,6 +177,52 @@ list
 dump
 -------------------------------
 
+.. code-block:: bash
+
+    npc dump -m -o dump.json
+
+Export all parsed characters as a json file. This file contains all of the parsed tags, but nothing from the rest of the file contents.
+
+Each character entry is an object with the character file's path and an object containing its tags.
+
+.. code-block:: json
+
+    {
+    	"path": "path/to/character_file.nwod",
+    	"tags": {
+    		"type": "changeling",
+    		"name": "Talon Bronzeheart",
+    		"seeming": "Fairest",
+    		"kith": "Draconic"
+    	}
+    }
+
+The ``--metadata`` option adds a special metadata object to the json output. It contains various bits of information about the campaign and the file:
+
+.. code-block:: json
+
+    {
+    	"meta": true,
+    	"title": "Campaign Name",
+    	"created": "Fri, May 28 08:30PM",
+    	"npc": "1.4.2"
+    }
+
+Options
+~~~~~~~
+
+-s, --do_sort
+	Sort the characters before exporting them. The default sort order is from the settings value ``dump.sort_by``.
+
+--sort_by <tag[, tag2]>
+	Override the default sort order. Requires a comma-separated list of tag names.
+
+-m, --metadata
+	Add metadata information to the output.
+
+-o, --outfile <file path>
+	Save the output to the given file. Besides a path, this option accepts a single hyphen (``-``) which writes the output to stdout, usable for piping into another command.
+
 report
 -------------------------------
 

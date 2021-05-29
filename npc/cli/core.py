@@ -198,10 +198,9 @@ def _make_parser():
     # Dump raw character data
     parser_dump = subparsers.add_parser('dump', parents=[common_options, paths_parser], help="Export raw json data of all characters")
     parser_dump.add_argument('-s', '--do_sort', action="store_true", default=False, help="Sort the characters")
+    parser_dump.add_argument('--sort_by', default='', help="Override the sort order for characters. Separate multiple tags with a comma. Defaults to the settings value 'dump.sort_by'.")
     parser_dump.add_argument('-m', '--metadata', action="store_true", default=False, help="Add metadata to the output.")
     parser_dump.add_argument('-o', '--outfile', nargs="?", const='-', default=None, help="File where the listing will be saved")
-    parser_dump.add_argument('--sort_by', default='', help="The sort order for characters. Separate multiple tags with a comma. Defaults to the settings value 'dump.sort_by'.")
-    parser_dump.add_argument('--no_sort', action='store_false', dest='do_sort', help="Do not sort characters at all")
     parser_dump.set_defaults(func=commands.dump)
 
     # Reorganize character files subcommand
