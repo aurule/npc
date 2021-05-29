@@ -298,13 +298,28 @@ report
 
 Create a tabular report on the values of one or more tags across all character files.
 
+The default output appears as a printed table::
+
+	| Type        | Characters |
+	| ----------- | ---------: |
+	| Changeling  |        537 |
+	| Human       |        280 |
+	| Fetch       |         33 |
+	| Goblin      |         28 |
+	| Gentry      |         21 |
+	| Hobgoblin   |          9 |
+	| Family      |          4 |
+	| Beast       |          2 |
+	| Fae-touched |          1 |
+	[Characters by Type]
+
 Options
 ~~~~~~~
 
--t, --format
+-t, --format <format>
 	The format for the report. Default value is in the settings as ``report.default_format``.
 
--o, --outfile
+-o, --outfile <file path>
 	File where the generated report will be output. Defaults to the special hyphen value ``-``, which prints the report to the console.
 
 --search <paths>

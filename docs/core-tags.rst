@@ -5,8 +5,12 @@ Core Tags
 
 Tags are the main way that NPC stores information about a character. These tags are valid for all character files, regardless of type or system.
 
+.. _tag-type:
+
 @type
 -------------------------------
+
+.. _tag-faketype:
 
 @faketype
 -------------------------------
