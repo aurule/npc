@@ -13,6 +13,8 @@ import npc
 from npc import util
 from npc.linters.settings import lint
 
+from .constants import VALID_EXTENSIONS
+
 class Settings:
     """
     Load and store settings
@@ -67,7 +69,6 @@ class Settings:
             'settings-werewolf',
             'settings-gui'
         ]
-        self.settings_file_suffixes = ['.json', '.yaml']
         self.settings_paths = [self.default_settings_path, self.user_settings_path, self.campaign_settings_path]
 
         self.verbose = verbose
@@ -92,7 +93,7 @@ class Settings:
         """
         Get the most preferred path to a settings file based on suffix
 
-        The list of suffixes in `self.settings_file_suffixes` is in order of
+        The list of suffixes in `VALID_EXTENSIONS` is in order of
         preference, so we want to check them in that order. If both files exist,
         only the most preferred should be returned.
 
@@ -108,7 +109,7 @@ class Settings:
             OSError if no file exists with any usable suffix
         """
         base_path = dir_name.joinpath(file_name)
-        for suffix in self.settings_file_suffixes:
+        for suffix in VALID_EXTENSIONS:
             attempt = base_path.with_suffix(suffix)
             if attempt.exists():
                 return attempt
@@ -282,7 +283,7 @@ class Settings:
             try:
                 return self._best_settings_path(base_path, filename)
             except OSError:
-                return base_path.joinpath(filename).with_suffix(self.settings_file_suffixes[0])
+                return base_path.joinpath(filename).with_suffix(VALID_EXTENSIONS[0])
         else:
             return base_path.joinpath(filename).with_suffix(suffix)
 

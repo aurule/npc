@@ -15,6 +15,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 * Improved documentation
 * The `faketype` tag can now only appear once
+* The YAML format is now the default for settings files and takes precedence over JSON
 
 ### Removed
 

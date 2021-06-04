@@ -17,7 +17,7 @@ User settings are stored under :file:`.config/npc/` in the user home directory. 
 Settings Files
 --------------
 
-All of the settings files can either be in yaml or json. You should not use both formats for a given file, but if you do, the json file takes precedence. The examples here show yaml for brevity.
+All of the settings files can either be in `yaml`_ or `json`_ syntax. You should not use two files for the same settings, but if you do, the yaml file takes precedence. The examples here show yaml for brevity.
 
 :file:`settings.yaml`
 	The core settings file
@@ -72,3 +72,6 @@ Validity
 Werewolf settings have a few additional checks to make sure that they're usable. Any errors will show up when NPC is run and must be fixed before it will do anything.
 
 * Each tribe name must appear under exactly one of ``moon`` or ``pure``
+
+.. _`yaml`: https://www.tutorialspoint.com/yaml/yaml_basics.htm
+.. _`json`: https://www.tutorialspoint.com/json/json_syntax.htm

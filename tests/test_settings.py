@@ -104,5 +104,5 @@ class TestIgnoredPaths:
                                         'settings-gui'])
 def test_default_files_match(prefs, file_name):
     settings_file_base = prefs.default_settings_path.joinpath(file_name)
-    loaded = [npc.util.load_settings(settings_file_base.with_suffix(s)) for s in prefs.settings_file_suffixes]
+    loaded = [npc.util.load_settings(settings_file_base.with_suffix(s)) for s in npc.settings.VALID_EXTENSIONS]
     assert loaded[1:] == loaded[:-1]
