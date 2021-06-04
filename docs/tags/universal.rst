@@ -1,5 +1,7 @@
 .. Main tags documentation
 
+.. _core-tags:
+
 Core Tags
 =========
 
