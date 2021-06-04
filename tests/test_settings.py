@@ -1,7 +1,7 @@
 import pytest
 import npc
 from datetime import datetime
-from tests.util import fixture_dir
+from util import fixture_dir
 
 def test_creation(prefs):
     assert prefs is not None

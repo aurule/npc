@@ -1,7 +1,7 @@
 import npc
 import os
 import json
-from tests.util import fixture_dir
+from util import fixture_dir
 
 def test_init_bare(prefs, campaign):
     npc.commands.init(prefs=prefs)

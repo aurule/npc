@@ -3,7 +3,7 @@ import pytest
 import io
 from collections import Counter
 
-from tests.util import fixture_dir
+from util import fixture_dir
 
 def test_default_table_format():
     data_out = io.StringIO()

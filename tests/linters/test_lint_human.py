@@ -2,7 +2,7 @@
 
 import npc
 import pytest
-from tests.util import fixture_dir
+from util import fixture_dir
 
 def lint_human(filename, **kwargs):
     prefs = npc.settings.Settings()

@@ -4,7 +4,7 @@ import io
 from collections import Counter
 import re
 
-from tests.util import fixture_dir
+from util import fixture_dir
 
 class Listing:
     CHARACTER_NAMES = ['Tom', 'Matt', 'Paul', 'Vincent', '']

@@ -2,7 +2,7 @@ import npc
 import pytest
 import os
 from pathlib import Path
-from tests.util import fixture_dir
+from util import fixture_dir
 from distutils import dir_util
 
 @pytest.fixture

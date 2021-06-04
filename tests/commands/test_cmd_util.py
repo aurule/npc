@@ -10,7 +10,7 @@ from npc.commands import util
 from npc.character import Character
 
 import pytest
-from tests.util import fixture_dir
+from util import fixture_dir
 
 def test_find_empty_dirs(tmp_path):
     tmp_path.joinpath('empty1').mkdir()

@@ -1,7 +1,7 @@
 import npc
 import json
 import pytest
-from tests.util import fixture_dir, load_json
+from util import fixture_dir, load_json
 
 @pytest.fixture
 def list_json_output(tmp_path):

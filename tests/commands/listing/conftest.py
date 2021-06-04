@@ -1,6 +1,6 @@
 import npc
 import pytest
-from tests.util import fixture_dir, load_json
+from util import fixture_dir, load_json
 import json
 
 @pytest.fixture

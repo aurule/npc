@@ -5,7 +5,7 @@ from collections import defaultdict
 import npc
 from npc import util
 
-from tests.util import fixture_dir
+from util import fixture_dir
 
 class TestJsonLoading:
     def test_ignore_comments(self):

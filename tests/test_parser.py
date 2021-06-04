@@ -1,6 +1,6 @@
 import npc
 import pytest
-from tests.util import fixture_dir
+from util import fixture_dir
 
 from npc.character.tags import UnknownTag
 

@@ -1,7 +1,7 @@
 import npc
 import pytest
 import sys
-from tests.util import fixture_dir
+from util import fixture_dir
 
 @pytest.mark.parametrize('outopt', [None, '-'])
 def test_output_no_file(capsys, outopt):

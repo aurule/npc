@@ -2,7 +2,7 @@
 
 import npc
 import pytest
-from tests.util import fixture_dir
+from util import fixture_dir
 import re
 
 @pytest.mark.parametrize('metaformat', ['json', 'asdf'])

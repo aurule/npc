@@ -2,7 +2,7 @@
 
 import npc
 import pytest
-from tests.util import fixture_dir
+from util import fixture_dir
 
 def test_has_virtue():
     char_file = fixture_dir('linter', 'nwod', 'Has Virtue.nwod')
