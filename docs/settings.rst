@@ -17,7 +17,7 @@ User settings are stored under :file:`.config/npc/` in the user home directory. 
 Settings Files
 --------------
 
-All of the settings files can either be in `yaml`_ or `json`_ syntax. You should not use two files for the same settings, but if you do, the yaml file takes precedence. The examples here show yaml for brevity.
+All of the settings files can either be in `yaml`_ or `json`_ syntax. You should not use two files for the same settings, but if you do, the yaml file takes precedence. When using JSON, comments starting with a double slash ``//`` are supported, even though these are not part of the json syntax. The examples here show yaml for brevity.
 
 :file:`settings.yaml`
 	The core settings file
