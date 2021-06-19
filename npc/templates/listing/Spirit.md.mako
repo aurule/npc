@@ -1,13 +1,11 @@
 <%page args="tags, header_level"/>\
-<%def name="make_ranks(group_tag, subtag_name=None)">\
-<%
+<%!
+def make_ranks(group_tag, subtag_name=None):
     if not subtag_name:
         subtag_name = group_tag.first_value()
-    %>\
-    %if group_tag.subtag(subtag_name).filled:
-<% return ' (' + ', '.join(group_tag.subtag(subtag_name)) + ')' %>\
-    %endif
-</%def>\
+    if group_tag.subtag(subtag_name).filled:
+        return '(' + ', '.join(group_tag.subtag(subtag_name)) + ')'
+%>\
 <%def name="locations()">\
 <%
     return tags('foreign').filled_data + tags('location').filled_data
