@@ -4,7 +4,8 @@ def make_ranks(group_tag, subtag_name=None):
     if not subtag_name:
         subtag_name = group_tag.first_value()
     if group_tag.subtag(subtag_name).filled:
-        return '(' + ', '.join(group_tag.subtag(subtag_name)) + ')'
+        return ' (' + ', '.join(group_tag.subtag(subtag_name)) + ')'
+    return ''
 %>\
 <%def name="locations()">\
 <%
@@ -92,7 +93,7 @@ ${', '.join(["{}{}".format(g, make_ranks(tags('group'), g)) for g in tags('group
 
 *Mask:* ${' '.join(tags('mask'))}
 % endif
-%if tags('description').filled:
+% if tags('description').filled:
 
 *Notes:* ${"\n".join(tags('description'))}
 % endif
