@@ -8,7 +8,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ### Added
 
-* The `race`, `age`, and `employer` tags will no longer give an "unrecognized tag" error when linting
+* The `race`, `age`, `employer`, and `job` tags will no longer give an "unrecognized tag" error when linting
 * Now recognizes `.fate` and `.npc` file extensions
 * Add `job` subtag for `employer` tag. This means the `employer` tag is now group-like
 

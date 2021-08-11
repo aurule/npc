@@ -120,6 +120,11 @@ Indicates that the character is dead. Optionally, a description can be given for
 
 Names the character's place of work.
 
+@job
+-------------------------------
+
+The name of a job that the character holds at their employer. This tag is automatically associated with the employer tag immediately preceeding it.
+
 .. _tag-desc:
 
 Description Tag
