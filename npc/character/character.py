@@ -61,7 +61,6 @@ class Character:
         self.tags.add_tag('location')
         self.tags.add_tag('race')
         self.tags.add_tag('age')
-        self.tags.add_tag('employer')
         self.tags.add_flag('foreign')
         self.tags.add_flag('wanderer')
         self.tags.add_flag('skip')
@@ -69,6 +68,7 @@ class Character:
         self.tags.add_flag('keep')
         self.tags.add_flag('dead')
         self.tags.add_group('group')
+        self.tags.add_group('employer', subtag='job')
 
         self._add_default_tags()
 
