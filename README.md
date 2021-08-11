@@ -2,33 +2,6 @@
 
 [![GitHub version](https://badge.fury.io/gh/aurule%2Fnpc.svg)](https://badge.fury.io/gh/aurule%2Fnpc)
 
-<!-- MarkdownTOC autolink="true" bracket="round" depth=2 -->
-
-- [About](#about)
-    - [Requirements](#requirements)
-    - [Installation](#installation)
-- [Usage](#usage)
-    - [Set Up Directories](#set-up-directories)
-    - [Create Session Files](#create-session-files)
-    - [Open Latest Plot and Session Files](#open-latest-plot-and-session-files)
-    - [Create a Character](#create-a-character)
-    - [Lint Character Files](#lint-character-files)
-    - [Find Characters](#find-characters)
-    - [Make an NPC Listing](#make-an-npc-listing)
-    - [Dump Raw NPC Data](#dump-raw-npc-data)
-    - [Reorganize Character Files](#reorganize-character-files)
-    - [Edit Settings](#edit-settings)
-    - [Make Character Tag Reports](#make-character-tag-reports)
-- [Gotchas](#gotchas)
-    - [Using both `search` and `ignore`](#using-both-search-and-ignore)
-- [Configuration](#configuration)
-    - [Type-Specific Settings](#type-specific-settings)
-- [Testing and Development](#testing-and-development)
-    - [Requirements](#requirements-1)
-    - [Running Tests](#running-tests)
-
-<!-- /MarkdownTOC -->
-
 # About
 
 NPC is a tool to make my life easier when I'm running tabletop RPG games. It automates and streamlines a few tedious tasks like managing plot and session notes, and managing character sheets. 
