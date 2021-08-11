@@ -46,7 +46,6 @@ NPC requires at least:
 * Python 3.5.0
 * [Mako](http://www.makotemplates.org/) 1.0.0
 * [Python Markdown](http://pythonhosted.org/Markdown/index.html) 2.6.0
-* [PyQt5](https://riverbankcomputing.com/software/pyqt/intro) 5.7.1
 
 All packages can be installed with `pip -r requirements.txt`.
 
@@ -56,7 +55,7 @@ NPC can be installed in a few ways.
 
 The recommended way is to download the debian package for the latest release and install it as normal.
 
-If you're using a different system, download the latest release tarball and unpack it (or clone the repo). Install the required packages above in the most appropriate way for your system, then run `make install` to symlink the launcher scripts. To uninstall the binaries, run `make uninstall`. If you'd rather handle the symlinks yourself, link the scripts `npc.py` and `npc-gui.py` to somewhere in your path, like `~/bin`.
+If you're using a different system, download the latest release tarball and unpack it (or clone the repo). Install the required packages above in the most appropriate way for your system, then run `make install` to symlink the launcher scripts. To uninstall the binaries, run `make uninstall`. If you'd rather handle the symlinks yourself, link the script `npc.py` to somewhere in your path, like `~/bin`.
 
 Finally, you can download or clone, then run `pip install .`. This installs npc like any other python package, including launcher scripts.
 
@@ -334,10 +333,6 @@ Every seeming *must* have a corresponding entry in both the `blessings` and `cur
 
 Since both seemings and kiths share the same blessings and curses dictionaries, all seeming and kith names *should* be unique. If a seeming and kith have the same name, then both will have the same blessing. That's probably not what you want.
 
-### Other Settings
-
-The `npc-gui` program has its own unique settings in `settings-gui.json`. These are ignored unless you're running the gui.
-
 # Testing and Development
 
 To set up the development environment, create and activate a venv and run `bin/setup`. It'll ensure everything is installed and ready to go.
@@ -345,7 +340,6 @@ To set up the development environment, create and activate a venv and run `bin/s
 ## Requirements
 
 * [pytest](http://doc.pytest.org/en/latest/) 3.3.0
-* [pytest-qt](https://pytest-qt.readthedocs.io/en/latest/) 2.2.1
 * [pytest-cov](https://pypi.python.org/pypi/pytest-cov) 2.5.1
 * [coverage](https://coverage.readthedocs.io/en/coverage-4.4.1/) 4.4.1
 * [stdeb](https://pypi.python.org/pypi/stdeb) 0.8.5 - optional: only for building debian packages

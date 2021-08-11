@@ -17,7 +17,7 @@ AUTHOR = 'Peter Andrews'
 
 # What packages are required for this module to be executed?
 REQUIRED = [
-    'mako', 'markdown', 'pyqt5'
+    'mako', 'markdown'
 ]
 
 # ------------------------------------------------
@@ -57,7 +57,6 @@ setup(
     extras_requires={
         "test": [
             "pytest>=3.9.1",
-            "pytest-qt>=2.1.0"
         ]
     },
     package_data={
@@ -73,8 +72,5 @@ setup(
         'console_scripts': [
             'npc=npc.cli:start',
         ],
-        'gui_scripts': [
-            'npc-gui=npc.gui:start',
-        ]
     }
 )

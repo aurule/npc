@@ -3,7 +3,7 @@
 Running NPC
 ===============================
 
-NPC is mainly run as a command-line program. It also has a QT-based windowed application.
+NPC is mainly run as a command-line program.
 
 Command Line Interface
 -------------------------------
@@ -29,8 +29,3 @@ Options
 --version
 
     Print the current program version and exit. Prevents any commands from running.
-
-Graphical Interface
--------------------------------
-
-The graphical interface is more limited than the CLI. It is invoked with ``npc-gui``.

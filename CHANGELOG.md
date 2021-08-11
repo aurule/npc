@@ -21,6 +21,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 ### Removed
 
 * No longer recognizes `.dfrpg` file extension. Use `.fate` instead.
+* The QT-based GUI has been removed. I felt it was not adding enough value to the project to be worth the substantial extra effort required to maintain it. Removing it has the upshot of also removing PyQT as a dependency of the project, which should make installation much simpler. I hope to create a new GUI some time in the future, but it's not a priority.
 
 ## 1.4.1
 

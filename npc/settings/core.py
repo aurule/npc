@@ -66,8 +66,7 @@ class Settings:
         self.settings_file_names = [
             'settings',
             'settings-changeling',
-            'settings-werewolf',
-            'settings-gui'
+            'settings-werewolf'
         ]
         self.settings_paths = [self.default_settings_path, self.user_settings_path, self.campaign_settings_path]
 

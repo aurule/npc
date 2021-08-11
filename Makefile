@@ -1,24 +1,7 @@
 .SUFFIXES: .ui .py .qrc
 rwildcard = $(wildcard $1$2)$(foreach d,$(wildcard $1*),$(call rwildcard,$d/,$2))
-UI_FILES := $(call rwildcard,npc/gui/uis/,*.ui)
-COMPILED_UI_FILES := $(UI_FILES:.ui=.py)
-RESOURCE_FILES := $(call rwildcard,npc/gui/uis/,*.qrc)
-COMPILED_RESOURCE_FILES := $(RESOURCE_FILES:%.qrc=%_rc.py)
-IMAGES := $(call rwildcard,npc/gui/uis/icons,*.svg)
 
 PREFIX := /usr/local
-
-all: resources uis
-
-.ui.py:
-	pyuic5 $< | sed 's/import \(.*_rc\)/from . import \1/g' > $@
-
-%_rc.py : %.qrc $(IMAGES)
-	pyrcc5 $< -o $@
-
-uis: $(COMPILED_UI_FILES)
-
-resources: $(COMPILED_RESOURCE_FILES)
 
 .PHONY: test
 test:
@@ -35,11 +18,9 @@ install:
 	cp -R npc $(DESTDIR)$(PREFIX)/share/npc
 	mkdir -p $(DESTDIR)$(PREFIX)/bin
 	ln -s $(DESTDIR)$(PREFIX)/share/npc/npc.py $(DESTDIR)$(PREFIX)/bin/npc
-	ln -s $(DESTDIR)$(PREFIX)/share/npc/npc-gui.py $(DESTDIR)$(PREFIX)/bin/npc-gui
 
 .PHONY: uninstall
 uninstall:
-	rm -f $(DESTDIR)$(PREFIX)/bin/npc-gui
 	rm -f $(DESTDIR)$(PREFIX)/bin/npc
 	rm -rf $(DESTDIR)$(PREFIX)/share/npc
 

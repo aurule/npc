@@ -74,7 +74,6 @@ Options
 -t <type>, --type <type>
 	Open a supplementary settings file. Options are:
 
-	* gui
 	* changeling
 	* werewolf
 

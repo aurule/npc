@@ -2,8 +2,6 @@
 
 set -e
 
-# tell user they need to have the Qt system libraries installed despite the venv
-
 tested_python_versions=('3.5' '3.6')
 minimum_python_version='3.5'
 
@@ -60,5 +58,4 @@ echo "OK"
 
 [[ -z `command -v make` ]] && echo "WARNING: You don't have 'make' installed, so you will not be able to use the makefile."
 
-echo "INFO: Ensure that your system has Qt installed in order to run the GUI."
 echo "Done setting up! Run 'make test' to verify that everything works."

@@ -22,9 +22,6 @@ All of the settings files can either be in `yaml`_ or `json`_ syntax. You should
 :file:`settings.yaml`
 	The core settings file
 
-:file:`settings-gui.yaml`
-	Supplemental settings for the GUI
-
 :file:`settings-changeling.yaml`
 	Supplemental settings for the changeling character type
 
@@ -40,11 +37,6 @@ These settings apply to the entirety of NPC. You can set all kinds of options in
 * Define character types
 * Set up session and plot file :ref:`templates`
 * Set properties for reports and listings
-
-GUI Settings
-------------
-
-These settings only affect the graphical interface. It only has a single setting which sets the default type for the new character window.
 
 Changeling Settings
 -------------------
