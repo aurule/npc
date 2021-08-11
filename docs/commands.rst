@@ -22,6 +22,16 @@ Common Options
 -b, --batch
 	Prevents NPC from opening any files that are relevant to the command. Without this switch, each command may open files in the configured editor.
 
+Gotchas
+~~~~~~~
+
+Various commands support both the ``--search`` and ``--ignore`` options. These interact in the following ways:
+
+1. When the same directory is passed to ``search`` and ``ignore``, ``ignore`` wins out and the directory is not scanned.
+2. When a directory is passed to ``search`` and one of its child directories is passed to ``ignore``, the child directory is not scanned.
+3. When a directory is passed to ``search`` and a file within that directory is passed to ``ignore``, the file is not scanned.
+4. When a file is passed to ``search`` and ``ignore``, ``search`` wins and the file is *always scanned*.
+
 init
 -------------------------------
 
