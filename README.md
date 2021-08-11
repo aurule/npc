@@ -18,7 +18,7 @@ NPC requires at least:
 
 * Python 3.5.0
 * [Mako](http://www.makotemplates.org/) 1.0.0
-* [Python Markdown](http://pythonhosted.org/Markdown/index.html) 2.6.0
+* [Python Markdown](https://github.com/Python-Markdown/markdown) 3.0.0
 
 All packages can be installed with `pip -r requirements.txt`.
 
