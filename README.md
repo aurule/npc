@@ -355,3 +355,19 @@ Then call `workon npc` to launch into the venv.
 ## Running Tests
 
 Go to the root project directory and run `python -m pytest` or `make test`.
+
+To generate a coverage report, run `make coverage`.
+
+## Release Process
+
+Releases are handled through [GitHub Releases](https://github.com/aurule/npc/releases).
+
+1. Update the version number in [npc/__version__.py](https://github.com/aurule/npc/blob/develop/npc/__version__.py)
+2. Update the [Changelog](https://github.com/aurule/npc/blob/develop/CHANGELOG.md) and remove the `[unreleased]` text from the to-be-released version number
+3. Checkout `master` and merge in `develop`.
+4. *(optional)* Create a tag on `master` containing the version number, like `1.4.2`.
+5. Go to the [GitHub Releases](https://github.com/aurule/npc/releases) page and draft a new release
+6. Use the version number as the tag name, and use the master branch
+7. Add a title and description
+8. *(optional)* If releasing premade packages for this release, add them now
+9. Publish the release
