@@ -17,7 +17,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 * Improved documentation
 * The `faketype` tag can now only appear once
 * The YAML format is now the default for settings files and takes precedence over JSON
-* Documentation is now exclusively in [ReadTheDocs](https://npc.readthedocs.io/).
+* Documentation is now exclusively in [ReadTheDocs](https://npc.readthedocs.io/)
+* Finished documenting new character commands
 
 ### Removed
 

@@ -116,6 +116,8 @@ Arguments
 	* plot
 	* session
 
+.. _cmd-new:
+
 new
 -------------------------------
 
@@ -123,9 +125,16 @@ new
 
     npc new human "Ted Fishman"
 
-Create a new character file. The first argument is the template name to use. The template *must* be configured under the ``types`` key in settings. The second argument is the name of the new file. This is also the default character name. The suffix of the template file is used for the new character file.
+Create a new character file. The first argument is the template name to use. The template *must* be configured under the ``types`` key in the :ref:`settings-core`. The second argument is the name of the new file. This is also the default character name. The suffix of the template file is used for the new character file.
 
-Character names can have an optional comment that is ignored by NPC when loading the file. The format is ``character name - comment string``.
+Arguments
+~~~~~~~~~
+
+*type*
+	Character type to create. Can be any configured character type.
+
+*name*
+	Name of the character file. This will replace the configured template's filename, keeping the template's extension. Character names can have an optional comment that is ignored by NPC when loading the file. The format is ``character name - comment string``.
 
 Options
 ~~~~~~~
@@ -145,11 +154,120 @@ Options
 h, human
 -------------------------------
 
+.. code-block:: bash
+
+	npc h "Ted Fishman"
+
+Create a new human character file. This is a shortcut to :ref:`cmd-new` with the type argument prefilled to "human".
+
+Arguments
+~~~~~~~~~
+
+*name*
+	Name of the character file. This will replace the configured template's filename, keeping the template's extension. Character names can have an optional comment that is ignored by NPC when loading the file. The format is ``character name - comment string``.
+
+Options
+~~~~~~~
+
+-g, --groups <group[,group2]>
+	Add a :ref:`tag-group` tag for each named group.
+
+--dead [reason]
+	Add the :ref:`tag-dead` tag. If a reason string is given, it is added to the tag.
+
+--foreign [place]
+	Add the :ref:`tag-foreign` tag. If a place name is given, it is added to the tag.
+
+--location <place>
+	Add the :ref:`tag-location` tag with the given place name.
+
 c, changeling
 -------------------------------
 
+.. code-block:: bash
+
+	npc c "Stan Changeman" wizened smith
+
+Create a new changeling character file. This is a shortcut to :ref:`cmd-new` with the type argument prefilled to "changeling", but with additional arguments and options unique to changeling characters.
+
+Arguments
+~~~~~~~~~
+
+*name*
+	Name of the character file. This will replace the configured template's filename, keeping the template's extension. Character names can have an optional comment that is ignored by NPC when loading the file. The format is ``character name - comment string``.
+
+*seeming*
+	Name of the character's seeming. This value must appear in the :ref:`settings-changeling`.
+
+*kith*
+	Name of the character's kith. The value must appear in the :ref:`settings-changeling` under the selected seeming.
+
+Options
+~~~~~~~
+
+-c, --court <court>
+	Add a :ref:`tag-court` tag with the given court name.
+
+-m, --motley <motley>
+	Add a :ref:`tag-motley` tag with the given motley name.
+
+-e, --entitlement <entitlement>
+	Add a :ref:`tag-entitlement` tag with the given entitlement name.
+
+-f, --freehold <freehold>
+	Add a :ref:`tag-freehold` tag with the given freehold name.
+
+-g, --groups <group[,group2]>
+	Add a :ref:`tag-group` tag for each named group.
+
+--dead [reason]
+	Add the :ref:`tag-dead` tag. If a reason string is given, it is added to the tag.
+
+--foreign [place]
+	Add the :ref:`tag-foreign` tag. If a place name is given, it is added to the tag.
+
+--location <place>
+	Add the :ref:`tag-location` tag with the given place name.
+
+
 w, werewolf
 -------------------------------
+
+.. code-block:: bash
+
+	npc w "Withrop Wolfman" rahu
+
+Create a new werewolf character file. This is a shortcut to :ref:`cmd-new` with the type argument prefilled to "werewolf", but with additional arguments and options unique to werewolf characters.
+
+Arguments
+~~~~~~~~~
+
+*name*
+	Name of the character file. This will replace the configured template's filename, keeping the template's extension. Character names can have an optional comment that is ignored by NPC when loading the file. The format is ``character name - comment string``.
+
+*auspice*
+	Name of the character's auspice. This value must appear in the :ref:`settings-werewolf`.
+
+Options
+~~~~~~~
+
+-t, --tribe <name>
+	Add a :ref:`tag-tribe` tag with the given tribe name. The tribe name must appear in :ref:`settings-werewolf`.
+
+-p, --pack <name>
+	Add a :ref:`tag-pack` tag with the given pack name.
+
+-g, --groups <group[,group2]>
+	Add a :ref:`tag-group` tag for each named group.
+
+--dead [reason]
+	Add the :ref:`tag-dead` tag. If a reason string is given, it is added to the tag.
+
+--foreign [place]
+	Add the :ref:`tag-foreign` tag. If a place name is given, it is added to the tag.
+
+--location <place>
+	Add the :ref:`tag-location` tag with the given place name.
 
 .. _cmd-lint:
 

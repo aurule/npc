@@ -52,20 +52,28 @@ Description of the character's human-facing appearance.
 
 Description of the character's fae-facing appearance.
 
+.. _tag-freehold:
+
 @freehold
 -------------------------------
 
 Name of the freehold that the character belongs to.
+
+.. _tag-court:
 
 @court
 -------------------------------
 
 Name of the character's court.
 
+.. _tag-motley:
+
 @motley
 -------------------------------
 
 Name of the character's motley.
+
+.. _tag-entitlement:
 
 @entitlement
 -------------------------------

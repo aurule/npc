@@ -29,12 +29,16 @@ This meta tag is not exported verbatim, as it is broken into its component parts
 
 Name of the character's auspice. The value must appear under the key ``werewolf.auspices``.
 
+.. _tag-tribe:
+
 @tribe
 -------------------------------
 
 *can appear only once*
 
 Name of the character's tribe. The value must appear under ``werewolf.tribes.moon`` or ``werewolf.tribes.pure``.
+
+.. _tag-pack:
 
 @pack
 -------------------------------

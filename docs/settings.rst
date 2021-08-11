@@ -28,6 +28,8 @@ All of the settings files can either be in `yaml`_ or `json`_ syntax. You should
 :file:`settings-werewolf.yaml`
 	Supplemental settings for the werewolf character type
 
+.. _settings-core:
+
 Core Settings
 -------------
 
@@ -37,6 +39,8 @@ These settings apply to the entirety of NPC. You can set all kinds of options in
 * Define character types
 * Set up session and plot file :ref:`templates`
 * Set properties for reports and listings
+
+.. _settings-changeling:
 
 Changeling Settings
 -------------------
@@ -52,6 +56,8 @@ Changeling settings have a few additional checks to make sure that they're usabl
 * All seemings must have an entry under ``curses``
 * All kiths must have an entry under ``blessings``
 * Each kith must appear under exactly one seeming
+
+.. _settings-werewolf:
 
 Werewolf Settings
 -----------------
