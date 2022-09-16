@@ -1,7 +1,7 @@
 attrs==21.2.0
 coverage==5.5
 iniconfig==1.1.1
-Mako==1.1.4
+Mako==1.2.2
 Markdown==3.3.4
 MarkupSafe==2.0.1
 packaging==20.9
