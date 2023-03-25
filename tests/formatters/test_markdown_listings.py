@@ -12,7 +12,7 @@ class Listing:
     SECTION_REGEX = r'^## .*$'
 
     def __init__(self, **kwargs):
-        self._output = io.StringIO()
+        self._output = io.StringIO(newline=None)
         self.result = npc.formatters.markdown.listing(self.build_characters(), self._output, **kwargs)
 
     @property

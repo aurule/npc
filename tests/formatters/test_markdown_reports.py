@@ -6,7 +6,7 @@ from collections import Counter
 from util import fixture_dir
 
 def test_default_table_format():
-    data_out = io.StringIO()
+    data_out = io.StringIO(newline=None)
     tables = {
         'type': Counter(['human', 'human', 'elf'])
     }

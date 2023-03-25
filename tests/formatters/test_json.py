@@ -5,7 +5,7 @@ import json
 
 class TestListing:
     def test_listing_is_correct(self, character):
-        data_out = io.StringIO()
+        data_out = io.StringIO(newline=None)
         assert npc.formatters.json.listing([character], data_out)
 
         parsed_data = json.loads(data_out.getvalue())
