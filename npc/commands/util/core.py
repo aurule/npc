@@ -205,7 +205,7 @@ def smart_open(filename=None, binary=False):
 
     """
     if filename and filename != '-':
-        stream = open(filename, 'wb') if binary else open(filename, 'w')
+        stream = open(filename, 'wb', newline='\n') if binary else open(filename, 'w', newline='\n')
     else:
         stream = sys.stdout.buffer if binary else sys.stdout
 

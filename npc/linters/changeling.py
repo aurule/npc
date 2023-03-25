@@ -262,7 +262,7 @@ def lint(character, fix=False, *, strict=False, sk_data=None):
                             problems[-1] += ' (can fix)'
 
     if dirty and data:
-        with open(character.path, 'w') as char_file:
+        with open(character.path, 'w', newline='\n') as char_file:
             char_file.write(data)
 
     return problems

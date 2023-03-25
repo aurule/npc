@@ -97,7 +97,7 @@ def session(**kwargs):
                 old_file_path = latest_file(dest_dir, file_regex).path
                 data = data.replace(COPY_KEYWORD, old_file_contents(old_file_path))
 
-            with open(destination, 'w') as f:
+            with open(destination, 'w', newline='\n') as f:
                 f.write(data)
 
     plot_templates = flatten([

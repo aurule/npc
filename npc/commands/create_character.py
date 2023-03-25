@@ -280,7 +280,7 @@ def _cp_template_for_char(name, character, prefs, fn=None):
 
     # Write the new file
     try:
-        with open(target_path, 'w') as char_file:
+        with open(target_path, 'w', newline='\n') as char_file:
             char_file.write(data)
     except IOError as err:
         return result.FSError(errmsg=err.strerror + " ({})".format(target_path))

@@ -236,7 +236,7 @@ def init(create_types=False, create_all=False, **kwargs):
         new_dir('.npc')
         log_change(prefs.get_settings_path('campaign'))
         if not dryrun:
-            with open(prefs.get_settings_path('campaign'), 'a') as settings_file:
+            with open(prefs.get_settings_path('campaign'), 'a', newline='\n') as settings_file:
                 json.dump({'campaign_name': campaign_name}, settings_file, indent=4)
 
     if create_types or create_all:
@@ -276,7 +276,7 @@ def open_settings(location, show_defaults=False, settings_type=None, **kwargs):
     if not target_path.exists():
         dirname = target_path.parent
         makedirs(dirname, mode=0o775, exist_ok=True)
-        with open(target_path, 'a') as settings_file:
+        with open(target_path, 'a', newline='\n') as settings_file:
             settings_file.write('{}')
 
     if show_defaults:
