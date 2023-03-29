@@ -65,7 +65,8 @@ setup(
             'templates/*.nwod',
             'templates/*.mako',
             'templates/*.md',
-            'templates/listing/*.mako'
+            'templates/listing/*.mako',
+            'py.typed'
         ]
     },
     entry_points={
