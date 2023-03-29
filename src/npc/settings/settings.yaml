@@ -1,7 +1,6 @@
 npc:
+  version: "2.0.0"
   editor: ""
-  report:
-    format: markdown
   listing:
     format: markdown
     sorting:
