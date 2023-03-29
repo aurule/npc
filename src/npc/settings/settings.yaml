@@ -10,6 +10,8 @@ npc:
     metadata:
       title: NPC Listing
       timestamp: '%a, %b %d %I:%M%p'
+  reorg:
+    path: "{type}/{type-social}/{type-political}/{type-squad}/{groups}"
   tags:
     - name: type
       desc: The character type of an npc
