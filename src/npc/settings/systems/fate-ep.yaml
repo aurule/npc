@@ -1,0 +1,9 @@
+fate-ep:
+  name: "Eclipse Phase: Transhumanity's Fate"
+  desc: Transhuman adventure in FATE
+  inherits: fate
+  tags:
+    - name: morph
+      desc: Special aspect for the body the character is wearing
+    - name: muse
+      desc: Name of the character's muse
