@@ -32,10 +32,6 @@ clean:
 	find . -name '<Temp*' -type d -print0 | xargs -0 rm -fr
 	rm -fr deb_dist dist npc.egg-info .pytest_cache htmlcov .coverage
 
-.PHONY: clean-all
-clean-all: clean
-	rm -fr $(COMPILED_UI_FILES) $(COMPILED_RESOURCE_FILES)
-
 .PHONY: freeze
 freeze:
 	pip freeze | grep -v "pkg-resources" > requirements-dev.txt
