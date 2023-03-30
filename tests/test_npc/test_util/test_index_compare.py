@@ -1,12 +1,29 @@
-from npc import util
+from npc.util import index_compare
 
 class TestCallableHasSingleTrueValue:
-    comparator: callable = lambda x: x == 'b'
-    test_list: list = ['a', 'b', 'c', 'd', 'e']
 
     def test_returns_correct_index(self):
-        index: int = npc.util.index_compare(test_list, comparator)
+        test_list: list = ['a', 'b', 'c', 'd', 'e']
+        comparator: callable = lambda x: x == 'b'
+        
+        index: int = index_compare(test_list, comparator)
+        
         assert index == 1
 
-def test_returns_index_of_fi():
-    assert True
+class TestCallableHasMultipleTrueValues:
+    def test_returns_first_true_index(self):
+        test_list: list = ['a', 'b', 'c', 'd', 'e']
+        comparator: callable = lambda x: x in ['b', 'e']
+        
+        index: int = index_compare(test_list, comparator)
+        
+        assert index == 1
+
+class TestCallableHasNoTrueValue:
+    def test_returns_negative_index(self):
+        test_list: list = ['a', 'b', 'c', 'd', 'e']
+        comparator: callable = lambda x: x == 'n'
+        
+        index: int = index_compare(test_list, comparator)
+        
+        assert index == -1
