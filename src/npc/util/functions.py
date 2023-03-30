@@ -3,13 +3,15 @@ Shared helper functions
 """
 
 import yaml
+from pathlib import Path
+
 from . import errors
 
-def parse_yaml(filename):
+def parse_yaml(filename: Path):
     """Parse a YAML file
 
     Args:
-        filename (str): Path of the file to load
+        filename (Path): Path of the file to load
 
     Returns:
         List or dict from `yaml.safe_load()`
@@ -17,7 +19,7 @@ def parse_yaml(filename):
     with open(filename, 'r') as f:
         try:
             return yaml.safe_load(f)
-        except yaml.parser.ParserError as err:
+        except (yaml.parser.ParserError, yaml.scanner.ScannerError) as err:
             nicestr = "Bad syntax in '{0}' line {2} column {3}: {1}"
             nicemsg = nicestr.format(filename, err.problem, err.problem_mark.line, err.problem_mark.column)
             raise errors.ParseError(nicemsg, filename, err.problem_mark.line, err.problem_mark.column)
