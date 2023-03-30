@@ -70,17 +70,17 @@ def merge_tags_lists(new_tags: list, orig: list) -> list:
     """
     dest: list = list(orig)
 
-    for val in new_data:
+    for val in new_tags:
         if val in dest:
             continue
 
         if isinstance(val, dict):
-            key: int = index_compare(dest, lambda q: q.name == val.name)
+            key: int = index_compare(dest, lambda q: q["name"] == val["name"])
             if key < 0:
-                dest.push(val)
+                dest.append(val)
                 continue
             dest[key] = merge_settings_dicts(val, dest[key])
         else:
-            dest.push(val)
+            dest.append(val)
 
     return dest
