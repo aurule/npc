@@ -3,7 +3,6 @@ Helper functions unique to the settings module
 """
 
 from ..util import index_compare
-
 from npc.util.errors import SchemaError
 
 
@@ -57,7 +56,8 @@ def merge_tags_lists(new_tags: list, orig: list) -> list:
 
     Add the keys in new_tags to the orig list. The logic for this merge is:
     1. If the new value is a dict, assume it describes a tag.
-        a. If an entry exists in orig with the same name as the new value, call merge_settings_dicts to update the existing tag entry
+        a. If an entry exists in orig with the same name as the new value, call merge_settings_dicts to update
+            the existing tag entry
         b. If no such entry exists, push the new tag onto the list
     2. Otherwise, push the new value onto the list
 
