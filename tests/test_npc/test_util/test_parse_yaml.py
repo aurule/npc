@@ -1,9 +1,20 @@
-from npc.util import index_compare
+import pytest
+
+from npc.util import parse_yaml
+from npc.util.errors import ParseError
+from tests.fixtures import fixture_file
 
 class TestWithValidFile:
     def test_returns_parsed_data(self):
-        pass
+        valid_file: Path = fixture_file(["valid.yaml"])
+
+        result: dict = parse_yaml(valid_file)
+
+        assert result == {"valid": True}
 
 class TestWithMalformedFile:
     def test_throws_parse_error(self):
-        pass
+        invalid_file: Path = fixture_file(["invalid.yaml"])
+
+        with pytest.raises(ParseError):
+            result: dict = parse_yaml(invalid_file)
