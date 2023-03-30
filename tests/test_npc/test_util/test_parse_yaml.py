@@ -17,4 +17,4 @@ class TestWithMalformedFile:
         invalid_file: Path = fixture_file(["invalid.yaml"])
 
         with pytest.raises(ParseError):
-            result: dict = parse_yaml(invalid_file)
+            parse_yaml(invalid_file)
