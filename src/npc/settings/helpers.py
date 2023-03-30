@@ -4,6 +4,9 @@ Helper functions unique to the settings module
 
 from ..util import index_compare
 
+from npc.util.errors import SchemaError
+
+
 def merge_settings_dicts(new_data: dict, orig: dict) -> dict:
     """Merge one dictionary into another, and return the result
 
@@ -35,13 +38,12 @@ def merge_settings_dicts(new_data: dict, orig: dict) -> dict:
             dest[key] = val
             continue
 
+        if not isinstance(val, type(dest[key])):
+            raise SchemaError("Expected {0} for '{1}', found {2}".format(type(dest[key]), key, type(val)))
+
         if isinstance(dest[key], dict):
-            if not isinstance(val, dict):
-                raise errors.ParseError("Expected dict for '{0}', found {1}".format(key, type(val)))
             dest[key] = merge_settings_dicts(val, dest[key])
         elif isinstance(dest[key], list):
-            if not isinstance(val, list):
-                raise errors.ParseError("Expected list for '{0}', found {1}".format(key, type(val)))
             dest[key] = merge_tags_lists(val, dest[key])
         else:
             dest[key] = val
