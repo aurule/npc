@@ -28,6 +28,13 @@ class Settings:
         self.install_base: Path = Path(self.default_settings_path).parent
 
         # load defaults and user prefs
+        self.refresh()
+
+    def refresh(self):
+        """
+        Clear internal data, and refresh the default and personal settings files
+        """
+        self.data = {}
         self.load_settings_file(self.install_base / "settings" / "settings.yaml")
         self.load_settings_file(self.personal_dir / "settings.yaml")
 

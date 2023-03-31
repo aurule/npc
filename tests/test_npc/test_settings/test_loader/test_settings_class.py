@@ -24,6 +24,28 @@ class TestSetup:
 
         assert settings.campaign_dir == tmp_path
 
+class TestRefresh:
+    def test_purges_changed_values(self):
+        settings = Settings()
+        settings.data["npc"]["editor"] = "test"
+
+        settings.refresh()
+
+        assert settings.get("npc.editor") == ""
+
+    def test_updates_personal_settings(self, tmp_path):
+        settings = Settings(personal_dir = tmp_path)
+
+        assert settings.get("npc.editor") == ""
+
+        personal_settings = {"npc": {"editor": "custom"}}
+        temp_file = tmp_path / "settings.yaml"
+        temp_file.write_text(yaml.dump(personal_settings))
+
+        settings.refresh()
+
+        assert settings.get("npc.editor") == "custom"
+
 class TestLoadSettingsFile:
     def test_merges_valid_settings(self):
         settings = Settings()
