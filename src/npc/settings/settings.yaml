@@ -71,4 +71,13 @@ npc:
   deprecated_tags:
       keep:
         desc: Prevent this file from being moved by the reorg command
-        replacement: sticky
+        replaced_by: sticky
+        deprecated: 2.0.0
+      hidegroup:
+        desc: Hide a single named group.
+        replaced_by: hide
+        deprecated: 1.4.1
+      hideranks:
+        desc: Hide all ranks for a named group.
+        replaced_by: hide
+        deprecated: 1.4.1
