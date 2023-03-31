@@ -81,7 +81,8 @@ npc:
 campaign:
   characters:
     path: Characters
-    subfolders: "{type}/{type-social}/{type-political}/{type-squad}/{groups}"
+    subpaths: "{type}/{type-social}/{type-political}/{type-squad}/{groups}"
+    ignore_subpaths: []
     listing:
       format: markdown
       sorting:
