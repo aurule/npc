@@ -7,16 +7,6 @@ class Error(Exception):
     pass
 
 """
-Raised when trying to use a malformed file
-
-Attributes:
-    strerror (str): Error message describing what happened
-"""
-class FormatError(Error):
-    def __init__(self, strerror):
-        self.strerror = strerror
-
-"""
 Raised when a file parsing operation fails
 
 Attributes:
