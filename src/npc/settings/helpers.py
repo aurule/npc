@@ -43,26 +43,21 @@ def merge_settings_dicts(new_data: dict, orig: dict) -> dict:
         if isinstance(dest[key], dict):
             dest[key] = merge_settings_dicts(val, dest[key])
         elif isinstance(dest[key], list):
-            dest[key] = merge_tags_lists(val, dest[key])
+            dest[key] = merge_settings_lists(val, dest[key])
         else:
             dest[key] = val
 
     return dest
 
-def merge_tags_lists(new_tags: list, orig: list) -> list:
-    """Merge two lists that may contain tag data
+def merge_settings_lists(new_list: list, orig: list) -> list:
+    """Merge two lists
 
     This method does not modify the original list.
 
-    Add the keys in new_tags to the orig list. The logic for this merge is:
-    1. If the new value is a dict, assume it describes a tag.
-        a. If an entry exists in orig with the same name as the new value, call merge_settings_dicts to update
-            the existing tag entry
-        b. If no such entry exists, push the new tag onto the list
-    2. Otherwise, push the new value onto the list
+    Add the values in new_list to the orig list. Values which are already present in orig are skipped.
 
     Args:
-        new_tags (list): List to merge into orig
+        new_list (list): List to merge into orig
         orig (list): List to receive new or updated keys
 
     Returns:
@@ -70,17 +65,8 @@ def merge_tags_lists(new_tags: list, orig: list) -> list:
     """
     dest: list = list(orig)
 
-    for val in new_tags:
-        if val in dest:
-            continue
-
-        if isinstance(val, dict):
-            key: int = index_compare(dest, lambda q: q["name"] == val["name"])
-            if key < 0:
-                dest.append(val)
-                continue
-            dest[key] = merge_settings_dicts(val, dest[key])
-        else:
+    for val in new_list:
+        if val not in dest:
             dest.append(val)
 
     return dest
