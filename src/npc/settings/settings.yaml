@@ -1,16 +1,6 @@
 npc:
   version: 2.0.0
   editor: ""
-  listing:
-    format: markdown
-    sorting:
-      - last
-    base_header_level: 1
-    metadata:
-      title: NPC Listing
-      timestamp: '%a, %b %d %I:%M%p'
-  reorg:
-    path: "{type}/{type-social}/{type-political}/{type-squad}/{groups}"
   tags:
     type:
       desc: The character type of an npc
@@ -91,6 +81,15 @@ npc:
 campaign:
   characters:
     path: Characters
+    subfolders: "{type}/{type-social}/{type-political}/{type-squad}/{groups}"
+    listing:
+      format: markdown
+      sorting:
+        - last
+      base_header_level: 1
+      metadata:
+        title: NPC Listing
+        timestamp: '%a, %b %d %I:%M%p'
   session:
     path: Session History
     templates:
