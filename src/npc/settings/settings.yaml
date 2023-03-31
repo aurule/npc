@@ -24,12 +24,6 @@ npc:
     - name: realname
       desc: The true primary name for the character. Useful when the real name uses characters that are not allowed in a filename.
       max: 1
-    - name: location
-      desc: Broad description of where the character lives.
-    - name: region
-      desc: More specific area in which the character lives. Typically contained within their location.
-    - name: locale
-      desc: Even more specific area in which the character lives. Typically contained within their region.
     - name: appearance
       desc: What the character looks like to other people.
     - name: race
@@ -38,6 +32,18 @@ npc:
       desc: How old the character is.
     - name: portrait
       desc: Name of an image file to use for the character.
+    - name: location
+      desc: Broad description of where the character lives.
+    - name: region
+      desc: More specific area in which the character lives. Typically contained within their location.
+    - name: locale
+      desc: Even more specific area in which the character lives. Typically contained within their region.
+    - name: wanderer
+      desc: Signifies that the character has no permanent home. Optionally contains a description of their travel habits, etc.
+      allow_empty: true
+    - name: foreign
+      desc: Signifies that the character does not live in the game's primary play area. Optionally contains a description of where they do live.
+      allow_empty: true
     - name: group
       desc: Name of a group that the character belongs to.
       subtags:
@@ -60,12 +66,6 @@ npc:
     - name: skip
       desc: Do not show this character in listings.
       no_value: true
-    - name: wanderer
-      desc: Signifies that the character has no permanent home. Optionally contains a description of their travel habits, etc.
-      allow_empty: true
-    - name: foreign
-      desc: Signifies that the character does not live in the game's primary play area. Optionally contains a description of where they do live.
-      allow_empty: true
   deprecated_tags:
       - name: keep
         desc: Prevent this file from being moved by the reorg command
