@@ -1,2 +1,25 @@
 werewolf:
   name: Werewolf
+  desc: Shapechanging warriors who guard the spirit world
+  tags:
+    auspice:
+      desc: Social caste based on the moon that the werewolf was born under
+      values: *auspices
+    tribe:
+      desc: Large group that the werewolf belongs to
+      values: *tribes
+  auspices: &auspices
+    - irraka
+    - ithaeur
+    - cahalith
+    - elodoth
+    - rahu
+  tribes: &tribes
+    - blood talons
+    - bone shadows
+    - hunters in darkness
+    - iron masters
+    - storm lords
+    - fire-touched
+    - ivory claws
+    - predator kings
