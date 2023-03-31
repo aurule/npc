@@ -67,7 +67,7 @@ npc:
       desc: Do not show this character in listings.
       no_value: true
     hide:
-      desc: xxx
+      desc: Conceal the named tag from listings. Individual tag values can be hidden using [tagname] >> [value]. Hide all subtags using [parent] >> [value] >> subtags, or hide single subtag with [parent] >> [value] >> [subtag value]
   deprecated_tags:
       keep:
         desc: Prevent this file from being moved by the reorg command
