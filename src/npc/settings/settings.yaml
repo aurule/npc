@@ -81,6 +81,9 @@ npc:
         desc: Hide all ranks for a named group.
         replaced_by: hide
         deprecated: 1.4.1
+      description:
+        desc: Public text about this character, like who they are, their history, what they want, etc. This tag should not be used explicitly. It is an internal tag used to store bare text in the tags area of npc sheets.
+        deprecated: 1.0.0
 campaign:
   characters:
     path: Characters
