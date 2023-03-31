@@ -1,5 +1,5 @@
 npc:
-  version: "2.0.0"
+  version: 2.0.0
   editor: ""
   listing:
     format: markdown
@@ -12,61 +12,63 @@ npc:
   reorg:
     path: "{type}/{type-social}/{type-political}/{type-squad}/{groups}"
   tags:
-    - name: type
+    type:
       desc: The character type of an npc
       required: true
       max: 1
-    - name: faketype
+    faketype:
       desc: A false character type that will be shown in listings. Useful for hiding that the town priest is secretly a vampire.
       max: 1
-    - name: name
+    name:
       desc: An additional name the character uses.
-    - name: realname
+    realname:
       desc: The true primary name for the character. Useful when the real name uses characters that are not allowed in a filename.
       max: 1
-    - name: appearance
+    appearance:
       desc: What the character looks like to other people.
-    - name: race
+    race:
       desc: Observable ancestry of the character. Extremely setting-dependent; anything from Greek and Egyptian, to Human and Elvish.
-    - name: age
+    age:
       desc: How old the character is.
-    - name: portrait
+    portrait:
       desc: Name of an image file to use for the character.
-    - name: location
+    location:
       desc: Broad description of where the character lives.
-    - name: region
+    region:
       desc: More specific area in which the character lives. Typically contained within their location.
-    - name: locale
+    locale:
       desc: Even more specific area in which the character lives. Typically contained within their region.
-    - name: wanderer
+    wanderer:
       desc: Signifies that the character has no permanent home. Optionally contains a description of their travel habits, etc.
       allow_empty: true
-    - name: foreign
+    foreign:
       desc: Signifies that the character does not live in the game's primary play area. Optionally contains a description of where they do live.
       allow_empty: true
-    - name: group
+    group:
       desc: Name of a group that the character belongs to.
       subtags:
-        - name: rank
+        rank:
           desc: The character's rank or role within this group.
-    - name: employer
+    employer:
       desc: Name of a person or organization that pays the character for work.
       subtags:
-        - name: job
+        job:
           desc: Name of the character's job at their employer.
-    - name: dead
+    dead:
       desc: Signifies that the character is deceased. Optionally also contains a description of how they perished.
       allow_empty: true
-    - name: sticky
+    sticky:
       desc: Prevent this file from being moved by the reorg command
       no_value: true
-    - name: nolint
+    nolint:
       desc: Do not show linting errors for this character.
       no_value: true
-    - name: skip
+    skip:
       desc: Do not show this character in listings.
       no_value: true
+    hide:
+      desc: xxx
   deprecated_tags:
-      - name: keep
+      keep:
         desc: Prevent this file from being moved by the reorg command
         replacement: sticky
