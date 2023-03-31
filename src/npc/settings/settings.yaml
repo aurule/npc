@@ -81,3 +81,15 @@ npc:
         desc: Hide all ranks for a named group.
         replaced_by: hide
         deprecated: 1.4.1
+campaign:
+  characters:
+    path: Characters
+  session:
+    path: Session History
+    templates:
+      - Session NNN.md
+  plot:
+    path: Plot
+    templates:
+      - Plot NNN.md
+  create_on_init: []
