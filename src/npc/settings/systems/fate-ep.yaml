@@ -3,7 +3,7 @@ fate-ep:
   desc: Transhuman adventure in FATE
   inherits: fate
   tags:
-    - name: morph
+    morph:
       desc: Special aspect for the body the character is wearing
-    - name: muse
+    muse:
       desc: Name of the character's muse

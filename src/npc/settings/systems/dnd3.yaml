@@ -2,8 +2,8 @@ dnd3:
   name: Dungeons & Dragons 3.5e
   desc: D&D 3.5! Just the right amount of crunch.
   tags:
-    - name: class
+    class:
       desc: Name of a class in which the character has levels
       subtags:
-        - name: level
+        level:
           desc: Number of levels the character has in this class

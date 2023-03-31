@@ -2,17 +2,17 @@ fate:
   name: FATE
   desc: A rules-light storytelling system
   tags:
-    - name: concept
+    concept:
       desc: The character's high concept
       required: true
       max: 1
-    - name: trouble
+    trouble:
       desc: The character's main trouble in life
       required: true
       max: 1
-    - name: aspect
+    aspect:
       desc: One of the character's aspects
-    - name: refresh
+    refresh:
       desc: Number of fate points the character starts with. Usually only relevant for PCs.
-    - name: stunt
+    stunt:
       desc: Name of a special stunt the character possesses
