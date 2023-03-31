@@ -24,6 +24,10 @@ npc:
     realname:
       desc: The true primary name for the character. Useful when the real name uses characters that are not allowed in a filename.
       max: 1
+    pronouns:
+      desc: Pronouns the character uses. Particularly useful for androgynous fantasy races.
+    gender:
+      desc: Gender role this character has.
     appearance:
       desc: What the character looks like to other people.
     race:
