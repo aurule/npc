@@ -92,10 +92,12 @@ campaign:
         timestamp: '%a, %b %d %I:%M%p'
   session:
     path: Session History
+    latest_index: 0
     templates:
       - Session NNN.md
   plot:
     path: Plot
+    latest_index: 0
     templates:
       - Plot NNN.md
   create_on_init: []
