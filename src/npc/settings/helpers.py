@@ -70,3 +70,33 @@ def merge_settings_lists(new_list: list, orig: list) -> list:
             dest.append(val)
 
     return dest
+
+def prepend_namespace(data: any, namespace: str = None) -> dict:
+    """Put data inside a nested dict
+    
+    Puts data inside one or more dicts as specified by namespace.
+    For example:
+        prepend_namespace("hello", "npc.greeting.first_time")
+    returns:
+        {"npc": {"greeting": {"first_time": "hello"}}}
+    
+    Args:
+        data (any): Data to insert into a dict
+        namespace (str): Key in dotted format for the namespace (default: `None`)
+    
+    Returns:
+        dict: Nested dict using the namespace keys, containing data within the last key
+    """     
+    if namespace is None or namespace == "":
+        return dict(data)
+
+    return_data: dict = {}
+
+    key_parts: list = namespace.split('.')
+    curr_dict: dict = return_data
+    for i in range(0, len(key_parts) - 1):
+        curr_dict[key_parts[i]] = {}
+        curr_dict = curr_dict[key_parts[i]]
+    curr_dict[key_parts[-1]] = data
+
+    return return_data
