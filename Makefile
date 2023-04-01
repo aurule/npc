@@ -5,11 +5,11 @@ PREFIX := /usr/local
 
 .PHONY: test
 test:
-	python3 -m pytest --tb=no
+	pytest --tb=no
 
 .PHONY: coverage
 coverage:
-	python3 -m pytest --cov=npc -q
+	pytest --cov=npc -q
 	coverage html
 
 .PHONY: install
