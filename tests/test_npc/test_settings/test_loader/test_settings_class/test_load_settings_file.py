@@ -22,3 +22,10 @@ def test_ignores_parse_errors():
     settings.load_settings_file(fixture_file(["invalid.yaml"]))
 
     assert settings.get("npc.version")
+
+def test_loads_into_namespace():
+    settings = Settings()
+
+    settings.load_settings_file(fixture_file(["valid.yaml"]), namespace = "test")
+
+    assert settings.get("test.valid") == True

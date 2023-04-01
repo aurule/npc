@@ -7,7 +7,7 @@ import yaml
 
 from pathlib import Path
 from ..util import errors, parse_yaml
-from .helpers import merge_settings_dicts
+from .helpers import merge_settings_dicts, prepend_namespace
 
 """Core settings class
 
@@ -38,7 +38,7 @@ class Settings:
         self.load_settings_file(self.install_base / "settings" / "settings.yaml")
         self.load_settings_file(self.personal_dir / "settings.yaml")
 
-    def load_settings_file(self, settings_file: Path) -> None:
+    def load_settings_file(self, settings_file: Path, namespace: str = None) -> None:
         """Open, parse, and merge settings from another file
 
         This is the primary way to load more settings info. Passing in a file path that does not exist will
@@ -46,6 +46,7 @@ class Settings:
 
         Args:
             settings_file (Path): The file to load
+            namespace (str): Optional namespace to use for new_data
         """
 
         try:
@@ -58,17 +59,19 @@ class Settings:
             logging.warning(err.strerror)
             return
 
-        self.merge_settings(loaded)
+        self.merge_settings(loaded, namespace)
 
-    def merge_settings(self, new_data: dict) -> None:
+    def merge_settings(self, new_data: dict, namespace: str = None) -> None:
         """Merge a dict of settings with this object
 
         Updates this object's data with the values from new_data
 
         Args:
             new_data (dict): Dict of settings values to merge with this object
+            namespace (str): Optional namespace to use for new_data
         """
-        self.data = merge_settings_dicts(new_data, self.data)
+        dict_to_merge = prepend_namespace(new_data, namespace)
+        self.data = merge_settings_dicts(dict_to_merge, self.data)
 
     def get(self, key, default=None):
         """
