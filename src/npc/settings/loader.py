@@ -168,6 +168,33 @@ class Settings:
                 return default
         return current_data
 
+    @property
+    def required_dirs(self) -> list:
+        """Get the list of required campaign directories
+
+        This includes the dirs for character, session, and plot files, relative to self.campaign_dir
+
+        Returns:
+            list: List of required directory names
+        """
+        return [
+            self.get("campaign.characters.path"),
+            self.get("campaign.session.path"),
+            self.get("campaign.plot.path"),
+        ]
+
+    @property
+    def init_dirs(self) -> list:
+        """Get the list of directories to create on campaign initialization
+
+        This includes self.required_dirs, as well as any directory listed in the settings key
+        campaign.create_on_init. All paths are relative to self.campaign_dir.
+
+        Returns:
+            list: List of directory names to create on campaign init
+        """
+        return self.required_dirs + self.get("campaign.create_on_init")
+
 # types
 #   search paths
 #   - `default/types/[system]/*.yaml`
