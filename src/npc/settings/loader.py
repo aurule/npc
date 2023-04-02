@@ -3,11 +3,11 @@ Load and save settings info
 """
 
 import logging
-import yaml
+from collections import defaultdict
 
 from pathlib import Path
-from ..util import errors, parse_yaml
-from .helpers import merge_settings_dicts, prepend_namespace
+from ..util import errors
+from .helpers import merge_settings_dicts, prepend_namespace, quiet_parse
 
 """Core settings class
 
@@ -30,13 +30,15 @@ class Settings:
         # load defaults and user prefs
         self.refresh()
 
-    def refresh(self):
+    def refresh(self) -> None:
         """
         Clear internal data, and refresh the default and personal settings files
         """
         self.data = {}
         self.load_settings_file(self.install_base / "settings" / "settings.yaml")
+        self.load_systems(self.install_base / "settings" / "systems")
         self.load_settings_file(self.personal_dir / "settings.yaml")
+        self.load_systems(self.personal_dir / "systems")
 
     def load_settings_file(self, settings_file: Path, namespace: str = None) -> None:
         """Open, parse, and merge settings from another file
@@ -49,14 +51,8 @@ class Settings:
             namespace (str): Optional namespace to use for new_data
         """
 
-        try:
-            loaded = parse_yaml(settings_file)
-        except OSError as err:
-            # Settings are optional, so we silently ignore these errors
-            logging.info('Missing settings file %s', settings_file)
-            return
-        except errors.ParseError as err:
-            logging.warning(err.strerror)
+        loaded: dict = quiet_parse(settings_file)
+        if loaded is None:
             return
 
         self.merge_settings(loaded, namespace)
@@ -73,7 +69,7 @@ class Settings:
         dict_to_merge = prepend_namespace(new_data, namespace)
         self.data = merge_settings_dicts(dict_to_merge, self.data)
 
-    def get(self, key, default=None):
+    def get(self, key, default=None) -> any:
         """
         Get the value of a settings key
 
@@ -98,9 +94,72 @@ class Settings:
                 return default
         return current_data
 
-    # systems
-    #   lazy load on request
-    #   can `inherit` from another system
-    #       Before merging the target system, check its `inherits` property and load that system first. Then finish merging the target system.
-    # types
-    #   lazy load on request
+    def load_systems(self, systems_dir: Path) -> None:
+        """Parse and load all system configs in systems_dir
+        
+        Finds all yaml files in systems_dir and loads them as systems. Special handling allows deep 
+        inheritance, and prevents circular dependencies between systems.
+        
+        Args:
+            systems_dir (Path): Dir to check for system config files
+        """
+        system_settings:list = systems_dir.glob("*.yaml")
+        dependencies = defaultdict(list)
+
+        for settings_file in system_settings:
+            loaded = quiet_parse(settings_file)
+            if loaded is None:
+                continue
+
+            system_name = list(loaded.keys())[0]
+            loaded_contents = loaded[system_name]
+
+            if "inherits" in loaded_contents:
+                dependencies[loaded_contents["inherits"]].append(loaded)
+                continue
+
+            self.merge_settings(loaded, namespace="npc.systems")
+
+        def load_dependencies(deps: dict):
+            """Handle dependency loading
+            
+            Unrecognized parents are stored away for the next iteration. Otherwise, children are merged with 
+            their parent's attributes, then merged into self.
+
+            If the dependencies do not change for one iteration, then the remaining systems cannot be loaded 
+            and are skipped.
+            
+            Args:
+                deps (dict): Dict mapping parent system keys to child system configs
+            """
+            new_deps = {}
+            for parent_name, children in deps.items():
+                if parent_name not in self.get("npc.systems"):
+                    new_deps[parent_name] = children
+                    continue
+
+                for child in children:
+                    child_name = list(child.keys())[0]
+                    parent_conf = dict(self.get(f"npc.systems.{parent_name}"))
+                    combined = merge_settings_dicts(child[child_name], parent_conf)
+                    self.merge_settings(combined, namespace=f"npc.systems.{child_name}")    
+            if not new_deps:
+                return
+            if new_deps == deps:
+                logging.error(f"Some systems could not be found: {deps.keys()}")
+                return
+            load_dependencies(new_deps)
+
+        load_dependencies(dependencies)
+
+# types
+#   search paths
+#   - `default/types/[system]/*.yaml`
+#   - `user/types/[system]/*.yaml`
+#   - `campaign/types/*.yaml`
+#   sheet_path optional, defaults to type's own file dir
+#       if a dir, searches as normal
+#       if a file, loads file directly
+#   searches for sheet file by way of typename.*, first thing that matches
+#   new sheets use the found file's extension
+#   expands file path on load, stores it as a Path object

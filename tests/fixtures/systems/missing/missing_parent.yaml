@@ -1,0 +1,4 @@
+missing_parent:
+  name: Missing Parent
+  desc: System that inherits from an undefined system
+  inherits: missing
