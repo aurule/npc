@@ -2,9 +2,11 @@
 Helper functions unique to the settings module
 """
 
-from ..util import index_compare
-from npc.util.errors import SchemaError
+import logging
+from pathlib import Path
 
+from ..util import index_compare, errors, parse_yaml
+from npc.util.errors import SchemaError
 
 def merge_settings_dicts(new_data: dict, orig: dict) -> dict:
     """Merge one dictionary into another, and return the result
@@ -100,3 +102,26 @@ def prepend_namespace(data: any, namespace: str = None) -> dict:
     curr_dict[key_parts[-1]] = data
 
     return return_data
+
+def quiet_parse(settings_file: Path) -> dict:
+    """Parse a yaml file and send log messages for common errors
+    
+    Parses a yaml file while suppressing exceptions for missing files or parse problems
+    
+    Args:
+        settings_file (Path): Path to the yaml file to load
+    
+    Returns:
+        dict: Parsed contents of the yaml file
+    """
+    try:
+        loaded: dict = parse_yaml(settings_file)
+    except OSError as err:
+        # Settings are optional, so we silently ignore these errors
+        logging.info('Missing settings file %s', settings_file)
+        return None
+    except errors.ParseError as err:
+        logging.warning(err.strerror)
+        return None
+
+    return loaded
