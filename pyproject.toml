@@ -1,0 +1,51 @@
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "npc"
+authors = [
+	{name = "Paige Andrews", email = "pmandrews@gmail.com"}
+]
+description = "Game master's tool to manage characters and game files"
+readme = "README.md"
+requires-python = ">=3.10"
+keywords = ["npc", "tabletop", "gaming", "gm", "campaign"]
+license = {text = "MIT License"}
+classifiers = [
+    'Development Status :: 5 - Production/Stable',
+    'License :: OSI Approved :: MIT License',
+    'Programming Language :: Python :: 3',
+]
+dependencies = [
+	"Mako",
+	"Markdown",
+]
+dynamic = ["version"]
+
+[project.urls]
+documentation = "https://npc.readthedocs.io/en/latest/"
+repository = "https://github.com/aurule/npc"
+
+[project.optional-dependencies]
+test = ["pytest >= 6.0.0"]
+
+[project.scripts]
+
+[project.gui-scripts]
+
+# 
+# Tool Configs
+# 
+
+[tool.coverage.run]
+branch = true
+
+[tool.coverage.report]
+omit = ["npc/__main__.py"]
+
+[tool.pytest.ini_options]
+minversion = "6.0.0"
+pythonpath = "src"
+testpaths = "tests"
+norecursedirs = "fixtures"
