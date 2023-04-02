@@ -6,7 +6,6 @@ being contained within a campaign.
 import yaml
 from pathlib import Path
 
-from . import helpers
 from ..settings import Settings
 
 def init(campaign_path: str, *, name: str, system: str, desc: str = None, settings: Settings = None) -> Settings:
@@ -34,24 +33,24 @@ def init(campaign_path: str, *, name: str, system: str, desc: str = None, settin
     Returns:
         Settings: Settings object with the new campaign loaded
     """
-	config_contents: dict = {"campaign": {"name": name, "system": system}}
-	if desc is not None:
-		config_contents["campaign"]["desc"] = desc
+    config_contents: dict = {"campaign": {"name": name, "system": system}}
+    if desc is not None:
+        config_contents["campaign"]["desc"] = desc
 
-	if settings is None:
-		settings = Settings()
+    if settings is None:
+        settings = Settings()
 
-	campaign_dir = Path(campaign_path)
-	config_dir = campaign_dir / ".npc"
+    campaign_dir = Path(campaign_path)
+    config_dir = campaign_dir / ".npc"
 
-	config_dir.mkdir(exist_ok = True)
-	config_file = config_dir / "settings.yaml"
-	with config_file.open('w', newline="\n") as f:
-		yaml.dump(config_contents, f)
+    config_dir.mkdir(exist_ok = True)
+    config_file = config_dir / "settings.yaml"
+    with config_file.open('w', newline="\n") as f:
+        yaml.dump(config_contents, f)
 
-	for dirname in settings.init_dirs:
-		target = campaign_dir / dirname
-		target.mkdir(exist_ok = True)
+    for dirname in settings.init_dirs:
+        target = campaign_dir / dirname
+        target.mkdir(exist_ok = True)
 
-	settings.load_campaign(campaign_dir)
-	return settings
+    settings.load_campaign(campaign_dir)
+    return settings
