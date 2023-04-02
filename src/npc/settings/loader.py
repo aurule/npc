@@ -4,6 +4,7 @@ Load and save settings info
 
 import logging
 from collections import defaultdict
+from importlib import resources
 
 from pathlib import Path
 from ..util import errors
@@ -24,8 +25,8 @@ class Settings:
         self.personal_dir: Path = personal_dir
         self.campaign_dir: Path = None
 
-        self.default_settings_path: Path = Path(__file__).parent
-        self.install_base: Path = Path(self.default_settings_path).parent
+        self.install_base = resources.files("npc")
+        self.default_settings_path = self.install_base / "settings"
 
         # load defaults and user prefs
         self.refresh()
@@ -35,8 +36,8 @@ class Settings:
         Clear internal data, and refresh the default and personal settings files
         """
         self.data = {}
-        self.load_settings_file(self.install_base / "settings" / "settings.yaml")
-        self.load_systems(self.install_base / "settings" / "systems")
+        self.load_settings_file(self.default_settings_path / "settings.yaml")
+        self.load_systems(self.default_settings_path / "systems")
         self.load_settings_file(self.personal_dir / "settings.yaml")
         self.load_systems(self.personal_dir / "systems")
 
