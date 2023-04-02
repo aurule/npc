@@ -9,7 +9,7 @@ test:
 
 .PHONY: coverage
 coverage:
-	pytest --cov=npc -q
+	pytest --cov=npc -q -p no:pretty
 	coverage html
 
 .PHONY: install
