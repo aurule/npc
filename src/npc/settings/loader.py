@@ -10,14 +10,14 @@ from pathlib import Path
 from ..util import errors
 from .helpers import merge_settings_dicts, prepend_namespace, quiet_parse
 
-"""Core settings class
-
-On init, it loads the default settings, followed by settings in the personal_dir. The campaign_dir is saved
-for later use.
-
-Settings are stored in yaml files.
-"""
 class Settings:
+    """Core settings class
+
+    On init, it loads the default settings, followed by settings in the personal_dir. The campaign_dir is saved
+    for later use.
+
+    Settings are stored in yaml files.
+    """
     def __init__(self, personal_dir: Path = None):
         self.data: dict = {}
         if(personal_dir is None):
