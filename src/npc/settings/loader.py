@@ -72,43 +72,6 @@ class Settings:
 
         self.merge_settings(loaded, namespace)
 
-    def merge_settings(self, new_data: dict, namespace: str = None) -> None:
-        """Merge a dict of settings with this object
-
-        Updates this object's data with the values from new_data
-
-        Args:
-            new_data (dict): Dict of settings values to merge with this object
-            namespace (str): Optional namespace to use for new_data
-        """
-        dict_to_merge = prepend_namespace(new_data, namespace)
-        self.data = merge_settings_dicts(dict_to_merge, self.data)
-
-    def get(self, key, default=None) -> any:
-        """
-        Get the value of a settings key
-
-        Use the period character to indicate a nested key. So, the key
-        "alpha.beta.charlie" is looked up like
-        `data['alpha']['beta']['charlie']`.
-
-        Args:
-            key (str): Key to get from settings.
-            default (any): Value to return when key isn't found.
-
-        Returns:
-            The value in that key, or None if the key could not be resolved.
-        """
-        key_parts: list = key.split('.')
-        current_data = self.data
-        for k in key_parts:
-            try:
-                current_data = current_data[k]
-            except (KeyError, TypeError):
-                logging.debug("Key not found: {}".format(key))
-                return default
-        return current_data
-
     def load_systems(self, systems_dir: Path) -> None:
         """Parse and load all system configs in systems_dir
         
@@ -166,6 +129,43 @@ class Settings:
             load_dependencies(new_deps)
 
         load_dependencies(dependencies)
+
+    def merge_settings(self, new_data: dict, namespace: str = None) -> None:
+        """Merge a dict of settings with this object
+
+        Updates this object's data with the values from new_data
+
+        Args:
+            new_data (dict): Dict of settings values to merge with this object
+            namespace (str): Optional namespace to use for new_data
+        """
+        dict_to_merge = prepend_namespace(new_data, namespace)
+        self.data = merge_settings_dicts(dict_to_merge, self.data)
+
+    def get(self, key, default=None) -> any:
+        """
+        Get the value of a settings key
+
+        Use the period character to indicate a nested key. So, the key
+        "alpha.beta.charlie" is looked up like
+        `data['alpha']['beta']['charlie']`.
+
+        Args:
+            key (str): Key to get from settings.
+            default (any): Value to return when key isn't found.
+
+        Returns:
+            The value in that key, or None if the key could not be resolved.
+        """
+        key_parts: list = key.split('.')
+        current_data = self.data
+        for k in key_parts:
+            try:
+                current_data = current_data[k]
+            except (KeyError, TypeError):
+                logging.debug("Key not found: {}".format(key))
+                return default
+        return current_data
 
 # types
 #   search paths
