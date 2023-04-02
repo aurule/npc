@@ -1,0 +1,6 @@
+campaign:
+  name: Test Campaign
+  system: generic
+  create_on_init:
+    - hello
+    - goodbye
