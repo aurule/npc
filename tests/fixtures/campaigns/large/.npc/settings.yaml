@@ -1,0 +1,4 @@
+campaign:
+  name: Test Campaign
+  system: custom
+  desc: Larger campaign with a custom system

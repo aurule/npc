@@ -17,12 +17,12 @@ for later use.
 Settings are stored in yaml files.
 """
 class Settings:
-    def __init__(self, personal_dir: Path = None, campaign_dir: Path = None):
+    def __init__(self, personal_dir: Path = None):
         self.data: dict = {}
         if(personal_dir is None):
             personal_dir = Path('~/.config/npc/').expanduser()
         self.personal_dir: Path = personal_dir
-        self.campaign_dir: Path = campaign_dir
+        self.campaign_dir: Path = None
 
         self.default_settings_path: Path = Path(__file__).parent
         self.install_base: Path = Path(self.default_settings_path).parent
@@ -39,6 +39,21 @@ class Settings:
         self.load_systems(self.install_base / "settings" / "systems")
         self.load_settings_file(self.personal_dir / "settings.yaml")
         self.load_systems(self.personal_dir / "systems")
+
+    def load_campaign(self, campaign_dir: Path) -> None:
+        """Load campaign settings, along with system and type configs
+        
+        Campaigns have a simplified directory structure compared to the primary settings paths, so this method 
+        loads campaign data just a little differently.
+
+        If campaign_dir is provided, this method will overwrite the setings object's existing value.
+        
+        Args:
+            campaign_dir (Path): Path to the campaign settings directory to load.
+        """
+        self.campaign_dir = campaign_dir
+        self.load_settings_file(self.campaign_dir / ".npc" / "settings.yaml")
+        self.load_systems(self.campaign_dir / ".npc" / "systems")
 
     def load_settings_file(self, settings_file: Path, namespace: str = None) -> None:
         """Open, parse, and merge settings from another file
