@@ -3,6 +3,7 @@ Load and save settings info
 """
 
 import logging
+import yaml
 from collections import defaultdict
 from importlib import resources
 
@@ -206,6 +207,30 @@ class Settings:
             return None
 
         return self.campaign_dir / ".npc" / "settings.yaml"
+
+    def patch_campaign_settings(self, data: dict) -> None:
+        """Update some values in the campaign settings and corresponding file
+
+        Updates the internal campaign settings with data, then writes those changes to the current campaign's
+        settings file.
+
+        If campaign_dir is not set, this returns immediately.
+
+        Args:
+            data (dict): Data to change
+        """
+        if not self.campaign_dir:
+            return
+
+        new_data = prepend_namespace(data, "campaign")
+        self.merge_settings(new_data)
+
+        settings_file = self.campaign_settings_file
+        loaded: dict = quiet_parse(settings_file)
+        loaded = merge_settings_dicts(new_data, loaded)
+        with settings_file.open('w', newline="\n") as f:
+            yaml.dump(loaded, f)
+
 # types
 #   search paths
 #   - `default/types/[system]/*.yaml`
