@@ -54,3 +54,26 @@ def init(campaign_path: str, *, name: str, system: str, desc: str = None, settin
 
     settings.load_campaign(campaign_dir)
     return settings
+
+def find_campaign_root(starting_dir: str) -> Path:
+    """Find the root dir of a campaign
+
+    Walks backward up the current dir's parents until either
+    a) The directory contains .npc/, at which point it returns that directory
+    b) The directory is the filesystem root, at which point it returns None
+
+    Args:
+        starting_dir (Path|str): Path whose parents will be searched.
+
+    Returns:
+        Path: Directory to the campaign's root dir, or None if no config dir was found.
+    """
+    current_dir = Path(starting_dir)
+    old_dir = Path('')
+    while not current_dir.joinpath('.npc').is_dir():
+        old_dir = current_dir
+        current_dir = current_dir.parent
+        if old_dir.samefile(current_dir):
+            return None
+
+    return current_dir
