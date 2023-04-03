@@ -195,6 +195,17 @@ class Settings:
         """
         return self.required_dirs + self.get("campaign.create_on_init")
 
+    @property
+    def campaign_settings_file(self) -> Path:
+        """Get the path to the current campaign settings file
+
+        Returns:
+            Path: Path to the campaign's settings file, or None if campaign_dir is not set
+        """
+        if not self.campaign_dir:
+            return None
+
+        return self.campaign_dir / ".npc" / "settings.yaml"
 # types
 #   search paths
 #   - `default/types/[system]/*.yaml`
