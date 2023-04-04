@@ -14,6 +14,8 @@ npc:
     realname:
       desc: The true primary name for the character. Useful when the real name uses characters that are not allowed in a filename.
       max: 1
+    title:
+      desc: Honorific title for the character, like The Kingslayer.
     pronouns:
       desc: Pronouns the character uses. Particularly useful for androgynous fantasy races.
     gender:
