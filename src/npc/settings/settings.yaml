@@ -94,16 +94,16 @@ campaign:
       metadata:
         title: NPC Listing
         timestamp: '%a, %b %d %I:%M%p'
+  plot:
+    path: Plot
+    latest_index: 0
+    filename_pattern: Plot ((NN)).md
+    file_contents: ((COPY))
   session:
     path: Session History
     latest_index: 0
-    filename_pattern: Session NNN.md
+    filename_pattern: Session ((NN)).md
     file_contents: |
       Played:
 
       # (in-game date and time)
-  plot:
-    path: Plot
-    latest_index: 0
-    filename_pattern: Plot NNN.md
-    file_contents: ((COPY))
