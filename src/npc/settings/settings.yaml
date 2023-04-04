@@ -81,6 +81,7 @@ npc:
         desc: Public text about this character, like who they are, their history, what they want, etc. This tag should not be used explicitly. It is an internal tag used to store bare text in the tags area of npc sheets.
         deprecated: 1.0.0
 campaign:
+  create_on_init: []
   characters:
     path: Characters
     subpaths: "{type}/{type-social}/{type-political}/{type-squad}/{groups}"
@@ -96,11 +97,13 @@ campaign:
   session:
     path: Session History
     latest_index: 0
-    templates:
-      - Session NNN.md
+    filename_pattern: Session NNN.md
+    file_contents: |
+      Played:
+
+      # (in-game date and time)
   plot:
     path: Plot
     latest_index: 0
-    templates:
-      - Plot NNN.md
-  create_on_init: []
+    filename_pattern: Plot NNN.md
+    file_contents: ((COPY))
