@@ -84,7 +84,7 @@ campaign:
   characters:
     path: Characters
     subpaths: "{type}/{type-social}/{type-political}/{type-squad}/{groups}"
-    ignore_subpaths: []
+    subpaths_ignored: []
     listing:
       format: markdown
       sorting:
