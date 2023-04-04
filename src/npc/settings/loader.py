@@ -3,6 +3,7 @@ Load and save settings info
 """
 
 import logging
+import re
 import yaml
 from collections import defaultdict
 from importlib import resources
@@ -230,6 +231,37 @@ class Settings:
         loaded = merge_settings_dicts(new_data, loaded)
         with settings_file.open('w', newline="\n") as f:
             yaml.dump(loaded, f)
+
+    def get_latest_index(self, key: str) -> int:
+        if key not in ("plot", "session"):
+            raise KeyError(f"Key must be one of 'plot' or 'session', got '{key}'")
+
+        latest_number: int = self.get(f"campaign.{key}.latest_index")
+        if not self.campaign_dir:
+            logging.warning(f"No campaign dir when fetching latest {key} file")
+            return latest_number
+
+        base_name: str = Path(self.get(f"campaign.{key}.filename_pattern")).name
+        regex_string: str = re.sub(r'\(\(N+\)\)', r'(?P<number>\d+)', base_name)
+        target_regex = re.compile(f"^{regex_string}$", flags=re.I)
+
+        plot_dir: Path = self.campaign_dir / self.get(f"campaign.{key}.path")
+        matches: list = [target_regex.match(f.name) for f in plot_dir.glob("*.*")]
+        plot_numbers: list[int] = [match.group('number') for match in matches if match]
+
+        if plot_numbers:
+            latest_number = max(plot_numbers)
+            self.patch_campaign_settings({"campaign": {key: {"latest_index": latest_number}}})
+
+        return latest_number
+
+    @property
+    def latest_plot_index(self) -> str:
+        return self.get_latest_index("plot")
+
+    @property
+    def latest_session_index(self) -> str:
+        return self.get_latest_index("session")
 
 # types
 #   search paths
