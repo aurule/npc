@@ -1,11 +1,10 @@
-from tests.fixtures import fixture_file
-from npc.campaign import init
+from tests.fixtures import tmp_campaign
 
 from npc.settings import Settings
 from npc.util import parse_yaml
 
-def test_gets_the_file(tmp_path):
-    settings = init(tmp_path, name="Test Campaign", system="generic")
+def test_gets_the_file(tmp_campaign):
+    (tmp_path, settings) = tmp_campaign
 
     assert settings.campaign_settings_file == tmp_path / ".npc" / "settings.yaml"
 
