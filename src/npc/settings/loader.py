@@ -276,6 +276,64 @@ class Settings:
 
         return latest_number
 
+    @property
+    def latest_plot_index(self) -> int:
+        """Get the largest index number in plot filenames
+
+        Calls get_latest_planning_index("plot")
+
+        Returns:
+            int: Highest index of the plot files
+        """
+        return self.get_latest_planning_index("plot")
+
+    @property
+    def latest_session_index(self) -> int:
+        """Get the largest index number in session filenames
+
+        Calls get_latest_planning_index("session")
+
+        Returns:
+            int: Highest index of the session files
+        """
+        return self.get_latest_planning_index("session")
+
+    @property
+    def plot_dir(self) -> Path:
+        """Get the path to the current campaign's plot directory
+
+        Returns:
+            Path: Path to the campaign's plot directory, or None if campaign_dir is not set
+        """
+        if not self.campaign_dir:
+            return None
+
+        return self.campaign_dir / self.get("campaign.plot.path")
+
+    @property
+    def session_dir(self) -> Path:
+        """Get the path to the current campaign's sessions directory
+
+        Returns:
+            Path: Path to the campaign's sessions directory, or None if campaign_dir is not set
+        """
+        if not self.campaign_dir:
+            return None
+
+        return self.campaign_dir / self.get("campaign.session.path")
+
+    @property
+    def characters_dir(self) -> Path:
+        """Get the path to the current campaign's characters directory
+
+        Returns:
+            Path: Path to the campaign's characters directory, or None if campaign_dir is not set
+        """
+        if not self.campaign_dir:
+            return None
+
+        return self.campaign_dir / self.get("campaign.characters.path")
+
 # types
 #   search paths
 #   - `default/types/[system]/*.yaml`
