@@ -242,26 +242,19 @@ class Settings:
             return latest_number
 
         base_name: str = Path(self.get(f"campaign.{key}.filename_pattern")).name
-        regex_string: str = re.sub(r'\(\(N+\)\)', r'(?P<number>\d+)', base_name)
+        # The lambda is **required**, or re.sub() balks at the \d in our replacement string
+        regex_string: str = re.sub(r'\(\(N+\)\)', lambda m: '(?P<number>\\d+)', base_name)
         target_regex = re.compile(f"^{regex_string}$", flags=re.I)
 
         plot_dir: Path = self.campaign_dir / self.get(f"campaign.{key}.path")
         matches: list = [target_regex.match(f.name) for f in plot_dir.glob("*.*")]
-        plot_numbers: list[int] = [match.group('number') for match in matches if match]
+        plot_numbers: list[int] = [int(match.group('number')) for match in matches if match]
 
         if plot_numbers:
             latest_number = max(plot_numbers)
-            self.patch_campaign_settings({"campaign": {key: {"latest_index": latest_number}}})
+            self.patch_campaign_settings({key: {"latest_index": latest_number}})
 
         return latest_number
-
-    @property
-    def latest_plot_index(self) -> str:
-        return self.get_latest_index("plot")
-
-    @property
-    def latest_session_index(self) -> str:
-        return self.get_latest_index("session")
 
 # types
 #   search paths
