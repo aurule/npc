@@ -84,6 +84,35 @@ npc:
     description:
       desc: Public text about this character, like who they are, their history, what they want, etc. This tag should not be used explicitly. It is an internal tag used to store bare text in the tags area of npc sheets.
       deprecated: 1.0.0
+  tag_blocks:
+    int:
+      - sticky
+      - nolint
+      - delist
+    bio:
+      - type
+      - faketype
+      - realname
+      - name
+      - title
+      - pronouns
+      - gender
+      - race
+      - age
+      - portrait
+      - appearance
+      - dead
+    geo:
+      - location
+      - region
+      - locale
+      - wanderer
+      - foreign
+    assoc:
+      - group
+      - employer
+    rest:
+      - "*"
 campaign:
   create_on_init: []
   characters:
@@ -98,6 +127,12 @@ campaign:
       metadata:
         title: NPC Listing
         timestamp: '%a, %b %d %I:%M%p'
+    use_blocks:
+      - int
+      - bio
+      - geo
+      - assoc
+      - rest
   plot:
     path: Plot
     latest_index: 0
