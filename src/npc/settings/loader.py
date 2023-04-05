@@ -266,8 +266,8 @@ class Settings:
         regex_string: str = re.sub(r'\(\(N+\)\)', lambda m: '(?P<number>\\d+)', base_name)
         target_regex = re.compile(f"^{regex_string}$", flags=re.I)
 
-        plot_dir: Path = self.campaign_dir / self.get(f"campaign.{key}.path")
-        matches: list = [target_regex.match(f.name) for f in plot_dir.glob("*.*")]
+        planning_dir: Path = self.campaign_dir / self.get(f"campaign.{key}.path")
+        matches: list = [target_regex.match(f.name) for f in planning_dir.glob("*.*")]
         plot_numbers: list[int] = [int(match.group('number')) for match in matches if match]
 
         if plot_numbers:
