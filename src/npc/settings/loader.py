@@ -11,6 +11,7 @@ from importlib import resources
 from pathlib import Path
 from ..util import errors
 from .helpers import merge_settings_dicts, prepend_namespace, quiet_parse
+from .planning_filename import PlanningFilename
 
 class Settings:
     """Core settings class
@@ -261,13 +262,11 @@ class Settings:
             logging.warning(f"No campaign dir when fetching latest {key} file")
             return latest_number
 
-        base_name: str = Path(self.get(f"campaign.{key}.filename_pattern")).name
-        # The lambda is **required**, or re.sub() balks at the \d in our replacement string
-        regex_string: str = re.sub(r'\(\(N+\)\)', lambda m: '(?P<number>\\d+)', base_name)
-        target_regex = re.compile(f"^{regex_string}$", flags=re.I)
+        planning_name = PlanningFilename(self.get(f"campaign.{key}.filename_pattern"))
+        target_regex = re.compile(f"^{planning_name.index_capture_regex}$", flags=re.I)
 
         planning_dir: Path = self.campaign_dir / self.get(f"campaign.{key}.path")
-        matches: list = [target_regex.match(f.name) for f in planning_dir.glob("*.*")]
+        matches: list = [target_regex.match(f.stem) for f in planning_dir.glob("*.*")]
         plot_numbers: list[int] = [int(match.group('number')) for match in matches if match]
 
         if plot_numbers:
