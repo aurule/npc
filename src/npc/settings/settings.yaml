@@ -59,27 +59,31 @@ npc:
     nolint:
       desc: Do not show linting errors for this character.
       no_value: true
-    skip:
+    delist:
       desc: Do not show this character in listings.
       no_value: true
     hide:
       desc: Conceal the named tag from listings. Individual tag values can be hidden using [tagname] >> [value]. Hide all subtags using [parent] >> [value] >> subtags, or hide single subtag with [parent] >> [value] >> [subtag value]
   deprecated_tags:
-      keep:
-        desc: Prevent this file from being moved by the reorg command
-        replaced_by: sticky
-        deprecated: 2.0.0
-      hidegroup:
-        desc: Hide a single named group.
-        replaced_by: hide
-        deprecated: 1.4.1
-      hideranks:
-        desc: Hide all ranks for a named group.
-        replaced_by: hide
-        deprecated: 1.4.1
-      description:
-        desc: Public text about this character, like who they are, their history, what they want, etc. This tag should not be used explicitly. It is an internal tag used to store bare text in the tags area of npc sheets.
-        deprecated: 1.0.0
+    skip:
+      desc: Do not show this character in listings.
+      replaced_by: delist
+      deprecated: 2.0.0
+    keep:
+      desc: Prevent this file from being moved by the reorg command
+      replaced_by: sticky
+      deprecated: 2.0.0
+    hidegroup:
+      desc: Hide a single named group.
+      replaced_by: hide
+      deprecated: 1.4.1
+    hideranks:
+      desc: Hide all ranks for a named group.
+      replaced_by: hide
+      deprecated: 1.4.1
+    description:
+      desc: Public text about this character, like who they are, their history, what they want, etc. This tag should not be used explicitly. It is an internal tag used to store bare text in the tags area of npc sheets.
+      deprecated: 1.0.0
 campaign:
   create_on_init: []
   characters:
