@@ -60,6 +60,9 @@ target/
 # Linux directory information
 .directory
 
+# Mac directory information
+.DS_STORE
+
 # pyenv local version file
 .python-version
 
