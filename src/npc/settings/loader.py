@@ -232,7 +232,27 @@ class Settings:
         with settings_file.open('w', newline="\n") as f:
             yaml.dump(loaded, f)
 
-    def get_latest_index(self, key: str) -> int:
+    def get_latest_planning_index(self, key: str) -> int:
+        """Find the highest index in planning filenames
+
+        Searches the filenames for either session or plot files to find the highest index within those names.
+        Filenames must match campaign.x.filename_pattern, but the file type suffix is ignored. The string
+        ((NNN)) is where this method will look for the index number (the total number of Ns is not relevant).
+
+        If there are no matching files, the value from campaign.x.latest_index is returned instead.
+
+        If there is no campaign_dir, a warning is logged and the value from campaign.x.latest_index is returned.
+
+        Args:
+            key (str): Type of planning file to examine. Must be one of "plot" or "session".
+
+        Returns:
+            int: Highest index number appearing within filenames that match the key's filename_pattern, or the
+                 value of the key's latest_index setting.
+
+        Raises:
+            KeyError: When key is invalid.
+        """
         if key not in ("plot", "session"):
             raise KeyError(f"Key must be one of 'plot' or 'session', got '{key}'")
 

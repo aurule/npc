@@ -6,14 +6,14 @@ from npc.settings import Settings
 def test_throws_on_bad_key():
     settings = Settings()
     with pytest.raises(KeyError):
-        settings.get_latest_index("nope")
+        settings.get_latest_planning_index("nope")
 
 class TestWithNoCampaignDir:
     @pytest.mark.parametrize("key", ["plot", "session"])
     def test_returns_saved_index(self, key):
         settings = Settings()
 
-        result = settings.get_latest_index(key)
+        result = settings.get_latest_planning_index(key)
 
         assert result == 0
 
@@ -22,7 +22,7 @@ class TestWithNoFiles:
     def test_returns_saved_index(self, tmp_campaign, key):
         tmp_path, settings = tmp_campaign
 
-        result = settings.get_latest_index(key)
+        result = settings.get_latest_planning_index(key)
 
         assert result == 0
 
@@ -32,7 +32,7 @@ class TestWithOneUsefulFile:
         tmp_path, settings = tmp_campaign
         tmp_path.joinpath(*path).touch()
 
-        result = settings.get_latest_index(key)
+        result = settings.get_latest_planning_index(key)
 
         assert result == 5
 
@@ -41,7 +41,7 @@ class TestWithOneUsefulFile:
         tmp_path, settings = tmp_campaign
         tmp_path.joinpath(*path).touch()
 
-        settings.get_latest_index(key)
+        settings.get_latest_planning_index(key)
 
         assert settings.get(f"campaign.{key}.latest_index") == 5
 
@@ -55,7 +55,7 @@ class TestWithManyFiles:
         for filename in files:
             tmp_path.joinpath(path, filename).touch()
 
-        result = settings.get_latest_index(key)
+        result = settings.get_latest_planning_index(key)
 
         assert result == 3
 
@@ -68,7 +68,7 @@ class TestWithManyFiles:
         for filename in files:
             tmp_path.joinpath(path, filename).touch()
 
-        settings.get_latest_index(key)
+        settings.get_latest_planning_index(key)
 
         assert settings.get(f"campaign.{key}.latest_index") == 3
 
@@ -82,6 +82,6 @@ class TestWithManyFiles:
             tmp_path.joinpath(path, filename).touch()
         tmp_path.joinpath(path, "Extra 04.md").touch()
 
-        result = settings.get_latest_index(key)
+        result = settings.get_latest_planning_index(key)
 
         assert result == 3
