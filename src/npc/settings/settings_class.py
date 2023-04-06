@@ -344,15 +344,3 @@ class Settings:
             return None
 
         return self.campaign_dir / self.get("campaign.characters.path")
-
-# types
-#   search paths
-#   - `default/types/[system]/*.yaml`
-#   - `user/types/[system]/*.yaml`
-#   - `campaign/types/*.yaml`
-#   sheet_path optional, defaults to type's own file dir
-#       if a dir, searches as normal
-#       if a file, loads file directly
-#   searches for sheet file by way of typename.*, first thing that matches
-#   new sheets use the found file's extension
-#   expands file path on load, stores it as a Path object
