@@ -56,8 +56,8 @@ class Settings:
             campaign_dir (Path): Path to the campaign settings directory to load.
         """
         self.campaign_dir = campaign_dir
-        self.load_settings_file(self.campaign_dir / ".npc" / "settings.yaml")
-        self.load_systems(self.campaign_dir / ".npc" / "systems")
+        self.load_settings_file(self.campaign_settings_file)
+        self.load_systems(self.campaign_settings_dir / "systems")
 
     def load_settings_file(self, settings_file: Path, namespace: str = None) -> None:
         """Open, parse, and merge settings from another file
@@ -199,6 +199,18 @@ class Settings:
         return self.required_dirs + self.get("campaign.create_on_init")
 
     @property
+    def campaign_settings_dir(self) -> Path:
+        """Get the path to the current campaign settings directory
+
+        Returns:
+            Path: Path to the campaign's settings dir, or None if campaign_dir is not set
+        """
+        if not self.campaign_dir:
+            return None
+
+        return self.campaign_dir / ".npc"
+
+    @property
     def campaign_settings_file(self) -> Path:
         """Get the path to the current campaign settings file
 
@@ -208,7 +220,7 @@ class Settings:
         if not self.campaign_dir:
             return None
 
-        return self.campaign_dir / ".npc" / "settings.yaml"
+        return self.campaign_settings_dir / "settings.yaml"
 
     def patch_campaign_settings(self, data: dict) -> None:
         """Update some values in the campaign settings and corresponding file
