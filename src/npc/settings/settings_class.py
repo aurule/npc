@@ -9,11 +9,12 @@ from collections import defaultdict
 from importlib import resources
 
 from pathlib import Path
-from ..util import errors
-from .helpers import merge_settings_dicts, prepend_namespace, quiet_parse
+from ..util import errors, DataStore
+from ..util.functions import merge_data_dicts, prepend_namespace
+from .helpers import quiet_parse
 from .planning_filename import PlanningFilename
 
-class Settings:
+class Settings(DataStore):
     """Core settings class
 
     On init, it loads the default settings, followed by settings in the personal_dir. The campaign_dir is saved
@@ -22,7 +23,8 @@ class Settings:
     Settings are stored in yaml files.
     """
     def __init__(self, personal_dir: Path = None):
-        self.data: dict = {}
+        super().__init__()
+
         if(personal_dir is None):
             personal_dir = Path('~/.config/npc/').expanduser()
         self.personal_dir: Path = personal_dir
@@ -74,7 +76,7 @@ class Settings:
         if loaded is None:
             return
 
-        self.merge_settings(loaded, namespace)
+        self.merge_data(loaded, namespace)
 
     def load_systems(self, systems_dir: Path) -> None:
         """Parse and load all system configs in systems_dir
@@ -100,7 +102,7 @@ class Settings:
                 dependencies[loaded_contents["inherits"]].append(loaded)
                 continue
 
-            self.merge_settings(loaded, namespace="npc.systems")
+            self.merge_data(loaded, namespace="npc.systems")
 
         def load_dependencies(deps: dict):
             """Handle dependency loading
@@ -123,8 +125,8 @@ class Settings:
                 for child in children:
                     child_name = list(child.keys())[0]
                     parent_conf = dict(self.get(f"npc.systems.{parent_name}"))
-                    combined = merge_settings_dicts(child[child_name], parent_conf)
-                    self.merge_settings(combined, namespace=f"npc.systems.{child_name}")    
+                    combined = merge_data_dicts(child[child_name], parent_conf)
+                    self.merge_data(combined, namespace=f"npc.systems.{child_name}")
             if not new_deps:
                 return
             if new_deps == deps:
@@ -133,43 +135,6 @@ class Settings:
             load_dependencies(new_deps)
 
         load_dependencies(dependencies)
-
-    def merge_settings(self, new_data: dict, namespace: str = None) -> None:
-        """Merge a dict of settings with this object
-
-        Updates this object's data with the values from new_data
-
-        Args:
-            new_data (dict): Dict of settings values to merge with this object
-            namespace (str): Optional namespace to use for new_data
-        """
-        dict_to_merge = prepend_namespace(new_data, namespace)
-        self.data = merge_settings_dicts(dict_to_merge, self.data)
-
-    def get(self, key, default=None) -> any:
-        """
-        Get the value of a settings key
-
-        Use the period character to indicate a nested key. So, the key
-        "alpha.beta.charlie" is looked up like
-        `data['alpha']['beta']['charlie']`.
-
-        Args:
-            key (str): Key to get from settings.
-            default (any): Value to return when key isn't found.
-
-        Returns:
-            The value in that key, or None if the key could not be resolved.
-        """
-        key_parts: list = key.split('.')
-        current_data = self.data
-        for k in key_parts:
-            try:
-                current_data = current_data[k]
-            except (KeyError, TypeError):
-                logging.debug("Key not found: {}".format(key))
-                return default
-        return current_data
 
     @property
     def required_dirs(self) -> list:
@@ -237,11 +202,11 @@ class Settings:
             return
 
         new_data = prepend_namespace(data, "campaign")
-        self.merge_settings(new_data)
+        self.merge_data(new_data)
 
         settings_file = self.campaign_settings_file
         loaded: dict = quiet_parse(settings_file)
-        loaded = merge_settings_dicts(new_data, loaded)
+        loaded = merge_data_dicts(new_data, loaded)
         with settings_file.open('w', newline="\n") as f:
             yaml.dump(loaded, f)
 

@@ -1,4 +1,4 @@
-from npc.settings.helpers import prepend_namespace
+from npc.util.functions import prepend_namespace
 
 class TestWithNoNamespace:
 	data = {"test": True}
