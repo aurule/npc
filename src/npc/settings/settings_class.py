@@ -9,7 +9,7 @@ from importlib import resources
 
 from pathlib import Path
 from ..util import DataStore
-from ..util.functions import merge_data_dicts, prepend_namespace
+from ..util.functions import merge_data_dicts, prepend_namespace, parse_yaml
 from .helpers import quiet_parse
 
 class Settings(DataStore):
@@ -118,6 +118,31 @@ class Settings(DataStore):
             load_dependencies(new_deps)
 
         load_dependencies(dependencies)
+
+
+    def load_types(self, types_dir: Path, *, system_key: str, namespace_root: str = "npc"):
+        """Load type definitions from a path for a given game system
+
+        Parses and stores type definitions found in types_dir. All yaml files in that dir are assumed to be
+        type defs. Files immediately in the dir are parsed first, then a subdir matching the given system key
+        is checked.
+
+        Parsed definitions are put into the "x.types.system" namespace. The root of this namespace is
+        determined by the namespace_root passed, and the system component uses the system key provided.
+
+        Args:
+            types_dir (Path): Path to look in for type definitions
+            system_key (str): Key of the game system these types are for
+            namespace_root (str): [description] (default: `"npc"`)
+        """
+        def glob_and_load(search_dir):
+            for type_file in search_dir.glob("*.yaml"):
+                typedef = parse_yaml(type_file)
+                self.merge_data(typedef, types_namespace)
+
+        types_namespace: str = f"{namespace_root}.types.{system_key}"
+        glob_and_load(types_dir)
+        glob_and_load(types_dir / system_key)
 
     @property
     def required_dirs(self) -> list:

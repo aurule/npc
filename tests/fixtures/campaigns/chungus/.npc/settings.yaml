@@ -1,0 +1,4 @@
+campaign:
+  name: Chonky Campaign
+  system: generic
+  desc: A campaign with custom character type
