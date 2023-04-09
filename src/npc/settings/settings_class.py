@@ -3,7 +3,6 @@ Load and save settings info
 """
 
 import logging
-import re
 import yaml
 from collections import defaultdict
 from importlib import resources
@@ -209,70 +208,6 @@ class Settings(DataStore):
         loaded = merge_data_dicts(new_data, loaded)
         with settings_file.open('w', newline="\n") as f:
             yaml.dump(loaded, f)
-
-    def get_latest_planning_index(self, key: str) -> int:
-        """Find the highest index in planning filenames
-
-        Searches the filenames for either session or plot files to find the highest index within those names.
-        Filenames must match campaign.x.filename_pattern, but the file type suffix is ignored. The string
-        ((NNN)) is where this method will look for the index number (the total number of Ns is not relevant).
-
-        If there are no matching files, the value from campaign.x.latest_index is returned instead.
-
-        If there is no campaign_dir, a warning is logged and the value from campaign.x.latest_index is returned.
-
-        Args:
-            key (str): Type of planning file to examine. Must be one of "plot" or "session".
-
-        Returns:
-            int: Highest index number appearing within filenames that match the key's filename_pattern, or the
-                 value of the key's latest_index setting.
-
-        Raises:
-            KeyError: When key is invalid.
-        """
-        if key not in ("plot", "session"):
-            raise KeyError(f"Key must be one of 'plot' or 'session', got '{key}'")
-
-        latest_number: int = self.get(f"campaign.{key}.latest_index")
-        if not self.has_campaign:
-            logging.warning(f"No campaign dir when fetching latest {key} file")
-            return latest_number
-
-        planning_name = PlanningFilename(self.get(f"campaign.{key}.filename_pattern"))
-        target_regex = re.compile(f"^{planning_name.index_capture_regex}$", flags=re.I)
-
-        planning_dir: Path = self.campaign_dir / self.get(f"campaign.{key}.path")
-        matches: list = [target_regex.match(f.stem) for f in planning_dir.glob("*.*")]
-        plot_numbers: list[int] = [int(match.group('number')) for match in matches if match]
-
-        if plot_numbers:
-            latest_number = max(plot_numbers)
-            self.patch_campaign_settings({key: {"latest_index": latest_number}})
-
-        return latest_number
-
-    @property
-    def latest_plot_index(self) -> int:
-        """Get the largest index number in plot filenames
-
-        Calls get_latest_planning_index("plot")
-
-        Returns:
-            int: Highest index of the plot files
-        """
-        return self.get_latest_planning_index("plot")
-
-    @property
-    def latest_session_index(self) -> int:
-        """Get the largest index number in session filenames
-
-        Calls get_latest_planning_index("session")
-
-        Returns:
-            int: Highest index of the session files
-        """
-        return self.get_latest_planning_index("session")
 
     @property
     def plot_dir(self) -> Path:

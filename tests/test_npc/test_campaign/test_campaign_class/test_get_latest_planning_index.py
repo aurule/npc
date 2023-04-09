@@ -3,26 +3,14 @@ from tests.fixtures import tmp_campaign
 
 from npc.settings import Settings
 
-def test_throws_on_bad_key():
-    settings = Settings()
+def test_throws_on_bad_key(tmp_campaign):
     with pytest.raises(KeyError):
-        settings.get_latest_planning_index("nope")
-
-class TestWithNoCampaignDir:
-    @pytest.mark.parametrize("key", ["plot", "session"])
-    def test_returns_saved_index(self, key):
-        settings = Settings()
-
-        result = settings.get_latest_planning_index(key)
-
-        assert result == 0
+        tmp_campaign.get_latest_planning_index("nope")
 
 class TestWithNoFiles:
     @pytest.mark.parametrize("key", ["plot", "session"])
     def test_returns_saved_index(self, tmp_campaign, key):
-        settings = tmp_campaign.settings
-
-        result = settings.get_latest_planning_index(key)
+        result = tmp_campaign.get_latest_planning_index(key)
 
         assert result == 0
 
@@ -30,10 +18,9 @@ class TestWithOneUsefulFile:
     @pytest.mark.parametrize("key, path", [("plot", ("Plot", "Plot 05.md")), ("session", ("Session History", "Session 05.md"))])
     def test_returns_file_index(self, tmp_campaign, key, path):
         root = tmp_campaign.root
-        settings = tmp_campaign.settings
         root.joinpath(*path).touch()
 
-        result = settings.get_latest_planning_index(key)
+        result = tmp_campaign.get_latest_planning_index(key)
 
         assert result == 5
 
@@ -43,7 +30,7 @@ class TestWithOneUsefulFile:
         settings = tmp_campaign.settings
         root.joinpath(*path).touch()
 
-        settings.get_latest_planning_index(key)
+        tmp_campaign.get_latest_planning_index(key)
 
         assert settings.get(f"campaign.{key}.latest_index") == 5
 
@@ -54,11 +41,10 @@ class TestWithManyFiles:
         ])
     def test_returns_highest_index(self, tmp_campaign, key, path, files):
         root = tmp_campaign.root
-        settings = tmp_campaign.settings
         for filename in files:
             root.joinpath(path, filename).touch()
 
-        result = settings.get_latest_planning_index(key)
+        result = tmp_campaign.get_latest_planning_index(key)
 
         assert result == 3
 
@@ -72,7 +58,7 @@ class TestWithManyFiles:
         for filename in files:
             root.joinpath(path, filename).touch()
 
-        settings.get_latest_planning_index(key)
+        tmp_campaign.get_latest_planning_index(key)
 
         assert settings.get(f"campaign.{key}.latest_index") == 3
 
@@ -82,11 +68,10 @@ class TestWithManyFiles:
         ])
     def test_ignores_other_files(self, tmp_campaign, key, path, files):
         root = tmp_campaign.root
-        settings = tmp_campaign.settings
         for filename in files:
             root.joinpath(path, filename).touch()
         root.joinpath(path, "Extra 04.md").touch()
 
-        result = settings.get_latest_planning_index(key)
+        result = tmp_campaign.get_latest_planning_index(key)
 
         assert result == 3

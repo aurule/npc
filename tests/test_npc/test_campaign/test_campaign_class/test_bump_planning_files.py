@@ -25,7 +25,7 @@ class TestWithLesserSession:
 
         tmp_campaign.bump_planning_files()
 
-        assert settings.latest_session_index == 3
+        assert tmp_campaign.latest_session_index == 3
 
     def test_ignores_old_plot_file(self, tmp_campaign):
         settings = tmp_campaign.settings
@@ -44,7 +44,7 @@ class TestWithLesserSession:
 
         tmp_campaign.bump_planning_files()
 
-        assert settings.latest_plot_index == 3
+        assert tmp_campaign.latest_plot_index == 3
 
     def test_returns_old_and_new_files(self, tmp_campaign):
         settings = tmp_campaign.settings
@@ -64,7 +64,7 @@ class TestWithLesserSession:
 
         tmp_campaign.bump_planning_files()
 
-        assert settings.latest_session_index == 4
+        assert tmp_campaign.latest_session_index == 4
 
 class TestWithLesserPlot:
     def test_creates_new_plot_file(self, tmp_campaign):
@@ -81,7 +81,7 @@ class TestWithLesserPlot:
 
         tmp_campaign.bump_planning_files()
 
-        assert settings.latest_plot_index == 3
+        assert tmp_campaign.latest_plot_index == 3
 
     def test_ignores_old_session_file(self, tmp_campaign):
         settings = tmp_campaign.settings
@@ -102,7 +102,7 @@ class TestWithLesserPlot:
 
         tmp_campaign.bump_planning_files()
 
-        assert settings.latest_session_index == 3
+        assert tmp_campaign.latest_session_index == 3
 
     def test_returns_old_and_new_files(self, tmp_campaign):
         settings = tmp_campaign.settings
@@ -122,7 +122,7 @@ class TestWithLesserPlot:
 
         tmp_campaign.bump_planning_files()
 
-        assert settings.latest_plot_index == 4
+        assert tmp_campaign.latest_plot_index == 4
 
 class TestWithMatchingIndexes:
     def test_creates_new_plot_file(self, tmp_campaign):
@@ -139,7 +139,7 @@ class TestWithMatchingIndexes:
 
         tmp_campaign.bump_planning_files()
 
-        assert settings.latest_plot_index == 3
+        assert tmp_campaign.latest_plot_index == 3
 
     def test_creates_new_session_file(self, tmp_campaign):
         settings = tmp_campaign.settings
@@ -155,7 +155,7 @@ class TestWithMatchingIndexes:
 
         tmp_campaign.bump_planning_files()
 
-        assert settings.latest_session_index == 3
+        assert tmp_campaign.latest_session_index == 3
 
     def test_returns_both_files(self, tmp_campaign):
         settings = tmp_campaign.settings
