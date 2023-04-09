@@ -10,5 +10,4 @@ def fixture_file(fixture_path: list[str]) -> Path:
 
 @pytest.fixture
 def tmp_campaign(tmp_path):
-    settings = init(tmp_path, name="Test Campaign", system="generic")
-    return Campaign(tmp_path, settings = settings)
+    return init(tmp_path, name="Test Campaign", system="generic")

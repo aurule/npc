@@ -1,8 +1,11 @@
 import logging
 import re
+import yaml
 from pathlib import Path
 
 from ..settings import Settings, PlanningFilename
+from ..util.functions import merge_data_dicts, prepend_namespace
+from npc.settings.helpers import quiet_parse
 
 class Campaign:
     def __init__(self, campaign_path: Path, *, settings: Settings = None):
@@ -12,7 +15,8 @@ class Campaign:
             settings = Settings()
         self.settings = settings
 
-        settings.load_campaign(campaign_path)
+        self.settings.load_settings_file(self.settings_file)
+        self.settings.load_systems(self.settings_dir / "systems")
 
     def bump_planning_files(self) -> dict:
         """Create the next planning files by current index
@@ -27,10 +31,6 @@ class Campaign:
             dict: Dict containing the resulting file paths, whether new or old. They are indexed by type, so
                   "path" and "session" both will have an entry.
         """
-        if not self.settings.campaign_dir:
-            logging.warning("No campaign dir in settings, cannot create planning files")
-            return None
-
         latest_plot = self.latest_plot_index
         latest_session = self.latest_session_index
 
@@ -42,10 +42,10 @@ class Campaign:
         for key in ["plot", "session"]:
             name_pattern = PlanningFilename(self.settings.get(f"campaign.{key}.filename_pattern"))
             new_filename = name_pattern.for_index(new_index)
-            new_path = self.settings.campaign_dir / self.settings.get(f"campaign.{key}.path") / new_filename
+            new_path = self.root / self.settings.get(f"campaign.{key}.path") / new_filename
             return_paths[key] = new_path
             if not new_path.exists():
-                self.settings.patch_campaign_settings({key: {"latest_index": new_index}})
+                self.patch_campaign_settings({key: {"latest_index": new_index}})
                 new_path.write_text(self.settings.get(f"campaign.{key}.file_contents"), newline = "\n")
 
         return return_paths
@@ -83,7 +83,7 @@ class Campaign:
 
         if plot_numbers:
             latest_number = max(plot_numbers)
-            self.settings.patch_campaign_settings({key: {"latest_index": latest_number}})
+            self.patch_campaign_settings({key: {"latest_index": latest_number}})
 
         return latest_number
 
@@ -108,3 +108,77 @@ class Campaign:
             int: Highest index of the session files
         """
         return self.get_latest_planning_index("session")
+
+    @property
+    def plot_dir(self) -> Path:
+        """Get the path to the current campaign's plot directory
+
+        Returns:
+            Path: Path to the campaign's plot directory, or None if campaign_dir is not set
+        """
+
+        return self.root / self.settings.get("campaign.plot.path")
+
+    @property
+    def session_dir(self) -> Path:
+        """Get the path to the current campaign's sessions directory
+
+        Returns:
+            Path: Path to the campaign's sessions directory, or None if campaign_dir is not set
+        """
+        return self.root / self.settings.get("campaign.session.path")
+
+    @property
+    def characters_dir(self) -> Path:
+        """Get the path to the current campaign's characters directory
+
+        Returns:
+            Path: Path to the campaign's characters directory, or None if campaign_dir is not set
+        """
+        return self.root / self.settings.get("campaign.characters.path")
+
+    @property
+    def settings_dir(self) -> Path:
+        """Get the path to the current campaign settings directory
+
+        Returns:
+            Path: Path to the campaign's settings dir, or None if campaign_dir is not set
+        """
+        return self.root / ".npc"
+
+    @property
+    def settings_file(self) -> Path:
+        """Get the path to the current campaign settings file
+
+        Returns:
+            Path: Path to the campaign's settings file, or None if campaign_dir is not set
+        """
+        return self.settings_dir / "settings.yaml"
+
+    def patch_campaign_settings(self, data: dict) -> None:
+        """Update some values in the campaign settings and corresponding file
+
+        Updates the internal campaign settings with data, then writes those changes to the current campaign's
+        settings file.
+
+        If campaign_dir is not set, this returns immediately.
+
+        Args:
+            data (dict): Data to change
+        """
+        new_data = prepend_namespace(data, "campaign")
+        self.settings.merge_data(new_data)
+
+        settings_file = self.settings_file
+        loaded: dict = quiet_parse(settings_file)
+        loaded = merge_data_dicts(new_data, loaded)
+        with settings_file.open('w', newline="\n") as f:
+            yaml.dump(loaded, f)
+
+    @property
+    def name(self) -> str:
+        return self.settings.get("campaign.name")
+
+    @property
+    def desc(self) -> str:
+        return self.settings.get("campaign.desc")

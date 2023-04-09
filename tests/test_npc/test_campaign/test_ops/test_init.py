@@ -52,14 +52,14 @@ class TestSettingsFile:
         assert settings_contents["campaign"]["desc"] == self.campaign_desc
 
 def test_creates_settings_object_when_none_supplied(tmp_path):
-    settings = init(tmp_path, name = "test", system = "fate")
+    campaign = init(tmp_path, name = "test", system = "fate")
 
-    assert isinstance(settings, Settings)
+    assert isinstance(campaign.settings, Settings)
 
 def test_updates_settings_obj(tmp_path):
     settings = Settings()
 
-    returned_settings = init(tmp_path, name = "test", system = "fate", settings = settings)
+    init(tmp_path, name = "test", system = "fate", settings = settings)
 
     assert "name" in settings.get("campaign")
 

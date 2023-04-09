@@ -44,21 +44,6 @@ class Settings(DataStore):
         self.load_settings_file(self.personal_dir / "settings.yaml")
         self.load_systems(self.personal_dir / "systems")
 
-    def load_campaign(self, campaign_dir: Path) -> None:
-        """Load campaign settings, along with system and type configs
-        
-        Campaigns have a simplified directory structure compared to the primary settings paths, so this method 
-        loads campaign data just a little differently.
-
-        If campaign_dir is provided, this method will overwrite the settings object's existing value.
-        
-        Args:
-            campaign_dir (Path): Path to the campaign settings directory to load.
-        """
-        self.campaign_dir = campaign_dir
-        self.load_settings_file(self.campaign_settings_file)
-        self.load_systems(self.campaign_settings_dir / "systems")
-
     def load_settings_file(self, settings_file: Path, namespace: str = None) -> None:
         """Open, parse, and merge settings from another file
 
@@ -160,86 +145,3 @@ class Settings(DataStore):
             list: List of directory names to create on campaign init
         """
         return self.required_dirs + self.get("campaign.create_on_init")
-
-    @property
-    def campaign_settings_dir(self) -> Path:
-        """Get the path to the current campaign settings directory
-
-        Returns:
-            Path: Path to the campaign's settings dir, or None if campaign_dir is not set
-        """
-        if not self.has_campaign:
-            return None
-
-        return self.campaign_dir / ".npc"
-
-    @property
-    def campaign_settings_file(self) -> Path:
-        """Get the path to the current campaign settings file
-
-        Returns:
-            Path: Path to the campaign's settings file, or None if campaign_dir is not set
-        """
-        if not self.has_campaign:
-            return None
-
-        return self.campaign_settings_dir / "settings.yaml"
-
-    def patch_campaign_settings(self, data: dict) -> None:
-        """Update some values in the campaign settings and corresponding file
-
-        Updates the internal campaign settings with data, then writes those changes to the current campaign's
-        settings file.
-
-        If campaign_dir is not set, this returns immediately.
-
-        Args:
-            data (dict): Data to change
-        """
-        if not self.has_campaign:
-            return
-
-        new_data = prepend_namespace(data, "campaign")
-        self.merge_data(new_data)
-
-        settings_file = self.campaign_settings_file
-        loaded: dict = quiet_parse(settings_file)
-        loaded = merge_data_dicts(new_data, loaded)
-        with settings_file.open('w', newline="\n") as f:
-            yaml.dump(loaded, f)
-
-    @property
-    def plot_dir(self) -> Path:
-        """Get the path to the current campaign's plot directory
-
-        Returns:
-            Path: Path to the campaign's plot directory, or None if campaign_dir is not set
-        """
-        if not self.has_campaign:
-            return None
-
-        return self.campaign_dir / self.get("campaign.plot.path")
-
-    @property
-    def session_dir(self) -> Path:
-        """Get the path to the current campaign's sessions directory
-
-        Returns:
-            Path: Path to the campaign's sessions directory, or None if campaign_dir is not set
-        """
-        if not self.has_campaign:
-            return None
-
-        return self.campaign_dir / self.get("campaign.session.path")
-
-    @property
-    def characters_dir(self) -> Path:
-        """Get the path to the current campaign's characters directory
-
-        Returns:
-            Path: Path to the campaign's characters directory, or None if campaign_dir is not set
-        """
-        if not self.has_campaign:
-            return None
-
-        return self.campaign_dir / self.get("campaign.characters.path")

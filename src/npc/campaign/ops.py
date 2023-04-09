@@ -7,9 +7,10 @@ import yaml
 import logging
 from pathlib import Path
 
-from ..settings import Settings, PlanningFilename
+from ..settings import Settings
+from .campaign_class import Campaign
 
-def init(campaign_path: str, *, name: str, system: str, desc: str = None, settings: Settings = None) -> Settings:
+def init(campaign_path: str, *, name: str, system: str, desc: str = None, settings: Settings = None) -> Campaign:
     """Initialize a directory with the basics for npc
 
     Creates a few folders and a basic campaign config file. Folders for characters, sessions, and paths are
@@ -53,8 +54,7 @@ def init(campaign_path: str, *, name: str, system: str, desc: str = None, settin
         target = campaign_dir / dirname
         target.mkdir(exist_ok = True)
 
-    settings.load_campaign(campaign_dir)
-    return settings
+    return Campaign(campaign_dir, settings = settings)
 
 def find_campaign_root(starting_dir: str) -> Path:
     """Find the root dir of a campaign
