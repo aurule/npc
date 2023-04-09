@@ -15,27 +15,27 @@ def test_allows_inherited_attributes():
 def test_skips_on_unknown_parent():
 	settings = Settings()
 
-	settings.load_systems(fixture_file(["systems", "missing"]))
+	settings.load_systems(fixture_file("systems", "missing"))
 
 	assert "missing_parent" not in settings.get("npc.systems").keys()
 
 def test_allows_deep_inheritance():
 	settings = Settings()
 	
-	settings.load_systems(fixture_file(["systems", "multi"]))
+	settings.load_systems(fixture_file("systems", "multi"))
 
 	assert "first" in settings.get("npc.systems").keys()
 
 def test_does_not_choke_on_circular_inherits():
 	settings = Settings()
 
-	settings.load_systems(fixture_file(["systems", "circular"]))
+	settings.load_systems(fixture_file("systems", "circular"))
 	
 	assert "name" in settings.get("npc.systems.nwod").keys()
 
 def test_skips_invalid_files():
 	settings = Settings()
 
-	settings.load_systems(fixture_file(["systems", "invalid"]))
+	settings.load_systems(fixture_file("systems", "invalid"))
 
 	assert "invalid" not in settings.get("npc.systems").keys()

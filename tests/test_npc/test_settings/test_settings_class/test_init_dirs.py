@@ -11,6 +11,6 @@ def test_has_required_dirs():
 
 def test_has_optional_dirs():
 	settings = Settings()
-	settings.load_settings_file(fixture_file(["campaigns", "init_dirs", ".npc", "settings.yaml"]))
+	settings.load_settings_file(fixture_file("campaigns", "init_dirs", ".npc", "settings.yaml"))
 
 	assert "hello" in settings.init_dirs

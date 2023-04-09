@@ -4,7 +4,7 @@ from npc.campaign import find_campaign_root
 
 class TestWithCampaignDir:
     def test_returns_curent_dir(self):
-        campaign_dir = fixture_file(["campaigns", "find_root"])
+        campaign_dir = fixture_file("campaigns", "find_root")
 
         result = find_campaign_root(campaign_dir)
 
@@ -12,7 +12,7 @@ class TestWithCampaignDir:
 
 class TestWithInsideDir:
     def test_returns_parent_dir(self):
-        campaign_dir = fixture_file(["campaigns", "find_root"])
+        campaign_dir = fixture_file("campaigns", "find_root")
 
         result = find_campaign_root(campaign_dir / "deep" / "nesting")
 

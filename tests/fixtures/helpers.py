@@ -4,7 +4,7 @@ from importlib import resources
 
 from npc.campaign import init, Campaign
 
-def fixture_file(fixture_path: list[str]) -> Path:
+def fixture_file(*fixture_path) -> Path:
     base: Path = resources.files("tests.fixtures")
     return base.joinpath(*fixture_path)
 

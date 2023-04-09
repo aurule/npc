@@ -20,17 +20,17 @@ def test_loads_default_types():
     assert "changeling" in settings.get("npc.systems.nwod.types").keys()
 
 def test_loads_personal_settings(tmp_path):
-    settings = Settings(personal_dir = fixture_file(["personal", "simple"]))
+    settings = Settings(personal_dir = fixture_file("personal", "simple"))
 
     assert settings.get("npc.editor") == "custom"
 
 def test_loads_personal_systems():
-    settings = Settings(personal_dir = fixture_file(["personal", "large"]))
+    settings = Settings(personal_dir = fixture_file("personal", "large"))
 
     assert "custom" in settings.get("npc.systems").keys()
 
 @pytest.mark.xfail
 def test_loads_personal_types():
-    settings = Settings(personal_dir = fixture_file(["personal", "chonk"]))
+    settings = Settings(personal_dir = fixture_file("personal", "chonk"))
     
     assert "pet" in settings.get("npc.systems.generic.types").keys()
