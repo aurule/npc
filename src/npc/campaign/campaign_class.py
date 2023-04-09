@@ -18,6 +18,74 @@ class Campaign:
         self.settings.load_settings_file(self.settings_file)
         self.settings.load_systems(self.settings_dir / "systems")
 
+    @property
+    def name(self) -> str:
+        """Get the campaign's name
+
+        Convenience property to pull the name from settings
+
+        Returns:
+            str: Name of the campaign
+        """
+        return self.settings.get("campaign.name")
+
+    @property
+    def desc(self) -> str:
+        """Get the campaign's description
+
+        Convenience property to pull the description from settings
+
+        Returns:
+            str: Description of the campaign
+        """
+        return self.settings.get("campaign.desc")
+
+    @property
+    def plot_dir(self) -> Path:
+        """Get the path to the current campaign's plot directory
+
+        Returns:
+            Path: Path to the campaign's plot directory, or None if campaign_dir is not set
+        """
+
+        return self.root / self.settings.get("campaign.plot.path")
+
+    @property
+    def session_dir(self) -> Path:
+        """Get the path to the current campaign's sessions directory
+
+        Returns:
+            Path: Path to the campaign's sessions directory, or None if campaign_dir is not set
+        """
+        return self.root / self.settings.get("campaign.session.path")
+
+    @property
+    def characters_dir(self) -> Path:
+        """Get the path to the current campaign's characters directory
+
+        Returns:
+            Path: Path to the campaign's characters directory, or None if campaign_dir is not set
+        """
+        return self.root / self.settings.get("campaign.characters.path")
+
+    @property
+    def settings_dir(self) -> Path:
+        """Get the path to the current campaign settings directory
+
+        Returns:
+            Path: Path to the campaign's settings dir, or None if campaign_dir is not set
+        """
+        return self.root / ".npc"
+
+    @property
+    def settings_file(self) -> Path:
+        """Get the path to the current campaign settings file
+
+        Returns:
+            Path: Path to the campaign's settings file, or None if campaign_dir is not set
+        """
+        return self.settings_dir / "settings.yaml"
+
     def bump_planning_files(self) -> dict:
         """Create the next planning files by current index
 
@@ -109,52 +177,6 @@ class Campaign:
         """
         return self.get_latest_planning_index("session")
 
-    @property
-    def plot_dir(self) -> Path:
-        """Get the path to the current campaign's plot directory
-
-        Returns:
-            Path: Path to the campaign's plot directory, or None if campaign_dir is not set
-        """
-
-        return self.root / self.settings.get("campaign.plot.path")
-
-    @property
-    def session_dir(self) -> Path:
-        """Get the path to the current campaign's sessions directory
-
-        Returns:
-            Path: Path to the campaign's sessions directory, or None if campaign_dir is not set
-        """
-        return self.root / self.settings.get("campaign.session.path")
-
-    @property
-    def characters_dir(self) -> Path:
-        """Get the path to the current campaign's characters directory
-
-        Returns:
-            Path: Path to the campaign's characters directory, or None if campaign_dir is not set
-        """
-        return self.root / self.settings.get("campaign.characters.path")
-
-    @property
-    def settings_dir(self) -> Path:
-        """Get the path to the current campaign settings directory
-
-        Returns:
-            Path: Path to the campaign's settings dir, or None if campaign_dir is not set
-        """
-        return self.root / ".npc"
-
-    @property
-    def settings_file(self) -> Path:
-        """Get the path to the current campaign settings file
-
-        Returns:
-            Path: Path to the campaign's settings file, or None if campaign_dir is not set
-        """
-        return self.settings_dir / "settings.yaml"
-
     def patch_campaign_settings(self, data: dict) -> None:
         """Update some values in the campaign settings and corresponding file
 
@@ -174,25 +196,3 @@ class Campaign:
         loaded = merge_data_dicts(new_data, loaded)
         with settings_file.open('w', newline="\n") as f:
             yaml.dump(loaded, f)
-
-    @property
-    def name(self) -> str:
-        """Get the campaign's name
-
-        Convenience property to pull the name from settings
-
-        Returns:
-            str: Name of the campaign
-        """
-        return self.settings.get("campaign.name")
-
-    @property
-    def desc(self) -> str:
-        """Get the campaign's description
-
-        Convenience property to pull the description from settings
-
-        Returns:
-            str: Description of the campaign
-        """
-        return self.settings.get("campaign.desc")
