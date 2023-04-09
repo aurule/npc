@@ -52,7 +52,7 @@ class Settings(DataStore):
         Campaigns have a simplified directory structure compared to the primary settings paths, so this method 
         loads campaign data just a little differently.
 
-        If campaign_dir is provided, this method will overwrite the setings object's existing value.
+        If campaign_dir is provided, this method will overwrite the settings object's existing value.
         
         Args:
             campaign_dir (Path): Path to the campaign settings directory to load.
