@@ -1,13 +1,6 @@
 werewolf:
   name: Werewolf
   desc: Shapechanging warriors who guard the spirit world
-  tags:
-    auspice:
-      desc: Social caste based on the moon that the werewolf was born under
-      values: *auspices
-    tribe:
-      desc: Large group that the werewolf belongs to
-      values: *tribes
   auspices: &auspices
     - irraka
     - ithaeur
@@ -23,3 +16,10 @@ werewolf:
     - fire-touched
     - ivory claws
     - predator kings
+  tags:
+    auspice:
+      desc: Social caste based on the moon that the werewolf was born under
+      values: *auspices
+    tribe:
+      desc: Large group that the werewolf belongs to
+      values: *tribes

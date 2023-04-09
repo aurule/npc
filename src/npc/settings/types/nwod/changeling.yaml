@@ -1,40 +1,6 @@
 changeling:
   name: Changeling
   desc: A human who was captured by the fae and returned to the mundane world
-  tags:
-    motley:
-      desc: Tight-knit group the changeling belongs to, like a family
-      max: 1
-    court:
-      desc: Court the changeling belongs to. Usually one of Winter, Spring, Summer, or Autumn.
-      max: 1
-      subtags:
-        rank: Name of the official position the changeling holds within their court
-    freehold:
-      desc: Name of the political bloc the changeling's court belongs to. Usually tied to a human city.
-      subtags:
-        rank: Official position the changeling has in their freehold, but not tied to their court.
-    entitlement:
-      desc: Magical, prestigious group the changeling belongs to.
-      max: 1
-      subtags:
-        rank: Official position the changeling holds within their entitlement.
-    seeming:
-      desc: The broad grouping of the changeling's fae kin.
-      values: *seemings
-    kith:
-      desc: The more specific grouping of the changeling's fae kin. A subset of their seeming.
-      values: *kiths
-    mask:
-      desc: How the changeling appears to humans and other non-fae.
-      replaces: appearance
-    mien:
-      desc: How the changeling appears to other changelings, as well as goblins and other fae creatures.
-  path_substitutions:
-      type_unit: motley
-      type_social: court
-      type_political: freehold
-      type_groups: entitlement
   seemings: &seemings
     - beast
     - darkling
@@ -88,10 +54,10 @@ changeling:
     - metalflesh
     - sandharrowed
     - apsaras
-    - "ask-wee-da-eed"
-    - "di-cang"
+    - ask-wee-da-eed
+    - di-cang
     fairest:
-    - "bright one"
+    - bright one
     - dancer
     - draconic
     - flowering
@@ -139,8 +105,42 @@ changeling:
     - pamarindo
     - thusser
     - fatemaker
-    # Descriptions for the seeming and kith blessings. Every seeming and
-    # kith must have a blessing.
+  tags:
+    motley:
+      desc: Tight-knit group the changeling belongs to, like a family
+      max: 1
+    court:
+      desc: Court the changeling belongs to. Usually one of Winter, Spring, Summer, or Autumn.
+      max: 1
+      subtags:
+        rank: Name of the official position the changeling holds within their court
+    freehold:
+      desc: Name of the political bloc the changeling's court belongs to. Usually tied to a human city.
+      subtags:
+        rank: Official position the changeling has in their freehold, but not tied to their court.
+    entitlement:
+      desc: Magical, prestigious group the changeling belongs to.
+      max: 1
+      subtags:
+        rank: Official position the changeling holds within their entitlement.
+    seeming:
+      desc: The broad grouping of the changeling's fae kin.
+      values: *seemings
+    kith:
+      desc: The more specific grouping of the changeling's fae kin. A subset of their seeming.
+      values: *kiths
+    mask:
+      desc: How the changeling appears to humans and other non-fae.
+      replaces: appearance
+    mien:
+      desc: How the changeling appears to other changelings, as well as goblins and other fae creatures.
+  path_substitutions:
+      type_unit: motley
+      type_social: court
+      type_political: freehold
+      type_groups: entitlement
+  # Descriptions for the seeming and kith blessings. Every seeming and
+  # kith must have a blessing.
   blessings:
     # seemings
     beast: "8-again animal ken and free specialty; glamour adds to presence and composure"
