@@ -41,6 +41,17 @@ class Campaign:
         return self.settings.get("campaign.desc")
 
     @property
+    def system_key(self) -> str:
+        """Get the campaign's game system key
+
+        Convenience property to pull the game system key from settings
+
+        Returns:
+            str: Description of the campaign
+        """
+        return self.settings.get("campaign.system")
+
+    @property
     def plot_dir(self) -> Path:
         """Get the path to the current campaign's plot directory
 
