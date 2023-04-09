@@ -20,7 +20,7 @@ class TestWithNoCampaignDir:
 class TestWithNoFiles:
     @pytest.mark.parametrize("key", ["plot", "session"])
     def test_returns_saved_index(self, tmp_campaign, key):
-        tmp_path, settings = tmp_campaign
+        settings = tmp_campaign.settings
 
         result = settings.get_latest_planning_index(key)
 
@@ -29,8 +29,9 @@ class TestWithNoFiles:
 class TestWithOneUsefulFile:
     @pytest.mark.parametrize("key, path", [("plot", ("Plot", "Plot 05.md")), ("session", ("Session History", "Session 05.md"))])
     def test_returns_file_index(self, tmp_campaign, key, path):
-        tmp_path, settings = tmp_campaign
-        tmp_path.joinpath(*path).touch()
+        root = tmp_campaign.root
+        settings = tmp_campaign.settings
+        root.joinpath(*path).touch()
 
         result = settings.get_latest_planning_index(key)
 
@@ -38,8 +39,9 @@ class TestWithOneUsefulFile:
 
     @pytest.mark.parametrize("key, path", [("plot", ("Plot", "Plot 05.md")), ("session", ("Session History", "Session 05.md"))])
     def test_updates_saved_index(self, tmp_campaign, key, path):
-        tmp_path, settings = tmp_campaign
-        tmp_path.joinpath(*path).touch()
+        root = tmp_campaign.root
+        settings = tmp_campaign.settings
+        root.joinpath(*path).touch()
 
         settings.get_latest_planning_index(key)
 
@@ -51,9 +53,10 @@ class TestWithManyFiles:
         ("session", "Session History", ["Session 01.md", "Session 02.md", "Session 03.md"])
         ])
     def test_returns_highest_index(self, tmp_campaign, key, path, files):
-        tmp_path, settings = tmp_campaign
+        root = tmp_campaign.root
+        settings = tmp_campaign.settings
         for filename in files:
-            tmp_path.joinpath(path, filename).touch()
+            root.joinpath(path, filename).touch()
 
         result = settings.get_latest_planning_index(key)
 
@@ -64,9 +67,10 @@ class TestWithManyFiles:
         ("session", "Session History", ["Session 01.md", "Session 02.md", "Session 03.md"])
         ])
     def test_updates_saved_index(self, tmp_campaign, key, path, files):
-        tmp_path, settings = tmp_campaign
+        root = tmp_campaign.root
+        settings = tmp_campaign.settings
         for filename in files:
-            tmp_path.joinpath(path, filename).touch()
+            root.joinpath(path, filename).touch()
 
         settings.get_latest_planning_index(key)
 
@@ -77,10 +81,11 @@ class TestWithManyFiles:
         ("session", "Session History", ["Session 01.md", "Session 02.md", "Session 03.md"])
         ])
     def test_ignores_other_files(self, tmp_campaign, key, path, files):
-        tmp_path, settings = tmp_campaign
+        root = tmp_campaign.root
+        settings = tmp_campaign.settings
         for filename in files:
-            tmp_path.joinpath(path, filename).touch()
-        tmp_path.joinpath(path, "Extra 04.md").touch()
+            root.joinpath(path, filename).touch()
+        root.joinpath(path, "Extra 04.md").touch()
 
         result = settings.get_latest_planning_index(key)
 

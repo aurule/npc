@@ -4,9 +4,10 @@ from npc.settings import Settings
 from npc.util import parse_yaml
 
 def test_gets_the_file(tmp_campaign):
-    (tmp_path, settings) = tmp_campaign
+    root = tmp_campaign.root
+    settings = tmp_campaign.settings
 
-    assert settings.characters_dir == tmp_path / "Characters"
+    assert settings.characters_dir == root / "Characters"
 
 def test_aborts_on_no_campaign():
     settings = Settings()

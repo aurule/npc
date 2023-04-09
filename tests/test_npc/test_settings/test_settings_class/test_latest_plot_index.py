@@ -1,5 +1,4 @@
 import pytest
-from tests.fixtures import tmp_campaign
 
 from npc.settings import Settings
 

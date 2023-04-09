@@ -4,7 +4,7 @@ from npc.settings import Settings
 from npc.util import parse_yaml
 
 def test_true_with_campaign(tmp_campaign):
-    (tmp_path, settings) = tmp_campaign
+    settings = tmp_campaign.settings
 
     assert settings.has_campaign
 

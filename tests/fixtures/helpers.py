@@ -2,7 +2,7 @@ import pytest
 from pathlib import Path
 from importlib import resources
 
-from npc.campaign import init
+from npc.campaign import init, Campaign
 
 def fixture_file(fixture_path: list[str]) -> Path:
     base: Path = resources.files("tests.fixtures")
@@ -10,4 +10,5 @@ def fixture_file(fixture_path: list[str]) -> Path:
 
 @pytest.fixture
 def tmp_campaign(tmp_path):
-    return (tmp_path, init(tmp_path, name="Test Campaign", system="generic"))
+    settings = init(tmp_path, name="Test Campaign", system="generic")
+    return Campaign(tmp_path, settings = settings)
