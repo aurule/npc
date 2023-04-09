@@ -177,8 +177,22 @@ class Campaign:
 
     @property
     def name(self) -> str:
+        """Get the campaign's name
+
+        Convenience property to pull the name from settings
+
+        Returns:
+            str: Name of the campaign
+        """
         return self.settings.get("campaign.name")
 
     @property
     def desc(self) -> str:
+        """Get the campaign's description
+
+        Convenience property to pull the description from settings
+
+        Returns:
+            str: Description of the campaign
+        """
         return self.settings.get("campaign.desc")
