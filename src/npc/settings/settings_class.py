@@ -170,7 +170,7 @@ class Settings(DataStore):
         Returns:
             Path: Path to the campaign's settings dir, or None if campaign_dir is not set
         """
-        if not self.campaign_dir:
+        if not self.has_campaign:
             return None
 
         return self.campaign_dir / ".npc"
@@ -182,7 +182,7 @@ class Settings(DataStore):
         Returns:
             Path: Path to the campaign's settings file, or None if campaign_dir is not set
         """
-        if not self.campaign_dir:
+        if not self.has_campaign:
             return None
 
         return self.campaign_settings_dir / "settings.yaml"
@@ -198,7 +198,7 @@ class Settings(DataStore):
         Args:
             data (dict): Data to change
         """
-        if not self.campaign_dir:
+        if not self.has_campaign:
             return
 
         new_data = prepend_namespace(data, "campaign")
@@ -235,7 +235,7 @@ class Settings(DataStore):
             raise KeyError(f"Key must be one of 'plot' or 'session', got '{key}'")
 
         latest_number: int = self.get(f"campaign.{key}.latest_index")
-        if not self.campaign_dir:
+        if not self.has_campaign:
             logging.warning(f"No campaign dir when fetching latest {key} file")
             return latest_number
 
@@ -281,7 +281,7 @@ class Settings(DataStore):
         Returns:
             Path: Path to the campaign's plot directory, or None if campaign_dir is not set
         """
-        if not self.campaign_dir:
+        if not self.has_campaign:
             return None
 
         return self.campaign_dir / self.get("campaign.plot.path")
@@ -293,7 +293,7 @@ class Settings(DataStore):
         Returns:
             Path: Path to the campaign's sessions directory, or None if campaign_dir is not set
         """
-        if not self.campaign_dir:
+        if not self.has_campaign:
             return None
 
         return self.campaign_dir / self.get("campaign.session.path")
@@ -305,7 +305,18 @@ class Settings(DataStore):
         Returns:
             Path: Path to the campaign's characters directory, or None if campaign_dir is not set
         """
-        if not self.campaign_dir:
+        if not self.has_campaign:
             return None
 
         return self.campaign_dir / self.get("campaign.characters.path")
+
+    @property
+    def has_campaign(self) -> bool:
+        """Return whether this settings class has campaign data
+
+        This is a super-simple helper property to make other code more readable
+
+        Returns:
+            bool: True if a campaign has been loaded, false if not
+        """
+        return self.campaign_dir is not None
