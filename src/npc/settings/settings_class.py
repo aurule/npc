@@ -9,7 +9,7 @@ from importlib import resources
 
 from pathlib import Path
 from ..util import DataStore
-from ..util.functions import merge_data_dicts, prepend_namespace, parse_yaml
+from ..util.functions import merge_data_dicts, prepend_namespace
 from .helpers import quiet_parse
 
 class Settings(DataStore):
@@ -137,11 +137,13 @@ class Settings(DataStore):
         """
         def glob_and_load(search_dir):
             for type_file in search_dir.glob("*.yaml"):
-                typedef = parse_yaml(type_file)
+                typedef = quiet_parse(type_file)
                 self.merge_data(typedef, types_namespace)
 
         types_namespace: str = f"{namespace_root}.types.{system_key}"
         glob_and_load(types_dir)
+        if self.get(f"npc.systems.{system_key}.inherits"):
+            glob_and_load(types_dir / self.get(f"npc.systems.{system_key}.inherits"))
         glob_and_load(types_dir / system_key)
 
     @property
