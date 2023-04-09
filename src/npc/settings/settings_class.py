@@ -8,10 +8,9 @@ from collections import defaultdict
 from importlib import resources
 
 from pathlib import Path
-from ..util import errors, DataStore
+from ..util import DataStore
 from ..util.functions import merge_data_dicts, prepend_namespace
 from .helpers import quiet_parse
-from .planning_filename import PlanningFilename
 
 class Settings(DataStore):
     """Core settings class
@@ -244,14 +243,3 @@ class Settings(DataStore):
             return None
 
         return self.campaign_dir / self.get("campaign.characters.path")
-
-    @property
-    def has_campaign(self) -> bool:
-        """Return whether this settings class has campaign data
-
-        This is a super-simple helper property to make other code more readable
-
-        Returns:
-            bool: True if a campaign has been loaded, false if not
-        """
-        return self.campaign_dir is not None
