@@ -66,3 +66,55 @@ def test_overrides_inherited_types():
         namespace_root = "campaign")
 
     assert "Testier" == settings.get("campaign.types.fate-ep.test.name")
+
+class TestResolvesExplicitSheetPath():
+    def test_ignores_absolute_path(self):
+        settings = Settings()
+
+        settings.load_types(
+            fixture_file("campaigns", "sheets", ".npc", "types"),
+            system_key = "pet",
+            namespace_root = "campaign")
+
+        assert "null" in str(settings.get("campaign.types.pet.dog.sheet_path"))
+
+    def test_expands_relative_path_from_typedef(self):
+        settings = Settings()
+
+        settings.load_types(
+            fixture_file("campaigns", "sheets", ".npc", "types"),
+            system_key = "other",
+            namespace_root = "campaign")
+
+        assert "sessile" in str(settings.get("campaign.types.other.tree.sheet_path"))
+
+class TestInsertsImplicitSheetPaths():
+    def test_assignes_discovered_files_using_stem(self):
+        settings = Settings()
+
+        settings.load_types(
+            fixture_file("campaigns", "sheets", ".npc", "types"),
+            system_key = "generic",
+            namespace_root = "campaign")
+
+        assert "animal" in str(settings.get("campaign.types.generic.animal.sheet_path"))
+
+    def test_skips_undefined_types(self):
+        settings = Settings()
+
+        settings.load_types(
+            fixture_file("campaigns", "sheets", ".npc", "types"),
+            system_key = "generic",
+            namespace_root = "campaign")
+
+        assert "foobar" not in settings.get("campaign.types.generic")
+
+    def test_skips_existing_sheet_paths(self):
+        settings = Settings()
+
+        settings.load_types(
+            fixture_file("campaigns", "sheets", ".npc", "types"),
+            system_key = "generic",
+            namespace_root = "campaign")
+
+        assert "animal" in str(settings.get("campaign.types.generic.useconf.sheet_path"))

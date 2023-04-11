@@ -1,0 +1,4 @@
+plant:
+  name: Plant
+  desc: A plant
+  sheet_path: ./shrub.npc

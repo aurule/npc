@@ -119,8 +119,7 @@ class Settings(DataStore):
 
         load_dependencies(dependencies)
 
-
-    def load_types(self, types_dir: Path, *, system_key: str, namespace_root: str = "npc"):
+    def load_types(self, types_dir: Path, *, system_key: str, namespace_root: str = "npc") -> None:
         """Load type definitions from a path for a given game system
 
         Parses and stores type definitions found in types_dir. All yaml files in that dir are assumed to be
@@ -130,21 +129,61 @@ class Settings(DataStore):
         Parsed definitions are put into the "x.types.system" namespace. The root of this namespace is
         determined by the namespace_root passed, and the system component uses the system key provided.
 
+        The sheet_path property is handled specially. If it's present in a type's yaml, then that value is
+        used. If not, a file whose name matches the type key is assumed to be the correct sheet contents file.
+
         Args:
             types_dir (Path): Path to look in for type definitions
             system_key (str): Key of the game system these types are for
             namespace_root (str): [description] (default: `"npc"`)
         """
-        def glob_and_load(search_dir):
-            for type_file in search_dir.glob("*.yaml"):
-                typedef = quiet_parse(type_file)
+        def process_types_dir(search_dir: Path) -> None:
+            """Load yaml files, expand sheet paths, handle implied sheets
+
+            This internal helper method scans all the files in search_dir and tries to load them by their type:
+            * yaml files are treated as type definitions and parsed. If they have a sheet_path property, it is
+              expanded into a fully qualified Path for later use
+            * All other files are set aside for later. After the types have been loaded, the base names of the
+              remaining files are compared against the loaded type keys within our current namespace. Any that
+              match are treated as the implicit sheet file for that type, and their Path is saved to the
+              type's sheet_path property.
+
+            Args:
+                search_dir (Path): Directory to search for type and sheet files
+            """
+            discovered_sheets: dict = {}
+            for type_path in search_dir.glob("*.*"):
+                if type_path.suffix != ".yaml":
+                    type_key: str = type_path.stem
+                    discovered_sheets[type_key] = type_path
+                    continue
+
+                typedef: dict = quiet_parse(type_path)
+                type_key: str = next(iter(typedef))
+
+                if typedef[type_key].get("sheet_path"):
+                    sheet_path = Path(typedef[type_key].get("sheet_path"))
+                    if sheet_path.is_absolute():
+                        typedef[type_key]["sheet_path"] = sheet_path.resolve()
+                    else:
+                        typedef[type_key]["sheet_path"] = search_dir.joinpath(sheet_path).resolve()
+
                 self.merge_data(typedef, types_namespace)
 
+            for discovered in discovered_sheets:
+                sheet_path = Path(discovered)
+                type_key = sheet_path.stem
+                if type_key not in self.get(types_namespace):
+                    logging.info(f"Type {type_key} not defined, skipping potential sheet {discovered}")
+                    continue
+                if "sheet_path" not in self.get(f"{types_namespace}.{type_key}"):
+                    self.merge_data({type_key: {"sheet_path": sheet_path}}, types_namespace)
+
         types_namespace: str = f"{namespace_root}.types.{system_key}"
-        glob_and_load(types_dir)
+        process_types_dir(types_dir)
         if self.get(f"npc.systems.{system_key}.inherits"):
-            glob_and_load(types_dir / self.get(f"npc.systems.{system_key}.inherits"))
-        glob_and_load(types_dir / system_key)
+            process_types_dir(types_dir / self.get(f"npc.systems.{system_key}.inherits"))
+        process_types_dir(types_dir / system_key)
 
     @property
     def required_dirs(self) -> list:
