@@ -78,7 +78,7 @@ class Settings(DataStore):
             if loaded is None:
                 continue
 
-            system_name = list(loaded.keys())[0]
+            system_name = next(iter(loaded))
             loaded_contents = loaded[system_name]
 
             if "inherits" in loaded_contents:
@@ -106,7 +106,7 @@ class Settings(DataStore):
                     continue
 
                 for child in children:
-                    child_name = list(child.keys())[0]
+                    child_name = next(iter(child))
                     parent_conf = dict(self.get(f"npc.systems.{parent_name}"))
                     combined = merge_data_dicts(child[child_name], parent_conf)
                     self.merge_data(combined, namespace=f"npc.systems.{child_name}")
