@@ -185,6 +185,16 @@ class Settings(DataStore):
             process_types_dir(types_dir / self.get(f"npc.systems.{system_key}.inherits"))
         process_types_dir(types_dir / system_key)
 
+    def get_system_keys(self) -> list[str]:
+        """Get a list of valid system keys
+
+        This method only considers systems in the npc namespace.
+
+        Returns:
+            list[str]: List of system keys
+        """
+        return self.get("npc.systems").keys()
+
     @property
     def required_dirs(self) -> list:
         """Get the list of required campaign directories
