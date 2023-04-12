@@ -18,8 +18,10 @@ classifiers = [
     'Programming Language :: Python :: 3',
 ]
 dependencies = [
-	"Mako",
-	"Markdown",
+	"Mako >= 1.2.0",
+	"Markdown >= 3.4.0",
+	"PyYAML >= 6.0.0",
+	"click >= 8.1.0",
 ]
 dynamic = ["version"]
 
