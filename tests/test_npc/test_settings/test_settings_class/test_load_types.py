@@ -68,7 +68,7 @@ def test_overrides_inherited_types():
     assert "Testier" == settings.get("campaign.types.fate-ep.test.name")
 
 class TestResolvesExplicitSheetPath():
-    def test_ignores_absolute_path(self):
+    def test_resolves_absolute_path(self):
         settings = Settings()
 
         settings.load_types(
@@ -76,7 +76,7 @@ class TestResolvesExplicitSheetPath():
             system_key = "pet",
             namespace_root = "campaign")
 
-        assert "null" in str(settings.get("campaign.types.pet.dog.sheet_path"))
+        assert ".." not in str(settings.get("campaign.types.pet.dog.sheet_path"))
 
     def test_expands_relative_path_from_typedef(self):
         settings = Settings()
