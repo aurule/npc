@@ -50,6 +50,10 @@ def describe():
     print("describe the configured game systems, or types")
 
 @cli.command()
+def settings():
+    print("open the user or campaign settings.yaml files, or folder with browse flag")
+
+@cli.command()
 def session():
     print("create and open new session and plot files")
 
@@ -57,6 +61,18 @@ def session():
 def latest():
     print("open the most recent session and/or plot file")
 
-@cli.command()
-def settings():
-    print("open the user or campaign settings.yaml files")
+@cli.group()
+def describe():
+    pass
+
+@describe.command()
+def systems():
+    print("show info about the configured game systems")
+
+@describe.command()
+def types():
+    print("show info about the configured types within the current campaign's system, or given system")
+
+@describe.command()
+def tags():
+    print("show info about the tags available within this campaign, optionally scoped to a specific system or type")
