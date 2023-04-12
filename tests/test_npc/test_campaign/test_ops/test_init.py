@@ -1,5 +1,7 @@
 import yaml
 
+from tests.fixtures import tmp_campaign
+
 from npc.campaign import init
 from npc.settings import Settings
 
@@ -80,3 +82,8 @@ def test_creates_optional_dirs(tmp_path):
 
     for dirname in settings.init_dirs:
         assert tmp_path.joinpath(dirname).exists()
+
+def test_does_not_overwrite_existing_settings(tmp_campaign):
+    init(tmp_campaign.root, name = "newname", system = "fate", settings = tmp_campaign.settings)
+
+    assert "newname" not in tmp_campaign.settings.get("campaign.name")

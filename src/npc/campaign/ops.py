@@ -47,8 +47,11 @@ def init(campaign_path: str, *, name: str, system: str, desc: str = None, settin
 
     config_dir.mkdir(exist_ok = True)
     config_file = config_dir / "settings.yaml"
-    with config_file.open('w', newline="\n") as f:
-        yaml.dump(config_contents, f)
+    if config_file.exists():
+        logging.info("Campaign settings dir exists, leaving it alone")
+    else:
+        with config_file.open('w', newline="\n") as f:
+            yaml.dump(config_contents, f)
 
     for dirname in settings.init_dirs:
         target = campaign_dir / dirname
