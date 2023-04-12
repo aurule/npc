@@ -1,4 +1,5 @@
 import click
+import logging
 from pathlib import Path
 
 from click import echo
@@ -46,8 +47,24 @@ def init(settings, campaign_path: Path, name: str, desc: str, system: str):
     echo("Done")
 
 @cli.command()
-def describe():
-    print("describe the configured game systems, or types")
+@click.argument(
+    'campaign_path',
+    type=click.Path(file_okay=False, resolve_path=True, path_type=Path),
+    default=".")
+@pass_settings
+def info(settings, campaign_path: Path):
+    campaign_root = npc.campaign.find_campaign_root(campaign_path)
+    if not campaign_root:
+        echo(f"No campaign seems to contain {campaign_path}")
+        return
+    logging.info(f"Found campaign root at {campaign_root}")
+
+    campaign = npc.campaign.Campaign(campaign_root, settings = settings)
+    echo(campaign.name)
+    echo(campaign.desc)
+    echo(campaign.system_key)
+    echo(campaign.latest_plot_index)
+    echo(campaign.latest_session_index)
 
 @cli.command()
 def settings():
