@@ -31,7 +31,17 @@ def init(settings, campaign_path: Path, name: str, desc: str, system: str):
     Args: CAMPAIGN_PATH (defaults to current dir)
     """
     campaign_path.mkdir(parents=True, exist_ok=True)
-    npc.campaign.init(campaign_path, name=name, desc=desc, system=system, settings=settings)
+    print(f"Setting up {campaign_path}...")
+    print("Creating .npc/ config directory")
+    print("Creating the following required directories:")
+    print(settings.init_dirs)
+    npc.campaign.init(
+        campaign_path,
+        name=name,
+        desc=desc,
+        system=system,
+        settings=settings)
+    print("Done")
 
 @cli.command()
 def describe():
