@@ -33,6 +33,7 @@ repository = "https://github.com/aurule/npc"
 test = ["pytest >= 6.0.0"]
 
 [project.scripts]
+npc = "npc_cli:cli"
 
 [project.gui-scripts]
 
