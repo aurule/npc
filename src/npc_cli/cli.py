@@ -63,8 +63,27 @@ def info(settings):
     echo(presenters.campaign_info(campaign))
 
 @cli.command()
-def settings():
-    print("open the user or campaign settings.yaml files, or folder with browse flag")
+@click.option("--location",
+    type=click.Choice(["user", "campaign"], case_sensitive=False),
+    default="campaign",
+    help="The settings file or directory to open. Defaults to campaign.")
+@pass_settings
+def settings(settings, location):
+    """Browse to the campaign or user settings"""
+    if location == "user":
+        target_file = settings.personal_dir / "settings.yaml"
+    elif location == "campaign":
+        campaign = cwd_campaign(settings)
+        if campaign is None:
+            echo("Not a campaign (or any of the parent directories)")
+            return
+        target_file = campaign.settings_file
+
+    if not target_file.exists():
+        target_file.parent.mkdir(exist_ok=True, parents=True)
+        target_file.touch(exist_ok=True)
+
+    click.launch(str(target_file), locate=True)
 
 @cli.command()
 def session():
