@@ -6,6 +6,7 @@ from click import echo
 
 import npc
 from npc.settings import Settings
+from . import presenters
 
 arg_settings: Settings = Settings()
 
@@ -36,8 +37,8 @@ def init(settings, campaign_path: Path, name: str, desc: str, system: str):
     campaign_path.mkdir(parents=True, exist_ok=True)
     echo(f"Setting up {campaign_path}...")
     echo("Creating .npc/ config directory")
-    echo("Creating the following required directories:")
-    echo(settings.init_dirs)
+    echo("Creating required directories:")
+    echo(presenters.directory_list(settings.init_dirs))
     npc.campaign.init(
         campaign_path,
         name=name,
@@ -53,6 +54,10 @@ def init(settings, campaign_path: Path, name: str, desc: str, system: str):
     default=".")
 @pass_settings
 def info(settings, campaign_path: Path):
+    """Get information about a campaign
+
+    Args: CAMPAIGN_PATH (defaults to current dir)
+    """
     campaign_root = npc.campaign.find_campaign_root(campaign_path)
     if not campaign_root:
         echo(f"No campaign seems to contain {campaign_path}")
@@ -60,11 +65,7 @@ def info(settings, campaign_path: Path):
     logging.info(f"Found campaign root at {campaign_root}")
 
     campaign = npc.campaign.Campaign(campaign_root, settings = settings)
-    echo(campaign.name)
-    echo(campaign.desc)
-    echo(campaign.system_key)
-    echo(campaign.latest_plot_index)
-    echo(campaign.latest_session_index)
+    echo(presenters.campaign_info(campaign))
 
 @cli.command()
 def settings():
