@@ -11,12 +11,12 @@ from .helpers import cwd_campaign
 
 arg_settings: Settings = Settings()
 
-pass_settings = click.make_pass_decorator(Settings, ensure=True)
+pass_settings = click.make_pass_decorator(Settings)
 
 @click.group()
 @click.pass_context
 def cli(ctx):
-    pass
+    ctx.obj = Settings(personal_dir = Path(click.get_app_dir("NPC")))
 
 @cli.command()
 @click.option('--name', help="Campaign name", default="My Campaign")
