@@ -91,8 +91,23 @@ def session(settings):
     npc.util.edit_files(new_files.values(), settings = settings)
 
 @cli.command()
-def latest():
-    print("open the most recent session and/or plot file")
+@click.argument("planning_type",
+    type=click.Choice(["plot", "session", "both"], case_sensitive=False),
+    default="both")
+@pass_settings
+def latest(settings, planning_type):
+    campaign = cwd_campaign(settings)
+    if campaign is None:
+        echo("Not a campaign (or any of the parent directories)")
+        return
+
+    if planning_type == "both":
+        keys = ["plot", "session"]
+    else:
+        keys = [planning_type]
+
+    files = [campaign.get_latest_planning_file(key) for key in keys]
+    npc.util.edit_files(files, settings = settings)
 
 @cli.group()
 def describe():
