@@ -16,7 +16,7 @@ pass_settings = click.make_pass_decorator(Settings)
 @click.group()
 @click.pass_context
 def cli(ctx):
-    ctx.obj = Settings(personal_dir = Path(click.get_app_dir("NPC")))
+    ctx.obj = npc.settings.app_settings()
 
 @cli.command()
 @click.option('--name', help="Campaign name", default="My Campaign")
