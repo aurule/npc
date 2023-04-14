@@ -78,8 +78,17 @@ def settings(settings, location):
     click.launch(str(target_file), locate=True)
 
 @cli.command()
-def session():
-    print("create and open new session and plot files")
+@pass_settings
+def session(settings):
+    """Create and open the next session and plot file"""
+    campaign = cwd_campaign(settings)
+    if campaign is None:
+        echo("Not a campaign (or any of the parent directories)")
+        return
+
+    new_files = campaign.bump_planning_files()
+
+    npc.util.edit_files(new_files.values(), settings = settings)
 
 @cli.command()
 def latest():
