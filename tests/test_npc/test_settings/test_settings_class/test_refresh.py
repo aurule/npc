@@ -8,12 +8,12 @@ def test_purges_changed_values():
 
     settings.refresh()
 
-    assert settings.get("npc.editor") == ""
+    assert settings.get("npc.editor") is None
 
 def test_updates_personal_settings(tmp_path):
     settings = Settings(personal_dir = tmp_path)
 
-    assert settings.get("npc.editor") == ""
+    assert settings.get("npc.editor") is None
 
     personal_settings = {"npc": {"editor": "custom"}}
     temp_file = tmp_path / "settings.yaml"

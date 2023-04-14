@@ -1,6 +1,5 @@
 npc:
   version: 2.0.0
-  editor: ""
   tags:
     type:
       desc: The character type of an npc
