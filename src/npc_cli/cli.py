@@ -7,7 +7,7 @@ from click import echo
 import npc
 from npc.settings import Settings
 from . import presenters
-from .helpers import cwd_campaign
+from .helpers import cwd_campaign, find_or_make_settings_file
 
 arg_settings: Settings = Settings()
 
@@ -70,18 +70,7 @@ def info(settings):
 @pass_settings
 def settings(settings, location):
     """Browse to the campaign or user settings"""
-    if location == "user":
-        target_file = settings.personal_dir / "settings.yaml"
-    elif location == "campaign":
-        campaign = cwd_campaign(settings)
-        if campaign is None:
-            echo("Not a campaign (or any of the parent directories)")
-            return
-        target_file = campaign.settings_file
-
-    if not target_file.exists():
-        target_file.parent.mkdir(exist_ok=True, parents=True)
-        target_file.touch(exist_ok=True)
+    target_file = find_or_make_settings_file(settings, location)
 
     click.launch(str(target_file), locate=True)
 
