@@ -188,6 +188,32 @@ class Campaign:
         """
         return self.get_latest_planning_index("session")
 
+    def get_latest_planning_file(self, key: str) -> Path:
+        """Get the path to the highest-numbered planning file
+
+        Searches the filenames for either session or plot files and returns the one with the highest index.
+
+        Args:
+            key (str): Type of planning file to get. Must be one of "plot" or "session".
+
+        Returns:
+            Path: Path to the highest-numbered planning file
+
+        Raises:
+            KeyError: When key is invalid.
+        """
+        if key not in ("plot", "session"):
+            raise KeyError(f"Key must be one of 'plot' or 'session', got '{key}'")
+
+        planning_dir: Path = self.root / self.settings.get(f"campaign.{key}.path")
+        planning_name = PlanningFilename(self.settings.get(f"campaign.{key}.filename_pattern"))
+        file_path = planning_dir / planning_name.for_index(self.get_latest_planning_index(key))
+
+        if file_path.exists():
+            return file_path
+
+        return None
+
     def patch_campaign_settings(self, data: dict) -> None:
         """Update some values in the campaign settings and corresponding file
 
