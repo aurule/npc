@@ -3,6 +3,9 @@ Shared helper functions
 """
 
 import yaml
+import subprocess
+import logging
+from click import launch
 from pathlib import Path
 
 from .errors import ParseError, SchemaError
@@ -137,3 +140,30 @@ def merge_data_lists(new_list: list, orig: list) -> list:
             dest.append(val)
 
     return dest
+
+def edit_files(files: list[Path], settings = None) -> None:
+    """Edit one or more files
+
+    If settings has a npc.editor key, that program is invoked for each file. Otherwise, click.launch is used
+    to open each target file in the system's default program.
+
+    Args:
+        files (Tuple[list[Path]]): List of files to open
+        settings (Settings): Settings file to use for getting the editor. If not supplied, a default settings
+            object is created. (default: `None`)
+    """
+    from ..settings import Settings
+
+    if settings is None:
+        settings = Settings()
+
+    editor = settings.get("npc.editor")
+    for file_path in files:
+        try:
+            if editor:
+                subprocess.run(args=[editor, file_path])
+            else:
+                launch(str(file_path))
+        except FileNotFoundError:
+            logging.error("Cannot open file. Check that your npc.editor setting is an absolute path or in your session PATH.")
+            return
