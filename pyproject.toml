@@ -45,7 +45,7 @@ npc = "npc_cli:cli"
 branch = true
 
 [tool.coverage.report]
-omit = ["npc/__main__.py"]
+omit = []
 
 [tool.pytest.ini_options]
 minversion = "6.0.0"
