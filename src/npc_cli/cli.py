@@ -96,6 +96,10 @@ def session(settings):
     default="both")
 @pass_settings
 def latest(settings, planning_type):
+    """Find and open the latest plot or session file, or both
+
+    Args: PLANNING_TYPE one of "plot", "session", or "both". (defaults to "both")
+    """
     campaign = cwd_campaign(settings)
     if campaign is None:
         echo("Not a campaign (or any of the parent directories)")
@@ -111,16 +115,22 @@ def latest(settings, planning_type):
 
 @cli.group()
 def describe():
-    pass
+    """Show info about systems, types, or tags"""
 
 @describe.command()
 def systems():
-    print("show info about the configured game systems")
+    """Show the configured game systems"""
+    print("show the configured game systems")
 
 @describe.command()
 def types():
-    print("show info about the configured types within the current campaign's system, or given system")
+    """Show the configured character types"""
+    print("show the configured types within the current campaign's system, or given system")
 
 @describe.command()
 def tags():
-    print("show info about the tags available within this campaign, optionally scoped to a specific system or type")
+    """Show the configured tags
+
+    Can show the tags available to all character types, or just the ones for a specific type.
+    """
+    print("show the tags available within this campaign, optionally scoped to a specific system or type")
