@@ -71,6 +71,9 @@ def info(settings):
 def settings(settings, location):
     """Browse to the campaign or user settings"""
     target_file = find_or_make_settings_file(settings, location)
+    if target_file is None:
+        echo("Not a campaign (or any of the parent directories)")
+        return
 
     click.launch(str(target_file), locate=True)
 
