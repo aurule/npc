@@ -63,4 +63,4 @@ class PlanningFilename:
         Returns:
             str: Filename with the index number inserted
         """
-        return re.sub(self.index_regex, str(index).rjust(self.index_width, "0"), self.filename_pattern)
+        return re.sub(self.index_regex, f"{index:0>{self.index_width}}", self.filename_pattern)
