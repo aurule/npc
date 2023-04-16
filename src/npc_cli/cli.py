@@ -121,11 +121,15 @@ def describe():
 def systems():
     """Show the configured game systems"""
     print("show the configured game systems")
+    # if in a campaign, mark the one in use
+    # merge from npc.systems and campaign.systems
 
 @describe.command()
 def types():
     """Show the configured character types"""
     print("show the configured types within the current campaign's system, or given system")
+    # without campaign, require an explicit system
+    # generate from npc.system.x.types merged with campaign.system.x.types
 
 @describe.command()
 def tags():
@@ -134,3 +138,9 @@ def tags():
     Can show the tags available to all character types, or just the ones for a specific type.
     """
     print("show the tags available within this campaign, optionally scoped to a specific system or type")
+    # default to campaign system and non-type scoped
+    # if not in a campaign, require explicit system
+    # if limited to a type, require that the type be in the given system
+    # generate from npc.tags; npc.system.x.tags, campaign.system.x.tags; npc.types.x.y.tags, campaign.types.x.y.tags
+    # merge down all three to get the tags list
+    # same process for deprecated_tags
