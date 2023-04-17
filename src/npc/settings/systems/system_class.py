@@ -16,6 +16,13 @@ class System():
 
     @property
     def tags(self) -> dict:
+        """Get the tags configured for this system
+
+        Combines tag definitions from the core npc namespace as well as this system.
+
+        Returns:
+            dict: Dict of Tag objects
+        """
         core_tag_defs: dict = self.settings.get("npc.tags")
         system_tag_defs: dict = self.settings.get(f"npc.systems.{self.key}.tags", {})
         combined_defs: dict = merge_data_dicts(core_tag_defs, system_tag_defs)
