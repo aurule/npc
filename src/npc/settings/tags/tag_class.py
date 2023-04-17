@@ -12,6 +12,7 @@ class Tag():
         self.required: bool     = tag_def.get("required", False)
         self.min: int           = tag_def.get("min", 0)
         self.max: int           = tag_def.get("max", 999)
+        self.values: list[str]  = tag_def.get("values", [])
         self.allow_empty: bool  = tag_def.get("allow_empty", False)
         self.no_value: bool     = tag_def.get("no_value", False)
         self.subtags: list[str] = tag_def.get("subtags", {}).keys()
