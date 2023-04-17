@@ -113,16 +113,19 @@ changeling:
       desc: Court the changeling belongs to. Usually one of Winter, Spring, Summer, or Autumn.
       max: 1
       subtags:
-        rank: Name of the official position the changeling holds within their court
+        rank:
+          desc: Name of the official position the changeling holds within their court
     freehold:
       desc: Name of the political bloc the changeling's court belongs to. Usually tied to a human city.
       subtags:
-        rank: Official position the changeling has in their freehold, but not tied to their court.
+        rank:
+          desc: Official position the changeling has in their freehold, but not tied to their court.
     entitlement:
       desc: Magical, prestigious group the changeling belongs to.
       max: 1
       subtags:
-        rank: Official position the changeling holds within their entitlement.
+        rank:
+          desc: Official position the changeling holds within their entitlement.
     seeming:
       desc: The broad grouping of the changeling's fae kin.
       values: *seemings
