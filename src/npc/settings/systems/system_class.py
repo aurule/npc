@@ -19,24 +19,34 @@ class System():
 
     @property
     def types_dir(self):
-        """Get the path to the directory where types are defined for this system
+        """Get the path to the directory where default types are defined for this system
 
         Returns:
             Path: Path to the main types definition dir
         """
         return self.settings.default_settings_path / "types" / self.key
 
+    @property
+    def personal_types_dir(self):
+        """Get the path to the directory where user types are defined
+
+        Returns:
+            Path: Path to the usesr types definition dir
+        """
+        return self.settings.personal_dir / "types" / self.key
+
     @cached_property
     def types(self) -> dict:
         """Get the character types for this system
 
-        The character types here are only those described at the global level -- i.e. from the default and user
-        settings. Campaign-level types are handled by the Campaign class.
+        The character types here are only those described in the default and user settings. Campaign-level
+        types are handled by the Campaign class.
 
         Returns:
             dict: Dict of character type objects
         """
         self.settings.load_types(self.types_dir, system_key=self.key)
+        self.settings.load_types(self.personal_types_dir, system_key=self.key)
         return make_types(self.settings.get(f"npc.types.{self.key}"))
 
     @cached_property
