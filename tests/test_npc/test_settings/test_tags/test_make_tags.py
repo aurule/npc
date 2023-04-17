@@ -13,13 +13,13 @@ class TestTopLevelTags():
     def test_makes_all_tags(self):
         tags = make_tags(self.tag_defs)
 
-        tag_names = [t.name for t in tags]
-        assert tag_names == ["first", "second"]
+        assert "first" in tags
+        assert "second" in tags
 
     def test_tags_have_no_parent(self):
         tags = make_tags(self.tag_defs)
 
-        tag_parents = [t.parent for t in tags]
+        tag_parents = [t.parent for t in tags.values()]
         assert tag_parents == [None, None]
 
 class TestSubtags():
@@ -40,18 +40,15 @@ class TestSubtags():
     def test_flattens_subtags(self):
         tags = make_tags(self.tag_defs)
 
-        tag_names = [t.name for t in tags]
-        assert "primero" in tag_names
+        assert "primero" in tags
 
     def test_makes_all_subtags(self):
         tags = make_tags(self.tag_defs)
 
-        tag_names = [t.name for t in tags]
-        assert "primero" in tag_names
-        assert "segundo" in tag_names
+        assert "primero" in tags
+        assert "segundo" in tags
 
     def test_assigns_parent(self):
         tags = make_tags(self.tag_defs)
 
-        tag_parents = [t.parent for t in tags]
-        assert "first" in tag_parents
+        assert "first" == tags.get("primero").parent

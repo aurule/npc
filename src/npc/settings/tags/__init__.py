@@ -1,7 +1,7 @@
 from .tag_class import Tag
 from .deprecated_tag_class import DeprecatedTag
 
-def make_tags(tag_defs: dict, parent: str = None) -> list[Tag]:
+def make_tags(tag_defs: dict, parent: str = None) -> dict:
     """Make Tag objects for every tag in a dict, including subtags
 
     Iterates the tags in the tag_defs dict, creating a Tag object for each one. Any subtags described are also
@@ -12,15 +12,15 @@ def make_tags(tag_defs: dict, parent: str = None) -> list[Tag]:
         parent (string): Name of the parent tag to assign to all created tags
 
     Returns:
-        list[Tag]: List of Tag objects
+        dict: Dict of Tag objects
     """
-    tags = []
+    tags = {}
 
     for tag_name, tag_def in tag_defs.items():
         new_tag = Tag(tag_name, tag_def)
         new_tag.parent = parent
-        tags.append(new_tag)
+        tags[tag_name] = new_tag
         if "subtags" in tag_def:
-            tags.extend(make_tags(tag_def["subtags"], parent=tag_name))
+            tags.update(make_tags(tag_def["subtags"], parent=tag_name))
 
     return tags

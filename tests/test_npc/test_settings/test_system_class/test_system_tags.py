@@ -6,8 +6,7 @@ def test_includes_global_tags():
 
     tags = system.tags
 
-    tag_names = [t.name for t in tags]
-    assert "type" in tag_names
+    assert "type" in tags
 
 def test_includes_system_tags():
     settings = Settings()
@@ -15,5 +14,4 @@ def test_includes_system_tags():
 
     tags = system.tags
 
-    tag_names = [t.name for t in tags]
-    assert "concept" in tag_names
+    assert "concept" in tags
