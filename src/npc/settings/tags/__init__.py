@@ -1,4 +1,5 @@
 from .tag_class import Tag
+from .subtag_class import SubTag
 from .deprecated_tag_class import DeprecatedTag
 
 def make_tags(tag_defs: dict, parent: str = None) -> dict:
@@ -20,7 +21,9 @@ def make_tags(tag_defs: dict, parent: str = None) -> dict:
         new_tag = Tag(tag_name, tag_def)
         new_tag.parent = parent
         tags[tag_name] = new_tag
-        if "subtags" in tag_def:
-            tags.update(make_tags(tag_def["subtags"], parent=tag_name))
+        for subtag_name, subtag_def in tag_def.get("subtags", {}).items():
+            if subtag_name not in tags:
+                tags[subtag_name] = SubTag(subtag_name)
+            tags[subtag_name].add_context(tag_name, Tag(subtag_name, subtag_def))
 
     return tags

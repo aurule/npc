@@ -18,7 +18,6 @@ class Tag():
         self.allow_empty: bool  = tag_def.get("allow_empty", False)
         self.no_value: bool     = tag_def.get("no_value", False)
         self.subtags: list[str] = tag_def.get("subtags", {}).keys()
-        self.parent: str        = None
 
         if self.required and self.min < 1:
             logging.debug(f"Tag {self.name} is required but min is zero. Setting min to 1.")
@@ -41,3 +40,6 @@ class Tag():
         if self.values and self.no_value:
             logging.warning(f"Tag {self.name} has list of accepted values, but is flagged no_value. Removing flag.")
             self.no_value = False
+
+    def add_context(self, parent_key: str, *args):
+        raise TypeError(f"The tag {parent_key} is trying to use {self.name} as a subtag, but {self.name} is already defined as a regular tag")

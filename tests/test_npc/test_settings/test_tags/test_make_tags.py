@@ -48,7 +48,7 @@ class TestSubtags():
         assert "primero" in tags
         assert "segundo" in tags
 
-    def test_assigns_parent(self):
+    def test_adds_context(self):
         tags = make_tags(self.tag_defs)
 
-        assert "first" == tags.get("primero").parent
+        assert "first" in tags.get("primero").contexts
