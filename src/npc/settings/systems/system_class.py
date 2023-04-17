@@ -1,5 +1,7 @@
+from functools import cached_property
+
 from npc.util import merge_data_dicts
-from npc.settings.tags import Tag, make_tags
+from npc.settings.tags import make_tags
 
 class System():
     """Represents a game system"""
@@ -14,7 +16,7 @@ class System():
         self.desc: str = system_def["desc"]
         self.settings = settings
 
-    @property
+    @cached_property
     def tags(self) -> dict:
         """Get the tags configured for this system
 
