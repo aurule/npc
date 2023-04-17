@@ -3,7 +3,7 @@ import re
 import yaml
 from pathlib import Path
 
-from ..settings import Settings, PlanningFilename
+from ..settings import Settings, PlanningFilename, System
 from ..util.functions import merge_data_dicts, prepend_namespace
 from npc.settings.helpers import quiet_parse
 
@@ -50,6 +50,15 @@ class Campaign:
             str: Description of the campaign
         """
         return self.settings.get("campaign.system")
+
+    @property
+    def system(self) -> System:
+        """Get a System object for the campaign's game system
+
+        Returns:
+            System: System object with data about this campaign's game system
+        """
+        return System(self.system_key, self.settings)
 
     @property
     def plot_dir(self) -> Path:
