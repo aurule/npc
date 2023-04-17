@@ -2,6 +2,7 @@ from functools import cached_property
 
 from npc.util import merge_data_dicts
 from npc.settings.tags import make_tags
+from npc.settings.types import make_types
 
 class System():
     """Represents a game system"""
@@ -15,6 +16,28 @@ class System():
         self.name: str = system_def["name"]
         self.desc: str = system_def["desc"]
         self.settings = settings
+
+    @property
+    def types_dir(self):
+        """Get the path to the directory where types are defined for this system
+
+        Returns:
+            Path: Path to the main types definition dir
+        """
+        return self.settings.default_settings_path / "types" / self.key
+
+    @cached_property
+    def types(self) -> dict:
+        """Get the character types for this system
+
+        The character types here are only those described at the global level -- i.e. from the default and user
+        settings. Campaign-level types are handled by the Campaign class.
+
+        Returns:
+            dict: Dict of character type objects
+        """
+        self.settings.load_types(self.types_dir, system_key=self.key)
+        return make_types(self.settings.get(f"npc.types.{self.key}"))
 
     @cached_property
     def tags(self) -> dict:
