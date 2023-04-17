@@ -1,3 +1,5 @@
+import logging
+
 class Tag():
     """Represents a single character tag
 
@@ -17,3 +19,25 @@ class Tag():
         self.no_value: bool     = tag_def.get("no_value", False)
         self.subtags: list[str] = tag_def.get("subtags", {}).keys()
         self.parent: str        = None
+
+        if self.required and self.min < 1:
+            logging.debug(f"Tag {self.name} is required but min is zero. Setting min to 1.")
+            self.min = 1
+
+        if self.min < 0:
+            logging.warning(f"Tag {self.name} cannot have negative min. Setting min to 0.")
+            self.min = 0
+
+        if self.max < 0:
+            logging.warning(f"Tag {self.name} cannot have negative max. Setting max to 0.")
+            self.max = 0
+
+        if self.min > self.max:
+            logging.warning(f"Tag {self.name} has min {self.min} greater than max {self.max}. Swapping.")
+            old_min = self.min
+            self.min = self.max
+            self.max = old_min
+
+        if self.values and self.no_value:
+            logging.warning(f"Tag {self.name} has list of accepted values, but is flagged no_value. Removing flag.")
+            self.no_value = False
