@@ -174,7 +174,7 @@ class Settings(DataStore):
             for discovered in discovered_sheets:
                 sheet_path = Path(discovered)
                 type_key = sheet_path.stem
-                if type_key not in self.get(types_namespace):
+                if type_key not in self.get(types_namespace, {}):
                     logging.info(f"Type {type_key} not defined, skipping potential sheet {discovered}")
                     continue
                 if "sheet_path" not in self.get(f"{types_namespace}.{type_key}"):
