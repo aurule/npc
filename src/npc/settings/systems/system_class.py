@@ -1,8 +1,8 @@
-from functools import cached_property
+from functools import cached_property, cache
 
 from npc.util import merge_data_dicts
 from npc.settings.tags import make_tags
-from npc.settings.types import make_types
+from npc.settings.types import make_types, UndefinedType
 
 class System():
     """Represents a game system"""
@@ -61,4 +61,15 @@ class System():
         core_tag_defs: dict = self.settings.get("npc.tags")
         system_tag_defs: dict = self.settings.get(f"npc.systems.{self.key}.tags", {})
         combined_defs: dict = merge_data_dicts(core_tag_defs, system_tag_defs)
+        return make_tags(combined_defs)
+
+    @cache
+    def type_tags(self, type_key) -> dict:
+        char_type = self.types.get(type_key, UndefinedType())
+
+        core_tag_defs: dict = self.settings.get("npc.tags")
+        system_tag_defs: dict = self.settings.get(f"npc.systems.{self.key}.tags", {})
+        shared_tag_defs: dict = merge_data_dicts(core_tag_defs, system_tag_defs)
+        type_tag_defs: dict = char_type.definition.get("tags", {})
+        combined_defs = merge_data_dicts(shared_tag_defs, type_tag_defs)
         return make_tags(combined_defs)

@@ -1,4 +1,4 @@
-from .type_class import Type
+from .type_class import *
 
 def make_types(type_defs: dict) -> dict:
     """Make Type objects for every type in a dict
