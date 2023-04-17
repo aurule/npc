@@ -11,6 +11,7 @@ from pathlib import Path
 from ..util import DataStore
 from ..util.functions import merge_data_dicts, prepend_namespace
 from .helpers import quiet_parse
+from .systems import System
 
 class Settings(DataStore):
     """Core settings class
@@ -194,6 +195,24 @@ class Settings(DataStore):
             list[str]: List of system keys
         """
         return self.get("npc.systems").keys()
+
+    def get_system(self, key: str) -> System:
+        """Get a system object for the given system key
+
+        Creates a System object using the definition from the given key. If the key does not have a
+        definition, returns None.
+
+        Args:
+            key (str): System key name to use
+
+        Returns:
+            System: System object for the given key, or None if the key does not have a system def
+        """
+        if key not in self.get("npc.systems"):
+            logging.error(f"System '{key}' is not defined")
+            return None
+
+        return System(key, self)
 
     @property
     def required_dirs(self) -> list:
