@@ -21,6 +21,8 @@ class SubTag():
             parent_key (str): Key of the parent tag
             props_obj (Tag): Tag object defining how this subtag should act when paired with the given parent
         """
+        if props_obj.name != self.name:
+            raise KeyError(f"Subtag {self.name} requires all context objs to have identical name")
         self.contexts[parent_key] = props_obj
 
     def in_context(self, parent_key: str) -> Tag:
