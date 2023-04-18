@@ -19,7 +19,7 @@ def cwd_campaign(settings: Settings) -> Campaign:
     """
     campaign_root = npc.campaign.find_campaign_root(os.getcwd())
     if not campaign_root:
-        logging.warning("Not a campaign (or any of the parent directories)")
+        logging.info("Not a campaign (or any of the parent directories)")
         return None
     logging.info(f"Found campaign root at {campaign_root}")
 
