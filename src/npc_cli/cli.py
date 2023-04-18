@@ -5,7 +5,7 @@ from pathlib import Path
 from click import echo
 
 import npc
-from npc.settings import Settings
+from npc.settings import Settings, System
 from . import presenters
 from .helpers import cwd_campaign, find_or_make_settings_file
 
@@ -119,11 +119,17 @@ def describe():
     """Show info about systems, types, or tags"""
 
 @describe.command()
-def systems():
+@pass_settings
+def systems(settings):
     """Show the configured game systems"""
-    print("show the configured game systems")
-    # if in a campaign, mark the one in use
-    # merge from npc.systems and campaign.systems
+    echo("These are the systems currently configured:\n")
+    campaign = cwd_campaign(settings)
+    systems = [settings.get_system(key) for key in settings.get_system_keys()]
+    namelen = max([len(system.name) for system in systems])
+    for system in systems:
+        echo(f"{system.name:>{namelen}} - {system.desc}")
+    if campaign:
+        echo(f"\nCurrently using {campaign.system.name}")
 
 @describe.command()
 def types():
