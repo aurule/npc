@@ -6,6 +6,7 @@ from click import echo
 
 import npc
 from npc.settings import Settings, System
+from npc.util import ParseError
 from . import presenters
 from .helpers import cwd_campaign, find_or_make_settings_file
 
@@ -132,11 +133,29 @@ def systems(settings):
         echo(f"\nCurrently using {campaign.system.name}")
 
 @describe.command()
-def types():
+@click.option('--system',
+    type=click.Choice(arg_settings.get_system_keys(), case_sensitive=False),
+    help="ID of the game system to use")
+@pass_settings
+def types(settings, system):
     """Show the configured character types"""
-    print("show the configured types within the current campaign's system, or given system")
-    # without campaign, require an explicit system
-    # generate from npc.system.x.types merged with campaign.system.x.types
+    campaign = cwd_campaign(settings)
+    try:
+        if campaign:
+            chartypes = campaign.types
+        elif system:
+            chartypes = settings.get_system(system).types
+        else:
+            echo("Not a campaign, so the --system option must be provided")
+            return 1
+    except ParseError as err:
+        echo(f"Could not load {err.path}: {err.strerror}")
+        return 1
+
+    echo("These are the available character types:\n")
+    namelen = max([len(chartype.name) for chartype in chartypes.values()])
+    for chartype in chartypes.values():
+        echo(f"{chartype.name:>{namelen}} - {chartype.desc}")
 
 @describe.command()
 def tags():
