@@ -60,7 +60,7 @@ class System():
         """
         core_tag_defs: dict = self.settings.get("npc.tags")
         system_tag_defs: dict = self.settings.get(f"npc.systems.{self.key}.tags", {})
-        combined_defs: dict = merge_data_dicts(core_tag_defs, system_tag_defs)
+        combined_defs: dict = merge_data_dicts(system_tag_defs, core_tag_defs)
         return make_tags(combined_defs)
 
     @cache
@@ -69,7 +69,7 @@ class System():
 
         core_tag_defs: dict = self.settings.get("npc.tags")
         system_tag_defs: dict = self.settings.get(f"npc.systems.{self.key}.tags", {})
-        shared_tag_defs: dict = merge_data_dicts(core_tag_defs, system_tag_defs)
+        shared_tag_defs: dict = merge_data_dicts(system_tag_defs, core_tag_defs)
         type_tag_defs: dict = char_type.definition.get("tags", {})
-        combined_defs = merge_data_dicts(shared_tag_defs, type_tag_defs)
+        combined_defs = merge_data_dicts(type_tag_defs, shared_tag_defs)
         return make_tags(combined_defs)
