@@ -1,0 +1,73 @@
+$schema: https://json-schema.org/draft/2020-12/schema
+$id: system.schema.yaml
+title: System
+description: A game system
+type: object
+patternProperties:
+    "^[a-z][a-z|-]+$":
+        type: object
+        description: The key of the system. This key must match the system's configuration file name.
+        properties:
+            name:
+                type: string
+                description: The full name of this game system
+            desc:
+                type: string
+                description: A single line of text that gives an overview of the game system
+            doc:
+                type: string
+                description: A multiline block of text describing the details of the game system
+            extends:
+                type: string
+                pattern: "^[a-z][a-z|-]+$"
+                description: The key of a different system. When present, the configuration for that system will be imported into the current system before being altered by the current configuration.
+            tags:
+                type: object
+                description: Tag objects unique to this game system
+                patternProperties:
+                    "^[a-z][a-z|-]+$":
+                        $ref: tag.schema.yaml
+            meta_tags:
+                type: object
+                description: Tags which set one or more other tags when found. They do not appear as separate tags in the parsed character data, but may be used as shorthand to set multiple tags at once.
+                example: |
+                    meta_tags:
+                        changeling:
+                            set:
+                                type: changeling
+                            match:
+                            - seeming
+                            - kith
+
+                    @changeling beast hunterheart
+
+                    Is equivalent to:
+
+                    @type changeling
+                    @seeming beast
+                    @kith hunterheart
+                patternProperties:
+                    "^[a-z][a-z|-]+$":
+                        type: object
+                        description: The name of the meta-tag
+                        properties:
+                            set:
+                                type: object
+                                description: Static values to assign to tags when this meta-tag is present
+                                patternProperties:
+                                    "^[a-z][a-z|-]+$":
+                                        type: string
+                                        description: Name and value of the tag to assign
+                            match:
+                                type: array
+                                description: Tags whose values will be set by matching against the meta-tag's value
+                                items:
+                                    type: string
+                                    pattern: "^[a-z][a-z|-]+$"
+        required:
+        - name
+        - desc
+        additionalProperties: true
+additionalProperties: false
+maxProperties: 1
+minProperties: 1

@@ -1,0 +1,49 @@
+$schema: https://json-schema.org/draft/2020-12/schema
+$id: tag.schema.json
+title: Tag
+description: A tag which can appear in a character file
+type: object
+properties:
+    desc:
+        type: string
+        description: A single line of text describing the basic purpose of this tag
+    doc:
+        type: string
+        description: A multiline block of text describing the details and nuances of this tag
+    replaces:
+        type: string
+        description: The name of a different tag which this tag replaces
+        pattern: "^[a-z][a-z|-]+$"
+    required:
+        type: boolean
+        description: Whether this tag must appear in the character file
+        defaul: false
+    min:
+        type: integer
+        minimum: 0
+        description: The minimum number of times this tag must appear in the character file. A positive number implies required=true.
+    max:
+        type: integer
+        minimum: 0
+        description: The maximum number of times this tag may appear in the character file.
+    values:
+        type: array
+        description: Explicit list of allowed values for this tag.
+        items:
+            type: string
+    allow_empty:
+        type: boolean
+        description: Whether this tag can appear with no value
+        default: false
+    no_value:
+        type: boolean
+        description: Whether this tag must not have a value
+        default: false
+    subtags:
+        patternProperties:
+            "^[a-z][a-z|-]+$":
+                type: object
+                description: A tag which gives supplemental data about its parent tag
+                $ref: "#"
+required:
+- desc
