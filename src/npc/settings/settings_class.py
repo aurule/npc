@@ -12,6 +12,7 @@ from ..util import DataStore
 from ..util.functions import merge_data_dicts, prepend_namespace
 from .helpers import quiet_parse
 from .systems import System
+from ..util import ParseError
 
 class Settings(DataStore):
     """Core settings class
@@ -160,7 +161,10 @@ class Settings(DataStore):
                     continue
 
                 typedef: dict = quiet_parse(type_path)
-                type_key: str = next(iter(typedef))
+                try:
+                    type_key: str = next(iter(typedef))
+                except TypeError:
+                    raise ParseError("Missing top-level key for type config", type_path)
 
                 if typedef[type_key].get("sheet_path"):
                     sheet_path = Path(typedef[type_key].get("sheet_path"))

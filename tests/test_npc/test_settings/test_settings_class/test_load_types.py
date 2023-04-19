@@ -1,4 +1,6 @@
+import pytest
 from tests.fixtures import fixture_file
+from npc.util import ParseError
 
 from npc.settings import Settings
 
@@ -28,6 +30,14 @@ def test_ignores_types_from_other_systems():
         system_key = "generic")
 
     assert "tree" not in settings.get("npc.types.generic")
+
+def test_throws_parse_error_on_missing_def():
+    settings = Settings()
+
+    with pytest.raises(ParseError):
+        settings.load_types(
+            fixture_file("campaigns", "empty_type", ".npc", "types"),
+            system_key = "generic")
 
 def test_loads_into_given_namespace():
     settings = Settings()
