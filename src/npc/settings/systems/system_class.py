@@ -35,7 +35,16 @@ class System():
         """
         return self.settings.personal_dir / "types" / self.key
 
-    @cached_property
+    @cache
+    def load_types(self):
+        """Load the character type definitions for this system
+
+        Merges in the type definition files in the default and user settings.
+        """
+        self.settings.load_types(self.types_dir, system_key=self.key)
+        self.settings.load_types(self.personal_types_dir, system_key=self.key)
+
+    @property
     def types(self) -> dict:
         """Get the character types for this system
 
@@ -45,8 +54,7 @@ class System():
         Returns:
             dict: Dict of character type objects
         """
-        self.settings.load_types(self.types_dir, system_key=self.key)
-        self.settings.load_types(self.personal_types_dir, system_key=self.key)
+        self.load_types()
         return make_types(self.settings.get(f"npc.types.{self.key}"))
 
     @cached_property
