@@ -2,10 +2,12 @@ import logging
 import re
 import yaml
 from pathlib import Path
+from functools import cached_property
 
 from ..settings import Settings, PlanningFilename, System
 from ..util.functions import merge_data_dicts, prepend_namespace
 from npc.settings.helpers import quiet_parse
+from npc.settings.types import make_types
 
 class Campaign:
     def __init__(self, campaign_path: Path, *, settings: Settings = None):
@@ -105,6 +107,26 @@ class Campaign:
             Path: Path to the campaign's settings file, or None if campaign_dir is not set
         """
         return self.settings_dir / "settings.yaml"
+
+    @cached_property
+    def types(self) -> dict:
+        """Get the character types for this campaign
+
+        Loads the default, user, and campaign-specific types for the campaign's system and generates a dict
+        of Type objects.
+
+        Returns:
+            dict: Type objects
+        """
+        self.system.load_types()
+        self.settings.load_types(
+            self.settings_dir / "types",
+            system_key=self.system_key,
+            namespace_root="campaign")
+        type_defs = merge_data_dicts(
+            self.settings.get(f"campaign.types.{self.system_key}", {}),
+            self.settings.get(f"npc.types.{self.system_key}", {}))
+        return make_types(type_defs)
 
     def bump_planning_files(self) -> dict:
         """Create the next planning files by current index
