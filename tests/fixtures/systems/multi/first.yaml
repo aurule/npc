@@ -1,4 +1,4 @@
 first:
   name: Diamonds
   desc: About half a deck of cards
-  inherits: second
+  extends: second

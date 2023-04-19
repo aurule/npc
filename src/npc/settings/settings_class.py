@@ -82,8 +82,8 @@ class Settings(DataStore):
             system_name = next(iter(loaded))
             loaded_contents = loaded[system_name]
 
-            if "inherits" in loaded_contents:
-                dependencies[loaded_contents["inherits"]].append(loaded)
+            if "extends" in loaded_contents:
+                dependencies[loaded_contents["extends"]].append(loaded)
                 continue
 
             self.merge_data(loaded, namespace="npc.systems")
@@ -182,8 +182,8 @@ class Settings(DataStore):
 
         types_namespace: str = f"{namespace_root}.types.{system_key}"
         process_types_dir(types_dir)
-        if self.get(f"npc.systems.{system_key}.inherits"):
-            process_types_dir(types_dir / self.get(f"npc.systems.{system_key}.inherits"))
+        if self.get(f"npc.systems.{system_key}.extends"):
+            process_types_dir(types_dir / self.get(f"npc.systems.{system_key}.extends"))
         process_types_dir(types_dir / system_key)
 
     def get_system_keys(self) -> list[str]:

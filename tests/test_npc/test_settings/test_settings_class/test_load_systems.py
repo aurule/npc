@@ -26,7 +26,7 @@ def test_allows_deep_inheritance():
 
 	assert "first" in settings.get("npc.systems").keys()
 
-def test_does_not_choke_on_circular_inherits():
+def test_does_not_choke_on_circular_extends():
 	settings = Settings()
 
 	settings.load_systems(fixture_file("systems", "circular"))

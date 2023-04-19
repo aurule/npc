@@ -1,4 +1,4 @@
 sibling-a:
   name: Sibling A
   desc: First of a circle
-  inherits: sibling-b
+  extends: sibling-b
