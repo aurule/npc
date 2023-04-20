@@ -141,10 +141,13 @@ def types(settings, system):
     """Show the configured character types"""
     campaign = cwd_campaign(settings)
     try:
-        if campaign:
+        if system:
+            game_system = settings.get_system(system)
+            chartypes = game_system.types
+            title = f"Character Types for {game_system.name}"
+        elif campaign:
             chartypes = campaign.types
-        elif system:
-            chartypes = settings.get_system(system).types
+            title = f"Character Types in {campaign.name}"
         else:
             echo("Not a campaign, so the --system option must be provided")
             return 1
@@ -152,10 +155,9 @@ def types(settings, system):
         echo(f"Could not load {err.path}: {err.strerror}")
         return 1
 
-    echo("These are the available character types:\n")
-    namelen = max([len(chartype.name) for chartype in chartypes.values()])
-    for chartype in chartypes.values():
-        echo(f"{chartype.name:>{namelen}} - {chartype.desc}")
+    chartype_headers = ["Name", "Key", "Description"]
+    chartype_data = [[chartype.name, chartype.key, chartype.desc] for chartype in chartypes.values()]
+    echo(presenters.tabularize(chartype_data, headers = chartype_headers, title = title))
 
 @describe.command()
 def tags():
