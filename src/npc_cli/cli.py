@@ -123,12 +123,12 @@ def describe():
 @pass_settings
 def systems(settings):
     """Show the configured game systems"""
-    echo("These are the systems currently configured:\n")
-    campaign = cwd_campaign(settings)
     systems = [settings.get_system(key) for key in settings.get_system_keys()]
-    namelen = max([len(system.name) for system in systems])
-    for system in systems:
-        echo(f"{system.name:>{namelen}} - {system.desc}")
+    system_headers = ["Name", "Key", "Description"]
+    system_data = [[system.name, system.key, system.desc] for system in systems]
+    echo(presenters.tabularize(system_data, headers = system_headers, title = "Configured Systems"))
+
+    campaign = cwd_campaign(settings)
     if campaign:
         echo(f"\nCurrently using {campaign.system.name}")
 
