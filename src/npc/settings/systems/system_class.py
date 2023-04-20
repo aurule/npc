@@ -55,7 +55,7 @@ class System():
             dict: Dict of character type objects
         """
         self.load_types()
-        return make_types(self.settings.get(f"npc.types.{self.key}"))
+        return make_types(self.settings.get(f"npc.types.{self.key}", {}))
 
     @cached_property
     def tags(self) -> dict:
