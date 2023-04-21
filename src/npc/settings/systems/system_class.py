@@ -13,8 +13,8 @@ class System():
         if system_def is None:
             raise KeyError(f"No system named '{key}' is defined")
 
-        self.name: str = system_def["name"]
-        self.desc: str = system_def["desc"]
+        self.name: str = system_def.get("name", "")
+        self.desc: str = system_def.get("desc", "")
         self.settings = settings
 
     @property
