@@ -15,6 +15,7 @@ class System():
 
         self.name: str = system_def.get("name", "")
         self.desc: str = system_def.get("desc", "")
+        self.extends: str = system_def.get("extends")
         self.settings = settings
 
     @property
