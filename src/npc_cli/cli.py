@@ -1,5 +1,6 @@
 import click
 import logging
+import os
 from pathlib import Path
 
 from click import echo
@@ -18,7 +19,8 @@ pass_settings = click.make_pass_decorator(Settings)
 @click.pass_context
 def cli(ctx):
     ctx.obj = npc.settings.app_settings()
-    ctx.max_content_width = ctx.terminal_width
+    term_width = os.get_terminal_size()
+    ctx.max_content_width = term_width.columns
 
 @cli.command()
 @click.option('--name', help="Campaign name", default="My Campaign")
