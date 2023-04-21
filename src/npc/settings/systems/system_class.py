@@ -52,6 +52,21 @@ class System():
             bool: False if both systems' hashes match, True if not
         """
         return not(self == other)
+
+    @cached_property
+    def parent(self):
+        """Get the parent system, if this system has one
+
+        If this system has the extends property, get the System object for its parent system. Otherwise,
+        returns None.
+
+        Returns:
+            System: The parent system of this game system, or None if no parent is defined
+        """
+        if not self.extends:
+            return None
+        return self.settings.get_system(self.extends)
+
     @property
     def types_dir(self):
         """Get the path to the directory where default types are defined for this system
