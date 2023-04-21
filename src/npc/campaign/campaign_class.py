@@ -7,7 +7,7 @@ from functools import cached_property
 from ..settings import Settings, PlanningFilename, System
 from ..util.functions import merge_data_dicts, prepend_namespace
 from npc.settings.helpers import quiet_parse
-from npc.settings.types import make_types
+from npc.settings.types import make_types, Type, UndefinedType
 
 class Campaign:
     def __init__(self, campaign_path: Path, *, settings: Settings = None):
@@ -127,6 +127,18 @@ class Campaign:
             self.settings.get(f"campaign.types.{self.system_key}", {}),
             self.settings.get(f"npc.types.{self.system_key}", {}))
         return make_types(type_defs)
+
+
+    def get_type(self, type_key: str) -> Type:
+        """Get a single character type
+
+        Args:
+            type_key (str): Key for the character type to get
+
+        Returns:
+            Type: Type for the given key, or an UndefinedType if that key does not have a type
+        """
+        return self.types.get(type_key, UndefinedType)
 
     def bump_planning_files(self) -> dict:
         """Create the next planning files by current index

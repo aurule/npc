@@ -2,7 +2,7 @@ from functools import cached_property, cache
 
 from npc.util import merge_data_dicts
 from npc.settings.tags import make_tags
-from npc.settings.types import make_types, UndefinedType
+from npc.settings.types import make_types, Type, UndefinedType
 
 class System():
     """Represents a game system"""
@@ -118,6 +118,17 @@ class System():
         """
         return make_types(self.typedefs)
 
+    def get_type(self, type_key: str) -> Type:
+        """Get a single character type
+
+        Args:
+            type_key (str): Key for the character type to get
+
+        Returns:
+            Type: Type for the given key, or an UndefinedType if that key does not have a type
+        """
+        return self.types.get(type_key, UndefinedType)
+
     @property
     def system_tag_defs(self) -> dict:
         """Get the combined tag definitions for this system
@@ -144,7 +155,7 @@ class System():
 
     @cache
     def type_tags(self, type_key) -> dict:
-        char_type = self.types.get(type_key, UndefinedType())
+        char_type = self.get_type(type_key)
 
         type_tag_defs: dict = char_type.definition.get("tags", {})
         combined_defs = merge_data_dicts(type_tag_defs, self.system_tag_defs)
