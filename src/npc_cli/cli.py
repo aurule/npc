@@ -6,7 +6,7 @@ from pathlib import Path
 from click import echo
 
 import npc
-from npc.settings import Settings, System
+from npc.settings import Settings, System, SubTag
 from npc.util import ParseError
 from . import presenters
 from .helpers import cwd_campaign, find_or_make_settings_file
@@ -163,15 +163,41 @@ def types(settings, system):
     echo(presenters.tabularize(chartype_data, headers = chartype_headers, title = title))
 
 @describe.command()
-def tags():
-    """Show the configured tags
+@click.option("-s", "--system", "system_key",
+    type=click.Choice(arg_settings.get_system_keys(), case_sensitive=False),
+    help="ID of the game system to use")
+@click.option("-t", "--type", "type_", help="Show tags for only this character type")
+@pass_settings
+def tags(settings, system_key, type_):
+    """Show the configured tags for this campaign
 
     Can show the tags available to all character types, or just the ones for a specific type.
     """
-    print("show the tags available within this campaign, optionally scoped to a specific system or type")
-    # default to campaign system and non-type scoped
-    # if not in a campaign, require explicit system
-    # if limited to a type, require that the type be in the given system
-    # generate from npc.tags; npc.system.x.tags, campaign.system.x.tags; npc.types.x.y.tags, campaign.types.x.y.tags
-    # merge down all three to get the tags list
-    # same process for deprecated_tags
+    campaign = cwd_campaign(settings)
+    try:
+        if system_key:
+            system = settings.get_system(system_key)
+            target = system
+        elif campaign:
+            system = campaign.system
+            target = campaign
+        else:
+            echo("Not a campaign, so the --system option must be provided")
+            return 1
+    except ParseError as err:
+        echo(f"Could not load {err.path}: {err.strerror}")
+        return 1
+
+    headers = ["Name", "Description"]
+    if type_:
+        if type_ not in system.types:
+            echo(f"Character type {type_} does not exist in {system.name}")
+            return 1
+
+        title = f"Tags for {system.types.get(type_).name} in {target.name}"
+        tags = system.type_tags(type_).values()
+    else:
+        title = f"Tags in {target.name}"
+        tags = system.tags.values()
+    data = [[tag.name, tag.desc] for tag in tags if not isinstance(tag, SubTag)]
+    echo(presenters.tabularize(data, headers = headers, title = title))
