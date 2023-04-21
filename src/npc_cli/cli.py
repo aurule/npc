@@ -23,14 +23,14 @@ def cli(ctx):
     ctx.max_content_width = term_width.columns
 
 @cli.command()
-@click.option('--name', help="Campaign name", default="My Campaign")
-@click.option('--desc', help="Description of the campaign", default="Campaign description")
-@click.option('--system',
+@click.option("-n", "--name", help="Campaign name", default="My Campaign")
+@click.option("-d", "--desc", help="Description of the campaign", default="Campaign description")
+@click.option("-s", "--system",
     type=click.Choice(arg_settings.get_system_keys(), case_sensitive=False),
     required=True,
     help="ID of the game system to use")
 @click.argument(
-    'campaign_path',
+    "campaign_path",
     type=click.Path(file_okay=False, resolve_path=True, path_type=Path),
     default=".")
 @pass_settings
@@ -67,7 +67,8 @@ def info(settings):
     echo(presenters.campaign_info(campaign))
 
 @cli.command()
-@click.option("--location",
+@click.option("-l",
+    "--location",
     type=click.Choice(["user", "campaign"], case_sensitive=False),
     default="campaign",
     help="The settings file or directory to open. Defaults to campaign.")
@@ -135,7 +136,7 @@ def systems(settings):
         echo(f"\nCurrently using {campaign.system.name}")
 
 @describe.command()
-@click.option('--system',
+@click.option("-s", "--system",
     type=click.Choice(arg_settings.get_system_keys(), case_sensitive=False),
     help="ID of the game system to use")
 @pass_settings
