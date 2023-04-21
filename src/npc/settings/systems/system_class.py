@@ -98,6 +98,15 @@ class System():
         self.settings.load_types(self.personal_types_dir, system_key = self.key)
 
     @property
+    def typedefs(self) -> dict:
+        self.load_types()
+        own_defs = self.settings.get(f"npc.types.{self.key}", {})
+        if self.parent:
+            return merge_data_dicts(own_defs, self.parent.typedefs)
+        else:
+            return own_defs
+
+    @property
     def types(self) -> dict:
         """Get the character types for this system
 
@@ -107,8 +116,7 @@ class System():
         Returns:
             dict: Dict of character type objects
         """
-        self.load_types()
-        return make_types(self.settings.get(f"npc.types.{self.key}", {}))
+        return make_types(self.typedefs)
 
     @cached_property
     def tags(self) -> dict:
