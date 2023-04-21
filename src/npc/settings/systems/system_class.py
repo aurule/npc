@@ -149,12 +149,22 @@ class System():
         Combines tag definitions from the core npc namespace as well as this system.
 
         Returns:
-            dict: Dict of Tag objects
+            dict: Dict of Tag objects indexed by tag key
         """
         return make_tags(self.system_tag_defs)
 
     @cache
-    def type_tags(self, type_key) -> dict:
+    def type_tags(self, type_key: str) -> dict:
+        """Get the tags for a specific character type
+
+        Combines core and system tags with any tags defined in the type itself
+
+        Args:
+            type_key (str): Key for the character type to get tags for
+
+        Returns:
+            dict: Dict of Tag objects indexed by tag key
+        """
         char_type = self.get_type(type_key)
 
         type_tag_defs: dict = char_type.definition.get("tags", {})
