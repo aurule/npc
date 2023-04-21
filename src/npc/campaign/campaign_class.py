@@ -2,12 +2,13 @@ import logging
 import re
 import yaml
 from pathlib import Path
-from functools import cached_property
+from functools import cached_property, cache
 
 from ..settings import Settings, PlanningFilename, System
 from ..util.functions import merge_data_dicts, prepend_namespace
 from npc.settings.helpers import quiet_parse
 from npc.settings.types import make_types, Type, UndefinedType
+from npc.settings.tags import make_tags
 
 class Campaign:
     def __init__(self, campaign_path: Path, *, settings: Settings = None):
@@ -139,6 +140,49 @@ class Campaign:
             Type: Type for the given key, or an UndefinedType if that key does not have a type
         """
         return self.types.get(type_key, UndefinedType)
+
+    @property
+    def campaign_tag_defs(self) -> dict:
+        """Get the combined tag definitions for this campaign
+
+        Merges the campaign-specific tags into the system tags and returns the resulting dict
+
+        Returns:
+            dict: Dict of tag configurations
+        """
+
+        system_tag_defs: dict = self.system.system_tag_defs
+        campaign_tag_defs: dict = self.settings.get("campaign.tags", {})
+        return merge_data_dicts(campaign_tag_defs, system_tag_defs)
+
+    @cached_property
+    def tags(self) -> dict:
+        """Get the tags configured for this campaign
+
+        Combines tag definitions from the system and this campaign
+
+        Returns:
+            dict: Dict of Tag objects indexed by tag key
+        """
+        return make_tags(self.campaign_tag_defs)
+
+    @cache
+    def type_tags(self, type_key: str) -> dict:
+        """Get the tags for a specific character type
+
+        Combines core and system tags with any tags defined in the type itself
+
+        Args:
+            type_key (str): Key for the character type to get tags for
+
+        Returns:
+            dict: Dict of Tag objects indexed by tag key
+        """
+        char_type = self.get_type(type_key)
+
+        type_tag_defs: dict = char_type.definition.get("tags", {})
+        combined_defs = merge_data_dicts(type_tag_defs, self.campaign_tag_defs)
+        return make_tags(combined_defs)
 
     def bump_planning_files(self) -> dict:
         """Create the next planning files by current index
