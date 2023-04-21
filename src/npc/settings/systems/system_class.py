@@ -118,6 +118,19 @@ class System():
         """
         return make_types(self.typedefs)
 
+    @property
+    def system_tag_defs(self) -> dict:
+        """Get the combined tag definitions for this system
+
+        Merges the system-specific tags into the global tags and returns the resulting dict
+
+        Returns:
+            dict: Dict of tag configurations
+        """
+        core_tag_defs: dict = self.settings.get("npc.tags")
+        system_tag_defs: dict = self.settings.get(f"npc.systems.{self.key}.tags", {})
+        return merge_data_dicts(system_tag_defs, core_tag_defs)
+
     @cached_property
     def tags(self) -> dict:
         """Get the tags configured for this system
@@ -127,18 +140,12 @@ class System():
         Returns:
             dict: Dict of Tag objects
         """
-        core_tag_defs: dict = self.settings.get("npc.tags")
-        system_tag_defs: dict = self.settings.get(f"npc.systems.{self.key}.tags", {})
-        combined_defs: dict = merge_data_dicts(system_tag_defs, core_tag_defs)
-        return make_tags(combined_defs)
+        return make_tags(self.system_tag_defs)
 
     @cache
     def type_tags(self, type_key) -> dict:
         char_type = self.types.get(type_key, UndefinedType())
 
-        core_tag_defs: dict = self.settings.get("npc.tags")
-        system_tag_defs: dict = self.settings.get(f"npc.systems.{self.key}.tags", {})
-        shared_tag_defs: dict = merge_data_dicts(system_tag_defs, core_tag_defs)
         type_tag_defs: dict = char_type.definition.get("tags", {})
-        combined_defs = merge_data_dicts(type_tag_defs, shared_tag_defs)
+        combined_defs = merge_data_dicts(type_tag_defs, self.system_tag_defs)
         return make_tags(combined_defs)
