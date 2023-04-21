@@ -19,8 +19,11 @@ pass_settings = click.make_pass_decorator(Settings)
 @click.pass_context
 def cli(ctx):
     ctx.obj = npc.settings.app_settings()
-    term_width = os.get_terminal_size()
-    ctx.max_content_width = term_width.columns
+    try:
+        term_width = os.get_terminal_size().columns
+    except OSError:
+        term_width = None
+    ctx.max_content_width = term_width
 
 @cli.command()
 @click.option("-n", "--name", help="Campaign name", default="My Campaign")
