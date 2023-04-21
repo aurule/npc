@@ -179,11 +179,11 @@ def tags(settings, system_key, type_):
     campaign = cwd_campaign(settings)
     try:
         if system_key:
-            system = settings.get_system(system_key)
-            target = system
+            target = settings.get_system(system_key)
+            system = target
         elif campaign:
-            system = campaign.system
             target = campaign
+            system = campaign.system
         else:
             echo("Not a campaign, so the --system option must be provided")
             return 1
@@ -193,14 +193,14 @@ def tags(settings, system_key, type_):
 
     headers = ["Name", "Description"]
     if type_:
-        if type_ not in system.types:
-            echo(f"Character type {type_} does not exist in {system.name}")
+        if type_ not in target.types:
+            echo(f"Character type {type_} does not exist in {target.name}")
             return 1
 
-        title = f"Tags for {system.types.get(type_).name} in {target.name}"
-        tags = system.type_tags(type_).values()
+        title = f"Tags for {target.get_type(type_).name} in {target.name}"
+        tags = target.type_tags(type_).values()
     else:
         title = f"Tags in {target.name}"
-        tags = system.tags.values()
+        tags = target.tags.values()
     data = [[tag.name, tag.desc] for tag in tags if not isinstance(tag, SubTag)]
     echo(presenters.tabularize(data, headers = headers, title = title))
