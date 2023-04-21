@@ -89,10 +89,13 @@ class System():
     def load_types(self):
         """Load the character type definitions for this system
 
-        Merges in the type definition files in the default and user settings.
+        Merges in the type definition files in the default and user settings. If this system extends another,
+        the parent's types will also be loaded into the parent's namespace.
         """
-        self.settings.load_types(self.types_dir, system_key=self.key)
-        self.settings.load_types(self.personal_types_dir, system_key=self.key)
+        if self.parent:
+            self.parent.load_types()
+        self.settings.load_types(self.types_dir, system_key = self.key)
+        self.settings.load_types(self.personal_types_dir, system_key = self.key)
 
     @property
     def types(self) -> dict:
