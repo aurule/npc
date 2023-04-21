@@ -18,6 +18,40 @@ class System():
         self.extends: str = system_def.get("extends")
         self.settings = settings
 
+    def __hash__(self) -> int:
+        """Get a hash for this system
+
+        Generates a hash based on the system key and the settings file it's associated with.
+
+        Returns:
+            int: Hash of this system's key and settings
+        """
+        return hash((self.key, self.name, self.desc, self.extends, self.settings))
+
+    def __eq__(self, other) -> bool:
+        """Test whether this system is the same as another system
+
+        Args:
+            other (System): System to test against
+
+        Returns:
+            bool: True if both systems' hashes match, False if not
+        """
+        if not isinstance(other, System):
+            return NotImplemented
+
+        return hash(self) == hash(other)
+
+    def __ne__(self, other) -> bool:
+        """Test whether this sytem is not the same as nother system
+
+        Args:
+            other (System): System to test against
+
+        Returns:
+            bool: False if both systems' hashes match, True if not
+        """
+        return not(self == other)
     @property
     def types_dir(self):
         """Get the path to the directory where default types are defined for this system
