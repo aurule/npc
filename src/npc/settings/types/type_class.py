@@ -5,6 +5,7 @@ class Type():
         self.definition: dict   = type_def
         self.name: str          = type_def.get("name", "")
         self.desc: str          = type_def.get("desc", "")
+        self.sheet_path         = type_def.get("sheet_path", "")
 
 class UndefinedType():
     """Represents a character type that has no definition
@@ -17,3 +18,4 @@ class UndefinedType():
         self.definition = {}
         self.name = "Undefined"
         self.desc = "Undefined character type"
+        self.sheet_path = None
