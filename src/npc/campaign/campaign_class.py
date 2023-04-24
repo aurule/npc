@@ -138,7 +138,7 @@ class Campaign:
         Returns:
             Type: Type for the given key, or an UndefinedType if that key does not have a type
         """
-        return self.types.get(type_key, UndefinedType)
+        return self.types.get(type_key, UndefinedType(type_key))
 
     @property
     def campaign_tag_defs(self) -> dict:
