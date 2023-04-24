@@ -5,17 +5,13 @@ class Type():
         self.definition: dict   = type_def
         self.name: str          = type_def.get("name", "")
         self.desc: str          = type_def.get("desc", "")
-        self.sheet_path         = type_def.get("sheet_path", "")
+        self.sheet_path         = type_def.get("sheet_path", None)
 
-class UndefinedType():
+class UndefinedType(Type):
     """Represents a character type that has no definition
 
     This is the null object for the Type class.
     """
 
-    def __init__(self, *args, **kwargs):
-        self.key = "undefined"
-        self.definition = {}
-        self.name = "Undefined"
-        self.desc = "Undefined character type"
-        self.sheet_path = None
+    def __init__(self, type_key: str):
+        super().__init__(type_key, type_def={"name": type_key})
