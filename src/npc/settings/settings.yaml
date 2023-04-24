@@ -78,10 +78,12 @@ npc:
     hidegroup:
       desc: Hide a single named group.
       replaced_by: hide
+      replace_pattern: "group >> $value"
       deprecated: 1.4.1
     hideranks:
       desc: Hide all ranks for a named group.
       replaced_by: hide
+      replace_pattern: "group >> $value >> rank"
       deprecated: 1.4.1
   reserved_tags:
     description:
