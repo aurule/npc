@@ -1,5 +1,3 @@
-import logging
-
 from .tag_class import Tag
 
 class SubTag():

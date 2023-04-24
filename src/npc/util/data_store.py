@@ -1,5 +1,7 @@
-import logging
 from .functions import merge_data_dicts, prepend_namespace
+
+import logging
+logger = logging.getLogger(__name__)
 
 class DataStore:
     """Base class for storing and retrieving structured data
@@ -30,7 +32,7 @@ class DataStore:
             try:
                 current_data = current_data[k]
             except (KeyError, TypeError):
-                logging.debug("Key not found: {}".format(key))
+                logger.debug("Key not found: {}".format(key))
                 return default
         return current_data
 

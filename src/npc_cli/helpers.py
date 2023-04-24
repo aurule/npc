@@ -1,9 +1,11 @@
 import os
-import logging
 
 import npc
 from npc.settings import Settings
 from npc.campaign import Campaign
+
+import logging
+logger = logging.getLogger(__name__)
 
 def cwd_campaign(settings: Settings) -> Campaign:
     """Make a campaign object for the nearest campaign to the current dir
@@ -19,9 +21,9 @@ def cwd_campaign(settings: Settings) -> Campaign:
     """
     campaign_root = npc.campaign.find_campaign_root(os.getcwd())
     if not campaign_root:
-        logging.info("Not a campaign (or any of the parent directories)")
+        logger.info("Not a campaign (or any of the parent directories)")
         return None
-    logging.info(f"Found campaign root at {campaign_root}")
+    logger.info(f"Found campaign root at {campaign_root}")
 
     return Campaign(campaign_root, settings = settings)
 
@@ -45,7 +47,7 @@ def find_or_make_settings_file(settings: Settings, location: str) -> str:
     """
     valid_locations: list[str] = ["user", "campaign"]
     if location not in valid_locations:
-        logging.error(f"Unrecognized settings location '{location}'")
+        logger.error(f"Unrecognized settings location '{location}'")
         return None
 
     if location == "user":

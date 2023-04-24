@@ -2,7 +2,6 @@
 Load and save settings info
 """
 
-import logging
 import yaml
 from collections import defaultdict
 from importlib import resources
@@ -13,6 +12,9 @@ from ..util.functions import merge_data_dicts, prepend_namespace
 from .helpers import quiet_parse
 from .systems import System
 from ..util import ParseError
+
+import logging
+logger = logging.getLogger(__name__)
 
 class Settings(DataStore):
     """Core settings class
@@ -115,7 +117,7 @@ class Settings(DataStore):
             if not new_deps:
                 return
             if new_deps == deps:
-                logging.error(f"Some systems could not be found: {deps.keys()}")
+                logger.error(f"Some systems could not be found: {deps.keys()}")
                 return
             load_dependencies(new_deps)
 
@@ -179,7 +181,7 @@ class Settings(DataStore):
                 sheet_path = Path(discovered)
                 type_key = sheet_path.stem
                 if type_key not in self.get(types_namespace, {}):
-                    logging.info(f"Type {type_key} not defined, skipping potential sheet {discovered}")
+                    logger.info(f"Type {type_key} not defined, skipping potential sheet {discovered}")
                     continue
                 if "sheet_path" not in self.get(f"{types_namespace}.{type_key}"):
                     self.merge_data({type_key: {"sheet_path": sheet_path}}, types_namespace)
@@ -213,7 +215,7 @@ class Settings(DataStore):
             System: System object for the given key, or None if the key does not have a system def
         """
         if key not in self.get("npc.systems"):
-            logging.error(f"System '{key}' is not defined")
+            logger.error(f"System '{key}' is not defined")
             return None
 
         return System(key, self)

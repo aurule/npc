@@ -4,11 +4,13 @@ Shared helper functions
 
 import yaml
 import subprocess
-import logging
 from click import launch
 from pathlib import Path
 
 from .errors import ParseError, SchemaError
+
+import logging
+logger = logging.getLogger(__name__)
 
 def parse_yaml(filename: Path):
     """Parse a YAML file
@@ -165,5 +167,5 @@ def edit_files(files: list[Path], settings = None) -> None:
             else:
                 launch(str(file_path))
         except FileNotFoundError:
-            logging.error("Cannot open file. Check that your npc.editor setting is an absolute path or in your session PATH.")
+            logger.error("Cannot open file. Check that your npc.editor setting is an absolute path or in your session PATH.")
             return

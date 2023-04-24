@@ -4,11 +4,13 @@ These functions create or manipulate general campaign files. They do not affect 
 being contained within a campaign.
 """
 import yaml
-import logging
 from pathlib import Path
 
 from ..settings import Settings
 from .campaign_class import Campaign
+
+import logging
+logger = logging.getLogger(__name__)
 
 def init(campaign_path: str, *, name: str, system: str, desc: str = None, settings: Settings = None) -> Campaign:
     """Initialize a directory with the basics for npc
@@ -48,7 +50,7 @@ def init(campaign_path: str, *, name: str, system: str, desc: str = None, settin
     config_dir.mkdir(exist_ok = True)
     config_file = config_dir / "settings.yaml"
     if config_file.exists():
-        logging.info("Campaign settings dir exists, leaving it alone")
+        logger.info("Campaign settings dir exists, leaving it alone")
     else:
         with config_file.open('w', newline="\n") as f:
             yaml.dump(config_contents, f)
