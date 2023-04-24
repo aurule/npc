@@ -63,7 +63,9 @@ npc:
       no_value: true
     hide:
       desc: Conceal the named tag from listings.
-      doc: Individual tag values can be hidden using [tagname] >> [value]. Hide all subtags using [parent] >> [value] >> subtags, or hide single subtag with [parent] >> [value] >> [subtag value]
+      doc: >
+        Individual tag values can be hidden using [tagname] >> [value]. Hide all subtags using
+        [parent] >> [value] >> subtags, or hide single subtag with [parent] >> [value] >> [subtag value]
   deprecated_tags:
     skip:
       desc: Do not show this character in listings.
