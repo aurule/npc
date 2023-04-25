@@ -53,4 +53,4 @@ class UndefinedTagSpec(TagSpec):
     """
 
     def __init__(self, name: str):
-        super().__init__(name, name={})
+        super().__init__(name, tag_def={})
