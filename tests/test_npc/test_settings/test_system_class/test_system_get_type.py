@@ -1,5 +1,5 @@
 from npc.settings import Settings, System
-from npc.settings.types import UndefinedType
+from npc.settings.types import UndefinedTypeSpec
 
 def test_gets_global_types():
     settings = Settings()
@@ -23,4 +23,4 @@ def test_gets_obj_for_unknown_type():
 
     chartype = system.get_type("nope")
 
-    assert isinstance(chartype, UndefinedType)
+    assert isinstance(chartype, UndefinedTypeSpec)

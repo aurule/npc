@@ -5,7 +5,7 @@ from pathlib import Path
 from click import echo
 
 import npc
-from npc.settings import Settings, System, SubTag
+from npc.settings import Settings, System, SubTagSpec
 from npc.util import ParseError
 from . import presenters
 from .helpers import cwd_campaign, find_or_make_settings_file
@@ -201,5 +201,5 @@ def tags(settings, system_key, type_):
     else:
         title = f"Tags in {target.name}"
         tags = target.tags.values()
-    data = [[tag.name, tag.desc] for tag in tags if not isinstance(tag, SubTag)]
+    data = [[tag.name, tag.desc] for tag in tags if not isinstance(tag, SubTagSpec)]
     echo(presenters.tabularize(data, headers = headers, title = title))

@@ -1,7 +1,8 @@
 from .settings_class import Settings
 from .planning_filename import PlanningFilename
 from .systems import System
-from .tags import Tag, SubTag, DeprecatedTag
+from .types import TypeSpec
+from .tags import TagSpec, SubTagSpec, DeprecatedTagSpec
 
 from pathlib import Path
 from click import get_app_dir

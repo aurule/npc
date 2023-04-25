@@ -1,6 +1,6 @@
 import yaml
 from tests.fixtures import tmp_campaign
-from npc.settings.types import UndefinedType
+from npc.settings.types import UndefinedTypeSpec
 
 from npc.campaign import Campaign
 
@@ -29,4 +29,4 @@ def test_gets_local_type(tmp_campaign):
 def test_gets_obj_for_unknown_type(tmp_campaign):
     chartype = tmp_campaign.get_type("nope")
 
-    assert isinstance(chartype, UndefinedType)
+    assert isinstance(chartype, UndefinedTypeSpec)

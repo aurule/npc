@@ -6,7 +6,7 @@ from functools import cached_property, cache
 from ..settings import Settings, PlanningFilename, System
 from ..util.functions import merge_data_dicts, prepend_namespace
 from npc.settings.helpers import quiet_parse
-from npc.settings.types import make_types, Type, UndefinedType
+from npc.settings.types import make_types, TypeSpec, UndefinedTypeSpec
 from npc.settings.tags import make_tags
 
 class Campaign:
@@ -113,10 +113,10 @@ class Campaign:
         """Get the character types for this campaign
 
         Loads the default, user, and campaign-specific types for the campaign's system and generates a dict
-        of Type objects.
+        of TypeSpec objects.
 
         Returns:
-            dict: Type objects
+            dict: TypeSpec objects
         """
         self.system.load_types()
         self.settings.load_types(
@@ -129,16 +129,16 @@ class Campaign:
         return make_types(type_defs)
 
 
-    def get_type(self, type_key: str) -> Type:
+    def get_type(self, type_key: str) -> TypeSpec:
         """Get a single character type
 
         Args:
             type_key (str): Key for the character type to get
 
         Returns:
-            Type: Type for the given key, or an UndefinedType if that key does not have a type
+            TypeSpec: TypeSpec for the given key, or an UndefinedType if that key does not have a type
         """
-        return self.types.get(type_key, UndefinedType(type_key))
+        return self.types.get(type_key, UndefinedTypeSpec(type_key))
 
     @property
     def campaign_tag_defs(self) -> dict:
@@ -161,7 +161,7 @@ class Campaign:
         Combines tag definitions from the system and this campaign
 
         Returns:
-            dict: Dict of Tag objects indexed by tag key
+            dict: Dict of TagSpec objects indexed by tag key
         """
         return make_tags(self.campaign_tag_defs)
 
@@ -175,7 +175,7 @@ class Campaign:
             type_key (str): Key for the character type to get tags for
 
         Returns:
-            dict: Dict of Tag objects indexed by tag key
+            dict: Dict of TagSpec objects indexed by tag key
         """
         char_type = self.get_type(type_key)
 

@@ -1,10 +1,10 @@
 import logging
 logger = logging.getLogger(__name__)
 
-class Tag():
+class TagSpec():
     """Represents a single character tag
 
-    Tag objects represent the configuration of a given tag, *not* its data.
+    TagSpec objects represent the configuration of a given tag, *not* its data.
     """
 
     def __init__(self, name: str, tag_def: dict):
@@ -45,3 +45,12 @@ class Tag():
 
     def add_context(self, parent_key: str, *args):
         raise TypeError(f"The tag {parent_key} is trying to use {self.name} as a subtag, but {self.name} is already defined as a regular tag")
+
+class UndefinedTagSpec(TagSpec):
+    """Represents a tag that has no definition
+
+    This is the null object for the TagSpec class.
+    """
+
+    def __init__(self, name: str):
+        super().__init__(name, name={})

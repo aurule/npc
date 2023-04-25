@@ -1,4 +1,4 @@
-class DeprecatedTag():
+class DeprecatedTagSpec():
     """Represents a single, deprecated character tag
 
     This object exists mostly for linting and validation purposes, as deprecated tags should not be used in

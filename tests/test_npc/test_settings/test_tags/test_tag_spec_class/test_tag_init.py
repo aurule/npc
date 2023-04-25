@@ -1,16 +1,16 @@
-from npc.settings import Tag
+from npc.settings import TagSpec
 
 def test_has_name():
     tag_def = {"desc": "A testing tag"}
 
-    tag = Tag("test", tag_def)
+    tag = TagSpec("test", tag_def)
 
     assert tag.name == "test"
 
 def test_has_desc():
     tag_def = {"desc": "A testing tag"}
 
-    tag = Tag("test", tag_def)
+    tag = TagSpec("test", tag_def)
 
     assert tag.desc == tag_def["desc"]
 
@@ -18,14 +18,14 @@ class TestCorrectness():
     def test_forces_positive_min(self):
         tag_def = {"min": -5}
 
-        tag = Tag("test", tag_def)
+        tag = TagSpec("test", tag_def)
 
         assert tag.min == 0
 
     def test_forces_positive_max(self):
         tag_def = {"max": -5}
 
-        tag = Tag("test", tag_def)
+        tag = TagSpec("test", tag_def)
 
         assert tag.max == 0
 
@@ -35,7 +35,7 @@ class TestCorrectness():
             "max": 1,
         }
 
-        tag = Tag("test", tag_def)
+        tag = TagSpec("test", tag_def)
 
         assert tag.min == 1
         assert tag.max == 5
@@ -46,7 +46,7 @@ class TestCorrectness():
             "min": 0
         }
 
-        tag = Tag("test", tag_def)
+        tag = TagSpec("test", tag_def)
 
         assert tag.min == 1
 
@@ -56,7 +56,7 @@ class TestCorrectness():
             "min": 5
         }
 
-        tag = Tag("test", tag_def)
+        tag = TagSpec("test", tag_def)
 
 
         assert tag.min == 5
@@ -67,6 +67,6 @@ class TestCorrectness():
             "no_value": True,
         }
 
-        tag = Tag("test", tag_def)
+        tag = TagSpec("test", tag_def)
 
         assert tag.no_value == False
