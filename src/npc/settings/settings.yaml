@@ -131,7 +131,7 @@ campaign:
   create_on_init: []
   characters:
     path: Characters
-    subpaths: "{type}/{type-social}/{type-political}/{type-squad}/{groups}"
+    subpaths: "{type}/{type_social}/{type_political}/{type_squad}/{groups}"
     subpaths_ignored: []
     listing:
       format: markdown

@@ -138,7 +138,7 @@ changeling:
     mien:
       desc: How the changeling appears to other changelings, as well as goblins and other fae creatures.
   path_substitutions:
-      type_unit: motley
+      type_squad: motley
       type_social: court
       type_political: freehold
       type_groups: entitlement
