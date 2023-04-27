@@ -17,16 +17,19 @@ class Character(BaseModel):
     __tablename__ = "characters"
 
     id: Mapped[int] = mapped_column(primary_key=True)
+    delist: Mapped[bool]
+    desc: Mapped[Optional[str]] = mapped_column(Text)
+    file_body: Mapped[Optional[str]] = mapped_column(Text)
+    file_path: Mapped[Optional[str]] = mapped_column(String(1024))
+    mnemonic: Mapped[Optional[str]] = mapped_column(String(1024))
+    name: Mapped[str] = mapped_column(String(1024))
+    nolint: Mapped[bool]
+    sticky: Mapped[bool]
     tags: Mapped[List["Tag"]] = relationship(
         back_populates="character",
         cascade="all, delete-orphan"
     )
     type_key: Mapped[str] = mapped_column(String(128))
-    name: Mapped[str] = mapped_column(String(1024))
-    mnemonic: Mapped[Optional[str]] = mapped_column(String(1024))
-    desc: Mapped[Optional[str]] = mapped_column(Text)
-    file_body: Mapped[Optional[str]] = mapped_column(Text)
-    file_path: Mapped[Optional[str]] = mapped_column(String(1024))
 
     def __repr__(self) -> str:
         return f"Character(id={self.id!r}, name={self.name!r})"
