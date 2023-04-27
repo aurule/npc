@@ -55,12 +55,15 @@ npc:
     sticky:
       desc: Prevent this file from being moved by the reorg command
       no_value: true
+      max: 1
     nolint:
       desc: Do not show linting errors for this character.
       no_value: true
+      max: 1
     delist:
       desc: Do not show this character in listings.
       no_value: true
+      max: 1
     hide:
       desc: Conceal the named tag from listings.
       doc: >
