@@ -1,7 +1,7 @@
 from pathlib import Path
 from sqlalchemy import String, Text
 from sqlalchemy.orm import Mapped, relationship, mapped_column
-from typing import List
+from typing import List, Optional
 
 from ..db import BaseModel
 
@@ -21,14 +21,12 @@ class Character(BaseModel):
         back_populates="character",
         cascade="all, delete-orphan"
     )
-    file_body: Mapped[str] = mapped_column(Text)
-    file_path: Mapped[str] = mapped_column(String(1024))
+    type_key: Mapped[str] = mapped_column(String(128))
+    name: Mapped[str] = mapped_column(String(1024))
+    mnemonic: Mapped[Optional[str]] = mapped_column(String(1024))
+    desc: Mapped[Optional[str]] = mapped_column(Text)
+    file_body: Mapped[Optional[str]] = mapped_column(Text)
+    file_path: Mapped[Optional[str]] = mapped_column(String(1024))
 
-    def __init__(self, tags: dict = {}, *, id: int = None, file_body: str = None, file_path: Path = None):
-        # create tag records from tags
-        # populate id, file body, and file path
-        pass
-
-    # type_key prop
-    # name prop
-    # description prop
+    def __repr__(self) -> str:
+        return f"Character(id={self.id!r}, name={self.name!r})"
