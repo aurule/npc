@@ -91,6 +91,10 @@ npc:
         Public text about this character, like who they are, their history, what they want, etc. This is an
         internal tag used to store bare text that appears in the tags area of npc sheets. It should not be
         used explicitly.
+    mnemonic:
+      desc: >
+        One or two words that will jog your memory about this character. The mnemonic is supposed to help you
+        easily browse character files, so it is part of the filename.
   tag_blocks:
     int:
       - sticky
