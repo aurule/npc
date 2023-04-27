@@ -99,7 +99,7 @@ npc:
         One or two words that will jog your memory about this character. The mnemonic is supposed to help you
         easily browse character files, so it is part of the filename.
   tag_blocks:
-    int:
+    flags:
       - sticky
       - nolint
       - delist
@@ -142,7 +142,7 @@ campaign:
         title: NPC Listing
         timestamp: '%a, %b %d %I:%M%p'
     use_blocks:
-      - int
+      - flags
       - bio
       - geo
       - assoc
