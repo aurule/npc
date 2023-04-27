@@ -4,7 +4,7 @@ from sqlalchemy.orm import DeclarativeBase, Session
 
 from ..util import Singleton
 
-class DB(Singleton):
+class DB(metaclass=Singleton):
     def __init__(self):
         self.engine = create_engine("sqlite://")
         BaseModel.metadata.create_all(self.engine)
