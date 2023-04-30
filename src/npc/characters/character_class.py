@@ -14,6 +14,9 @@ class Character(BaseModel):
     Handles validating and changing individual characters, as well as fetching specific tag values
     """
 
+    # Names of tags which are represented by properties on the Character object, instead of as associated Tags
+    MAPPED_TAGS = ["realname", "delist", "nolint", "sticky", "type"]
+
     __tablename__ = "characters"
 
     id: Mapped[int] = mapped_column(primary_key=True)
