@@ -1,4 +1,5 @@
-from . import Character, Tag
+from dataclasses import dataclass
+from . import Character, Tag, RawTag
 from npc.campaign import Campaign
 
 import logging
@@ -19,7 +20,7 @@ class CharacterFactory():
         body: str = None,
         path: str = None,
         desc: str = None,
-        tags: list = None,
+        tags: list[RawTag] = None,
     ):
         """Make a Character object from passed values
 
@@ -36,10 +37,10 @@ class CharacterFactory():
             body (str): The non-tag contents of the character's file (default: `None`)
             path (str): The path to the character file location (default: `None`)
             desc (str): General purpose text in the tag area of the sheet (default: `None`)
-            tags (list): List of tag data to parse and add as Tag records (default: `None`)
+            tags (list[RawTag]): List of tag data to parse and add as Tag records (default: `None`)
         """
-        if type_key not in self.campaign.types:
-            logger.warning(f"Character {realname} has unknown type {type_key}")
+        if tags is None:
+            tags = []
 
         character = Character(
             type_key=type_key,
@@ -50,43 +51,73 @@ class CharacterFactory():
             desc=desc,
         )
 
-        if tags:
-            self.make_tags(Character, tags)
+        context_stack: list[TagContext] = []
+        for rawtag in tags:
+            if self.handle_mapped_tag(character, rawtag):
+                continue
+
+            # if tag.name in character.campaign.meta_tags:
+            #     # use helper to expand the meta-tag and extend tags with the resulting list
+            #     pass
+
+            tag_spec = self.campaign.get_tag(rawtag.name)
+            tag = Tag(name = rawtag.name, value = rawtag.value)
+
+            if not context_stack:
+                character.tags.append(tag)
+                if tag_spec.subtags:
+                    context_stack.append(TagContext(tag, tag_spec.subtags))
+                continue
+            else:
+                context = context_stack[-1]
+                if tag.name in context.subtag_names:
+                    context.tag.subtags.append(tag)
+                    if tag_spec.in_context(context.tag.name).subtags:
+                        context_stack.append(TagContext(tag, tag_spec.subtags))
+                    continue
+                else:
+                    context_stack.pop()
+                    # TODO retry in the now-highest context, or add to character if we run out of contexts
 
         return character
 
-    def make_tags(self, character: Character, tags: list):
-        working_tags = tags.copy()
+    def handle_mapped_tag(self, character: Character, tag: RawTag) -> bool:
+        """Assign values of mapped tags to the right character property
 
-        for tag_data in working_tags:
-            if tag_data.name == "type":
-                character.type_key = tag_data.value
-                continue
-            if tag_data.name == "realname":
-                character.name = tag_data.value
-                continue
+        The tags listed in Character.MAPPED_TAGS are each represented by a property on the Character object.
+        This method assigns those properties.
 
+        Args:
+            character (Character): The character to modify
+            tag (RawTag): The tag data to apply
 
+        Returns:
+            bool: True if the tag was handled, false if not
 
-        # meta-tags are broken into their set and match tags
-        # TODO
+        Raises:
+            NotImplementedError: In the unexpected case of a new mapped tag that has not yet been implemented,
+            this error will be raised as a safety.
+        """
+        if tag.name not in Character.MAPPED_TAGS:
+            return False
 
-        # The tags type, realname, sticky, nolint, and delist modify the Character record directly instead of
-        # adding Tag records. We handle those first and remove them from the working tags list to prevent
-        # processing them twice.
-        if "type" in working_tags:
-            character.type_key = working_tags.pop("type")
-        if "realname" in working_tags:
-            character.realname = working_tags.pop("realname")
-        character.sticky = working_tags.pop("sticky", False)
-        character.nolint = working_tags.pop("nolint", False)
-        character.delist = working_tags.pop("delist", False)
+        match tag.name:
+            case "type":
+                character.type_key = tag.value
+            case "realname":
+                character.realname = tag.value
+            case "sticky":
+                character.sticky = True
+            case "nolint":
+                character.nolint = True
+            case "delist":
+                character.delist = True
+            case _:
+                raise NotImplementedError(f"Tag {tag.name} is supposed to be mapped to a Character property, but has no implementation")
 
-        # Create Tag records for all remaining tags
-        tag_queue = list(tags.keys())
-        subtag_context = None
+        return True
 
-        while len(tag_queue) > 0:
-            return
-            # most tags get stored as a Tag object
-            # subtags need to be assigned to their parent
+@dataclass
+class TagContext():
+    tag: Tag
+    subtag_names: list[str]
