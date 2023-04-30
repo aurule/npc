@@ -1,6 +1,7 @@
 from sqlalchemy import String, Text, ForeignKey
 from sqlalchemy.orm import Mapped, relationship, mapped_column
-from typing import List, Optional
+from typing import List, Optional, Union
+from dataclasses import dataclass
 
 from ..db import BaseModel
 
@@ -26,3 +27,17 @@ class Tag(BaseModel):
 
     def __repr__(self) -> str:
         return f"Tag(id={self.id!r}, name={self.name!r}, value={self.value!r})"
+
+@dataclass
+class RawTag():
+    """Class for passing raw tag data
+
+    This is little more than a fancy tuple. It should be used instead of a database-backed Tag object when you
+    just need to pass around tag name/value pairs.
+
+    Attributes:
+        name: Name of the tag
+        value: Value of the tag
+    """
+    name: str
+    value: Union[str, int]
