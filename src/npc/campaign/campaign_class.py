@@ -7,7 +7,7 @@ from ..settings import Settings, PlanningFilename, System
 from ..util.functions import merge_data_dicts, prepend_namespace
 from npc.settings.helpers import quiet_parse
 from npc.settings.types import make_types, TypeSpec, UndefinedTypeSpec
-from npc.settings.tags import make_tags
+from npc.settings.tags import make_tags, TagSpec, UndefinedTagSpec
 
 class Campaign:
     def __init__(self, campaign_path: Path, *, settings: Settings = None):
@@ -164,6 +164,19 @@ class Campaign:
             dict: Dict of TagSpec objects indexed by tag key
         """
         return make_tags(self.campaign_tag_defs)
+
+    def get_tag(self, tag_name: str) -> TagSpec:
+        """Get a single tag as configured for this campaign
+
+        Uses the combied system and campaign definitions
+
+        Args:
+            tag_name (str): Name of the tag to get
+
+        Returns:
+            TagSpec: Spec of the named tag, or a new UndefinedTagSpec if that tag has no definition
+        """
+        return self.tags.get(tag_name, UndefinedTagSpec(tag_name))
 
     @cache
     def type_tags(self, type_key: str) -> dict:
