@@ -12,7 +12,7 @@ class CharacterFactory():
 
     def make(
         self,
-        name: str,
+        realname: str,
         *,
         type_key: str = None,
         mnemonic: str = None,
@@ -31,7 +31,7 @@ class CharacterFactory():
 
         Args:
             type_key (str): Type key for the character. Should appear in campaign.types.
-            name (str): The character's name
+            realname (str): The character's name
             mnemonic (str): A brief reminder of the character to go in its filename (default: `None`)
             body (str): The non-tag contents of the character's file (default: `None`)
             path (str): The path to the character file location (default: `None`)
@@ -39,11 +39,11 @@ class CharacterFactory():
             tags (list): List of tag data to parse and add as Tag records (default: `None`)
         """
         if type_key not in self.campaign.types:
-            logger.warning(f"Character {name} has unknown type {type_key}")
+            logger.warning(f"Character {realname} has unknown type {type_key}")
 
         character = Character(
             type_key=type_key,
-            name=name,
+            realname=realname,
             mnemonic=mnemonic,
             file_body=body,
             file_path=path,
@@ -77,7 +77,7 @@ class CharacterFactory():
         if "type" in working_tags:
             character.type_key = working_tags.pop("type")
         if "realname" in working_tags:
-            character.name = working_tags.pop("realname")
+            character.realname = working_tags.pop("realname")
         character.sticky = working_tags.pop("sticky", False)
         character.nolint = working_tags.pop("nolint", False)
         character.delist = working_tags.pop("delist", False)

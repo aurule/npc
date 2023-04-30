@@ -2,12 +2,12 @@ from tests.fixtures import tmp_campaign
 
 from npc.characters import CharacterFactory
 
-def test_saves_name(tmp_campaign):
+def test_saves_realname(tmp_campaign):
     factory = CharacterFactory(tmp_campaign)
 
     character = factory.make("Test Mann")
 
-    assert character.name == "Test Mann"
+    assert character.realname == "Test Mann"
 
 def test_saves_type(tmp_campaign):
     factory = CharacterFactory(tmp_campaign)
