@@ -46,6 +46,9 @@ class TagSpec():
     def add_context(self, parent_key: str, *args):
         raise TypeError(f"The tag {parent_key} is trying to use {self.name} as a subtag, but {self.name} is already defined as a regular tag")
 
+    def in_context(self, parent_key: str):
+        return self
+
 class UndefinedTagSpec(TagSpec):
     """Represents a tag that has no definition
 
