@@ -2,9 +2,12 @@ from pathlib import Path
 from sqlalchemy import String, Text
 from sqlalchemy.orm import Mapped, relationship, mapped_column
 from typing import List, Optional
+from .taggable_interface import Taggable
+from .tag_class import Tag
 
 from ..db import BaseModel
 
+@Taggable.register
 class Character(BaseModel):
     """Class representing a single character
 
@@ -36,3 +39,28 @@ class Character(BaseModel):
 
     def __repr__(self) -> str:
         return f"Character(id={self.id!r}, realname={self.realname!r})"
+
+    def accepts_tag(self, tag_name: str) -> bool:
+        """Indicate that Character objects accept all tags
+
+        Args:
+            tag_name (str): Tag name to test
+
+        Returns:
+            bool: True. Character objects accept all tags.
+        """
+        return True
+
+    def add_tag(self, tag: Tag):
+        """Add the tag to our tags list
+
+        Adds the tag to our tags property.
+
+        Args:
+            tag (Tag): Tag to add
+        """
+        self.tags.append(tag)
+
+    @property
+    def name(self) -> str:
+        return self.realname

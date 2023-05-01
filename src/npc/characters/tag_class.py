@@ -3,8 +3,11 @@ from sqlalchemy.orm import Mapped, relationship, mapped_column
 from typing import List, Optional, Union
 from dataclasses import dataclass
 
+from .taggable_interface import Taggable
+from npc.settings import TagSpec
 from ..db import BaseModel
 
+@Taggable.register
 class Tag(BaseModel):
     """Class representing a single tag value
 
@@ -27,6 +30,25 @@ class Tag(BaseModel):
 
     def __repr__(self) -> str:
         return f"Tag(id={self.id!r}, name={self.name!r}, value={self.value!r})"
+
+    def accepts_tag(self, tag_name: str) -> bool:
+        """Get whether this object accepts the named tag as a subtag
+
+        Args:
+            tag_name (str): Name of the tag to test
+
+        Returns:
+            bool: True if this tag allows subtags, and the named tag appears in the list of subtags in our spec
+        """
+        return self.spec.subtags and tag_name in self.spec.subtags
+
+    def add_tag(self, tag):
+        """Add the given tag to our subtags
+
+        Args:
+            tag (Tag): The tag to add
+        """
+        self.subtags.append(tag)
 
 @dataclass
 class RawTag():
