@@ -51,6 +51,17 @@ class CharacterFactory():
             desc (str): General purpose text in the tag area of the sheet (default: `None`)
             tags (list[RawTag]): List of tag data to parse and add as Tag records (default: `None`)
         """
+        def walk_tag_stack(tag: Tag):
+            context = context_stack[-1]
+            if context.accepts_tag(tag.name):
+                context.add_tag(tag)
+                if tag.spec.subtags:
+                    context_stack.append(tag)
+                return
+
+            context_stack.pop()
+            walk_tag_stack(tag)
+
         if tags is None:
             tags = []
 
@@ -63,7 +74,7 @@ class CharacterFactory():
             desc=desc,
         )
 
-        context_stack: list[TagContext] = []
+        context_stack: list[Taggable] = [character]
         for rawtag in tags:
             if self.handle_mapped_tag(character, rawtag):
                 continue
@@ -74,47 +85,11 @@ class CharacterFactory():
 
             tag_spec = self.campaign.get_tag(rawtag.name)
             tag = Tag(name = rawtag.name, value = rawtag.value)
+            tag.spec = tag_spec.in_context(context_stack[-1].name)
 
-            self.handle_tag_stack(character, tag, spec=tag_spec, stack=context_stack)
+            walk_tag_stack(tag)
 
         return character
-
-    def handle_tag_stack(self, character: Character, tag: Tag, spec: TagSpec, stack: list[TagContext]):
-        """Add tag to the correct level of the stack
-
-        If the stack is empty, tag is added directly to the character. If tag has subtags, it is then pushed
-        to the stack.
-
-        If the stack is not empty and the top of stack can accept tag as a subtag, tag is added to that parent
-        tag. Also, if tag has subtags, it is then pushed to the stack itself.
-
-        If the stack is not empty and the top of the stack cannot take tag as a subtag, that parent tag is
-        popped off the stack and we recurse.
-
-        The end result is that tag is tried against the whole stack until it's allowed as a subtag, or added
-        to the character.
-
-        Args:
-            character (Character): Character object we are building
-            tag (Tag): Tag to add to a parent in the stack, or to the character
-            spec (TagSpec): Tag spec for the tag being added
-            stack (list[TagContext]): Stack of open parent tags
-        """
-        if not stack:
-            character.tags.append(tag)
-            if spec.subtags:
-                stack.append(TagContext(tag, spec.subtags))
-            return
-
-        context = stack[-1]
-        if tag.name in context.subtag_names:
-            context.tag.subtags.append(tag)
-            if spec.in_context(context.tag.name).subtags:
-                stack.append(TagContext(tag, spec.in_context(context.tag.name).subtags))
-            return
-
-        stack.pop()
-        self.handle_tag_stack(character, tag, spec, stack)
 
     def handle_mapped_tag(self, character: Character, tag: RawTag) -> bool:
         """Assign values of mapped tags to the right character property
