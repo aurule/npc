@@ -8,6 +8,12 @@ logger = logging.getLogger(__name__)
 
 @dataclass
 class TagContext():
+    """Internal class used for the parent tag stack in handle_tag_stack
+
+    Attributes:
+        tag: Tag object
+        subtag_names: List of valid subtag names
+    """
     tag: Tag
     subtag_names: list[str]
 
