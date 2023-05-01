@@ -50,3 +50,35 @@ def test_adds_shallow_nested_tags(tmp_campaign):
     character = factory.make("Test Mann", tags=tags)
 
     assert character.tags[0].subtags[0].value == "Lead"
+
+def test_adds_deep_nested_tags(tmp_campaign):
+    new_defs = {
+        "tags": {
+            "test1": {
+                "desc": "First test tag",
+                "subtags": {
+                    "test2": {
+                        "desc": "Second test tag",
+                        "subtags": {
+                            "test3": {
+                                "desc": "Third test tag",
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    tmp_campaign.patch_campaign_settings(new_defs)
+    factory = CharacterFactory(tmp_campaign)
+    tags = [
+        RawTag("test1", "Testers"),
+        RawTag("test2", "Lead"),
+        RawTag("test3", "Pro"),
+    ]
+
+    print(tmp_campaign.get_tag("test2"))
+
+    character = factory.make("Test Mann", tags=tags)
+
+    assert character.tags[0].subtags[0].subtags[0].value == "Pro"
