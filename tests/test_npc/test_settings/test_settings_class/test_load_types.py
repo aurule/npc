@@ -99,7 +99,7 @@ class TestResolvesExplicitSheetPath():
         assert "sessile" in str(settings.get("campaign.types.other.tree.sheet_path"))
 
 class TestInsertsImplicitSheetPaths():
-    def test_assignes_discovered_files_using_stem(self):
+    def test_assigns_discovered_files_using_stem(self):
         settings = Settings()
 
         settings.load_types(
