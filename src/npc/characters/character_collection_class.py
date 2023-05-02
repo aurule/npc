@@ -1,4 +1,3 @@
-from ..campaign import Campaign
 from ..db import DB
 
 class CharacterCollection():
@@ -7,6 +6,6 @@ class CharacterCollection():
     Manages the loading, creation, and fetching of Characters
     """
 
-    def __init__(self, campaign: Campaign):
+    def __init__(self, campaign):
         self.campaign = campaign
         self.root = campaign.characters_dir

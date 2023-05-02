@@ -1,5 +1,3 @@
-from .tag_spec_class import TagSpec, UndefinedTagSpec
-from .deprecated_tag_spec_class import DeprecatedTagSpec
 from .metatag_class import Metatag
 
 def make_metatags(metatag_defs: dict) -> dict:

@@ -1,7 +1,5 @@
 from dataclasses import dataclass
 from . import Character, Tag, RawTag
-from npc.campaign import Campaign
-from npc.settings import TagSpec
 
 import logging
 logger = logging.getLogger(__name__)
@@ -9,7 +7,7 @@ logger = logging.getLogger(__name__)
 class CharacterFactory():
     """Create Character objects from simple data"""
 
-    def __init__(self, campaign: Campaign):
+    def __init__(self, campaign):
         self.campaign = campaign
 
     def make(
