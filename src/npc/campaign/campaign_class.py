@@ -8,7 +8,9 @@ from ..util.functions import merge_data_dicts, prepend_namespace
 from npc.settings.helpers import quiet_parse
 from npc.settings.types import make_types, TypeSpec, UndefinedTypeSpec
 from npc.settings.tags import make_tags, make_metatags, TagSpec, UndefinedTagSpec
+from npc.settings.tag_definer_interface import TagDefiner
 
+@TagDefiner.register
 class Campaign:
     def __init__(self, campaign_path: Path, *, settings: Settings = None):
         self.root = campaign_path

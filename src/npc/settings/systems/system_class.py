@@ -1,9 +1,11 @@
 from functools import cached_property, cache
 
 from npc.util import merge_data_dicts
-from npc.settings.tags import make_tags, make_metatags
+from npc.settings.tags import make_tags, make_metatags, TagSpec
 from npc.settings.types import make_types, TypeSpec, UndefinedTypeSpec
+from npc.settings.tag_definer_interface import TagDefiner
 
+@TagDefiner.register
 class System():
     """Represents a game system"""
 
@@ -152,6 +154,19 @@ class System():
             dict: Dict of TagSpec objects indexed by tag key
         """
         return make_tags(self.system_tag_defs)
+
+    def get_tag(self, tag_name: str) -> TagSpec:
+        """Get a single tag as configured for this system
+
+        Uses the combied core and system definitions
+
+        Args:
+            tag_name (str): Name of the tag to get
+
+        Returns:
+            TagSpec: Spec of the named tag, or a new UndefinedTagSpec if that tag has no definition
+        """
+        return self.tags.get(tag_name, UndefinedTagSpec(tag_name))
 
     @property
     def system_metatag_defs(self) -> dict:
