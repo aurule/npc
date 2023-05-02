@@ -1,7 +1,7 @@
 from functools import cached_property, cache
 
 from npc.util import merge_data_dicts
-from npc.settings.tags import make_tags, make_metatags, TagSpec
+from npc.settings.tags import make_tags, make_metatags, TagSpec, UndefinedTagSpec
 from npc.settings.types import make_types, TypeSpec, UndefinedTypeSpec
 from npc.settings.tag_definer_interface import TagDefiner
 
