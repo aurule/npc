@@ -23,13 +23,14 @@ class SubTagSpec():
             raise KeyError(f"Subtag {self.name} requires all context objs to have identical name")
         self.contexts[parent_key] = props_obj
 
-    def in_context(self, parent_key: str) -> TagSpec:
+    def in_context(self, parent_key: str, default=None) -> TagSpec:
         """Get the definition for this subtag in the given context
 
         Args:
             parent_key (str): Key of the parent tag
+            default (any): Value to return if the named context does not exist
 
         Returns:
             TagSpec: Effective definition for this subtag in the context of the given parent
         """
-        return self.contexts.get(parent_key)
+        return self.contexts.get(parent_key, default)
