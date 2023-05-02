@@ -57,7 +57,7 @@ patternProperties:
                             doc:
                                 type: string
                                 description: A multiline block of text describing the details of the metatag and its intended use
-                            set:
+                            static:
                                 type: object
                                 description: Static values to assign to tags when this metatag is present
                                 patternProperties:
@@ -70,6 +70,9 @@ patternProperties:
                                 items:
                                     type: string
                                     pattern: "^[a-z][a-z|-]+$"
+                            separator:
+                                type: string
+                                description: Character pattern which separates values for tags in the match array. Ignored for match tags which have a values array. Defaults to a single space.
         required:
         - name
         - desc

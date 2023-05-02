@@ -3,7 +3,7 @@ nwod:
   desc: Urban fantasy in the modern era
   metatags:
     changeling:
-      set:
+      static:
         type: changeling
       match:
         - seeming
