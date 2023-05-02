@@ -1,7 +1,7 @@
 from functools import cached_property, cache
 
 from npc.util import merge_data_dicts
-from npc.settings.tags import make_tags
+from npc.settings.tags import make_tags, make_metatags
 from npc.settings.types import make_types, TypeSpec, UndefinedTypeSpec
 
 class System():
@@ -152,6 +152,30 @@ class System():
             dict: Dict of TagSpec objects indexed by tag key
         """
         return make_tags(self.system_tag_defs)
+
+    @property
+    def system_metatag_defs(self) -> dict:
+        """Get the combined metatag definitions for this system
+
+        Merges the system-specific metatags into the global metatags and returns the resulting dict
+
+        Returns:
+            dict: Dict of metatag configurations
+        """
+        core_tag_defs: dict = self.settings.get("npc.metatags", {})
+        system_tag_defs: dict = self.settings.get(f"npc.systems.{self.key}.metatags", {})
+        return merge_data_dicts(system_tag_defs, core_tag_defs)
+
+    @cached_property
+    def metatags(self) -> dict:
+        """Get the metatags configured for this system
+
+        Combines metatag definitions from the core npc namespace as well as this system.
+
+        Returns:
+            dict: Dict of Metatag objects indexed by tag key
+        """
+        return make_metatags(self.system_metatag_defs)
 
     @cache
     def type_tags(self, type_key: str) -> dict:

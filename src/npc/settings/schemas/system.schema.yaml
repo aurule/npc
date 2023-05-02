@@ -27,11 +27,11 @@ patternProperties:
                 patternProperties:
                     "^[a-z][a-z|-]+$":
                         $ref: tag.schema.yaml
-            meta_tags:
+            metatags:
                 type: object
                 description: Tags which set one or more other tags when found. They do not appear as separate tags in the parsed character data, but may be used as shorthand to set multiple tags at once.
                 example: |
-                    meta_tags:
+                    metatags:
                         changeling:
                             set:
                                 type: changeling
@@ -49,18 +49,24 @@ patternProperties:
                 patternProperties:
                     "^[a-z][a-z|-]+$":
                         type: object
-                        description: The name of the meta-tag
+                        description: The name of the metatag
                         properties:
+                            desc:
+                                type: string
+                                description: A single line of text that gives an overview of the metatag
+                            doc:
+                                type: string
+                                description: A multiline block of text describing the details of the metatag and its intended use
                             set:
                                 type: object
-                                description: Static values to assign to tags when this meta-tag is present
+                                description: Static values to assign to tags when this metatag is present
                                 patternProperties:
                                     "^[a-z][a-z|-]+$":
                                         type: string
                                         description: Name and value of the tag to assign
                             match:
                                 type: array
-                                description: Tags whose values will be set by matching against the meta-tag's value
+                                description: Tags whose values will be set by matching against the metatag's value
                                 items:
                                     type: string
                                     pattern: "^[a-z][a-z|-]+$"

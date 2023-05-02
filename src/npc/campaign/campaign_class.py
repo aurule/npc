@@ -7,7 +7,7 @@ from ..settings import Settings, PlanningFilename, System
 from ..util.functions import merge_data_dicts, prepend_namespace
 from npc.settings.helpers import quiet_parse
 from npc.settings.types import make_types, TypeSpec, UndefinedTypeSpec
-from npc.settings.tags import make_tags, TagSpec, UndefinedTagSpec
+from npc.settings.tags import make_tags, make_metatags, TagSpec, UndefinedTagSpec
 
 class Campaign:
     def __init__(self, campaign_path: Path, *, settings: Settings = None):
@@ -177,6 +177,31 @@ class Campaign:
             TagSpec: Spec of the named tag, or a new UndefinedTagSpec if that tag has no definition
         """
         return self.tags.get(tag_name, UndefinedTagSpec(tag_name))
+
+    @property
+    def campaign_metatag_defs(self) -> dict:
+        """Get the combined metatag definitions for this campaign
+
+        Merges the campaign-specific metatags into the system metatags and returns the resulting dict
+
+        Returns:
+            dict: Dict of metatag configurations
+        """
+
+        system_metatag_defs: dict = self.system.system_metatag_defs
+        campaign_metatag_defs: dict = self.settings.get("campaign.metatags", {})
+        return merge_data_dicts(campaign_metatag_defs, system_metatag_defs)
+
+    @cached_property
+    def metatags(self) -> dict:
+        """Get the metatags configured for this campaign
+
+        Combines metatag definitions from the system and this campaign
+
+        Returns:
+            dict: Dict of Metatag objects indexed by metatag key
+        """
+        return make_metatags(self.campaign_metatag_defs)
 
     @cache
     def type_tags(self, type_key: str) -> dict:
