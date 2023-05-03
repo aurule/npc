@@ -11,7 +11,7 @@ class TestWithNonMappedTag():
         character = Character()
         tag = RawTag("fizzle", "yes")
 
-        result = factory.handle_mapped_tag(character, tag)
+        result = factory.handle_mapped_tag(tag, character)
 
         assert not result
 
@@ -21,7 +21,7 @@ class TestWithMappedTag():
         character = Character()
         tag = RawTag("type", "person")
 
-        result = factory.handle_mapped_tag(character, tag)
+        result = factory.handle_mapped_tag(tag, character)
 
         assert result
 
@@ -30,7 +30,7 @@ class TestWithMappedTag():
         character = Character()
         tag = RawTag("type", "person")
 
-        factory.handle_mapped_tag(character, tag)
+        factory.handle_mapped_tag(tag, character)
 
         assert character.type_key == "person"
 
@@ -39,7 +39,7 @@ class TestWithMappedTag():
         character = Character()
         tag = RawTag("realname", "Hank")
 
-        factory.handle_mapped_tag(character, tag)
+        factory.handle_mapped_tag(tag, character)
 
         assert character.realname == "Hank"
 
@@ -48,7 +48,7 @@ class TestWithMappedTag():
         character = Character()
         tag = RawTag("sticky", None)
 
-        factory.handle_mapped_tag(character, tag)
+        factory.handle_mapped_tag(tag, character)
 
         assert character.sticky
 
@@ -57,7 +57,7 @@ class TestWithMappedTag():
         character = Character()
         tag = RawTag("nolint", None)
 
-        factory.handle_mapped_tag(character, tag)
+        factory.handle_mapped_tag(tag, character)
 
         assert character.nolint
 
@@ -66,7 +66,7 @@ class TestWithMappedTag():
         character = Character()
         tag = RawTag("delist", None)
 
-        factory.handle_mapped_tag(character, tag)
+        factory.handle_mapped_tag(tag, character)
 
         assert character.delist
 
@@ -77,6 +77,6 @@ class TestWithMappedTag():
         tag = RawTag("invalid", None)
 
         with pytest.raises(NotImplementedError):
-            factory.handle_mapped_tag(character, tag)
+            factory.handle_mapped_tag(tag, character)
 
         Character.MAPPED_TAGS.pop()

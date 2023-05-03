@@ -1,5 +1,5 @@
-from dataclasses import dataclass
 from . import Character, Tag, RawTag
+from npc.settings.tags import Metatag, UndefinedTagSpec
 
 import logging
 logger = logging.getLogger(__name__)
@@ -20,7 +20,7 @@ class CharacterFactory():
         path: str = None,
         desc: str = None,
         tags: list[RawTag] = None,
-    ):
+    ) -> Character:
         """Make a Character object from passed values
 
         Most of the values are passed to the Character constructor verbatim, except the tags list. That is
@@ -37,18 +37,10 @@ class CharacterFactory():
             path (str): The path to the character file location (default: `None`)
             desc (str): General purpose text in the tag area of the sheet (default: `None`)
             tags (list[RawTag]): List of tag data to parse and add as Tag records (default: `None`)
+
+        Returns:
+            Character: Character object with tags and properties filled in
         """
-        def walk_tag_stack(tag: Tag):
-            context = context_stack[-1]
-            if context.accepts_tag(tag.name):
-                context.add_tag(tag)
-                if tag.spec.subtags:
-                    context_stack.append(tag)
-                return
-
-            context_stack.pop()
-            walk_tag_stack(tag)
-
         if tags is None:
             tags = []
 
@@ -61,24 +53,33 @@ class CharacterFactory():
             desc=desc,
         )
 
-        context_stack: list[Taggable] = [character]
+        context_stack = [character]
         for rawtag in tags:
-            if self.handle_mapped_tag(character, rawtag):
-                continue
-
-            # if tag.name in character.campaign.meta_tags:
-            #     # use helper to expand the meta-tag and extend tags with the resulting list
-            #     pass
-
-            tag_spec = self.campaign.get_tag(rawtag.name)
-            tag = Tag(name = rawtag.name, value = rawtag.value)
-            tag.spec = tag_spec.in_context(context_stack[-1].name)
-
-            walk_tag_stack(tag)
+            context_stack = self.apply_raw_tag(rawtag, character, context_stack)
 
         return character
 
-    def handle_mapped_tag(self, character: Character, tag: RawTag) -> bool:
+    def apply_raw_tag(self, rawtag: RawTag, character: Character, stack: list) -> list:
+        context_stack = stack.copy()
+
+        if self.handle_mapped_tag(rawtag, character):
+            return context_stack
+
+        if rawtag.name in self.campaign.metatags:
+            metatag = self.campaign.metatags.get(rawtag.name)
+            return self.expand_metatag(metatag, rawtag.value, character, context_stack)
+
+        tag_spec = self.get_tag_spec(rawtag.name, character)
+        tag = Tag(name = rawtag.name, value = rawtag.value)
+        tag.spec = tag_spec.in_context(context_stack[-1].name)
+        return self.insert_tag_record(tag, character, context_stack)
+
+    def get_tag_spec(self, tag_name: str, character: Character):
+        if character.type_key:
+            return self.campaign.get_type_tag(tag_name, character.type_key)
+        return self.campaign.get_tag(tag_name)
+
+    def handle_mapped_tag(self, tag: RawTag, character: Character) -> bool:
         """Assign values of mapped tags to the right character property
 
         The tags listed in Character.MAPPED_TAGS are each represented by a property on the Character object.
@@ -113,3 +114,49 @@ class CharacterFactory():
                 raise NotImplementedError(f"Tag {tag.name} is supposed to be mapped to a Character property, but has no implementation")
 
         return True
+
+    def expand_metatag(self, metatag: Metatag, metatag_value: str, character: Character, stack: list) -> list:
+        def try_contexts(spec):
+            for rawtag in reversed(stack):
+                if spec.in_context(rawtag.name):
+                    return spec.in_context(rawtag.name)
+            return UndefinedTagSpec(spec.name)
+
+        def find_matching_value(spec, working_value):
+            for value in spec.values:
+                if working_value.startswith(value):
+                    return value
+
+        context_stack = stack.copy()
+        for name, value in metatag.static.items():
+            context_stack = self.apply_raw_tag(RawTag(name, value), character, context_stack)
+
+        working_value = metatag_value
+
+        for name in metatag.match:
+            spec = self.get_tag_spec(name, character)
+            spec = try_contexts(spec)
+            matching_value = find_matching_value(spec, working_value)
+            if matching_value:
+                context_stack = self.apply_raw_tag(RawTag(name, matching_value), character, context_stack)
+                working_value = working_value.removeprefix(matching_value).lstrip(metatag.separator)
+                continue
+
+            value_parts = working_value.partition(metatag.separator)
+            context_stack = self.apply_raw_tag(RawTag(name, value_parts[0]), character, context_stack)
+            working_value = value_parts[2]
+
+        return context_stack
+
+    def insert_tag_record(self, tag: Tag, character: Character, stack: list) -> list:
+        context_stack = stack.copy()
+
+        context = context_stack[-1]
+        if context.accepts_tag(tag.name):
+            context.add_tag(tag)
+            if tag.spec.subtags:
+                context_stack.append(tag)
+            return context_stack
+
+        context_stack.pop()
+        return self.insert_tag_record(tag, character, context_stack)
