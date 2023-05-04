@@ -60,6 +60,19 @@ class CharacterFactory():
         return character
 
     def apply_raw_tag(self, rawtag: RawTag, character: Character, stack: list) -> list:
+        """Apply a RawTag to the given character
+
+        Calls out to handle_mapped_stack, expand_metatag, and insert_tag_record to deal with the various
+        cases of tag type.
+
+        Args:
+            rawtag (RawTag): Tag name and value object
+            character (Character): Character object to apply the tag to
+            stack (list): List of Tag objects, with the character at index 0.
+
+        Returns:
+            list: Potentially different list of Tag objects similar to stack
+        """
         context_stack = stack.copy()
 
         if self.handle_mapped_tag(rawtag, character):
