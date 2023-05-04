@@ -75,6 +75,18 @@ class CharacterFactory():
         return self.insert_tag_record(tag, character, context_stack)
 
     def get_tag_spec(self, tag_name: str, character: Character):
+        """Get the most accurate tag spec for current character state
+
+        If the character has a type, then we can use that to resolve type-specific tags. Otherwise, we fall
+        back on campaign tags.
+
+        Args:
+            tag_name (str): Name of the tag to get
+            character (Character): Character for the tag
+
+        Returns:
+            TagSpec: Spec of the tag
+        """
         if character.type_key:
             return self.campaign.get_type_tag(tag_name, character.type_key)
         return self.campaign.get_tag(tag_name)
