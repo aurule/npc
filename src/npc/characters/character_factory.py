@@ -141,6 +141,20 @@ class CharacterFactory():
         return True
 
     def expand_metatag(self, metatag: Metatag, metatag_value: str, character: Character, stack: list) -> list:
+        """Turn a metatag into one or more normal tags
+
+        Static tags are emitted as-is. Match tags are assigned values either based on their values list, or by
+        splitting the metatag's own value using its separator.
+
+        Args:
+            metatag (Metatag): Metatag object to use for creating tags
+            metatag_value (str): Raw value for the metatag, applied to match tags
+            character (Character): Character object that receives the tags
+            stack (list): List of Taggable objects
+
+        Returns:
+            list: Potentially modified list of Taggable objects
+        """
         def try_contexts(spec):
             for rawtag in reversed(stack):
                 if context := spec.in_context(rawtag.name):
