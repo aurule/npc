@@ -85,7 +85,7 @@ class CharacterFactory():
         tag_spec = self.get_tag_spec(rawtag.name, character)
         tag = Tag(name = rawtag.name, value = rawtag.value)
         tag.spec = tag_spec.in_context(context_stack[-1].name)
-        return self.insert_tag_record(tag, character, context_stack)
+        return self.insert_tag_record(tag, context_stack)
 
     def get_tag_spec(self, tag_name: str, character: Character):
         """Get the most accurate tag spec for current character state
@@ -143,8 +143,8 @@ class CharacterFactory():
     def expand_metatag(self, metatag: Metatag, metatag_value: str, character: Character, stack: list) -> list:
         def try_contexts(spec):
             for rawtag in reversed(stack):
-                if spec.in_context(rawtag.name):
-                    return spec.in_context(rawtag.name)
+                if context := spec.in_context(rawtag.name):
+                    return context
             return UndefinedTagSpec(spec.name)
 
         def find_matching_value(spec, working_value):
@@ -161,8 +161,7 @@ class CharacterFactory():
         for name in metatag.match:
             spec = self.get_tag_spec(name, character)
             spec = try_contexts(spec)
-            matching_value = find_matching_value(spec, working_value)
-            if matching_value:
+            if matching_value := find_matching_value(spec, working_value):
                 context_stack = self.apply_raw_tag(RawTag(name, matching_value), character, context_stack)
                 working_value = working_value.removeprefix(matching_value).lstrip(metatag.separator)
                 continue
@@ -173,15 +172,33 @@ class CharacterFactory():
 
         return context_stack
 
-    def insert_tag_record(self, tag: Tag, character: Character, stack: list) -> list:
+    def insert_tag_record(self, tag: Tag, stack: list) -> list:
+        """Insert a tag into the first accepting container on the stack
+
+        Stack is a list of Taggable objects. This tries to insert tag into the last entry of the list. If
+        that fails, it pops and tries again with the new list. It's important that the 0 entry of the stack
+        list accepts all tags, or there may be errors raised when the pop call fails.
+
+        The stack list is never directly modified. This method makes a copy instead.
+
+        Args:
+            tag (Tag): Tag object to add
+            stack (list): List of Taggable objects to try to put the tag into
+
+        Returns:
+            list: Potentially modified list of Taggable objects
+        """
         context_stack = stack.copy()
 
         context = context_stack[-1]
         if context.accepts_tag(tag.name):
             context.add_tag(tag)
-            if tag.spec.subtags:
-                context_stack.append(tag)
+            try:
+                if tag.spec.subtags:
+                    context_stack.append(tag)
+            except AttributeError:
+                pass
             return context_stack
 
         context_stack.pop()
-        return self.insert_tag_record(tag, character, context_stack)
+        return self.insert_tag_record(tag, context_stack)
