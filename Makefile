@@ -11,7 +11,7 @@ test:
 coverage:
 	pytest --cov=npc --cov=npc_cli --cov-report=html --cov-report=term -q -p no:pretty
 
-requirements = requirements.txt requirements-ci.txt requirements-dev.txt
+requirements = requirements.txt requirements-ci.txt requirements-dev.txt docs/requirements.txt
 $(requirements): %.txt: %.in
 	pip-compile $< --resolver=backtracking --quiet
 
