@@ -21,6 +21,7 @@ requirements: $(requirements)
 clean:
 	find . -name '__pycache__' -type d | xargs rm -fr
 	rm -fr .pytest_cache htmlcov .coverage
+	${MAKE} -C docs clean
 
 h: help
 
