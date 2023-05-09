@@ -1,0 +1,5 @@
+-r requirements-ci.in
+Sphinx >= 6.0
+sphinx_rtd_theme
+readthedocs-sphinx-search
+pip-tools >= 6.0

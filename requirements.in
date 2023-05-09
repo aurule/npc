@@ -1,0 +1,5 @@
+click >= 8.0
+Mako
+Markdown
+PyYAML >= 6.0
+SQLAlchemy >= 2.0

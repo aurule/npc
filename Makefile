@@ -11,33 +11,16 @@ test:
 coverage:
 	pytest --cov=npc --cov=npc_cli --cov-report=html --cov-report=term -q -p no:pretty
 
-.PHONY: install
-install:
-	mkdir -p $(DESTDIR)$(PREFIX)/share/npc
-	cp -R npc $(DESTDIR)$(PREFIX)/share/npc
-	mkdir -p $(DESTDIR)$(PREFIX)/bin
-	ln -s $(DESTDIR)$(PREFIX)/share/npc/npc.py $(DESTDIR)$(PREFIX)/bin/npc
+requirements = requirements.txt requirements-ci.txt requirements-dev.txt
+$(requirements): %.txt: %.in
+	pip-compile $< --resolver=backtracking --quiet
 
-.PHONY: uninstall
-uninstall:
-	rm -f $(DESTDIR)$(PREFIX)/bin/npc
-	rm -rf $(DESTDIR)$(PREFIX)/share/npc
+requirements: $(requirements)
 
 .PHONY: clean
 clean:
-	find . -name '*.pyc' -delete
 	find . -name '__pycache__' -type d | xargs rm -fr
-	find . -name '.cache' -type d | xargs rm -fr
-	find . -name '<Temp*' -type d -print0 | xargs -0 rm -fr
-	rm -fr deb_dist dist npc.egg-info .pytest_cache htmlcov .coverage
-
-.PHONY: freeze
-freeze:
-	pip freeze | grep -v "pkg-resources" > requirements-dev.txt
-
-.PHONY: deb
-deb:
-	python3 setup.py --command-packages=stdeb.command bdist_deb
+	rm -fr .pytest_cache htmlcov .coverage
 
 h: help
 
