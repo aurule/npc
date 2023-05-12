@@ -131,8 +131,19 @@ campaign:
   create_on_init: []
   characters:
     path: Characters
-    subpaths: "{type}/{type_social}/{type_political}/{type_squad}/{groups}"
-    subpaths_ignored: []
+    ignore_subpaths: []
+    subpath_template: "{type}/{type_social}/{type_political}/{type_squad}/{groups}"
+    subpath_components:
+      - selector: first_value
+        tags: [type]
+      - selector: first_value
+        tags: [court]
+      - selector: first_value
+        tags: [freehold]
+      - selector: first_value
+        tags: [motley]
+      - selector: first_value
+        tags: [entitlement, group]
     listing:
       format: markdown
       sorting:
