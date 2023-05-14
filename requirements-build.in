@@ -1,0 +1,2 @@
+-r requirements.in
+pyinstaller >= 5.0
