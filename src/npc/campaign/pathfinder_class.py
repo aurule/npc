@@ -16,15 +16,14 @@ class Pathfinder:
         for component in self.path_components:
             match component.get("selector"):
                 case "first_value":
-                    filters: dict = {}
+                    stmt = select(Tag).where(Tag.name.in_(component.get("tags", []))).order_by(Tag.id)
 
                     if exists:
                         existing_dirs = [child for child in character_path.iterdir() if child.is_dir()]
-                        filters.value = existing_dirs
+                        stmt = stmt.where(Tag.value.in_(existing_dirs))
 
                     db = DB()
                     with db.session() as session:
-                        stmt = select(Tag).where(Tag.name.in_(component.get("tags", []))).filter_by(**filters).order_by(Tag.id)
                         result_tag = session.execute(stmt).first()
 
                     if result_tag:
