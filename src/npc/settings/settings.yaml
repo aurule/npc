@@ -132,7 +132,6 @@ campaign:
   characters:
     path: Characters
     ignore_subpaths: []
-    subpath_template: "{type}/{type_social}/{type_political}/{type_squad}/{groups}"
     subpath_components:
       - selector: first_value
         tags: [type]
