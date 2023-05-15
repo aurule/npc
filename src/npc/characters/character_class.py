@@ -63,4 +63,11 @@ class Character(BaseModel):
 
     @property
     def name(self) -> str:
+        """Get the canonical name of this character
+
+        Used when adding tags.
+
+        Returns:
+            str: The realname of this character
+        """
         return self.realname
