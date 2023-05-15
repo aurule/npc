@@ -1,9 +1,22 @@
+import pytest
+
 from tests.fixtures import tmp_campaign
 from npc.campaign import Campaign
-from npc.characters import Character, Tag
+from npc.characters import Character, Tag, CharacterFactory, RawTag
 from npc.db import DB
 
 from npc.campaign import Pathfinder
+
+def create_character(tags: list, tmp_campaign: Campaign, db: DB) -> Character:
+    factory = CharacterFactory(tmp_campaign)
+    rawtags = [RawTag(*tag) for tag in tags]
+
+    character = factory.make("Test Mann", type_key="person", tags=rawtags)
+    with db.session() as session:
+        session.add(character)
+        session.commit()
+        character.tags # load the tags immediately to prevent DetachedInstanceError later
+    return character
 
 class TestWithExistingDirsOnly:
     pass
@@ -27,24 +40,93 @@ class TestWithNonExistingDirs:
             }
         }
         tmp_campaign.patch_campaign_settings(patch)
-        db = DB()
-        character = Character(realname="Test Mann", type_key="person", delist=False, nolint=False, sticky=False)
-        tag1 = Tag(name="test", value="blep")
-        character.add_tag(tag1)
-        with db.session() as session:
-            session.add(character)
-            session.add(tag1)
-            session.commit()
-        finder = Pathfinder(tmp_campaign)
+        db = DB(clearSingleton=True)
+        character = create_character([("test", "blep")], tmp_campaign, db)
+        finder = Pathfinder(tmp_campaign, db=db)
 
         result = finder.build_character_path(character, exists=False)
 
         assert result == tmp_campaign.characters_dir / "blep"
 
-    # character has named tag: adds to path
-    # character does not have named tag: does not add
-    # character only has second named tag: adds to path
+    def test_no_tag_skips(self, tmp_campaign):
+        patch = {
+            "characters": {
+                "subpath_components": [
+                    {
+                        "selector": "first_value",
+                        "tags": ["test"]
+                    }
+                ]
+            }
+        }
+        tmp_campaign.patch_campaign_settings(patch)
+        db = DB(clearSingleton=True)
+        character = create_character([("nah", "blep")], tmp_campaign, db)
+        finder = Pathfinder(tmp_campaign, db=db)
+
+        result = finder.build_character_path(character, exists=False)
+
+        assert result == tmp_campaign.characters_dir
+
+    def test_has_second_tag_adds(self, tmp_campaign):
+        patch = {
+            "characters": {
+                "subpath_components": [
+                    {
+                        "selector": "first_value",
+                        "tags": ["brains", "test"]
+                    }
+                ]
+            }
+        }
+        tmp_campaign.patch_campaign_settings(patch)
+        db = DB(clearSingleton=True)
+        character = create_character([
+                ("nah", "beep"),
+                ("test", "blep")
+            ], tmp_campaign, db)
+        finder = Pathfinder(tmp_campaign, db=db)
+
+        result = finder.build_character_path(character, exists=False)
+
+        assert result == tmp_campaign.characters_dir / "blep"
 
 class TestWithBadSelector:
-    pass
-    # throws an error
+    def test_throws_error(self, tmp_campaign):
+        patch = {
+            "characters": {
+                "subpath_components": [
+                    {
+                        "selector": "nopealope",
+                        "tags": ["brains", "test"]
+                    }
+                ]
+            }
+        }
+        tmp_campaign.patch_campaign_settings(patch)
+        db = DB(clearSingleton=True)
+        character = create_character([("nah", "blep")], tmp_campaign, db)
+        finder = Pathfinder(tmp_campaign, db=db)
+
+        with pytest.raises(ValueError):
+            finder.build_character_path(character)
+
+class TestWithMissingTagsProp:
+    def test_throws_error(self, tmp_campaign):
+        patch = {
+            "characters": {
+                "subpath_components": [
+                    {
+                        "selector": "first_value",
+                        "xtags": ["brains", "test"]
+                    }
+                ]
+            }
+        }
+        tmp_campaign.patch_campaign_settings(patch)
+        db = DB(clearSingleton=True)
+        character = create_character([("nah", "blep")], tmp_campaign, db)
+        finder = Pathfinder(tmp_campaign, db=db)
+
+        with pytest.raises(KeyError):
+            finder.build_character_path(character)

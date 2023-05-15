@@ -1,5 +1,5 @@
 from pathlib import Path
-from sqlalchemy import String, Text
+from sqlalchemy import String, Text, select, Select
 from sqlalchemy.orm import Mapped, relationship, mapped_column
 from typing import List, Optional
 from .taggable_interface import Taggable
@@ -71,3 +71,9 @@ class Character(BaseModel):
             str: The realname of this character
         """
         return self.realname
+
+    def tag_value_query(self, *names: list[str]) -> Select:
+        return select(Tag.value) \
+            .where(Tag.name.in_(names)) \
+            .filter(Tag.character_id == self.id) \
+            .order_by(Tag.id)
