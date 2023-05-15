@@ -40,6 +40,15 @@ def test_adds_regular_tags(tmp_campaign):
 
     assert "kingdom" in [tag.name for tag in character.tags]
 
+def test_sets_default_flags(tmp_campaign):
+    factory = CharacterFactory(tmp_campaign)
+
+    character = factory.make("Test Mann")
+
+    assert not character.delist
+    assert not character.nolint
+    assert not character.sticky
+
 class TestNestedTag():
     def test_adds_deep_nested_tags(self, tmp_campaign):
         new_defs = {

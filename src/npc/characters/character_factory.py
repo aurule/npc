@@ -51,6 +51,9 @@ class CharacterFactory():
             file_body=body,
             file_path=path,
             desc=desc,
+            delist=False,
+            nolint=False,
+            sticky=False,
         )
 
         context_stack = [character]
