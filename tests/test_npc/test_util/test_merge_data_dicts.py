@@ -45,9 +45,9 @@ class TestWithDictValues:
 
 class TestWithListValues:
     old_dict = {"val": [1, 2, 3]}
-    new_dict = {"val": [1, 2, 3, 4]}
+    new_dict = {"val": [5, 6, 7, 8]}
 
-    def test_updates_existing_list(self):
+    def test_overwrites_existing_list(self):
         result = merge_data_dicts(self.new_dict, self.old_dict)
 
         assert result["val"] == self.new_dict["val"]
