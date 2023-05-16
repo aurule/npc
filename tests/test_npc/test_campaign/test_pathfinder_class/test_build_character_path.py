@@ -132,7 +132,6 @@ class TestWithExistingDirsOnly:
 
         result = finder.build_character_path(character, exists=True)
 
-        assert False
         assert result == tmp_campaign.characters_dir / "blep"
 
 class TestWithNonExistingDirs:
