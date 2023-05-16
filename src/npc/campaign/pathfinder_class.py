@@ -6,6 +6,8 @@ from ..characters import Character, Tag
 from ..db import DB
 
 class Pathfinder:
+    """Class for finding and manipulating character-specific paths"""
+
     def __init__(self, campaign: Campaign, db: DB = None):
         self.campaign = campaign
         self.path_components = campaign.settings.get("campaign.characters.subpath_components")
@@ -17,13 +19,28 @@ class Pathfinder:
             self.db = db
 
     def build_character_path(self, character: Character, *, exists: bool = True) -> Path:
+        """Construct a character path based on the campaign settings
+
+        The path is built using the saved subpath components from our campaign's settings.
+
+        Args:
+            character (Character): The character whose path to make
+            exists (bool): Whether to limit paths to directories that already exist (default: `True`)
+
+        Returns:
+            Path: Path for the character file. This is only a directory! No filename is included.
+
+        Raises:
+            KeyError: Raised if the tags key is missing from a subpath component
+            ValueError: Raised if the subpath component's selector is not found or not recognized
+        """
         character_path: Path = self.base_path
         for component in self.path_components:
             match component.get("selector"):
                 case "first_value":
                     tag_names = component.get("tags")
                     if not tag_names:
-                        raise KeyError("Missing tags key for supath component")
+                        raise KeyError("Missing tags key for subpath component")
 
                     stmt: Select = character.tag_value_query(*tag_names)
 
