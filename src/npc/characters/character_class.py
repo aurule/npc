@@ -72,7 +72,17 @@ class Character(BaseModel):
         """
         return self.realname
 
-    def tag_value_query(self, *names: list[str]) -> Select:
+    def tag_value_query(self, *names: str) -> Select:
+        """Create a database query to get values for our tags
+
+        Builds a DB query for the named tags, scoped to this character. This query only returns tag values.
+
+        Args:
+            names (Tuple[str]): Tag names to include in the query
+
+        Returns:
+            Select: Select object for a tag value query
+        """
         return select(Tag.value) \
             .where(Tag.name.in_(names)) \
             .filter(Tag.character_id == self.id) \
