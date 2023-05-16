@@ -28,7 +28,7 @@ class Pathfinder:
                     stmt: Select = character.tag_value_query(*tag_names)
 
                     if exists:
-                        existing_dirs: list = [child for child in character_path.iterdir() if child.is_dir()]
+                        existing_dirs: list = [child.name for child in character_path.iterdir() if child.is_dir()]
                         stmt = stmt.where(Tag.value.in_(existing_dirs))
 
                     with self.db.session() as session:
