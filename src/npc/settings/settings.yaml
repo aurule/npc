@@ -21,12 +21,18 @@ npc:
       desc: Gender role this character has.
     appearance:
       desc: What the character looks like to other people.
+      doc: >
+        This is expected to be as long and descriptive as needed. Multiple appearance tags will be joined together with a newline to allow multiple paragraphs.
     race:
-      desc: Observable ancestry of the character. Extremely setting-dependent; anything from Greek and Egyptian, to Human and Elvish.
+      desc: "Observable ancestry of the character. Extremely setting-dependent: anything from Greek and Egyptian, to Human and Elvish."
     age:
       desc: How old the character is.
+      doc: >
+        This can be a plain number like 52, or a full descriptor like 'Five life-ages of the Earth'.
     portrait:
       desc: Name of an image file to use for the character.
+      doc: >
+        If you're hosting character listings somewhere, then the filename or path given here must also exist exactly as given on your server.
     location:
       desc: Broad description of where the character lives.
     region:
