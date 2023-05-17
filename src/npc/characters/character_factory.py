@@ -1,5 +1,5 @@
 from . import Character, Tag, RawTag
-from npc.settings.tags import Metatag, UndefinedTagSpec
+from npc.settings.tags import MetatagSpec, UndefinedTagSpec
 
 import logging
 logger = logging.getLogger(__name__)
@@ -143,14 +143,14 @@ class CharacterFactory():
 
         return True
 
-    def expand_metatag(self, metatag: Metatag, metatag_value: str, character: Character, stack: list) -> list:
+    def expand_metatag(self, metatag: MetatagSpec, metatag_value: str, character: Character, stack: list) -> list:
         """Turn a metatag into one or more normal tags
 
         Static tags are emitted as-is. Match tags are assigned values either based on their values list, or by
         splitting the metatag's own value using its separator.
 
         Args:
-            metatag (Metatag): Metatag object to use for creating tags
+            metatag (MetatagSpec): MetatagSpec object to use for creating tags
             metatag_value (str): Raw value for the metatag, applied to match tags
             character (Character): Character object that receives the tags
             stack (list): List of Taggable objects

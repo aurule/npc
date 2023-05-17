@@ -1,4 +1,4 @@
-class Metatag():
+class MetatagSpec():
     def __init__(self, name: str, tag_def: dict):
         self.name: str          = name
         self.definition: dict   = tag_def

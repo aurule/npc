@@ -201,7 +201,7 @@ class Campaign:
         Combines metatag definitions from the system and this campaign
 
         Returns:
-            dict: Dict of Metatag objects indexed by metatag key
+            dict: Dict of MetatagSpec objects indexed by metatag key
         """
         return make_metatags(self.campaign_metatag_defs)
 

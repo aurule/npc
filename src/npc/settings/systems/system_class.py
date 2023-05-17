@@ -188,7 +188,7 @@ class System():
         Combines metatag definitions from the core npc namespace as well as this system.
 
         Returns:
-            dict: Dict of Metatag objects indexed by tag key
+            dict: Dict of MetatagSpec objects indexed by tag key
         """
         return make_metatags(self.system_metatag_defs)
 

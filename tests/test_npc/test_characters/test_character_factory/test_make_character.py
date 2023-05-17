@@ -91,7 +91,7 @@ class TestNestedTag():
 
         assert character.tags[0].subtags[0].value == "Lead"
 
-class TestMetatagsStatic():
+class TestMetatagSpecsStatic():
     def test_adds_tags(self, tmp_campaign):
         new_defs = {
             "metatags": {
