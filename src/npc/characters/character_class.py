@@ -26,7 +26,7 @@ class Character(BaseModel):
     Optional Attributes
         desc        str
         file_body   str
-        file_path   str
+        file_loc    str
         mnemonic    str
     """
 
@@ -39,7 +39,7 @@ class Character(BaseModel):
     delist: Mapped[bool] = mapped_column(Boolean, default=False)
     desc: Mapped[Optional[str]] = mapped_column(Text)
     file_body: Mapped[Optional[str]] = mapped_column(Text)
-    file_path: Mapped[Optional[str]] = mapped_column(String(1024))
+    file_loc: Mapped[Optional[str]] = mapped_column(String(1024))
     mnemonic: Mapped[Optional[str]] = mapped_column(String(1024))
     realname: Mapped[str] = mapped_column(String(1024))
     nolint: Mapped[bool] = mapped_column(Boolean, default=False)
@@ -84,6 +84,24 @@ class Character(BaseModel):
             str: The realname of this character
         """
         return self.realname
+
+    @property
+    def file_path(self) -> Path:
+        """Get the character's file location as a Path
+
+        Returns:
+            Path: Path object representing the character's file_loc property
+        """
+        return Path(self.file_loc)
+
+    @file_path.setter
+    def file_path(self, new_path: Path):
+        """Set the character's file location from a Path
+
+        Args:
+            new_path (Path): Path to use for the new location
+        """
+        self.file_loc = str(new_path)
 
     def tag_value_query(self, *names: str) -> Select:
         """Create a database query to get values for our tags
