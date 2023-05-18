@@ -1,5 +1,5 @@
 from pathlib import Path
-from sqlalchemy import String, Text, select, Select
+from sqlalchemy import String, Text, select, Select, Boolean
 from sqlalchemy.orm import Mapped, relationship, mapped_column
 from typing import List, Optional
 from .taggable_interface import Taggable
@@ -15,6 +15,19 @@ class Character(BaseModel):
     is merely a cache, though: the file on disk is the source of truth.
 
     Handles validating and changing individual characters, as well as fetching specific tag values
+
+    Required Attributes:
+        id          int     auto
+        delist      bool    default False
+        realname    str
+        nolint      bool    default False
+        sticky      bool    default False
+        type_key    str
+    Optional Attributes
+        desc        str
+        file_body   str
+        file_path   str
+        mnemonic    str
     """
 
     # Names of tags which are represented by properties on the Character object, instead of as associated Tags
@@ -23,14 +36,14 @@ class Character(BaseModel):
     __tablename__ = "characters"
 
     id: Mapped[int] = mapped_column(primary_key=True)
-    delist: Mapped[bool]
+    delist: Mapped[bool] = mapped_column(Boolean, default=False)
     desc: Mapped[Optional[str]] = mapped_column(Text)
     file_body: Mapped[Optional[str]] = mapped_column(Text)
     file_path: Mapped[Optional[str]] = mapped_column(String(1024))
     mnemonic: Mapped[Optional[str]] = mapped_column(String(1024))
     realname: Mapped[str] = mapped_column(String(1024))
-    nolint: Mapped[bool]
-    sticky: Mapped[bool]
+    nolint: Mapped[bool] = mapped_column(Boolean, default=False)
+    sticky: Mapped[bool] = mapped_column(Boolean, default=False)
     tags: Mapped[List["Tag"]] = relationship(
         back_populates="character",
         cascade="all, delete-orphan"
