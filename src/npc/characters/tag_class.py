@@ -60,6 +60,26 @@ class Tag(BaseModel):
         """
         self.subtags.append(tag)
 
+    def emit(self) -> str:
+        """Generate a parseable representation of this tag and its subtags
+
+        The value is only included if set and non-falsey.
+            @flag
+            @tag value
+            @subtag new value
+            @subtag other value
+
+        Returns:
+            str: Parseable version of the tag and its subtags
+        """
+        out = f"@{self.name}"
+        if self.value:
+            out += (f" {self.value}")
+
+        lines = [out] + [subtag.emit() for subtag in self.subtags]
+
+        return "\n".join(lines)
+
 @dataclass
 class RawTag():
     """Class for passing raw tag data
