@@ -13,6 +13,7 @@ class ConTag:
     """
     name: str
     value: str = None
+    id: int = None
 
     def emit(self) -> str:
         """Generate a parseable representation of this tag
