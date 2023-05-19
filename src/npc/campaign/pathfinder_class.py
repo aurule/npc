@@ -3,7 +3,7 @@ from pathlib import Path
 
 from .campaign_class import Campaign
 from ..characters import Character, Tag
-from ..db import DB
+from ..db import DB, character_repository
 
 class Pathfinder:
     """Class for finding and manipulating character-specific paths"""
@@ -42,7 +42,7 @@ class Pathfinder:
                     if not tag_names:
                         raise KeyError("Missing tags key for subpath component")
 
-                    stmt: Select = character.tag_value_query(*tag_names)
+                    stmt: Select = character_repository.tag_values(character, *tag_names)
 
                     if exists:
                         existing_dirs: list = [child.name for child in character_path.iterdir() if child.is_dir()]
