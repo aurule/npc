@@ -42,7 +42,7 @@ class Pathfinder:
                     if not tag_names:
                         raise KeyError("Missing tags key for subpath component")
 
-                    stmt: Select = character_repository.tag_values(character, *tag_names)
+                    stmt: Select = character_repository.tag_values_by_name(character, *tag_names)
 
                     if exists:
                         existing_dirs: list = [child.name for child in character_path.iterdir() if child.is_dir()]

@@ -1,7 +1,7 @@
 from sqlalchemy import select, Select
 from npc.characters import Tag, Character
 
-def tag_values(character: Character, *names: str) -> Select:
+def tag_values_by_name(character: Character, *names: str) -> Select:
     """Create a database query to get values for a single character's tags
 
     Builds a DB query for the named tags, scoped to the character. This query only returns tag values.
