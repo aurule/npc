@@ -11,6 +11,17 @@ class Tag(BaseModel):
     """Class representing a single tag value
 
     Holds a single value for a single tag belonging to a single character.
+
+    Required Attributes:
+        id              int (auto)
+        name            str
+    Optional Attributes:
+        character       rel     Character
+        character_id    int
+        value           str
+        subtags         rel     Tag
+        parent_tag      rel     Tag
+        parent_tag_id   int
     """
 
     __tablename__ = "tags"

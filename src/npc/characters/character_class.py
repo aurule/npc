@@ -28,6 +28,7 @@ class Character(BaseModel):
         file_body   str
         file_loc    str
         mnemonic    str
+        tags        rel     Tag
     """
 
     # Names of tags which are represented by properties on the Character object, instead of as associated Tags
