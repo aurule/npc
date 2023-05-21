@@ -1,9 +1,8 @@
 from npc.campaign import Campaign
 from ..character_class import Character
 from ..tag_class import Tag
-from .con_tag_class import ConTag
 from npc.db import DB, character_repository
-
+from .helpers import viable_character, make_contags
 
 class CharacterWriter:
     def __init__(self, campaign: Campaign, db=None):
@@ -24,13 +23,13 @@ class CharacterWriter:
         #   write character.file_body
 
     def make_contents(self, character: Character) -> str:
-        if not self.viable_character(character):
+        if not viable_character(character):
             raise AttributeError(f"Character {character!r} is missing minimal required attributes (id, realname)")
 
         chunks: list[str] = []
         rest_index: int = None
         handled_tag_ids: list[str] = []
-        constructed_tags: dict = self.make_contags(character) # key is tag name, value is array of ConTag or Metatag objects
+        constructed_tags: dict = make_contags(character) # key is tag name, value is array of ConTag or Metatag objects
 
         if character.desc:
             chunks.append(character.desc)
@@ -81,22 +80,3 @@ class CharacterWriter:
             chunks.insert(rest_index, "\n".join([tag.emit() for tag in remaining_tags]))
 
         return "\n".join(chunks)
-
-    def viable_character(self, character: Character):
-        return character.id and character.realname
-
-    def make_contags(self, character) -> dict:
-        tags: dict = {
-            "type": ConTag("type", character.type_key)
-        }
-
-        if character.realname not in character.file_path.name:
-            tags["realname"] = ConTag("realname", character.realname)
-        if character.sticky:
-            tags["sticky"] = ConTag("sticky")
-        if character.nolint:
-            tags["nolint"] = ConTag("nolint")
-        if character.delist:
-            tags["delist"] = ConTag("delist")
-
-        return tags
