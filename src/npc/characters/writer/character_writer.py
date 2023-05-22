@@ -2,7 +2,7 @@ from npc.campaign import Campaign
 from ..character_class import Character
 from ..tag_class import Tag
 from npc.db import DB, character_repository
-from .helpers import viable_character, make_contags
+from .helpers import *
 
 class CharacterWriter:
     def __init__(self, campaign: Campaign, db=None):
@@ -28,24 +28,17 @@ class CharacterWriter:
 
         chunks: list[str] = []
         rest_index: int = None
-        handled_tag_ids: list[str] = []
-        constructed_tags: dict = make_contags(character) # key is tag name, value is array of ConTag or Metatag objects
+        handled_tag_ids: list[int] = []
+        constructed_tags: dict[str, list] = make_contags(character)
 
         if character.desc:
             chunks.append(character.desc)
 
-        # generate metatags
-        #   for each metatag definition in campaign.metatags
-        #       for every static entry
-        #           get the first tag whose name and value matches the config and ID is not in metatag_consumed
-        #           if not found, abort
-        #       for every match entry
-        #           get the first tag whose name matches and ID is not in metatag_consumed
-        #           if not found, abort
-        #       store that info, including tag IDs, for later use
-        #           put tag IDs into a special metatag_consumed list
-        #           store in constructed_tags
-        #       if the metatag is greedy, repeat this process until it fails
+        for metatag_def in self.campaign.metatags:
+            (metatags, consumed_ids) = make_metatags(metatag_def, character, handled_tag_ids)
+            if metatags:
+                constructed_tags[metatag_def.name] = metatags
+                handled_tag_ids.extend(consumed_ids)
 
         for blockname in self.blocks:
             block_def = self.block_defs.get(blockname, [])

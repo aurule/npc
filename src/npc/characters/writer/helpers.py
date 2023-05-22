@@ -1,5 +1,7 @@
+from npc.settings import MetatagSpec
 from ..character_class import Character
 from .con_tag_class import ConTag
+
 
 def viable_character(character: Character) -> bool:
     """Whether a character is capable of being written
@@ -43,3 +45,20 @@ def make_contags(character: Character) -> dict:
         tags["delist"] = [ConTag("delist")]
 
     return tags
+
+def make_metatags(spec: MetatagSpec, character: Character, bad_ids: list[int]) -> tuple:
+    metatags: list = []
+    consumed_ids: list[int] = []
+
+    # if spec.greedy:
+    #   repeat until fail
+    # else
+    #   try once
+    # every static entry must exist and not in metatag_consumed
+    # every match entry must exist and not in metatag_consumed
+    # if all exist
+    #   store appropriately
+    #   put tag IDs into metatag_consumed
+    #   place Metatag objects into constructed_tags
+
+    return (metatags, consumed_ids)
