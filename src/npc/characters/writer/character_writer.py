@@ -57,7 +57,7 @@ class CharacterWriter:
             # get constructed tags
             for key in block_def:
                 if key in constructed_tags:
-                    tags.append(constructed_tags.pop(key))
+                    tags.extend(constructed_tags.pop(key))
 
             # get normal tags
             tags_query = character_repository.tags_by_name(character, *block_def)

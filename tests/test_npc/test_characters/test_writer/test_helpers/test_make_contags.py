@@ -9,7 +9,7 @@ def test_makes_type():
     result = make_contags(character)
 
     assert "type" in result
-    assert result["type"].value == "human"
+    assert result["type"][0].value == "human"
 
 def test_makes_realname_when_needed():
     character = Character(id=1, realname="test mann", file_loc="/dev/null/nope.npc")
@@ -17,7 +17,7 @@ def test_makes_realname_when_needed():
     result = make_contags(character)
 
     assert "realname" in result
-    assert result["realname"].value == "test mann"
+    assert result["realname"][0].value == "test mann"
 
 def test_does_not_make_realname_when_not_needed():
     character = Character(id=1, realname="test mann", file_loc="/dev/null/test mann.npc")

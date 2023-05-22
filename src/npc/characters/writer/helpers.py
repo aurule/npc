@@ -27,19 +27,19 @@ def make_contags(character: Character) -> dict:
         character (Character): Character to inspect
 
     Returns:
-        dict: ConTag objects indexed by tag name for easy lookup
+        dict: ConTag object lists indexed by tag name for easy lookup
     """
     tags: dict = {
-        "type": ConTag("type", character.type_key)
+        "type": [ConTag("type", character.type_key)]
     }
 
     if character.realname not in character.file_path.name:
-        tags["realname"] = ConTag("realname", character.realname)
+        tags["realname"] = [ConTag("realname", character.realname)]
     if character.sticky:
-        tags["sticky"] = ConTag("sticky")
+        tags["sticky"] = [ConTag("sticky")]
     if character.nolint:
-        tags["nolint"] = ConTag("nolint")
+        tags["nolint"] = [ConTag("nolint")]
     if character.delist:
-        tags["delist"] = ConTag("delist")
+        tags["delist"] = [ConTag("delist")]
 
     return tags
