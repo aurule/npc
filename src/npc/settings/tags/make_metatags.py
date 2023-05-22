@@ -1,4 +1,4 @@
-from .metatag_class import MetatagSpec
+from .metatag_spec_class import MetatagSpec
 
 def make_metatags(metatag_defs: dict) -> dict:
     """Make MetaTag objects for every metatag in a dict

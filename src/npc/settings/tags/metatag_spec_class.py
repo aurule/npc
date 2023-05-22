@@ -7,3 +7,4 @@ class MetatagSpec():
         self.static: dict       = tag_def.get("static", {})
         self.match: list        = tag_def.get("match", [])
         self.separator          = tag_def.get("separator", " ")
+        self.greedy             = tag_def.get("greedy", False)
