@@ -14,7 +14,7 @@ markupsafe==2.1.2
     # via mako
 pyyaml==6.0
     # via -r requirements.in
-sqlalchemy==2.0.13
+sqlalchemy==2.0.15
     # via -r requirements.in
-typing-extensions==4.5.0
+typing-extensions==4.6.0
     # via sqlalchemy

@@ -75,7 +75,7 @@ pyyaml==6.0
     # via -r requirements.in
 readthedocs-sphinx-search==0.3.1
     # via -r requirements-dev.in
-requests==2.30.0
+requests==2.31.0
     # via sphinx
 rich==13.3.5
     # via pytest-pretty
@@ -86,7 +86,7 @@ sphinx==6.2.1
     #   -r requirements-dev.in
     #   sphinx-rtd-theme
     #   sphinxcontrib-jquery
-sphinx-rtd-theme==1.2.0
+sphinx-rtd-theme==1.2.1
     # via -r requirements-dev.in
 sphinxcontrib-applehelp==1.0.4
     # via sphinx
@@ -102,9 +102,9 @@ sphinxcontrib-qthelp==1.0.3
     # via sphinx
 sphinxcontrib-serializinghtml==1.1.5
     # via sphinx
-sqlalchemy==2.0.13
+sqlalchemy==2.0.15
     # via -r requirements.in
-typing-extensions==4.5.0
+typing-extensions==4.6.0
     # via sqlalchemy
 urllib3==2.0.2
     # via requests
