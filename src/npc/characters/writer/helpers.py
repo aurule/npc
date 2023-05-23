@@ -46,7 +46,8 @@ def make_contags(character: Character) -> dict:
 
     return tags
 
-def make_metatags(spec: MetatagSpec, character: Character, bad_ids: list[int]) -> tuple:
+def make_metatags(spec: MetatagSpec, character: Character, handled_ids: list[int]) -> tuple:
+    bad_ids: list[int] = copy(handled_ids)
     metatags: list = []
     consumed_ids: list[int] = []
 
@@ -60,5 +61,22 @@ def make_metatags(spec: MetatagSpec, character: Character, bad_ids: list[int]) -
     #   store appropriately
     #   put tag IDs into metatag_consumed
     #   place Metatag objects into constructed_tags
+
+    # select Tag.id from tags where name = static and id not in bad_ids
+    # tags_by_name(static).where(id not in bad_ids).limit(1)
+    # .scalars().first()
+
+    # tags_by_name(static+match).where(id not in bad_ids)
+    # result = session.scalars(...)
+    # for tag in result:
+    #   metatag.consider(tag)
+    #       adds to metatag if that name is accepted and not already populated
+    # if metatag.satisfied():
+    #   true if all names are populated
+    #   add to metatags
+    #   add ids to consumed_ids
+    #   if greedy:
+    #       add ids to bad_ids
+    #       extend metatags and consumed_ids with result of make_metatags(spec, character, bad_ids)
 
     return (metatags, consumed_ids)
