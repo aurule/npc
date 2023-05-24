@@ -1,7 +1,7 @@
 from functools import cached_property, cache
 
 from npc.util import merge_data_dicts
-from npc.settings.tags import make_tags, make_metatags, TagSpec, UndefinedTagSpec
+from npc.settings.tags import make_tags, make_metatag_specs, TagSpec, UndefinedTagSpec
 from npc.settings.types import make_types, TypeSpec, UndefinedTypeSpec
 from npc.settings.tag_definer_interface import TagDefiner
 
@@ -190,7 +190,7 @@ class System():
         Returns:
             dict: Dict of MetatagSpec objects indexed by tag key
         """
-        return make_metatags(self.system_metatag_defs)
+        return make_metatag_specs(self.system_metatag_defs)
 
     @cache
     def type_tags(self, type_key: str) -> dict:

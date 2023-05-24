@@ -1,4 +1,4 @@
-from npc.settings.tags import make_metatags
+from npc.settings.tags import make_metatag_specs
 
 def test_makes_all_metatags():
     metatag_defs = {
@@ -21,7 +21,7 @@ def test_makes_all_metatags():
             ]
         }
     }
-    metatags = make_metatags(metatag_defs)
+    metatags = make_metatag_specs(metatag_defs)
 
     assert "first" in metatags
     assert "second" in metatags

@@ -1,6 +1,6 @@
 from .metatag_spec_class import MetatagSpec
 
-def make_metatags(metatag_defs: dict) -> dict:
+def make_metatag_specs(metatag_defs: dict) -> dict:
     """Make MetaTag objects for every metatag in a dict
 
     Args:

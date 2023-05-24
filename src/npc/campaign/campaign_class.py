@@ -7,7 +7,7 @@ from ..settings import Settings, PlanningFilename, System
 from ..util.functions import merge_data_dicts, prepend_namespace
 from npc.settings.helpers import quiet_parse
 from npc.settings.types import make_types, TypeSpec, UndefinedTypeSpec
-from npc.settings.tags import make_tags, make_metatags, TagSpec, UndefinedTagSpec
+from npc.settings.tags import make_tags, make_metatag_specs, TagSpec, UndefinedTagSpec
 from npc.settings.tag_definer_interface import TagDefiner
 
 @TagDefiner.register
@@ -203,7 +203,7 @@ class Campaign:
         Returns:
             dict: Dict of MetatagSpec objects indexed by metatag key
         """
-        return make_metatags(self.campaign_metatag_defs)
+        return make_metatag_specs(self.campaign_metatag_defs)
 
     @cache
     def type_tags(self, type_key: str) -> dict:
