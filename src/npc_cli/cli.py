@@ -14,6 +14,10 @@ arg_settings: Settings = Settings()
 
 pass_settings = click.make_pass_decorator(Settings)
 
+###################
+# Main entry point
+###################
+
 @click.group()
 @click.pass_context
 def cli(ctx):
@@ -23,6 +27,10 @@ def cli(ctx):
     except OSError:
         term_width = None
     ctx.max_content_width = term_width
+
+###################
+# Campaign init
+###################
 
 @cli.command()
 @click.option("-n", "--name", help="Campaign name", default="My Campaign")
@@ -54,6 +62,10 @@ def init(settings, campaign_path: Path, name: str, desc: str, system: str):
         settings=settings)
     echo("Done")
 
+###################
+# Campaign info
+###################
+
 @cli.command()
 @pass_settings
 def info(settings):
@@ -67,6 +79,10 @@ def info(settings):
         return
 
     echo(presenters.campaign_info(campaign))
+
+###################
+# Browse settings
+###################
 
 @cli.command()
 @click.option("-l",
@@ -84,6 +100,10 @@ def settings(settings, location):
 
     click.launch(str(target_file), locate=True)
 
+###################################
+# Create and open next session/plot
+###################################
+
 @cli.command()
 @pass_settings
 def session(settings):
@@ -96,6 +116,10 @@ def session(settings):
     new_files = campaign.bump_planning_files()
 
     npc.util.edit_files(new_files.values(), settings = settings)
+
+##########################
+# Open latest session/plot
+##########################
 
 @cli.command()
 @click.argument("planning_type",
@@ -120,9 +144,17 @@ def latest(settings, planning_type):
     files = [campaign.get_latest_planning_file(key) for key in keys]
     npc.util.edit_files(files, settings = settings)
 
+##########################
+# Config description group
+##########################
+
 @cli.group()
 def describe():
     """Show info about systems, types, or tags"""
+
+###################
+# Describe systems
+###################
 
 @describe.command()
 @pass_settings
@@ -136,6 +168,10 @@ def systems(settings):
     campaign = cwd_campaign(settings)
     if campaign:
         echo(f"\nCurrently using {campaign.system.name}")
+
+###################
+# Describe types
+###################
 
 @describe.command()
 @click.option("-s", "--system",
@@ -163,6 +199,10 @@ def types(settings, system):
     chartype_headers = ["Name", "Key", "Description"]
     chartype_data = [[chartype.name, chartype.key, chartype.desc] for chartype in chartypes.values()]
     echo(presenters.tabularize(chartype_data, headers = chartype_headers, title = title))
+
+###################
+# Describe tags
+###################
 
 @describe.command()
 @click.option("-s", "--system", "system_key",
