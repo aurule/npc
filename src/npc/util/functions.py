@@ -7,6 +7,7 @@ import subprocess
 from click import launch
 from pathlib import Path
 
+from . import env
 from .errors import ParseError, SchemaError
 
 import logging
@@ -140,7 +141,7 @@ def merge_data_lists(new_list: list, orig: list) -> list:
 
     return dest
 
-def edit_files(files: list[Path], settings = None) -> None:
+def edit_files(files: list[Path], settings = None, *, debug: bool = False):
     """Edit one or more files
 
     If settings has a npc.editor key, that program is invoked for each file. Otherwise, click.launch is used
@@ -150,19 +151,53 @@ def edit_files(files: list[Path], settings = None) -> None:
         files (Tuple[list[Path]]): List of files to open
         settings (Settings): Settings file to use for getting the editor. If not supplied, a default settings
             object is created. (default: `None`)
+        debug (bool): Whether to return debugging statements instead of invoking the editor (default: `False`)
     """
     from ..settings import Settings
 
     if settings is None:
         settings = Settings()
 
-    editor = settings.get("npc.editor")
+    opened: list = []
+
     for file_path in files:
         try:
-            if editor:
-                subprocess.run(args=[editor, file_path])
-            else:
-                launch(str(file_path))
+            opened.append(run_editor(file_path, settings.get("npc.editor"), debug = debug))
         except FileNotFoundError:
             logger.error("Cannot open file. Check that your npc.editor setting is an absolute path or in your session PATH.")
-            return
+            opened.append(f"Cannot open file {file_path}")
+
+    return opened
+
+def run_editor(file_path: Path, editor: str = None, *, debug: bool = False):
+    """Open a file
+
+    Args:
+        file_path (Path): Path of the file to open
+        editor (str): Name of the editor to use. Falls back on system behavior. (default: `None`)
+        debug (bool): Whether to return debugging statements instead of invoking the editor (default: `False`)
+
+    Returns:
+        [str|bool]: Normally returns True once the editor is invoked. In debug mode, returns a string
+        describing the action that would have been taken.
+
+    Raises:
+        FileNotFoundError: If the file does not exist, this error from the system is re-raised. Never raised
+        in debug mode.
+    """
+    if env.testing():
+        debug = True
+
+    try:
+        if editor:
+            if debug:
+                return f"Running {editor} with {file_path}"
+            subprocess.run(args=[editor, file_path])
+            return True
+        else:
+            if debug:
+                return f"Launching {file_path}"
+            launch(str(file_path))
+            return True
+    except FileNotFoundError as e:
+        raise e
