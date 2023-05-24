@@ -243,3 +243,39 @@ def tags(settings, system_key, type_):
         tags = target.tags.values()
     data = [[tag.name, tag.desc] for tag in tags if not isinstance(tag, SubTagSpec)]
     echo(presenters.tabularize(data, headers = headers, title = title))
+
+@cli.command()
+@click.argument("type_key")
+@click.argument("name")
+@click.argument("mnemonic")
+@click.option("-t", "--tag",
+    type=(str, any),
+    multiple=True,
+    help="Tags to add to the new character")
+@pass_settings
+def new(settings, type_key, name, mnemonic, tag):
+    """Create a new character
+
+    \b
+    Examples:
+        npc new supporting "Jack Goosington" "submariner thief"
+        npc new werewolf "Howls at Your Face" "brat" --tag breed lupus --tag auspice ragabash
+        npc new changeling "Squawks McGee" "flying courier" -t seeming beast -t kith windwing -t court spring
+
+    \b
+    Args:
+        TYPE_KEY TEXT   Type of the character
+        NAME     TEXT   The character's name
+        MNEMONIC TEXT   One or two words about the character
+    """
+    campaign = cwd_campaign(settings)
+    if campaign is None:
+        echo("Not a campaign (or any of the parent directories)")
+        return
+
+    # ensure type exists
+    # use a factory to make the character, using body from typedef
+    # use pathfinder to make the right path
+    # use new pathfinder method to generate the filename
+    # use writer to spit out the character
+    # open the character
