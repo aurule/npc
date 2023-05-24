@@ -1,5 +1,6 @@
 -r requirements.in
 pytest >= 7
 pytest-cov
+pytest-env
 pytest-mock
 pytest-pretty

@@ -52,3 +52,6 @@ minversion = "6.0.0"
 pythonpath = "src"
 testpaths = "tests"
 norecursedirs = "fixtures"
+env = [
+	"TESTING=true",
+]

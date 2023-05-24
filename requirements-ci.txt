@@ -30,9 +30,12 @@ pytest==7.3.1
     # via
     #   -r requirements-ci.in
     #   pytest-cov
+    #   pytest-env
     #   pytest-mock
     #   pytest-pretty
 pytest-cov==4.0.0
+    # via -r requirements-ci.in
+pytest-env==0.8.1
     # via -r requirements-ci.in
 pytest-mock==3.10.0
     # via -r requirements-ci.in
