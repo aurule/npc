@@ -1,7 +1,9 @@
 from npc.settings import MetatagSpec
+from npc.db.character_repository import tags_by_name
 from ..character_class import Character
+from ..tag_class import Tag
 from .con_tag_class import ConTag
-
+from .metatag_class import Metatag
 
 def viable_character(character: Character) -> bool:
     """Whether a character is capable of being written
@@ -51,32 +53,24 @@ def make_metatags(spec: MetatagSpec, character: Character, handled_ids: list[int
     metatags: list = []
     consumed_ids: list[int] = []
 
-    # if spec.greedy:
-    #   repeat until fail
-    # else
-    #   try once
-    # every static entry must exist and not in metatag_consumed
-    # every match entry must exist and not in metatag_consumed
-    # if all exist
-    #   store appropriately
-    #   put tag IDs into metatag_consumed
-    #   place Metatag objects into constructed_tags
+    metatag = Metatag(spec)
 
-    # select Tag.id from tags where name = static and id not in bad_ids
-    # tags_by_name(static).where(id not in bad_ids).limit(1)
-    # .scalars().first()
+    tag_names = spec.static.keys() + spec.match
+    stmt = tags_by_name(tag_names).where(Tag.id.not_in(bad_ids))
+    with db.session as session:
+        result = session.scalars(stmt)
+        for tag in result:
+            metatag.consider(tag)
 
-    # tags_by_name(static+match).where(id not in bad_ids)
-    # result = session.scalars(...)
-    # for tag in result:
-    #   metatag.consider(tag)
-    #       adds to metatag if that name is accepted and not already populated
-    # if metatag.satisfied():
-    #   true if all names are populated
-    #   add to metatags
-    #   add ids to consumed_ids
-    #   if greedy:
-    #       add ids to bad_ids
-    #       extend metatags and consumed_ids with result of make_metatags(spec, character, bad_ids)
+    if not metatag.satisfied():
+        return (None, None)
+
+    metatags.append(metatag)
+    consumed_ids.extend(metatag.tag_ids)
+    if spec.greedy:
+        bad_ids.extend(consumed_ids)
+        (next_metatags, next_ids) = make_metatags(spec, character, bad_ids)
+        metatags.extend(next_metatags)
+        consumed_ids.extend(next_ids)
 
     return (metatags, consumed_ids)
