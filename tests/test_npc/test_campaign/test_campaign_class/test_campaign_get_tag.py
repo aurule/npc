@@ -1,4 +1,3 @@
-import yaml
 from tests.fixtures import tmp_campaign
 from npc.settings.tags import TagSpec, UndefinedTagSpec
 
