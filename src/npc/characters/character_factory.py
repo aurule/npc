@@ -49,12 +49,12 @@ class CharacterFactory():
             realname=realname,
             mnemonic=mnemonic,
             file_body=body,
-            file_path=path,
             desc=desc,
             delist=False,
             nolint=False,
             sticky=False,
         )
+        character.file_path = path
 
         context_stack = [character]
         for rawtag in tags:
