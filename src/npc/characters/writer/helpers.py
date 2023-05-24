@@ -1,4 +1,5 @@
 from npc.settings import MetatagSpec
+from npc.db import DB
 from npc.db.character_repository import tags_by_name
 from ..character_class import Character
 from ..tag_class import Tag
@@ -31,7 +32,8 @@ def make_contags(character: Character) -> dict:
         character (Character): Character to inspect
 
     Returns:
-        dict: ConTag object lists indexed by tag name for easy lookup
+        dict: ConTag object lists indexed by tag name for easy lookup. Each list should only ever have a
+        single value.
     """
     tags: dict = {
         "type": [ConTag("type", character.type_key)]
@@ -48,29 +50,42 @@ def make_contags(character: Character) -> dict:
 
     return tags
 
-def make_metatags(spec: MetatagSpec, character: Character, handled_ids: list[int]) -> tuple:
-    bad_ids: list[int] = copy(handled_ids)
+def make_metatags(spec: MetatagSpec, character: Character, handled_ids: list[int], *, db: DB = None) -> list:
+    """Construct one or more Metatag objects using the given spec and character
+
+    Args:
+        spec (MetatagSpec): Spec to apply
+        character (Character): Character to use for tags
+        handled_ids (list[int]): List of tag IDs to exclude
+        db (DB): Database object for the tag query (default: `None`)
+
+    Returns:
+        list: [description]
+    """
+    if not db:
+        db = DB()
+
     metatags: list = []
-    consumed_ids: list[int] = []
 
     metatag = Metatag(spec)
 
-    tag_names = spec.static.keys() + spec.match
-    stmt = tags_by_name(tag_names).where(Tag.id.not_in(bad_ids))
-    with db.session as session:
+    contag_lists = make_contags(character).values()
+    for contag_list in contag_lists:
+        for contag in contag_list:
+            metatag.consider(contag)
+
+    stmt = tags_by_name(character, *spec.required_tag_names).where(Tag.id.not_in(handled_ids))
+    with db.session() as session:
         result = session.scalars(stmt)
         for tag in result:
             metatag.consider(tag)
 
     if not metatag.satisfied():
-        return (None, None)
+        return metatags
 
     metatags.append(metatag)
-    consumed_ids.extend(metatag.tag_ids)
     if spec.greedy:
-        bad_ids.extend(consumed_ids)
-        (next_metatags, next_ids) = make_metatags(spec, character, bad_ids)
+        next_metatags = make_metatags(spec, character, handled_ids + metatag.tag_ids)
         metatags.extend(next_metatags)
-        consumed_ids.extend(next_ids)
 
-    return (metatags, consumed_ids)
+    return metatags

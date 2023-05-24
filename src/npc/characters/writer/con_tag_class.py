@@ -1,4 +1,4 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 
 @dataclass
 class ConTag:
@@ -14,6 +14,7 @@ class ConTag:
     name: str
     value: str = None
     id: int = None
+    subtags: list = field(default_factory=list)
 
     def emit(self) -> str:
         """Generate a parseable representation of this tag

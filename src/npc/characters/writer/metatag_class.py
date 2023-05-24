@@ -8,6 +8,14 @@ class Metatag:
         self.tag_ids: list[int] = []
         self.match_values: list[str] = []
 
+    @property
+    def name(self) -> str:
+        return self.spec.name
+
+    @property
+    def required_tag_names(self) -> list:
+        return self.spec.required_tag_names
+
     def consider(self, tag: Tag):
         """See if a tag fits this metatag
 

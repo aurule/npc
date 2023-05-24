@@ -23,22 +23,44 @@ class CharacterWriter:
         #   write character.file_body
 
     def make_contents(self, character: Character) -> str:
+        """Create the contents of the tag section for a character file
+
+        Constructed tags are generated, followed by metatags. Any tag records that appear in a metatag are
+        excluded from future output. Then, the character's tag records, contags, and metatags are emitted
+        using the block definitions and order in the campaign settings.
+
+        Args:
+            character (Character): Character we're generating for
+
+        Returns:
+            str: Big string of the character's tag text
+
+        Raises:
+            AttributeError: If the character does not meet the conditions in helpers.viable_character (id and
+            realname present).
+        """
         if not viable_character(character):
             raise AttributeError(f"Character {character!r} is missing minimal required attributes (id, realname)")
 
         chunks: list[str] = []
         rest_index: int = None
+
         handled_tag_ids: list[int] = []
         constructed_tags: dict[str, list] = make_contags(character)
 
         if character.desc:
             chunks.append(character.desc)
 
-        for metatag_def in self.campaign.metatags:
-            (metatags, consumed_ids) = make_metatags(metatag_def, character, handled_tag_ids)
-            if metatags:
-                constructed_tags[metatag_def.name] = metatags
-                handled_tag_ids.extend(consumed_ids)
+        for metatag_def in self.campaign.metatags.values():
+            metatags = make_metatags(metatag_def, character, handled_tag_ids)
+            for metatag in metatags:
+                if metatag.name not in constructed_tags:
+                    constructed_tags[metatag.name] = []
+                constructed_tags[metatag.name].append(metatag)
+                handled_tag_ids.extend(metatag.tag_ids)
+                for tag_name in metatag.required_tag_names:
+                    if tag_name in constructed_tags:
+                        del constructed_tags[tag_name]
 
         for blockname in self.blocks:
             block_def = self.block_defs.get(blockname, [])
@@ -66,10 +88,13 @@ class CharacterWriter:
         # now that everything explicitly listed has been handled, insert the remaining tags at rest_index
         remainder_query = character_repository.tags(character).where(Tag.id.not_in(handled_tag_ids))
         with self.db.session() as session:
-            remaining_tags = session.scalars(remainder_query).all()
-        if len(remaining_tags):
+            remainder_result = session.scalars(remainder_query).all()
+
+        if len(constructed_tags) or len(remainder_result):
             if rest_index is None:
                 rest_index = len(chunks)
-            chunks.insert(rest_index, "\n".join([tag.emit() for tag in remaining_tags]))
+            remaining_contags = constructed_tags.values()
+            chunks.insert(rest_index, "\n".join([tag.emit() for tag in remainder_result]))
+            chunks.insert(rest_index, "\n".join([tag[0].emit() for tag in remaining_contags]))
 
         return "\n".join(chunks)
