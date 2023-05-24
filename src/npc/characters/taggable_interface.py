@@ -16,7 +16,6 @@ class Taggable(ABC):
         Returns:
             bool: True if the object accepts the named tag, False if not
         """
-        pass
 
     @abstractmethod
     def add_tag(self, tag):
@@ -25,4 +24,3 @@ class Taggable(ABC):
         Args:
             tag (Tag): Tag to add
         """
-        pass

@@ -14,7 +14,6 @@ class TagDefiner(ABC):
         Returns:
             dict: Dict of TagSpec objects indexed by tag key
         """
-        pass
 
     @abstractmethod
     def get_tag(self, tag_name: str) -> TagSpec:
@@ -28,4 +27,3 @@ class TagDefiner(ABC):
         Returns:
             TagSpec: Spec of the named tag, or a new UndefinedTagSpec if that tag has no definition
         """
-        pass
