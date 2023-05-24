@@ -16,13 +16,24 @@ class CharacterWriter:
             self.db = db
 
     def write(self, character: Character):
-        contents = self.make_contents(character)
+        """Write the contents of a character file
 
-        # with the full string available, open character.file_path
-        #   write out generated string
-        #   write character.file_body
+        Opens the file at character.file_path, creating it if necessary, and writes the output of
+        tag_strings along with the character.file_body string.
 
-    def make_contents(self, character: Character) -> str:
+        Args:
+            character (Character): [description]
+        """
+        contents = self.tag_strings(character)
+        dest = character.file_path
+
+        dest.touch(exist_ok=True)
+
+        with dest.open('w', newline="\n") as char_file:
+            char_file.write(contents)
+            char_file.write(character.file_body)
+
+    def tag_strings(self, character: Character) -> str:
         """Create the contents of the tag section for a character file
 
         Constructed tags are generated, followed by metatags. Any tag records that appear in a metatag are
