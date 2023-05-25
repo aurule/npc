@@ -236,6 +236,10 @@ def tags(settings, system_key, type_):
     data = [[tag.name, tag.desc] for tag in tags if not isinstance(tag, SubTagSpec)]
     echo(presenters.tabularize(data, headers = headers, title = title))
 
+####################
+# Make new character
+####################
+
 @cli.command()
 @click.argument("type_key")
 @click.argument("name")
@@ -262,10 +266,11 @@ def new(settings, type_key, name, mnemonic, tag):
     """
     campaign = cwd_campaign(settings)
     if campaign is None:
-        echo("Not a campaign (or any of the parent directories)")
-        return
+        raise CampaignNotFoundException
 
-    # ensure type exists
+    if type_key not in campaign.types:
+        raise click.BadParameter(f"'{type_key}' is not one of {presenters.type_list(campaign.types)}", param_hint="'TYPE_KEY'")
+
     # use a factory to make the character, using body from typedef
     # use pathfinder to make the right path
     # use new pathfinder method to generate the filename
