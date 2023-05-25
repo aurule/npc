@@ -9,6 +9,7 @@ from npc.settings import Settings, System, SubTagSpec
 from npc.util import ParseError
 from . import presenters
 from .helpers import cwd_campaign, find_or_make_settings_file
+from .cli_errors import CampaignNotFoundException
 
 arg_settings: Settings = Settings()
 
@@ -75,8 +76,7 @@ def info(settings):
     """
     campaign = cwd_campaign(settings)
     if campaign is None:
-        echo("Not a campaign (or any of the parent directories)")
-        return
+        raise CampaignNotFoundException
 
     echo(presenters.campaign_info(campaign))
 
@@ -95,8 +95,7 @@ def settings(settings, location):
     """Browse to the campaign or user settings"""
     target_file = find_or_make_settings_file(settings, location)
     if target_file is None:
-        echo("Not a campaign (or any of the parent directories)")
-        return
+        raise CampaignNotFoundException
 
     click.launch(str(target_file), locate=True)
 
@@ -110,8 +109,7 @@ def session(settings):
     """Create and open the next session and plot file"""
     campaign = cwd_campaign(settings)
     if campaign is None:
-        echo("Not a campaign (or any of the parent directories)")
-        return
+        raise CampaignNotFoundException
 
     new_files = campaign.bump_planning_files()
 
@@ -133,8 +131,7 @@ def latest(settings, planning_type):
     """
     campaign = cwd_campaign(settings)
     if campaign is None:
-        echo("Not a campaign (or any of the parent directories)")
-        return
+        raise CampaignNotFoundException
 
     if planning_type == "both":
         keys = ["plot", "session"]
