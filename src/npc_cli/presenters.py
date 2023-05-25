@@ -11,6 +11,17 @@ def directory_list(dirs: list) -> str:
     """
     return "\n".join([f"  {dirname}/" for dirname in dirs])
 
+def type_list(types: dict) -> str:
+    """Format a dict of type defs
+
+    Args:
+        types (dict): Dict of type definitions to format
+
+    Returns:
+        str: List of type keys joined by commas
+    """
+    return ", ".join([f"'{t}'" for t in types.keys()])
+
 def campaign_info(campaign: Campaign) -> str:
     """Show information about a campaign
 
