@@ -62,4 +62,4 @@ class TestForSingleType():
 
         result = runner.invoke(cli, ["describe", "tags", "--system", "nwod", "--type", "nope"])
 
-        assert "does not exist" in result.output
+        assert "'nope' is not one of" in result.output

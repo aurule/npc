@@ -187,11 +187,9 @@ def types(settings, system):
             chartypes = campaign.types
             title = f"Character Types in {campaign.name}"
         else:
-            echo("Not a campaign, so the --system option must be provided")
-            return 1
+            raise click.UsageError("Not a campaign, so the --system option must be provided")
     except ParseError as err:
-        echo(f"Could not load {err.path}: {err.strerror}")
-        return 1
+        raise click.FileError(err.path, hint=err.strerror)
 
     chartype_headers = ["Name", "Key", "Description"]
     chartype_data = [[chartype.name, chartype.key, chartype.desc] for chartype in chartypes.values()]
@@ -205,7 +203,7 @@ def types(settings, system):
 @click.option("-s", "--system", "system_key",
     type=click.Choice(arg_settings.get_system_keys(), case_sensitive=False),
     help="ID of the game system to use")
-@click.option("-t", "--type", "type_", help="Show tags for only this character type")
+@click.option("-p", "--type", "type_", help="Show tags for only this character type")
 @pass_settings
 def tags(settings, system_key, type_):
     """Show the configured tags for this campaign
@@ -221,17 +219,14 @@ def tags(settings, system_key, type_):
             target = campaign
             system = campaign.system
         else:
-            echo("Not a campaign, so the --system option must be provided")
-            return 1
+            raise click.UsageError("Not a campaign, so the --system option must be provided")
     except ParseError as err:
-        echo(f"Could not load {err.path}: {err.strerror}")
-        return 1
+        raise click.FileError(err.path, hint=err.strerror)
 
     headers = ["Name", "Description"]
     if type_:
         if type_ not in target.types:
-            echo(f"Character type {type_} does not exist in {target.name}")
-            return 1
+            raise click.BadParameter(f"'{type_}' is not one of {presenters.type_list(target.types)}", param_hint="'-p' / '--type'")
 
         title = f"Tags for {target.get_type(type_).name} in {target.name}"
         tags = target.type_tags(type_).values()
