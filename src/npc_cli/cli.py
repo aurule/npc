@@ -7,8 +7,8 @@ from click import echo
 import npc
 from npc.settings import Settings, SubTagSpec
 from npc.util import ParseError
-from . import presenters
-from .helpers import cwd_campaign, find_or_make_settings_file
+from . import presenters, helpers
+from .helpers import cwd_campaign
 from .errors import CampaignNotFoundException
 
 arg_settings: Settings = Settings()
@@ -93,7 +93,7 @@ def info(settings):
 @pass_settings
 def settings(settings, location):
     """Browse to the campaign or user settings"""
-    target_file = find_or_make_settings_file(settings, location)
+    target_file = helpers.find_or_make_settings_file(settings, location)
     if target_file is None:
         raise CampaignNotFoundException
 
@@ -255,12 +255,12 @@ def tags(settings, system_key, type_):
 @click.option("-d", "--description", "desc",
     type=str,
     help="Bio, background, etc. of the character")
-@click.option("-t", "--tag",
-    type=(str, any),
+@click.option("-t", "--tag", "tags",
+    type=(str, str),
     multiple=True,
     help="Tags to add to the new character, as tagname value pairs.")
 @pass_settings
-def new(settings, type_key, name, mnemonic, desc, tag):
+def new(settings, type_key, name, mnemonic, desc, tags):
     """Create a new character
 
     This command only works within an existing campaign.
@@ -283,8 +283,18 @@ def new(settings, type_key, name, mnemonic, desc, tag):
     if type_key not in campaign.types:
         raise click.BadParameter(f"'{type_key}' is not one of {presenters.type_list(campaign.types)}", param_hint="'TYPE_KEY'")
 
-    # use a factory to make the character, using body from typedef
-    # use pathfinder to make the right path
-    # use new pathfinder method to generate the filename
-    # use writer to spit out the character
-    # open the character
+    type_spec = campaign.get_type(type_key)
+    body = type_spec.default_sheet_body()
+
+    character_factory = npc.characters.CharacterFactory(campaign)
+    character = character_factory.make(
+        realname=name,
+        mnemonic=mnemonic,
+        body=body,
+        type_key=type_key,
+        desc=desc,
+        tags=[npc.characters.RawTag(*t) for t in tags])
+
+    helpers.write_new_character(character, campaign)
+
+    npc.util.edit_files([character.file_path], settings = settings)
