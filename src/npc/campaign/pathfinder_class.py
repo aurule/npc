@@ -1,6 +1,7 @@
 from sqlalchemy import Select
 from pathlib import Path
 
+from npc.util import win_sanitize
 from .campaign_class import Campaign
 from ..characters import Character, Tag
 from ..db import DB, character_repository
@@ -57,3 +58,19 @@ class Pathfinder:
                     raise ValueError("Invalid subpath component selector")
 
         return character_path
+
+    def make_filename(self, character: Character) -> str:
+        """Create a filename using a character's attributes
+
+        Sanitizes the name and mnemonic, then uses them to make a new filename. The format is
+        "name - mnemonic.npc".
+
+        Args:
+            character (Character): Character to make a filename for
+
+        Returns:
+            str: The generated filename
+        """
+        sanitized_name = win_sanitize(character.name)
+        sanitized_mnemonic = win_sanitize(character.mnemonic)
+        return f"{sanitized_name} - {sanitized_mnemonic}.npc"
