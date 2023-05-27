@@ -5,11 +5,11 @@ from pathlib import Path
 from click import echo
 
 import npc
-from npc.settings import Settings, System, SubTagSpec
+from npc.settings import Settings, SubTagSpec
 from npc.util import ParseError
 from . import presenters
 from .helpers import cwd_campaign, find_or_make_settings_file
-from .cli_errors import CampaignNotFoundException
+from .errors import CampaignNotFoundException
 
 arg_settings: Settings = Settings()
 
