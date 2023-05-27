@@ -98,6 +98,16 @@ class TestResolvesExplicitSheetPath():
 
         assert "sessile" in str(settings.get("campaign.types.other.tree.sheet_path"))
 
+    def test_stores_real_path(self):
+        settings = Settings()
+
+        settings.load_types(
+            fixture_file("campaigns", "sheets", ".npc", "types"),
+            system_key = "other",
+            namespace_root = "campaign")
+
+        assert settings.get("campaign.types.other.tree.sheet_path").exists()
+
 class TestInsertsImplicitSheetPaths():
     def test_assigns_discovered_files_using_stem(self):
         settings = Settings()
@@ -128,3 +138,13 @@ class TestInsertsImplicitSheetPaths():
             namespace_root = "campaign")
 
         assert "animal" in str(settings.get("campaign.types.generic.useconf.sheet_path"))
+
+    def test_stores_real_path(self):
+        settings = Settings()
+
+        settings.load_types(
+            fixture_file("campaigns", "sheets", ".npc", "types"),
+            system_key = "generic",
+            namespace_root = "campaign")
+
+        assert settings.get("campaign.types.generic.animal.sheet_path").exists()

@@ -177,11 +177,9 @@ class Settings(DataStore):
 
                 self.merge_data(typedef, types_namespace)
 
-            for discovered in discovered_sheets:
-                sheet_path = Path(discovered)
-                type_key = sheet_path.stem
+            for type_key, sheet_path in discovered_sheets.items():
                 if type_key not in self.get(types_namespace, {}):
-                    logger.info(f"Type {type_key} not defined, skipping potential sheet {discovered}")
+                    logger.info(f"Type {type_key} not defined, skipping potential sheet {sheet_path}")
                     continue
                 if "sheet_path" not in self.get(f"{types_namespace}.{type_key}"):
                     self.merge_data({type_key: {"sheet_path": sheet_path}}, types_namespace)
