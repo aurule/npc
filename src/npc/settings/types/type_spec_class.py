@@ -12,6 +12,9 @@ class TypeSpec():
         self.desc: str          = type_def.get("desc", "")
         self.sheet_loc          = type_def.get("sheet_path", None)
 
+    def __repr__(self):
+        return f"TypeSpec(key={self.key!r}, name={self.name!r})"
+
     @property
     def sheet_path(self) -> Path:
         """Get the default sheet file as a Path object
@@ -23,6 +26,19 @@ class TypeSpec():
             return Path(self.sheet_loc)
         except:
             return None
+
+    @property
+    def default_sheet_suffix(self) -> str:
+        """Get the filename suffix for this type's default sheet
+
+        If a default sheet exists, we use its suffix. If not, we fall back on ".npc".
+
+        Returns:
+            str: Suffix of the default sheet, or ".npc" if that is not defined
+        """
+        if not self.sheet_path:
+            return ".npc"
+        return self.sheet_path.suffix
 
     def default_sheet_body(self) -> str:
         """Get the contents of the default sheet file
