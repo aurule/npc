@@ -1,3 +1,5 @@
+from tests.fixtures import tmp_campaign
+
 from npc.characters import Character
 from npc.db import DB
 
