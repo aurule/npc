@@ -41,3 +41,13 @@ def test_sanitizes_unsafe_mnemonic(tmp_campaign):
     result = finder.make_filename(character)
 
     assert "dragon_ man" in result
+
+def test_uses_type_sheet_suffix(tmp_campaign):
+    tmp_campaign.patch_campaign_settings({"system": "fate"})
+    character = Character(realname="Test Mann", mnemonic="dragon man", type_key="supporting")
+    db = DB(clearSingleton=True)
+    finder = Pathfinder(tmp_campaign, db=db)
+
+    result = finder.make_filename(character)
+
+    assert ".fate" in result

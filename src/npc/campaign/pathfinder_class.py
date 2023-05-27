@@ -73,4 +73,8 @@ class Pathfinder:
         """
         sanitized_name = win_sanitize(character.name)
         sanitized_mnemonic = win_sanitize(character.mnemonic)
-        return f"{sanitized_name} - {sanitized_mnemonic}.npc"
+
+        type_spec = self.campaign.get_type(character.type_key)
+        suffix = type_spec.default_sheet_suffix
+
+        return f"{sanitized_name} - {sanitized_mnemonic}{suffix}"
