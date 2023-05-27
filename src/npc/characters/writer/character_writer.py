@@ -31,6 +31,7 @@ class CharacterWriter:
 
         with dest.open('w', newline="\n") as char_file:
             char_file.write(contents)
+            char_file.write("\n\n")
             char_file.write(character.file_body)
 
     def tag_strings(self, character: Character) -> str:
