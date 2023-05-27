@@ -203,7 +203,7 @@ def types(settings, system):
 @click.option("-s", "--system", "system_key",
     type=click.Choice(arg_settings.get_system_keys(), case_sensitive=False),
     help="ID of the game system to use")
-@click.option("-p", "--type", "type_", help="Show tags for only this character type")
+@click.option("-t", "--type", "type_", help="Show tags for only this character type")
 @pass_settings
 def tags(settings, system_key, type_):
     """Show the configured tags for this campaign
@@ -242,27 +242,39 @@ def tags(settings, system_key, type_):
 
 @cli.command()
 @click.argument("type_key")
-@click.argument("name")
-@click.argument("mnemonic")
+@click.option("-n", "--name",
+    type=str,
+    prompt=True,
+    required=True,
+    help="Character name")
+@click.option("-m", "--mnemonic",
+    type=str,
+    prompt=True,
+    required=True,
+    help="One or two words about the character")
+@click.option("-d", "--description", "desc",
+    type=str,
+    help="Bio, background, etc. of the character")
 @click.option("-t", "--tag",
     type=(str, any),
     multiple=True,
-    help="Tags to add to the new character")
+    help="Tags to add to the new character, as tagname value pairs.")
 @pass_settings
-def new(settings, type_key, name, mnemonic, tag):
+def new(settings, type_key, name, mnemonic, desc, tag):
     """Create a new character
+
+    This command only works within an existing campaign.
+    If a name and note are not given, you'll be prompted to add them.
 
     \b
     Examples:
-        npc new supporting "Jack Goosington" "submariner thief"
-        npc new werewolf "Howls at Your Face" "brat" --tag breed lupus --tag auspice ragabash
-        npc new changeling "Squawks McGee" "flying courier" -t seeming beast -t kith windwing -t court spring
+        npc new supporting -n "Jack Goosington" -m "submariner thief"
+        npc new werewolf -n "Howls at Your Face" -m "brat" --tag breed lupus --tag auspice ragabash
+        npc new changeling -n "Squawks McGee" -m "flying courier" -t seeming beast -t kith windwing -t court spring
 
     \b
     Args:
         TYPE_KEY TEXT   Type of the character
-        NAME     TEXT   The character's name
-        MNEMONIC TEXT   One or two words about the character
     """
     campaign = cwd_campaign(settings)
     if campaign is None:
