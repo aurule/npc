@@ -1,8 +1,11 @@
 import os
+from pathlib import Path
 
 import npc
+from npc.db import DB
 from npc.settings import Settings
-from npc.campaign import Campaign
+from npc.campaign import Campaign, Pathfinder
+from npc.characters import Character, RawTag, CharacterWriter
 
 import logging
 logger = logging.getLogger(__name__)
@@ -63,3 +66,32 @@ def find_or_make_settings_file(settings: Settings, location: str) -> str:
         target_file.write_text("npc: {}", newline="\n")
 
     return str(target_file)
+
+def write_new_character(character: Character, campaign: Campaign, db=None):
+    """Create a new character file
+
+    This function determines the correct file path and name for the given character object, then writes its
+    tags and default sheet body to that file. It also adds the character to the database, but that is
+    incidental.
+
+    The Character object's file_path is directly modified.
+
+    Args:
+        character (Character): Character to create
+        campaign (Campaign): Campaign containing the character
+        db (DB): Optional database to use. Intended for dependency injection during testing.
+    """
+    if not db:
+        db = DB()
+
+    with db.session() as session:
+        session.add(character)
+        session.commit()
+
+    finder = Pathfinder(campaign, db=db)
+    sheet_path: Path = finder.build_character_path(character)
+    sheet_name: str = finder.make_filename(character)
+    character.file_path = sheet_path / sheet_name
+
+    writer = CharacterWriter(campaign, db=db)
+    writer.write(character)
