@@ -4,7 +4,7 @@
 block_cipher = None
 
 
-a = Analysis(
+cli_analysis = Analysis(
     ['cli_entrypoint.py'],
     pathex=[],
     binaries=[],
@@ -29,11 +29,11 @@ a = Analysis(
     cipher=block_cipher,
     noarchive=False,
 )
-pyz = PYZ(a.pure, a.zipped_data, cipher=block_cipher)
+cli_pyz = PYZ(cli_analysis.pure, cli_analysis.zipped_data, cipher=block_cipher)
 
-exe = EXE(
-    pyz,
-    a.scripts,
+cli_exe = EXE(
+    cli_pyz,
+    cli_analysis.scripts,
     [],
     exclude_binaries=True,
     name='npc',
@@ -49,10 +49,10 @@ exe = EXE(
     entitlements_file=None,
 )
 coll = COLLECT(
-    exe,
-    a.binaries,
-    a.zipfiles,
-    a.datas,
+    cli_exe,
+    cli_analysis.binaries,
+    cli_analysis.zipfiles,
+    cli_analysis.datas,
     strip=False,
     upx=True,
     upx_exclude=[],

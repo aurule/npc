@@ -37,5 +37,4 @@ docs:
 
 .PHONY: exe
 exe:
-	pyinstaller pyi/cli_entrypoint_win.spec
-
+	pyinstaller pyi/npc_win.spec
