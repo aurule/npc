@@ -11,7 +11,7 @@ from . import presenters, helpers
 from .helpers import cwd_campaign
 from .errors import CampaignNotFoundException
 
-arg_settings: Settings = Settings()
+arg_settings: Settings = npc.settings.app_settings()
 
 pass_settings = click.make_pass_decorator(Settings)
 
