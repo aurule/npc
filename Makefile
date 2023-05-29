@@ -20,7 +20,7 @@ requirements: $(requirements)
 .PHONY: clean
 clean:
 	find . -name '__pycache__' -type d | xargs rm -fr
-	rm -fr .pytest_cache htmlcov .coverage
+	rm -fr .pytest_cache htmlcov .coverage build dist
 	${MAKE} -C docs clean
 
 h: help
@@ -32,3 +32,10 @@ help:
 .PHONY: docs
 docs:
 	${MAKE} -C docs html
+
+# INSTALLERS
+
+.PHONY: exe
+exe:
+	pyinstaller pyi/cli_entrypoint_win.spec
+
