@@ -1,3 +1,5 @@
 main:
   name: Main
-  desc: A full character.
+  desc: A full character
+  doc: >
+    A serious antagonist or ally, with formidable skills and stunts.
