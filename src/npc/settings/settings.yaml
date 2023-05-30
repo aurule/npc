@@ -6,78 +6,131 @@ npc:
       required: true
       max: 1
     faketype:
-      desc: A false character type that will be shown in listings. Useful for hiding that the town priest is secretly a vampire.
+      desc: A false character type that will be shown in listings
+      doc: >
+        The type referenced by the type key given is used in listings, while
+        leaving the real character type in place. Useful for hiding that the
+        town priest is secretly a vampire.
       max: 1
     name:
-      desc: An additional name the character uses.
+      desc: An additional name the character uses
+      doc: >
+        Mainly useful for characters with a nickname or multiple false
+        identities. The character's main name comes from the filename (or the
+        realname tag).
     realname:
-      desc: The true primary name for the character. Useful when the real name uses characters that are not allowed in a filename.
+      desc: The true primary name for the character
+      doc: >
+        Useful when the real name uses characters that are not allowed in a
+        filename (like "quotes" around a common nickname).
       max: 1
     title:
       desc: Honorific title for the character, like The Kingslayer.
     pronouns:
-      desc: Pronouns the character uses. Particularly useful for androgynous fantasy races.
+      desc: Pronouns the character uses
+      doc: >
+        Particularly useful for androgynous fantasy races or for disambiguation
+        between languages.
     gender:
-      desc: Gender role this character has.
+      desc: Gender role this character has
     appearance:
-      desc: What the character looks like to other people.
+      desc: What the character looks like to other people
       doc: >
-        This is expected to be as long and descriptive as needed. Multiple appearance tags will be joined together with a newline to allow multiple paragraphs.
+        This is expected to be as long and descriptive as needed. Multiple
+        appearance tags will be joined together with a newline in generated
+        listings to allow multiple paragraphs.
     race:
-      desc: "Observable ancestry of the character. Extremely setting-dependent: anything from Greek and Egyptian, to Human and Elvish."
+      desc: Observable ancestry of the character
+      doc: >
+        Extremely setting-dependent: anything from Greek and Egyptian, to Human
+        and Elvish.
     age:
-      desc: How old the character is.
+      desc: How old the character is
       doc: >
-        This can be a plain number like 52, or a full descriptor like 'Five life-ages of the Earth'.
+        This can be a plain number like 52, or a full descriptor like 'Five
+        life-ages of the Earth'.
     portrait:
-      desc: Name of an image file to use for the character.
+      desc: Path to an image file to use for the character
       doc: >
-        If you're hosting character listings somewhere, then the filename or path given here must also exist exactly as given on your server.
+        If you're hosting character listings somewhere, then the filename or
+        path given here must also exist exactly as given on your server.
+        Relative paths are usually easiest to work with.
     location:
-      desc: Broad description of where the character lives.
+      desc: Broad description of where the character lives
     region:
       desc: More specific area in which the character lives. Typically contained within their location.
     locale:
       desc: Even more specific area in which the character lives. Typically contained within their region.
     wanderer:
-      desc: Signifies that the character has no permanent home. Optionally contains a description of their travel habits, etc.
+      desc: Indicates that the character has no permanent home
+      doc: >
+        Can optionally contain a description of their travel habits, etc.
       allow_empty: true
     foreign:
-      desc: Signifies that the character does not live in the game's primary play area. Optionally contains a description of where they do live.
+      desc: Indicates that the character lives somewhere outside the main play area
+      doc: >
+        Can optionally contain a description of where they do live.
       allow_empty: true
     group:
-      desc: Name of a group that the character belongs to.
+      desc: Name of a group that the character belongs to
+      doc: >
+        This is a highly multipurpose tag and can represent membership in
+        anything from a university's faculty to a street gang.
       subtags:
         rank:
-          desc: The character's rank or role within this group.
+          desc: The character's rank or role within this group
+          doc: >
+            The rank tag does not have to mean a literal rank, because not all
+            groups have that. It really just represents how people within the
+            group see this character. A character with @group MIT Faculty might
+            have the rank of Professor, Student, or Janitor. In the group Fifth
+            Street Muggers, they might have the rank Lookout, or Pickpocket.
     employer:
-      desc: Name of a person or organization that pays the character for work.
+      desc: Name of a person or organization that pays the character for work
       subtags:
         job:
-          desc: Name of the character's job at their employer.
+          desc: Name of the character's job at their employer
     dead:
-      desc: Signifies that the character is deceased. Optionally also contains a description of how they perished.
+      desc: Indicates that the character is deceased
+      doc: >
+        Can optionally contains a description of how they perished. This tag is
+        meant to be used for characters who are really, truly dead (at this
+        point in the story). For immortals or characters who have been
+        resurrected multiple times in the past, just put the details of past
+        deaths in their description.
       allow_empty: true
     sticky:
       desc: Prevent this file from being moved by the reorg command
+      doc: >
+        The automatic file sorting is not ever going to be perfect, so this tag
+        lets you tell it to leave a particular file alone.
       no_value: true
       max: 1
     nolint:
-      desc: Do not show linting errors for this character.
+      desc: Do not show linting errors for this character
+      doc: >
+        This flag is great for character file templates, or characters who
+        intentionally deviate from the game system's norms.
       no_value: true
       max: 1
     delist:
-      desc: Do not show this character in listings.
+      desc: Do not show this character in listings
+      doc: >
+        Ideal for hiding secret minions, unnamed mooks, etc.
       no_value: true
       max: 1
     hide:
-      desc: Conceal the named tag from listings.
+      desc: Conceal the named tag from listings
       doc: >
-        Individual tag values can be hidden using [tagname] >> [value]. Hide all subtags using
-        [parent] >> [value] >> subtags, or hide single subtag with [parent] >> [value] >> [subtag value]
+        For when you want a character to appear in the listing, but have some
+        important details remain a mystery.
+
+        Individual tag values can be hidden using [tagname] >> [value]. Hide all
+        subtags using [parent] >> [value] >> subtags, or hide single subtag with
+        [parent] >> [value] >> [subtag value]
   deprecated_tags:
     skip:
-      desc: Do not show this character in listings.
+      desc: Do not show this character in listings
       replaced_by: delist
       deprecated: 2.0.0
     keep:
@@ -85,25 +138,27 @@ npc:
       replaced_by: sticky
       deprecated: 2.0.0
     hidegroup:
-      desc: Hide a single named group.
+      desc: Hide a single named group
       replaced_by: hide
       replace_pattern: "group >> $value"
       deprecated: 1.4.1
     hideranks:
-      desc: Hide all ranks for a named group.
+      desc: Hide all ranks for a named group
       replaced_by: hide
       replace_pattern: "group >> $value >> rank"
       deprecated: 1.4.1
   reserved_tags:
     description:
       desc: >
-        Public text about this character, like who they are, their history, what they want, etc. This is an
-        internal tag used to store bare text that appears in the tags area of npc sheets. It should not be
-        used explicitly.
+        Public text about this character, like who they are, their history, what
+        they want, etc. This is an internal tag used to store bare text that
+        appears in the tags area of npc sheets. It should not be used
+        explicitly.
     mnemonic:
       desc: >
-        One or two words that will jog your memory about this character. The mnemonic is supposed to help you
-        easily browse character files, so it is part of the filename.
+        One or two words that will jog your memory about this character. The
+        mnemonic is supposed to help you easily browse character files, so it is
+        part of the filename.
   tag_blocks:
     flags:
       - sticky
