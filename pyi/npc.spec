@@ -36,7 +36,7 @@ cli_exe = EXE(
     cli_analysis.scripts,
     [],
     exclude_binaries=True,
-    name='npc',
+    name='npc_cli',
     debug=False,
     bootloader_ignore_signals=False,
     strip=False,
@@ -56,5 +56,5 @@ coll = COLLECT(
     strip=False,
     upx=True,
     upx_exclude=[],
-    name='npc',
+    name='npc_bin',
 )

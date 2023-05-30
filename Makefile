@@ -35,6 +35,6 @@ docs:
 
 # INSTALLERS
 
-.PHONY: exe
-exe:
-	pyinstaller pyi/npc_win.spec
+.PHONY: bin
+bin:
+	pyinstaller pyi/npc.spec
