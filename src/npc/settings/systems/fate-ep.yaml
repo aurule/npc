@@ -11,13 +11,37 @@ fate-ep:
     infected with an alien virus, WMD dealers, corrupted AGI god-minds, shifty
     amoeboid alien merchants, rampaging alien wildlife, and the ultimate threat:
     transhumanity’s own self-destructive capabilities.
+
+    Unlike other Fate variants, this system redefines the trouble and aspect
+    tags as subtags of the character's concept and morph.
   links:
     - label: Homepage
       url: https://posthuman.shop/products/eclipse-phase-transhumanitysfate
     - label: Book
       url: https://www.drivethrurpg.com/product/176939/Eclipse-Phase-Transhumanitys-Fate
   tags:
+    concept:
+      desc: The character's high concept
+      required: true
+      max: 1
+      subtags:
+        trouble:
+          desc: The character's main trouble in life
+          required: true
+          max: 1
+        aspect:
+          desc: An aspect of the character's ego
     morph:
       desc: Special aspect for the body the character is wearing
+      subtags:
+        aspect:
+          desc: An aspect of the character's morph
     muse:
       desc: Name of the character's muse
+    refresh:
+      desc: Number of fate points the character starts with
+      doc: >
+        Usually only relevant for PCs, since NPCs use a shared pool of GM fate
+        points in every scene.
+    stunt:
+      desc: Name of a special power the character possesses
