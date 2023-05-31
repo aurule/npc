@@ -21,6 +21,20 @@ patternProperties:
                 type: string
                 pattern: "^[a-z][a-z|-]+$"
                 description: The key of a different system. When present, the configuration for that system will be imported into the current system before being altered by the current configuration.
+            links:
+                type: array
+                description: Labelled URLs that are relevant to this system, like its SRD and homepage
+                items:
+                    type: object
+                    description: A single link with its displayable label
+                    properties:
+                        label:
+                            type: string
+                            description: Text to display that identify the purpose of this URL
+                        url:
+                            type: string
+                            format: uri
+                            description: The URL itself
             tags:
                 type: object
                 description: Tag objects unique to this game system
