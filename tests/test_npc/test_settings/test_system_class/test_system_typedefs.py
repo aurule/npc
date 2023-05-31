@@ -8,6 +8,6 @@ def test_gets_own_typedefs():
 
 def test_gets_parent_typedefs():
     settings = Settings()
-    system = settings.get_system("fate-ep")
+    system = settings.get_system("fate-venture")
 
     assert "supporting" in system.typedefs

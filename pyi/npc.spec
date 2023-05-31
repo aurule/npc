@@ -14,6 +14,7 @@ cli_analysis = Analysis(
         ("../src/npc/settings/types/dnd3", "npc/settings/types/dnd3"),
         ("../src/npc/settings/types/fate", "npc/settings/types/fate"),
         ("../src/npc/settings/types/fate-ep", "npc/settings/types/fate-ep"),
+        ("../src/npc/settings/types/fate-venture", "npc/settings/types/fate-venture"),
         ("../src/npc/settings/types/generic", "npc/settings/types/generic"),
         ("../src/npc/settings/types/nwod", "npc/settings/types/nwod"),
         ("../src/npc/settings/types/wod", "npc/settings/types/wod"),

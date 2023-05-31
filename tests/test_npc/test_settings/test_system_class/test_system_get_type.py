@@ -11,7 +11,7 @@ def test_gets_global_types():
 
 def test_gets_inherited_types():
     settings = Settings()
-    system = settings.get_system("fate-ep")
+    system = settings.get_system("fate-venture")
 
     chartype = system.get_type("supporting")
 

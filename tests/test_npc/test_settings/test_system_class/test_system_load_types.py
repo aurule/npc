@@ -10,7 +10,7 @@ def test_loads_global_types():
 
 def test_loads_parent_types():
     settings = Settings()
-    system = settings.get_system("fate-ep")
+    system = settings.get_system("fate-venture")
 
     system.load_types()
 

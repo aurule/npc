@@ -10,7 +10,7 @@ def test_loads_regular_system():
 def test_allows_inherited_attributes():
 	settings = Settings()
 
-	assert "concept" in settings.get("npc.systems.fate-ep.tags").keys()
+	assert "concept" in settings.get("npc.systems.fate-venture.tags").keys()
 
 def test_skips_on_unknown_parent():
 	settings = Settings()

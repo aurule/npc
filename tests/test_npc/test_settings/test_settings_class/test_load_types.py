@@ -63,19 +63,19 @@ def test_loads_inherited_system_types():
 
     settings.load_types(
         settings.default_settings_path / "types",
-        system_key = "fate-ep")
+        system_key = "fate-venture")
 
-    assert "nameless" in settings.get("npc.types.fate-ep")
+    assert "nameless" in settings.get("npc.types.fate-venture")
 
 def test_overrides_inherited_types():
     settings = Settings()
 
     settings.load_types(
         fixture_file("campaigns", "types_inherit", ".npc", "types"),
-        system_key = "fate-ep",
+        system_key = "fate-venture",
         namespace_root = "campaign")
 
-    assert "Testier" == settings.get("campaign.types.fate-ep.test.name")
+    assert "Testier" == settings.get("campaign.types.fate-venture.test.name")
 
 class TestResolvesExplicitSheetPath():
     def test_resolves_absolute_path(self):
