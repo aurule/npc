@@ -1,0 +1,6 @@
+ghoul:
+  name: Ghoul
+  desc: A mortal enhanced by, and dependent on, vampire blood
+  tags:
+    domitor:
+      desc: The vampire to whom this ghoul is bound
