@@ -19,7 +19,7 @@ def tag_values_by_name(character: Character, *names: str) -> Select:
         .order_by(Tag.id)
 
 def tags_by_name(character: Character, *names: str) -> Select:
-    """Create a db query to get Tag records from a character
+    """Create a db query to get Tag records from a character, filtered by name
 
     Builds a query for the named tags, scoped to the character. Best used with the scalars() method to get a
     list of Tag objects instead of single-element tuples.
@@ -34,6 +34,17 @@ def tags_by_name(character: Character, *names: str) -> Select:
     return tags(character).where(Tag.name.in_(names))
 
 def tags(character: Character) -> Select:
+    """Create a db query to get all Tag records for a character
+
+    Builds a query for all tags, scoped to the given character. Best used with the scalars() method to get a
+    list of Tag objects instead of single-element tuples.
+
+    Args:
+        character (Character): Character containing the tags to query
+
+    Returns:
+        Select: Select object for the tag query
+    """
     return select(Tag) \
         .filter(Tag.character_id == character.id) \
         .order_by(Tag.id)
