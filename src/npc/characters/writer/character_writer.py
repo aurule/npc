@@ -1,6 +1,6 @@
 from npc.campaign import Campaign
-from ..character_class import Character
-from ..tag_class import Tag
+from npc.characters.character_class import Character
+from npc.characters.tag_class import Tag
 from npc.db import DB, character_repository
 from .helpers import *
 

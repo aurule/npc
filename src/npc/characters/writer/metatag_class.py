@@ -1,5 +1,5 @@
 from npc.settings import MetatagSpec
-from ..tag_class import Tag
+from npc.characters.tag_class import Tag
 
 class Metatag:
     def __init__(self, spec: MetatagSpec):

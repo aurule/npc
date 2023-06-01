@@ -4,7 +4,7 @@ from typing import List, Optional, Union
 from dataclasses import dataclass
 
 from .taggable_interface import Taggable
-from ..db import BaseModel
+from npc.db import BaseModel
 
 @Taggable.register
 class Tag(BaseModel):

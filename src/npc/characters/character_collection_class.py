@@ -1,4 +1,4 @@
-from ..db import DB
+from npc.db import DB
 
 class CharacterCollection():
     """Class for a group of Character objects, backed by a database

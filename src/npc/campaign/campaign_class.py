@@ -3,8 +3,8 @@ import yaml
 from pathlib import Path
 from functools import cached_property, cache
 
-from ..settings import Settings, PlanningFilename, System
-from ..util.functions import merge_data_dicts, prepend_namespace
+from npc.settings import Settings, PlanningFilename, System
+from npc.util.functions import merge_data_dicts, prepend_namespace
 from npc.settings.helpers import quiet_parse
 from npc.settings.types import make_types, TypeSpec, UndefinedTypeSpec
 from npc.settings.tags import make_tags, make_metatag_specs, TagSpec, UndefinedTagSpec

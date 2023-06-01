@@ -1,8 +1,8 @@
 from npc.settings import MetatagSpec
 from npc.db import DB
 from npc.db.character_repository import tags_by_name
-from ..character_class import Character
-from ..tag_class import Tag
+from npc.characters.character_class import Character
+from npc.characters.tag_class import Tag
 from .con_tag_class import ConTag
 from .metatag_class import Metatag
 

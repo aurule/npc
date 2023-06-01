@@ -6,7 +6,7 @@ being contained within a campaign.
 import yaml
 from pathlib import Path
 
-from ..settings import Settings
+from npc.settings import Settings
 from .campaign_class import Campaign
 
 import logging

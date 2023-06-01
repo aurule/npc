@@ -7,11 +7,10 @@ from collections import defaultdict
 from importlib import resources
 
 from pathlib import Path
-from ..util import DataStore
-from ..util.functions import merge_data_dicts, prepend_namespace
+from npc.util import DataStore, ParseError
+from npc.util.functions import merge_data_dicts, prepend_namespace
 from .helpers import quiet_parse
 from .systems import System
-from ..util import ParseError
 
 import logging
 logger = logging.getLogger(__name__)
