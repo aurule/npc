@@ -3,8 +3,8 @@ from pathlib import Path
 
 from npc.util import win_sanitize
 from .campaign_class import Campaign
-from ..characters import Character, Tag
-from ..db import DB, character_repository
+from npc.characters import CharacterReader, Character, Tag
+from npc.db import DB, character_repository
 
 class Pathfinder:
     """Class for finding and manipulating character-specific paths"""
@@ -77,4 +77,4 @@ class Pathfinder:
         type_spec = self.campaign.get_type(character.type_key)
         suffix = type_spec.default_sheet_suffix
 
-        return f"{sanitized_name} - {sanitized_mnemonic}{suffix}"
+        return "".join([sanitized_name, CharacterReader.NAME_SEPARATOR, sanitized_mnemonic, suffix])
