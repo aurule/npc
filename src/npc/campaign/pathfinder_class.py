@@ -2,14 +2,13 @@ from sqlalchemy import Select
 from pathlib import Path
 
 from npc.util import win_sanitize
-from .campaign_class import Campaign
 from npc.characters import CharacterReader, Character, Tag
 from npc.db import DB, character_repository
 
 class Pathfinder:
     """Class for finding and manipulating character-specific paths"""
 
-    def __init__(self, campaign: Campaign, db: DB = None):
+    def __init__(self, campaign, db: DB = None):
         self.campaign = campaign
         self.path_components = campaign.settings.get("campaign.characters.subpath_components")
         self.base_path = campaign.characters_dir

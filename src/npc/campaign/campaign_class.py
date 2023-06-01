@@ -9,6 +9,7 @@ from npc.settings.helpers import quiet_parse
 from npc.settings.types import make_types, TypeSpec, UndefinedTypeSpec
 from npc.settings.tags import make_tags, make_metatag_specs, TagSpec, UndefinedTagSpec
 from npc.settings.tag_definer_interface import TagDefiner
+from .character_collection import CharacterCollection
 
 @TagDefiner.register
 class Campaign:
@@ -21,6 +22,8 @@ class Campaign:
 
         self.settings.load_settings_file(self.settings_file)
         self.settings.load_systems(self.settings_dir / "systems")
+
+        self.characters = CharacterCollection(self)
 
     @property
     def name(self) -> str:
