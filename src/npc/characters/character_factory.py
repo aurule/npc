@@ -44,6 +44,9 @@ class CharacterFactory():
         if tags is None:
             tags = []
 
+        if desc is None:
+            desc = ""
+
         character = Character(
             type_key=type_key,
             realname=realname,
@@ -138,6 +141,11 @@ class CharacterFactory():
                 character.nolint = True
             case "delist":
                 character.delist = True
+            case "description":
+                if not character.desc:
+                    character.desc = tag.value
+                else:
+                    character.desc = f"{character.desc}\n\n{tag.value}"
             case _:
                 raise NotImplementedError(f"Tag {tag.name} is supposed to be mapped to a Character property, but has no implementation")
 

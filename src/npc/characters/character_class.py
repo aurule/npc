@@ -32,7 +32,7 @@ class Character(BaseModel):
     """
 
     # Names of tags which are represented by properties on the Character object, instead of as associated Tags
-    MAPPED_TAGS = ["realname", "delist", "nolint", "sticky", "type"]
+    MAPPED_TAGS = ["realname", "delist", "nolint", "sticky", "type", "description"]
 
     __tablename__ = "characters"
 

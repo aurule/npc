@@ -70,6 +70,24 @@ class TestWithMappedTag():
 
         assert character.delist
 
+    def test_type_sets_desc(self):
+        factory = CharacterFactory(tmp_campaign)
+        character = Character()
+        tag = RawTag("description", "a person")
+
+        factory.handle_mapped_tag(tag, character)
+
+        assert character.desc == "a person"
+
+    def test_type_appends_desc(self):
+        factory = CharacterFactory(tmp_campaign)
+        character = Character(desc="some text or something")
+        tag = RawTag("description", "a person")
+
+        factory.handle_mapped_tag(tag, character)
+
+        assert character.desc == "some text or something\n\na person"
+
     def test_unkonwn_throws_error(self):
         factory = CharacterFactory(tmp_campaign)
         Character.MAPPED_TAGS.append("invalid")
