@@ -5,7 +5,7 @@ from npc.db import DB, character_repository
 from .helpers import *
 
 class CharacterWriter:
-    def __init__(self, campaign: Campaign, db=None):
+    def __init__(self, campaign: Campaign, *, db=None):
         self.campaign = campaign
         self.block_defs = campaign.settings.get("npc.tag_blocks")
         self.blocks = campaign.settings.get("campaign.characters.use_blocks")
