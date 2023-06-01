@@ -87,14 +87,3 @@ class TestWithMappedTag():
         factory.handle_mapped_tag(tag, character)
 
         assert character.desc == "some text or something\n\na person"
-
-    def test_unkonwn_throws_error(self):
-        factory = CharacterFactory(tmp_campaign)
-        Character.MAPPED_TAGS.append("invalid")
-        character = Character()
-        tag = RawTag("invalid", None)
-
-        with pytest.raises(NotImplementedError):
-            factory.handle_mapped_tag(tag, character)
-
-        Character.MAPPED_TAGS.pop()

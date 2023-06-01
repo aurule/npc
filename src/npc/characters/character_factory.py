@@ -146,8 +146,6 @@ class CharacterFactory():
                     character.desc = tag.value
                 else:
                     character.desc = f"{character.desc}\n\n{tag.value}"
-            case _:
-                raise NotImplementedError(f"Tag {tag.name} is supposed to be mapped to a Character property, but has no implementation")
 
         return True
 
