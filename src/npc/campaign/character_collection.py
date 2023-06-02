@@ -20,12 +20,19 @@ class CharacterCollection():
         self.root = campaign.characters_dir
 
     def refresh(self):
-        def allowed(path):
-            if path.suffix not in self.allowed_suffixes:
+        """Load npc files into the db
+
+        This method is pretty dumb right now and does not check for duplicates at all. It simply reads in npc
+        files and creates the corresponding Character record in the database.
+        """
+        ignore_paths = [self.root / p for p in self.campaign.settings.get("campaign.characters.ignore_subpaths")]
+        def allowed(file_path):
+            if file_path.suffix not in self.allowed_suffixes:
                 return False
 
-            # if self.campaign.ignore in path.parents:
-            #     return False
+            for ignore_path in ignore_paths:
+                if file_path.is_relative_to(ignore_path):
+                    return False
 
             return True
 
@@ -69,13 +76,3 @@ class CharacterCollection():
             session.commit()
 
         return character.id
-
-    def write(self, character: Character = None):
-        writer = CharacterWriter(self.campaign, db=self.db)
-        # write the character object to its destination file
-        # if it has no path, use pathfinder to make one
-        # pathfinder = Pathfinder(self.campaign, db=self.db)
-
-    def get(self, character_id: int) -> Character:
-        pass
-        # get a character by ID, or None if not found
