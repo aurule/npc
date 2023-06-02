@@ -13,6 +13,7 @@ nwod:
     type-specific tags.
   metatags:
     changeling:
+      desc: Shorthand for setting type, seeming, and kith for changelings
       static:
         type: changeling
       match:
