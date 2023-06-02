@@ -1,0 +1,14 @@
+$schema: https://json-schema.org/draft/2020-12/schema
+$id: reserved_tag.schema.json
+title: Reserved Tag
+description: A tag that should not appear in an NPC file
+type: object
+properties:
+    desc:
+        type: string
+        description: A single line of text describing why this tag is reserved
+    doc:
+        type: string
+        description: A multiline block of text describing the details of why this tag is reserved
+required:
+- desc

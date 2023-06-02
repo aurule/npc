@@ -132,30 +132,32 @@ npc:
     skip:
       desc: Do not show this character in listings
       replaced_by: delist
-      deprecated: 2.0.0
+      version: 2.0.0
     keep:
       desc: Prevent this file from being moved by the reorg command
       replaced_by: sticky
-      deprecated: 2.0.0
+      version: 2.0.0
     hidegroup:
       desc: Hide a single named group
       replaced_by: hide
-      replace_pattern: "group >> $value"
-      deprecated: 1.4.1
+      replacement_pattern: "group >> $value"
+      version: 1.4.1
     hideranks:
       desc: Hide all ranks for a named group
       replaced_by: hide
-      replace_pattern: "group >> $value >> rank"
-      deprecated: 1.4.1
+      replacement_pattern: "group >> $value >> rank"
+      version: 1.4.1
   reserved_tags:
     description:
-      desc: >
+      desc: Generated automatically for bare text in the tag area
+      doc: >
         Public text about this character, like who they are, their history, what
         they want, etc. This is an internal tag used to store bare text that
         appears in the tags area of npc sheets. It should not be used
         explicitly.
     mnemonic:
-      desc: >
+      desc: Intended to exist only in the filename
+      doc: >
         One or two words that will jog your memory about this character. The
         mnemonic is supposed to help you easily browse character files, so it is
         part of the filename.
