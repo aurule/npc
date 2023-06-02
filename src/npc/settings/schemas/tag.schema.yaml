@@ -17,7 +17,7 @@ properties:
     required:
         type: boolean
         description: Whether this tag must appear in the character file
-        defaul: false
+        default: false
     min:
         type: integer
         minimum: 0
