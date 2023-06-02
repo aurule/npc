@@ -1,0 +1,35 @@
+$schema: https://json-schema.org/draft/2020-12/schema
+$id: metatag.schema.json
+title: Metatag
+description: A pseudo-tag that is meant to encapsulate multiple concrete tags
+type: object
+properties:
+    desc:
+        type: string
+        description: A single line of text describing the basic purpose of this metatag
+    doc:
+        type: string
+        description: A multiline block of text describing the details and nuances of this metatag
+    static:
+        type: object
+        description: Static values to assign to tags when this metatag is present
+        patternProperties:
+            "^[a-z][a-z|-]+$":
+                type: string
+                description: Name and value of the tag to assign
+    match:
+        type: array
+        description: List of tag names whose values are derived by parsing the metatag's value
+        items:
+            type: string
+            pattern: "^[a-z][a-z|-]+$"
+    separator:
+        type: string
+        description: The string used to break the metatag value into multiple tag values to fill the tags in the match property
+        default: " "
+    greedy:
+        type: boolean
+        description: Whether this metatag should be emitted as many times as possible, i.e. as long as there are enough sets of static and match tags in the character object. No effect on reading in the character.
+        default: false
+required:
+- desc
