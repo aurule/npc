@@ -88,10 +88,12 @@ def write_new_character(character: Character, campaign: Campaign, db=None):
         session.add(character)
         session.commit()
 
-    finder = Pathfinder(campaign, db=db)
-    sheet_path: Path = finder.build_character_path(character)
-    sheet_name: str = finder.make_filename(character)
-    character.file_path = sheet_path / sheet_name
+        finder = Pathfinder(campaign, db=db)
+        sheet_path: Path = finder.build_character_path(character)
+        sheet_name: str = finder.make_filename(character)
+
+        character.file_path = sheet_path / sheet_name
+        session.commit()
 
     writer = CharacterWriter(campaign, db=db)
     writer.write(character)
