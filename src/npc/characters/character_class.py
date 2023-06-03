@@ -22,7 +22,7 @@ class Character(BaseModel):
         realname    str
         nolint      bool    default False
         sticky      bool    default False
-        type_key    str
+        type_key    str     default "unknown"
     Optional Attributes
         desc        str
         file_body   str
@@ -33,6 +33,8 @@ class Character(BaseModel):
 
     # Names of tags which are represented by properties on the Character object, instead of as associated Tags
     MAPPED_TAGS = {"realname", "delist", "nolint", "sticky", "type", "description"}
+
+    DEFAULT_TYPE = "unknown"
 
     __tablename__ = "characters"
 
@@ -49,7 +51,7 @@ class Character(BaseModel):
         back_populates="character",
         cascade="all, delete-orphan"
     )
-    type_key: Mapped[str] = mapped_column(String(128))
+    type_key: Mapped[str] = mapped_column(String(128), default=DEFAULT_TYPE)
 
     def __repr__(self) -> str:
         return f"Character(id={self.id!r}, realname={self.realname!r})"
