@@ -83,7 +83,9 @@ class CharacterReader:
         """Parse the file into tags and body"""
         with self.character_path.open('r', newline="\n") as file:
             for line in file:
-                if line == "\n":
+                line = line.strip()
+
+                if not line:
                     continue
 
                 if self.SECTION_HEADER_RE.match(line):
@@ -93,4 +95,4 @@ class CharacterReader:
                 if match := self.TAG_RE.match(line):
                     self._tags.append(RawTag(match.group("name"), match.group("value")))
                 else:
-                    self._tags.append(RawTag("description", line.strip()))
+                    self._tags.append(RawTag("description", line))
