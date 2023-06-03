@@ -134,9 +134,10 @@ changeling:
       values: *kiths
     mask:
       desc: How the changeling appears to humans and other non-fae.
-      replaces: appearance
     mien:
       desc: How the changeling appears to other changelings, as well as goblins and other fae creatures.
+    appearance:
+      replaced_by: mask
   # Descriptions for the seeming and kith blessings. Every seeming and
   # kith must have a blessing.
   blessings:

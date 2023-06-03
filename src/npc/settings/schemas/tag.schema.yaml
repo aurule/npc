@@ -10,9 +10,9 @@ properties:
     doc:
         type: string
         description: A multiline block of text describing the details and nuances of this tag
-    replaces:
+    replaced_by:
         type: string
-        description: The name of a different tag which this tag replaces
+        description: The name of a different tag which is used instead of this tag. The replacement should be limited to a specific scope, like a system or type. If the tag is replaced globally, deprecated the tag instead.
         pattern: "^[a-z][a-z|-]+$"
     required:
         type: boolean

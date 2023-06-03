@@ -12,7 +12,7 @@ class TagSpec():
         self.definition: dict   = tag_def
         self.desc: str          = tag_def.get("desc", "")
         self.doc: str           = tag_def.get("doc", "")
-        self.replaces: str      = tag_def.get("replaces", "")
+        self.replaced_by: str   = tag_def.get("replaced_by", "")
         self.required: bool     = tag_def.get("required", False)
         self.min: int           = tag_def.get("min", 0)
         self.max: int           = tag_def.get("max", 999)
