@@ -1,37 +1,47 @@
 from . import ValidationError
 
 class TagValidationError(ValidationError):
-    def __init__(self, message: str, name):
-        super().__init__(f"Error in tag @{name}: {message}")
+    def __init__(self, detail: str, tag_name: str):
+        super().__init__(detail)
+        self.tag_name: str = tag_name
+        self.preamble: str = f"Error in tag @{tag_name}"
 
 class TagDeprecatedError(TagValidationError):
-    def __init__(self, name: str, replacement: str):
-        super().__init__(f"deprecated. Use {replacement} instead.", name)
+    def __init__(self, tag_name: str, replacement: str):
+        super().__init__(f"deprecated. Use {replacement} instead.", tag_name)
+        self.replacement: str = replacement
 
 class TagEmptyError(TagValidationError):
-    def __init__(self, name: str):
-        super().__init__("missing value", name)
+    def __init__(self, tag_name: str):
+        super().__init__("missing value", tag_name)
 
 class TagMaxError(TagValidationError):
-    def __init__(self, name: str, cap: int, count: int):
-        super().__init__(f"too many. {cap} allowed, found {count}", name)
+    def __init__(self, tag_name: str, cap: int, count: int):
+        super().__init__(f"too many. {cap} allowed, found {count}", tag_name)
+        self.cap: int = cap
+        self.count: int = count
 
 class TagMinError(TagValidationError):
-    def __init__(self, name: str, floor: int, count: int):
-        super().__init__(f"too few. {floor} required, found {count}", name)
+    def __init__(self, tag_name: str, floor: int, count: int):
+        super().__init__(f"too few. {floor} required, found {count}", tag_name)
+        self.floor: int = floor
+        self.count: int = count
 
 class TagNoValueAllowedError(TagValidationError):
-    def __init__(self, name: str, value: str):
-        super().__init__(f"no value allowed, but has '{value}'", name)
+    def __init__(self, tag_name: str, value: str):
+        super().__init__(f"no value allowed, but has '{value}'", tag_name)
+        self.value: str = value
 
 class TagReplacedError(TagValidationError):
-    def __init__(self, name: str, replacement: str):
-        super().__init__(f"replaced. Use {replacement} instead.", name)
+    def __init__(self, tag_name: str, replacement: str):
+        super().__init__(f"replaced. Use {replacement} instead.", tag_name)
+        self.replacement: str = replacement
 
 class TagRequiredError(TagValidationError):
-    def __init__(self, name: str):
-        super().__init__("required, but not present", name)
+    def __init__(self, tag_name: str):
+        super().__init__("required, but not present", tag_name)
 
 class TagValueError(TagValidationError):
-    def __init__(self, name: str, badvalue: str):
-        super().__init__(f"unrecognized value '{badvalue}'", name)
+    def __init__(self, tag_name: str, value: str):
+        super().__init__(f"unrecognized value '{value}'", tag_name)
+        self.value: str = value
