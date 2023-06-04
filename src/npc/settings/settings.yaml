@@ -72,12 +72,14 @@ npc:
         Can optionally contain a description of where they do live.
       allow_empty: true
     group:
+      replaced_by: org
       desc: Name of a group that the character belongs to
       doc: >
         This is a highly multipurpose tag and can represent membership in
         anything from a university's faculty to a street gang.
       subtags:
         rank:
+          replaced_by: role
           desc: The character's rank or role within this group
           doc: >
             The rank tag does not have to mean a literal rank, because not all
@@ -85,6 +87,25 @@ npc:
             group see this character. A character with @group MIT Faculty might
             have the rank of Professor, Student, or Janitor. In the group Fifth
             Street Muggers, they might have the rank Lookout, or Pickpocket.
+    org:
+      desc: Official organization to which the character belongs
+      doc: >
+        This is a multipurpose tag designed to represent membership in any
+        official grouping of people: from university faculty to a street gang.
+      subtags:
+        role:
+          desc: The role or position the character holds within this organization
+          doc: >
+            A character's role can be as vague or specific as makes sense for
+            the org in question. A character with @org MIT Faculty might have
+            the role of Professor, Student, or Janitor. In the org Fifth Street
+            Muggers, they might have the role Lookout, or Pickpocket.
+        rank:
+          desc: A formal rank the character holds within this organization
+          doc: >
+            Some orgs have formal ranks that may or may not be related to a
+            member's duties. Someone in an army might have the role Soldier
+            and a rank of Private or Sergeant.
     employer:
       desc: Name of a person or organization that pays the character for work
       subtags:
