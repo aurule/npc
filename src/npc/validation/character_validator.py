@@ -1,17 +1,31 @@
 from npc.characters import Character
 from npc.validation.errors.character_errors import *
-from .tag_validator import TagValidator
+from npc.validation.errors.tag_errors import *
 
 class CharacterValidator:
-    def __init__(self, character: Character):
-        self.character = character
-        self.errors = []
+    def __init__(self, campaign):
+        self.campaign = campaign
 
-    def validate(self) -> list:
-        # check for attribute problems
-        # gather tag specs
-        #   for each required spec, run a TagValidator against our values
-        # for all non-required tags which we possess, run a TagValidator against that tag's values
-        # for all deprecated tags, make sure we don't have any values
-        # add tag validation results to our errors list
-        return self.errors
+    def validate(self, character: Character) -> list:
+        errors = []
+        char_name = character.realname
+
+        char_type = character.type_key
+        if not char_type:
+            errors.append(TagEmptyError("type"))
+        else:
+            if char_type == Character.DEFAULT_TYPE:
+                errors.append(TagRequiredError("type"))
+            if char_type not in self.campaign.types.keys():
+                errors.append(TagValueError("type", char_type))
+
+        if not char_name:
+            errors.append(CharacterMissingAttributeError(character.file_loc, "name"))
+
+        if not character.desc:
+            errors.append(CharacterMissingAttributeError(char_name, "description"))
+
+        if not character.mnemonic:
+            errors.append(CharacterMissingAttributeError(char_name, "mnemonic"))
+
+        return errors
