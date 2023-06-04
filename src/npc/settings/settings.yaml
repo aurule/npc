@@ -103,6 +103,11 @@ npc:
             relationship is at least as important as the fact that it exists.
             Good for denoting parents, children, siblings, school rivals,
             nemeses, or pretty much any other kind of relationship.
+    lineage:
+      desc: Brief listing of the character's ancestors
+      doc: >
+        Useful mainly for monarchs, snooty vampires, and seventh sons of seventh
+        sons.
     dead:
       desc: Indicates that the character is deceased
       doc: >
