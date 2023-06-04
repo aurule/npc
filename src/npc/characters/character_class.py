@@ -34,7 +34,7 @@ class Character(BaseModel):
     # Names of tags which are represented by properties on the Character object, instead of as associated Tags
     MAPPED_TAGS = {"realname", "delist", "nolint", "sticky", "type", "description"}
 
-    DEFAULT_TYPE = "unknown"
+    DEFAULT_TYPE = "invalid"
 
     __tablename__ = "characters"
 
