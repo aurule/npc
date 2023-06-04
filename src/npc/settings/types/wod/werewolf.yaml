@@ -1,3 +1,29 @@
 werewolf:
   name: Werewolf
   desc: A shape-changing wolf warrior
+  tags:
+    breed:
+      desc: The werewolf's breed
+      doc: >
+        A werewolf's breed is the shape they were born in.
+      values:
+        - Lupus
+        - Metis
+        - Homid
+    auspice:
+      desc: The werewolf's auspice
+      doc: >
+        Determined by the phase of the moon in the sky where and when the
+        werewolf was born.
+      values:
+        - Ragabash
+        - Theurge
+        - Philodox
+        - Galliard
+        - Ahroun
+    tribe:
+      desc: The werewolf's tribe
+    sept:
+      desc: Name of the sept the werewolf lives near and protects
+    pack:
+      desc: Name of the werewolf's pack
