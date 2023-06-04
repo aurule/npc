@@ -90,6 +90,19 @@ npc:
       subtags:
         job:
           desc: Name of the character's job at their employer
+    tie:
+      desc: Name of a person to whom the character is socially tied
+      doc: >
+        Useful for noting families and other loose relationships that form
+        outside of regimented groups.
+      subtags:
+        rel:
+          desc: The nature of the relationship the character has to the tied person
+          doc: >
+            This subtag should almost always be used, as the nature of a
+            relationship is at least as important as the fact that it exists.
+            Good for denoting parents, children, siblings, school rivals,
+            nemeses, or pretty much any other kind of relationship.
     dead:
       desc: Indicates that the character is deceased
       doc: >
