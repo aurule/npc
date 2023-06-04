@@ -106,26 +106,6 @@ changeling:
     - thusser
     - fatemaker
   tags:
-    motley:
-      desc: Tight-knit group the changeling belongs to, like a family
-      max: 1
-    court:
-      desc: Court the changeling belongs to. Usually one of Winter, Spring, Summer, or Autumn.
-      max: 1
-      subtags:
-        rank:
-          desc: Name of the official position the changeling holds within their court
-    freehold:
-      desc: Name of the political bloc the changeling's court belongs to. Usually tied to a human city.
-      subtags:
-        rank:
-          desc: Official position the changeling has in their freehold, but not tied to their court.
-    entitlement:
-      desc: Magical, prestigious group the changeling belongs to.
-      max: 1
-      subtags:
-        rank:
-          desc: Official position the changeling holds within their entitlement.
     seeming:
       desc: The broad grouping of the changeling's fae kin.
       values: *seemings
@@ -138,6 +118,50 @@ changeling:
       desc: How the changeling appears to other changelings, as well as goblins and other fae creatures.
     appearance:
       replaced_by: mask
+    motley:
+      desc: Tight-knit group the changeling belongs to, like a family
+      doc: >
+        This is a magically-bound group of changelings which often lives
+        together. Changelings socialize all the time outside of their motley,
+        but it's these people the changeling comes home to.
+      max: 1
+    freehold:
+      desc: Name of the main political group to which the changeling belongs
+      doc: >
+        Usually tied to a human city. Freeholds almost always have multiple
+        courts within them.
+      subtags:
+        role:
+          desc: Official position the changeling has in their freehold
+          doc: >
+            This is a position outside of their court. Freehold-wide roles are
+            not common, but some freeholds use them to help unify the disparate
+            courts.
+    court:
+      desc: Court the changeling belongs to
+      doc: >
+        Usually one of the seasonal courts: Winter, Spring, Summer, or Autumn.
+      max: 1
+      subtags:
+        role:
+          desc: Name of an official position the changeling holds within their court
+          doc: >
+            Most courts have a seasonal king or queen, and many courts have
+            optional positions. Changelings in these roles help run the court or
+            forward its goals within their freehold.
+    entitlement:
+      desc: Magical, prestigious group the changeling belongs to.
+      doc: >
+        These elite groups have specific criteria for changelings who wish to
+        join. Some require a certain seeming, membership in a court, or displays
+        of skill.
+      max: 1
+      subtags:
+        role:
+          desc: Official position the changeling holds within their entitlement.
+          doc: >
+            Not all entitlements have specific roles. For those that do,
+            achieving a certain role can be a major motivation for members.
   # Descriptions for the seeming and kith blessings. Every seeming and
   # kith must have a blessing.
   blessings:
