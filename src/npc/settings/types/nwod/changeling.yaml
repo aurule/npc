@@ -162,6 +162,8 @@ changeling:
           doc: >
             Not all entitlements have specific roles. For those that do,
             achieving a certain role can be a major motivation for members.
+    other:
+      desc: The changeling's fetch
   # Descriptions for the seeming and kith blessings. Every seeming and
   # kith must have a blessing.
   blessings:
