@@ -14,6 +14,18 @@ def test_handles_mapped_tags(tmp_campaign):
     assert character.realname == "Test Mann"
     assert new_stack == stack
 
+def test_makes_tag_for_mapped_when_instructed(tmp_campaign):
+    factory = CharacterFactory(tmp_campaign)
+    character = Character()
+    rawtag = RawTag("realname", "Test Mann")
+    stack = [character]
+
+    new_stack = factory.apply_raw_tag(rawtag, character, stack, mapped=False)
+
+    assert character.realname != "Test Mann"
+    assert character.tags[0].name == "realname"
+    assert new_stack == stack
+
 def test_handles_metatags(tmp_campaign):
     new_defs = {
         "metatags": {

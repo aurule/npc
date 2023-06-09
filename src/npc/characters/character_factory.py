@@ -66,23 +66,34 @@ class CharacterFactory():
 
         return character
 
-    def apply_raw_tag(self, rawtag: RawTag, character: Character, stack: list[Taggable]) -> list[Taggable]:
+    def apply_raw_tag(
+        self,
+        rawtag: RawTag,
+        character: Character,
+        stack: list[Taggable],
+        *,
+        mapped: bool = True
+    ) -> list[Taggable]:
         """Apply a RawTag to the given character
 
         Calls out to handle_mapped_stack, expand_metatag, and insert_tag_record to deal with the various
         cases of tag type.
 
+        The mapped arg should normally be True. The only time to set it to False is if you want to represent
+        all possible tag-like data from the character file, like for linting.
+
         Args:
             rawtag (RawTag): Tag name and value object
             character (Character): Character object to apply the tag to
-            stack (list): List of Tag objects, with the character at index 0.
+            stack (list): List of Taggable objects, with the character at index 0.
+            mapped (bool): Whether to map certain tags onto character attrs instead of making tags (default True)
 
         Returns:
             list: Potentially different list of Tag objects similar to stack
         """
         context_stack = stack.copy()
 
-        if self.handle_mapped_tag(rawtag, character):
+        if mapped and self.handle_mapped_tag(rawtag, character):
             return context_stack
 
         if rawtag.name in self.campaign.metatags:
