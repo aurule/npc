@@ -1,4 +1,5 @@
 from . import Character, Tag, RawTag
+from .taggable_interface import Taggable
 from npc.settings.tags import MetatagSpec, UndefinedTagSpec
 
 import logging
@@ -65,7 +66,7 @@ class CharacterFactory():
 
         return character
 
-    def apply_raw_tag(self, rawtag: RawTag, character: Character, stack: list) -> list:
+    def apply_raw_tag(self, rawtag: RawTag, character: Character, stack: list[Taggable]) -> list[Taggable]:
         """Apply a RawTag to the given character
 
         Calls out to handle_mapped_stack, expand_metatag, and insert_tag_record to deal with the various
@@ -122,10 +123,6 @@ class CharacterFactory():
 
         Returns:
             bool: True if the tag was handled, false if not
-
-        Raises:
-            NotImplementedError: In the unexpected case of a new mapped tag that has not yet been implemented,
-            this error will be raised as a safety.
         """
         if tag.name not in Character.MAPPED_TAGS:
             return False
@@ -149,7 +146,7 @@ class CharacterFactory():
 
         return True
 
-    def expand_metatag(self, metatag: MetatagSpec, metatag_value: str, character: Character, stack: list) -> list:
+    def expand_metatag(self, metatag: MetatagSpec, metatag_value: str, character: Character, stack: list[Taggable]) -> list[Taggable]:
         """Turn a metatag into one or more normal tags
 
         Static tags are emitted as-is. Match tags are assigned values either based on their values list, or by
@@ -195,7 +192,7 @@ class CharacterFactory():
 
         return context_stack
 
-    def insert_tag_record(self, tag: Tag, stack: list) -> list:
+    def insert_tag_record(self, tag: Tag, stack: list[Taggable]) -> list[Taggable]:
         """Insert a tag into the first accepting container on the stack
 
         Stack is a list of Taggable objects. This tries to insert tag into the last entry of the list. If
