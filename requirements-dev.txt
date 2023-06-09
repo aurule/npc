@@ -107,10 +107,14 @@ sphinxcontrib-serializinghtml==1.1.5
     # via sphinx
 sqlalchemy==2.0.15
     # via -r requirements.in
+toml==0.10.2
+    # via vulture
 typing-extensions==4.6.3
     # via sqlalchemy
 urllib3==2.0.2
     # via requests
+vulture==2.7
+    # via -r requirements-dev.in
 wheel==0.40.0
     # via pip-tools
 
