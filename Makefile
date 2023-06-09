@@ -3,15 +3,11 @@ rwildcard = $(wildcard $1$2)$(foreach d,$(wildcard $1*),$(call rwildcard,$d/,$2)
 
 PREFIX := /usr/local
 
-.PHONY: test
+.PHONY: test coverage unused
 test:
 	pytest --tb=no
-
-.PHONY: coverage
 coverage:
 	pytest --cov=npc --cov=npc_cli --cov-report=html --cov-report=term -q -p no:pretty
-
-.PHONY: unused
 unused:
 	vulture src/npc tests
 
@@ -23,13 +19,12 @@ requirements: $(requirements)
 
 .PHONY: clean
 clean:
-	find . -name '__pycache__' -type d | xargs rm -fr
-	rm -fr .pytest_cache htmlcov .coverage build dist
+	-find . -name '__pycache__' -type d | xargs rm -fr
+	-rm -fr .pytest_cache htmlcov .coverage build dist
 	${MAKE} -C docs clean
 
-h: help
-
 .PHONY: help
+h: help
 help:
 	@$(MAKE) -pRrq -f $(lastword $(MAKEFILE_LIST)) : 2>/dev/null | awk -v RS= -F: '/^# File/,/^# Finished Make data base/ {if ($$1 !~ "^[#.]") {print $$1}}' | sort | egrep -v -e '^[^[:alnum:]]' -e '^$@$$' | xargs
 
