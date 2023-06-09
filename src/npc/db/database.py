@@ -2,7 +2,7 @@ from contextlib import contextmanager
 from sqlalchemy import create_engine
 from sqlalchemy.orm import DeclarativeBase, Session
 
-from ..util import Singleton
+from npc.util import Singleton
 
 class DB(metaclass=Singleton):
     """Internal database class
