@@ -10,7 +10,7 @@ class TestWithoutType():
         factory = CharacterFactory(tmp_campaign)
         character = Character()
 
-        tag_spec = factory.get_tag_spec("seeming", character)
+        tag_spec = factory.get_tag_spec("seeming", character.type_key)
 
         assert isinstance(tag_spec, UndefinedTagSpec)
 
@@ -19,7 +19,7 @@ class TestWithoutType():
         factory = CharacterFactory(tmp_campaign)
         character = Character()
 
-        tag_spec = factory.get_tag_spec("age", character)
+        tag_spec = factory.get_tag_spec("age", character.type_key)
 
         assert isinstance(tag_spec, TagSpec)
 
@@ -29,7 +29,7 @@ class TestWithType():
         factory = CharacterFactory(tmp_campaign)
         character = Character(type_key="changeling")
 
-        tag_spec = factory.get_tag_spec("seeming", character)
+        tag_spec = factory.get_tag_spec("seeming", character.type_key)
 
         assert isinstance(tag_spec, TagSpec)
 
@@ -38,6 +38,6 @@ class TestWithType():
         factory = CharacterFactory(tmp_campaign)
         character = Character(type_key="changeling")
 
-        tag_spec = factory.get_tag_spec("age", character)
+        tag_spec = factory.get_tag_spec("age", character.type_key)
 
         assert isinstance(tag_spec, TagSpec)

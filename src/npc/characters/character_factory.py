@@ -89,26 +89,27 @@ class CharacterFactory():
             metatag = self.campaign.metatags.get(rawtag.name)
             return self.expand_metatag(metatag, rawtag.value, character, context_stack)
 
-        tag_spec = self.get_tag_spec(rawtag.name, character)
+        tag_spec = self.get_tag_spec(rawtag.name, character.type_key)
         tag = Tag(name = rawtag.name, value = rawtag.value)
         tag.spec = tag_spec.in_context(context_stack[-1].name)
         return self.insert_tag_record(tag, context_stack)
 
-    def get_tag_spec(self, tag_name: str, character: Character):
+    def get_tag_spec(self, tag_name: str, type_key: str):
         """Get the most accurate tag spec for current character state
 
-        If the character has a type, then we can use that to resolve type-specific tags. Otherwise, we fall
-        back on campaign tags.
+        If the type_key is present, then we can use that to resolve type-specific tags. Otherwise, we fall
+        back on campaign tags. This only works for character objects that have not been persisted, meaning
+        their type_keys are still None.
 
         Args:
             tag_name (str): Name of the tag to get
-            character (Character): Character for the tag
+            type_key (str): Character type for the tag
 
         Returns:
             TagSpec: Spec of the tag
         """
-        if character.type_key:
-            return self.campaign.get_type_tag(tag_name, character.type_key)
+        if type_key:
+            return self.campaign.get_type_tag(tag_name, type_key)
         return self.campaign.get_tag(tag_name)
 
     def handle_mapped_tag(self, tag: RawTag, character: Character) -> bool:
@@ -179,7 +180,7 @@ class CharacterFactory():
         working_value = metatag_value
 
         for name in metatag.match:
-            spec = self.get_tag_spec(name, character)
+            spec = self.get_tag_spec(name, character.type_key)
             spec = try_contexts(spec)
             if matching_value := find_matching_value(spec, working_value):
                 context_stack = self.apply_raw_tag(RawTag(name, matching_value), character, context_stack)
