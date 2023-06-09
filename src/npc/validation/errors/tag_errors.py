@@ -41,6 +41,10 @@ class TagRequiredError(TagValidationError):
     def __init__(self, tag_name: str):
         super().__init__("required, but not present", tag_name)
 
+class TagUndefinedError(TagValidationError):
+    def __init__(self, tag_name: str):
+        super().__init__("no definition found", tag_name)
+
 class TagValueError(TagValidationError):
     def __init__(self, tag_name: str, value: str):
         super().__init__(f"unrecognized value '{value}'", tag_name)

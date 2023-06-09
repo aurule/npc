@@ -21,6 +21,10 @@ class TagValidator:
         errors: list = []
         tag_name: str = self.spec.name
 
+        if not self.spec.definition:
+            errors.append(TagUndefinedError(tag_name))
+            return errors
+
         if self.spec.replaced_by:
             errors.append(TagReplacedError(tag_name, self.spec.replaced_by))
             return errors
@@ -34,7 +38,7 @@ class TagValidator:
             errors.append(TagMaxError(tag_name, self.spec.max, total_tags))
 
         for tag in tags:
-            value = tag.value
+            value: str = tag.value
             if value:
                 if self.spec.no_value:
                     errors.append(TagNoValueAllowedError(tag_name, value))

@@ -7,10 +7,10 @@ class CharacterValidator:
         self.campaign = campaign
 
     def validate(self, character: Character) -> list:
-        errors = []
-        char_name = character.realname
+        errors: list = []
+        char_name: str = character.realname
 
-        char_type = character.type_key
+        char_type: str = character.type_key
         if not char_type:
             errors.append(TagEmptyError("type"))
         else:

@@ -1,4 +1,5 @@
 from npc.settings import TagSpec
+from npc.settings.tags.tag_spec_class import UndefinedTagSpec
 from npc.characters import Tag
 
 from npc.validation import TagValidator
@@ -70,7 +71,7 @@ def test_bad_value():
     assert "unrecognized value" in str(result[0])
 
 def test_missing_value():
-    spec = TagSpec("test", {})
+    spec = TagSpec("test", {"required": False})
     tags = [Tag(name="test")]
     validator = TagValidator(spec)
 
@@ -86,3 +87,11 @@ def test_allowed_empty_value():
     result = validator.validate(tags)
 
     assert not result
+
+def test_undefined():
+    spec = UndefinedTagSpec("test")
+    tags = [Tag(name="test")]
+    validator = TagValidator(spec)
+    result = validator.validate(tags)
+
+    assert "no definition" in str(result[0])
