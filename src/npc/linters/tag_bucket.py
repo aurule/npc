@@ -10,7 +10,7 @@ class TagBucket:
     This class is meant to make tags easy to fetch by name so that linting them against a spec is easier. It
     is able to be dropped into the CharacterFactory's apply_raw_tag method in place of a Character object.
     """
-    def __init__(self, character: Character):
+    def __init__(self, character: Character = None):
         self.character = character
         self.tags = defaultdict(list)
 
