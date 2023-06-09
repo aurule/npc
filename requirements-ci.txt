@@ -16,7 +16,7 @@ markdown==3.4.3
     # via -r requirements.in
 markdown-it-py==2.2.0
     # via rich
-markupsafe==2.1.2
+markupsafe==2.1.3
     # via mako
 mdurl==0.1.2
     # via markdown-it-py
