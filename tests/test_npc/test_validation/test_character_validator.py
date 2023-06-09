@@ -12,7 +12,7 @@ def test_missing_type(tmp_campaign):
 
     result = validator.validate(character)
 
-    assert "missing value" in str(result[0])
+    assert "missing value" in result[0].message
 
 def test_default_type(tmp_campaign):
     character = Character(
@@ -24,7 +24,7 @@ def test_default_type(tmp_campaign):
 
     result = validator.validate(character)
 
-    assert "required" in str(result[0])
+    assert "required" in result[0].message
 
 def test_bad_type(tmp_campaign):
     character = Character(
@@ -36,7 +36,7 @@ def test_bad_type(tmp_campaign):
 
     result = validator.validate(character)
 
-    assert "unrecognized" in str(result[0])
+    assert "unrecognized" in result[0].message
 
 def test_missing_name(tmp_campaign):
     character = Character(
@@ -47,7 +47,7 @@ def test_missing_name(tmp_campaign):
 
     result = validator.validate(character)
 
-    assert "missing name" in str(result[0])
+    assert "missing name" in result[0].message
 
 def test_missing_desc(tmp_campaign):
     character = Character(
@@ -58,7 +58,7 @@ def test_missing_desc(tmp_campaign):
 
     result = validator.validate(character)
 
-    assert "missing description" in str(result[0])
+    assert "missing description" in result[0].message
 
 def test_missing_mnemonic(tmp_campaign):
     character = Character(
@@ -69,4 +69,4 @@ def test_missing_mnemonic(tmp_campaign):
 
     result = validator.validate(character)
 
-    assert "missing mnemonic" in str(result[0])
+    assert "missing mnemonic" in result[0].message

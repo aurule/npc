@@ -11,7 +11,7 @@ def test_replaced_by():
 
     result = validator.validate(tags)
 
-    assert "replaced" in str(result[0])
+    assert "replaced" in result[0].message
 
 def test_replaced_by_ignores_other_errors():
     spec = TagSpec("test", {"replaced_by": "nopealope"})
@@ -29,7 +29,7 @@ def test_required():
 
     result = validator.validate(tags)
 
-    assert "required" in str(result[0])
+    assert "required" in result[0].message
 
 def test_min():
     spec = TagSpec("test", {"min": 2})
@@ -38,7 +38,7 @@ def test_min():
 
     result = validator.validate(tags)
 
-    assert "too few" in str(result[0])
+    assert "too few" in result[0].message
 
 def test_max():
     spec = TagSpec("test", {"max": 1})
@@ -50,7 +50,7 @@ def test_max():
 
     result = validator.validate(tags)
 
-    assert "too many" in str(result[0])
+    assert "too many" in result[0].message
 
 def test_no_value():
     spec = TagSpec("test", {"no_value": True})
@@ -59,7 +59,7 @@ def test_no_value():
 
     result = validator.validate(tags)
 
-    assert "no value allowed" in str(result[0])
+    assert "no value allowed" in result[0].message
 
 def test_bad_value():
     spec = TagSpec("test", {"values": ['yes', 'no']})
@@ -68,7 +68,7 @@ def test_bad_value():
 
     result = validator.validate(tags)
 
-    assert "unrecognized value" in str(result[0])
+    assert "unrecognized value" in result[0].message
 
 def test_missing_value():
     spec = TagSpec("test", {"required": False})
@@ -77,7 +77,7 @@ def test_missing_value():
 
     result = validator.validate(tags)
 
-    assert "missing value" in str(result[0])
+    assert "missing value" in result[0].message
 
 def test_allowed_empty_value():
     spec = TagSpec("test", {"allow_empty": True})
@@ -94,4 +94,4 @@ def test_undefined():
     validator = TagValidator(spec)
     result = validator.validate(tags)
 
-    assert "no definition" in str(result[0])
+    assert "no definition" in result[0].message
