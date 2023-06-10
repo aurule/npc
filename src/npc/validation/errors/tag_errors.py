@@ -6,6 +6,9 @@ class TagValidationError(ValidationError):
         self.tag_name: str = tag_name
         self.preamble: str = f"Error in tag @{tag_name}"
 
+    def __repr__(self) -> str:
+        return f"{self.__class__.__name__}(tag_name={self.tag_name!r})"
+
 class TagDeprecatedError(TagValidationError):
     def __init__(self, tag_name: str, replacement: str):
         super().__init__(f"deprecated. Use {replacement} instead.", tag_name)
