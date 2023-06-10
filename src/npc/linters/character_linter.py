@@ -3,6 +3,9 @@ from npc.characters import Character, CharacterReader, CharacterFactory
 from npc.validation import CharacterValidator, TagValidator
 from .tag_bucket import TagBucket
 
+import logging
+logger = logging.getLogger(__name__)
+
 class CharacterLinter:
     def __init__(self, character: Character, campaign: Campaign):
         self.character = character
@@ -29,7 +32,7 @@ class CharacterLinter:
 
         required_specs = (spec for spec in available_specs if (spec.required or spec.min))
         for spec in required_specs:
-            print(f"{spec.name} is required")
+            logger.debug(f"tag {spec.name} is required")
             self.validate_spec(spec, bucket.tags[spec.name])
             self.handled_specs.append(spec.name)
 
@@ -38,7 +41,7 @@ class CharacterLinter:
 
         remaining_specs = (spec for spec in available_specs if spec.name not in handled_specs and spec.name in bucket.tags.keys())
         for spec in remaining_specs:
-            print(f"{spec.name} was found")
+            logger.debug(f"tag {spec.name} was found")
             self.validate_spec(spec, bucket.tags[spec.name])
 
         # handle tags with no spec
