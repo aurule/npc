@@ -11,4 +11,5 @@ class DeprecatedTagSpec():
         self.desc: str          = tag_def.get("desc", "")
         self.doc: str           = tag_def.get("doc", "")
         self.replaced_by: str   = tag_def.get("replaced_by", None)
-        self.deprecation_version: str = tag_def.get("deprecated", "")
+        self.pattern            = tag_def.get("replacement_pattern", "$value")
+        self.version: str       = tag_def.get("version", "")
