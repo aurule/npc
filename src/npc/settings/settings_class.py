@@ -5,10 +5,12 @@ Load and save settings info
 import yaml
 from collections import defaultdict
 from importlib import resources
+from functools import cached_property
 
 from pathlib import Path
 from npc.util import DataStore, ParseError
 from npc.util.functions import merge_data_dicts, prepend_namespace
+from .tags import make_deprecated_tag_specs
 from .helpers import quiet_parse
 from .systems import System
 
@@ -216,6 +218,18 @@ class Settings(DataStore):
             return None
 
         return System(key, self)
+
+    @cached_property
+    def deprecated_tags(self) -> dict:
+        """Get the deprecated tag definitions
+
+        These specs describe tags that should no longer be used at all, due to changes in the way that NPC
+        works.
+
+        Returns:
+            dict: Dict of deprecated tag info, indexed by tag name
+        """
+        return make_deprecated_tag_specs(self.get("npc.deprecated_tags", {}))
 
     @property
     def required_dirs(self) -> list:
