@@ -1,6 +1,7 @@
 from npc.campaign import Campaign
 from npc.characters import Character, CharacterReader, CharacterFactory
 from npc.validation import CharacterValidator, TagValidator
+from npc.validation.errors.tag_errors import TagDeprecatedError, TagUndefinedError
 from .tag_bucket import TagBucket
 
 import logging
@@ -24,27 +25,58 @@ class CharacterLinter:
         for rawtag in reader.tags():
             factory.apply_raw_tag(rawtag, tag_bucket, tag_context_stack)
 
-
         self.check_tags(tag_bucket, self.campaign.tags.values())
 
-    def check_tags(self, bucket: TagBucket, available_specs: list):
-        handled_specs = []
+    def check_tags(self, bucket: TagBucket, available_specs: list) -> list:
+        """Check a bucket of tags for errors
 
-        required_specs = (spec for spec in available_specs if (spec.required or spec.min))
+        The passed specs are used to run TagValidators against every tag in the bucket. In addition,
+        deprecated tags are pulled from our campaign's settings to ensure they don't appear in the bucket. The
+        self.errors attribute is modified by this method, as well as returned directly by it.
+
+        Args:
+            bucket (TagBucket): TagBucket of tags to examine
+            available_specs (list[TagSpec]): Specs to use for validating the tags
+
+        Returns:
+            list: List of TagError objects, or empty.
+        """
+        handled_names = []
+
+        deprecations = self.campaign.settings.deprecated_tags.values()
+        for spec in deprecations:
+            if bucket.tags[spec.name]:
+                self.errors.append(TagDeprecatedError(spec.name, spec.replaced_by))
+            handled_names.append(spec.name)
+
+        required_specs = (
+            spec
+            for spec in available_specs
+            if (spec.required or spec.min) and spec.name not in handled_names
+        )
         for spec in required_specs:
             logger.debug(f"tag {spec.name} is required")
             self.validate_spec(spec, bucket.tags[spec.name])
-            self.handled_specs.append(spec.name)
+            handled_names.append(spec.name)
 
-        # handle deprecated tags
-        # handled_specs.extend(deprecations)
-
-        remaining_specs = (spec for spec in available_specs if spec.name not in handled_specs and spec.name in bucket.tags.keys())
+        remaining_specs = (
+            spec
+            for spec in available_specs
+            if spec.name not in handled_names and spec.name in bucket.tags.keys()
+        )
         for spec in remaining_specs:
             logger.debug(f"tag {spec.name} was found")
             self.validate_spec(spec, bucket.tags[spec.name])
 
-        # handle tags with no spec
+        unknown_tags = (
+            key
+            for key in bucket.tags.keys()
+            if key not in handled_names
+        )
+        for tag_name in unknown_tags:
+            self.errors.append(TagUndefinedError(tag_name))
+
+        return self.errors
 
     def validate_spec(self, spec, tags: list):
         """Validate a list of tags against the given spec, then check their subtags
