@@ -32,6 +32,35 @@ def systems(settings):
     if campaign:
         echo(f"\nCurrently using {campaign.system.name}")
 
+##########################
+# Describe system details
+##########################
+
+@describe.command()
+@click.option("-s", "--system",
+    type=click.Choice(arg_settings.get_system_keys(), case_sensitive=False),
+    help="ID of the game system to show")
+@pass_settings
+def system(settings, system):
+    """Show details about a single system"""
+    campaign = cwd_campaign(settings)
+    try:
+        if system:
+            game_system = settings.get_system(system)
+        elif campaign:
+            game_system = campaign.system
+        else:
+            raise click.UsageError("Not a campaign, so the --system option must be provided")
+    except ParseError as err:
+        raise click.FileError(err.path, hint=err.strerror)
+
+    echo(f"=== {game_system.name} ===")
+    echo(game_system.doc, nl=False)
+    if game_system.links:
+        echo(f"\nRelevant Links:")
+        for link in game_system.links:
+            echo(f'* {link["label"]}: {link["url"]}')
+
 ###################
 # Describe types
 ###################
