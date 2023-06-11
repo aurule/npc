@@ -10,6 +10,7 @@ class TagSpec():
     def __init__(self, name: str, tag_def: dict):
         self.name: str          = name
         self.definition: dict   = tag_def
+        self.needs_context      = False
         self.desc: str          = tag_def.get("desc", "")
         self.doc: str           = tag_def.get("doc", "")
         self.replaced_by: str   = tag_def.get("replaced_by", "")

@@ -7,8 +7,9 @@ class SubTagSpec():
     parent tags and mean something different for each one. These different definitions are referred to as contexts.
     """
     def __init__(self, name: str):
-        self.name: str = name
-        self.contexts = {}
+        self.name: str      = name
+        self.needs_context  = True
+        self.contexts       = {}
 
     def add_context(self, parent_key: str, props_obj: TagSpec):
         """Add a context to this subtag
