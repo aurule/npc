@@ -120,38 +120,38 @@ changeling:
       replaced_by: mask
     motley:
       desc: Tight-knit group the changeling belongs to, like a family
-      doc: |
+      doc: >
         This is a magically-bound group of changelings which often lives
         together. Changelings socialize all the time outside of their motley,
         but it's these people the changeling comes home to.
       max: 1
     freehold:
       desc: Name of the main political group to which the changeling belongs
-      doc: |
+      doc: >
         Usually tied to a human city. Freeholds almost always have multiple
         courts within them.
       subtags:
         role:
           desc: Official position the changeling has in their freehold
-          doc: |
+          doc: >
             This is a position outside of their court. Freehold-wide roles are
             not common, but some freeholds use them to help unify the disparate
             courts.
     court:
       desc: Court the changeling belongs to
-      doc: |
+      doc: >
         Usually one of the seasonal courts: Winter, Spring, Summer, or Autumn.
       max: 1
       subtags:
         role:
           desc: Name of an official position the changeling holds within their court
-          doc: |
+          doc: >
             Most courts have a seasonal king or queen, and many courts have
             optional positions. Changelings in these roles help run the court or
             forward its goals within their freehold.
     entitlement:
       desc: Magical, prestigious group the changeling belongs to.
-      doc: |
+      doc: >
         These elite groups have specific criteria for changelings who wish to
         join. Some require a certain seeming, membership in a court, or displays
         of skill.
@@ -159,7 +159,7 @@ changeling:
       subtags:
         role:
           desc: Official position the changeling holds within their entitlement.
-          doc: |
+          doc: >
             Not all entitlements have specific roles. For those that do,
             achieving a certain role can be a major motivation for members.
     other:

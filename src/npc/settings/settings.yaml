@@ -7,20 +7,20 @@ npc:
       max: 1
     faketype:
       desc: A false character type that will be shown in listings
-      doc: |
+      doc: >
         The type referenced by the type key given is used in listings, while
         leaving the real character type in place. Useful for hiding that the
         town priest is secretly a vampire.
       max: 1
     name:
       desc: An additional name the character uses
-      doc: |
+      doc: >
         Mainly useful for characters with a nickname or multiple false
         identities. The character's main name comes from the filename (or the
         realname tag).
     realname:
       desc: The true primary name for the character
-      doc: |
+      doc: >
         Useful when the real name uses characters that are not allowed in a
         filename (like "quotes" around a common nickname).
       max: 1
@@ -28,30 +28,30 @@ npc:
       desc: Honorific title for the character, like The Kingslayer.
     pronouns:
       desc: Pronouns the character uses
-      doc: |
+      doc: >
         Particularly useful for androgynous fantasy races or for disambiguation
         between languages.
     gender:
       desc: Gender role this character has
     appearance:
       desc: What the character looks like to other people
-      doc: |
+      doc: >
         This is expected to be as long and descriptive as needed. Multiple
         appearance tags will be joined together with a newline in generated
         listings to allow multiple paragraphs.
     race:
       desc: Observable ancestry of the character
-      doc: |
+      doc: >
         Extremely setting-dependent: anything from Greek and Egyptian, to Human
         and Elvish.
     age:
       desc: How old the character is
-      doc: |
+      doc: >
         This can be a plain number like 52, or a full descriptor like 'Five
         life-ages of the Earth'.
     portrait:
       desc: Path to an image file to use for the character
-      doc: |
+      doc: >
         If you're hosting character listings somewhere, then the filename or
         path given here must also exist exactly as given on your server.
         Relative paths are usually easiest to work with.
@@ -63,25 +63,25 @@ npc:
       desc: Even more specific area in which the character lives. Typically contained within their region.
     wanderer:
       desc: Indicates that the character has no permanent home
-      doc: |
+      doc: >
         Can optionally contain a description of their travel habits, etc.
       allow_empty: true
     foreign:
       desc: Indicates that the character lives somewhere outside the main play area
-      doc: |
+      doc: >
         Can optionally contain a description of where they do live.
       allow_empty: true
     group:
       replaced_by: org
       desc: Name of a group that the character belongs to
-      doc: |
+      doc: >
         This is a highly multipurpose tag and can represent membership in
         anything from a university's faculty to a street gang.
       subtags:
         rank:
           replaced_by: role
           desc: The character's rank or role within this group
-          doc: |
+          doc: >
             The rank tag does not have to mean a literal rank, because not all
             groups have that. It really just represents how people within the
             group see this character. A character with @group MIT Faculty might
@@ -89,20 +89,20 @@ npc:
             Street Muggers, they might have the rank Lookout, or Pickpocket.
     org:
       desc: Official organization to which the character belongs
-      doc: |
+      doc: >
         This is a multipurpose tag designed to represent membership in any
         official grouping of people: from university faculty to a street gang.
       subtags:
         role:
           desc: The role or position the character holds within this organization
-          doc: |
+          doc: >
             A character's role can be as vague or specific as makes sense for
             the org in question. A character with @org MIT Faculty might have
             the role of Professor, Student, or Janitor. In the org Fifth Street
             Muggers, they might have the role Lookout, or Pickpocket.
         rank:
           desc: A formal rank the character holds within this organization
-          doc: |
+          doc: >
             Some orgs have formal ranks that may or may not be related to a
             member's duties. Someone in an army might have the role Soldier
             and a rank of Private or Sergeant.
@@ -113,25 +113,25 @@ npc:
           desc: Name of the character's job at their employer
     tie:
       desc: Name of a person to whom the character is socially tied
-      doc: |
+      doc: >
         Useful for noting families and other loose relationships that form
         outside of regimented groups.
       subtags:
         rel:
           desc: The nature of the relationship the character has to the tied person
-          doc: |
+          doc: >
             This subtag should almost always be used, as the nature of a
             relationship is at least as important as the fact that it exists.
             Good for denoting parents, children, siblings, school rivals,
             nemeses, or pretty much any other kind of relationship.
     lineage:
       desc: Brief listing of the character's ancestors
-      doc: |
+      doc: >
         Useful mainly for monarchs, snooty vampires, and seventh sons of seventh
         sons.
     dead:
       desc: Indicates that the character is deceased
-      doc: |
+      doc: >
         Can optionally contains a description of how they perished. This tag is
         meant to be used for characters who are really, truly dead (at this
         point in the story). For immortals or characters who have been
@@ -140,27 +140,27 @@ npc:
       allow_empty: true
     sticky:
       desc: Prevent this file from being moved by the reorg command
-      doc: |
+      doc: >
         The automatic file sorting is not ever going to be perfect, so this tag
         lets you tell it to leave a particular file alone.
       no_value: true
       max: 1
     nolint:
       desc: Do not show linting errors for this character
-      doc: |
+      doc: >
         This flag is great for character file templates, or characters who
         intentionally deviate from the game system's norms.
       no_value: true
       max: 1
     delist:
       desc: Do not show this character in listings
-      doc: |
+      doc: >
         Ideal for hiding secret minions, unnamed mooks, etc.
       no_value: true
       max: 1
     hide:
       desc: Conceal the named tag from listings
-      doc: |
+      doc: >
         For when you want a character to appear in the listing, but have some
         important details remain a mystery.
 
@@ -189,14 +189,14 @@ npc:
   reserved_tags:
     description:
       desc: Generated automatically for bare text in the tag area
-      doc: |
+      doc: >
         Public text about this character, like who they are, their history, what
         they want, etc. This is an internal tag used to store bare text that
         appears in the tags area of npc sheets. It should not be used
         explicitly.
     mnemonic:
       desc: Intended to exist only in the filename
-      doc: |
+      doc: >
         One or two words that will jog your memory about this character. The
         mnemonic is supposed to help you easily browse character files, so it is
         part of the filename.

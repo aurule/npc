@@ -6,7 +6,7 @@ vampire:
       desc: The vampire's generation
     sire:
       desc: Name of the vampire who turned this character into another vampire
-      doc: |
+      doc: >
         Sometimes vampiric lineage is a really big deal. Other times, it's just
         nice to know who's been fangin' around.
     clan:
@@ -23,20 +23,20 @@ vampire:
           desc: A status held by the vampire which is recognized in this sect
         role:
           desc: A high-level role the vampire fulfills within the sect
-          doc: |
+          doc: >
             Some roles are not limited to a single city, but are important to
             the functioning of an entire sect. Archons, Cardinals, and Prisci
             would be noted here.
     crew:
       desc: Name of the pack, gang, or coterie to which this vampire belongs
-      doc: |
+      doc: >
         Vampires often form small social groups so they can work together toward
         a shared purpose. They have different names in different sects, but the
         outcome is the same.
       subtags:
         role:
           desc: The role the vampire has in their crew
-          doc: |
+          doc: >
             Not all crews have distinct roles. This tag is primarily useful in
             Sabbat packs to note the ductus, abbot, and priest. It can also be
             used to note the less rigid roles certain vamipres play within their
@@ -46,7 +46,7 @@ vampire:
       subtags:
         role:
           desc: The role the vampire has in their city
-          doc: |
+          doc: >
             This tag is best used for positions like prince, bishop, harpy, etc.
             that are only important within that city. If a position is
             recognized more universally, it's probably best represented using

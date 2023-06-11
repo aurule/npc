@@ -1,7 +1,7 @@
 fetch:
   name: Fetch
   desc: The replacement a gentry leaves behind when it abducts a changeling
-  doc: |
+  doc: >
     Fetches are the other half a changeling, usually designed by the gentry or
     by fate to take over the life of the abducted human.
   tags:

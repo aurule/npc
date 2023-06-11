@@ -1,7 +1,7 @@
 fate-ep:
   name: "Eclipse Phase: Transhumanity's Fate"
   desc: Transhuman adventure in FATE
-  doc: |
+  doc: >
     Play as secret agents protecting the scattered remnants of transhumanity
     from threats that could wipe it out once and for all. You're a transhuman --
     a genetically modified human, an intelligent animal, a mind in a robotic
@@ -40,7 +40,7 @@ fate-ep:
       desc: Name of the character's muse
     refresh:
       desc: Number of fate points the character starts with
-      doc: |
+      doc: >
         Usually only relevant for PCs, since NPCs use a shared pool of GM fate
         points in every scene.
     stunt:
