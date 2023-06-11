@@ -93,6 +93,42 @@ def types(settings, system):
     chartype_data = [[chartype.name, chartype.key, chartype.desc] for chartype in chartypes.values()]
     echo(tabularize(chartype_data, headers = chartype_headers, title = title))
 
+########################
+# Describe type details
+########################
+
+@describe.command()
+@click.option("-s", "--system",
+    type=click.Choice(arg_settings.get_system_keys(), case_sensitive=False),
+    help="ID of the game system to use")
+@click.option("-t", "--type", "type_",
+    required=True,
+    help="Character type to show")
+@pass_settings
+def type(settings, system, type_):
+    """Show details about a single character type"""
+    campaign = cwd_campaign(settings)
+    try:
+        if system:
+            target = settings.get_system(system)
+        elif campaign:
+            target = campaign
+        else:
+            raise click.UsageError("Not a campaign, so the --system option must be provided")
+    except ParseError as err:
+        raise click.FileError(err.path, hint=err.strerror)
+
+    if type_ not in target.types:
+        raise click.BadParameter(f"'{type_}' is not one of {type_list(target.types)}", param_hint="'-t' / '--type'")
+    chartype = target.get_type(type_)
+
+    echo(f"Character Type: {chartype.name}")
+    echo(f"ID: {chartype.key}")
+    echo(f"File suffix: {chartype.default_sheet_suffix}")
+    echo(f"Sheet template: {chartype.sheet_path}")
+    echo("")
+    echo(chartype.desc)
+
 ###################
 # Describe tags
 ###################
