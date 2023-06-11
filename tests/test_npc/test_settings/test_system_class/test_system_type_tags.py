@@ -17,7 +17,6 @@ def test_includes_system_tags():
     assert "concept" in tags
 
 def test_includes_type_tags():
-
     settings = Settings()
     system = settings.get_system("nwod")
 

@@ -211,3 +211,17 @@ class System():
         type_tag_defs: dict = char_type.definition.get("tags", {})
         combined_defs = merge_data_dicts(type_tag_defs, self.system_tag_defs)
         return make_tags(combined_defs)
+
+    def get_type_tag(self, tag_name: str, type_key: str) -> TagSpec:
+        """Get a single tag as configured for this system and type
+
+        Uses the combied system and type definitions
+
+        Args:
+            tag_name (str): Name of the tag to get
+            type_key (str): Key for the character type to get a tag for
+
+        Returns:
+            TagSpec: Spec of the named tag, or a new UndefinedTagSpec if that tag has no definition
+        """
+        return self.type_tags(type_key).get(tag_name, UndefinedTagSpec(tag_name))
