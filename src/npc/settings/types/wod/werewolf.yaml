@@ -4,7 +4,7 @@ werewolf:
   tags:
     breed:
       desc: The werewolf's breed
-      doc: >
+      doc: |
         A werewolf's breed is the shape they were born in.
       values:
         - Lupus
@@ -12,7 +12,7 @@ werewolf:
         - Homid
     auspice:
       desc: The werewolf's auspice
-      doc: >
+      doc: |
         Determined by the phase of the moon in the sky where and when the
         werewolf was born.
       values:

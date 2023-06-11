@@ -1,7 +1,7 @@
 fate:
   name: Fate Core
   desc: A rules-light storytelling system
-  doc: >
+  doc: |
     Fate Core is a dynamic and flexible roleplaying game built around proactive
     characters. Its mechanics allow play in any number of settings, from the mad
     science robotics of Atomic Robo to the superheroes of Venture City.
@@ -25,7 +25,7 @@ fate:
       desc: One of the character's aspects
     refresh:
       desc: Number of fate points the character starts with
-      doc: >
+      doc: |
         Usually only relevant for PCs, since NPCs use a shared pool of GM fate
         points in every scene.
     stunt:
