@@ -10,7 +10,7 @@ class TestWithoutCampaign():
 
         result = runner.invoke(cli, ["describe", "tags"])
 
-        assert "--system option must be provided" in result.output
+        assert "'--system' option must be provided" in result.output
 
     def test_shows_system_tags(self):
         runner = CliRunner()

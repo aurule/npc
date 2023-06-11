@@ -4,7 +4,7 @@ from click import echo
 from npc import characters
 from npc_cli.presenters import type_list
 from npc_cli.helpers import cwd_campaign, write_new_character
-from npc_cli.errors import CampaignNotFoundException
+from npc_cli.errors import CampaignNotFoundException, BadCharacterTypeException
 
 from .main_group import cli, pass_settings
 
@@ -53,7 +53,7 @@ def new(settings, type_key, name, mnemonic, desc, tags):
         raise CampaignNotFoundException
 
     if type_key not in campaign.types:
-        raise click.BadParameter(f"'{type_key}' is not one of {type_list(campaign.types)}", param_hint="'TYPE_KEY'")
+        raise BadCharacterTypeException(type_key, type_list(campaign.types), "'TYPE_KEY'")
 
     type_spec = campaign.get_type(type_key)
     body = type_spec.default_sheet_body()

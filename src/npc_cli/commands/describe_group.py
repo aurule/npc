@@ -4,6 +4,7 @@ from click import echo
 from npc.util import ParseError
 from npc_cli.presenters import tabularize, type_list, wrapped_paragraphs, tag_table_data
 from npc_cli.helpers import cwd_campaign
+from npc_cli.errors import BadCharacterTypeException, CampaignRequiredException
 
 from .main_group import cli, arg_settings, pass_settings
 
@@ -50,7 +51,7 @@ def system(settings, system):
         elif campaign:
             game_system = campaign.system
         else:
-            raise click.UsageError("Not a campaign, so the --system option must be provided")
+            raise CampaignRequiredException
     except ParseError as err:
         raise click.FileError(err.path, hint=err.strerror)
 
@@ -85,7 +86,7 @@ def types(settings, system):
             chartypes = campaign.types
             title = f"Character Types in {campaign.name}"
         else:
-            raise click.UsageError("Not a campaign, so the --system option must be provided")
+            raise CampaignRequiredException
     except ParseError as err:
         raise click.FileError(err.path, hint=err.strerror)
 
@@ -114,12 +115,12 @@ def type(settings, system, type_):
         elif campaign:
             target = campaign
         else:
-            raise click.UsageError("Not a campaign, so the --system option must be provided")
+            raise CampaignRequiredException
     except ParseError as err:
         raise click.FileError(err.path, hint=err.strerror)
 
     if type_ not in target.types:
-        raise click.BadParameter(f"'{type_}' is not one of {type_list(target.types)}", param_hint="'-t' / '--type'")
+        raise BadCharacterTypeException(type_, type_list(target.types), "'-t' / '--type'")
     chartype = target.get_type(type_)
 
     echo(f"Character Type: {chartype.name}")
@@ -153,14 +154,14 @@ def tags(settings, system_key, type_):
             target = campaign
             system = campaign.system
         else:
-            raise click.UsageError("Not a campaign, so the --system option must be provided")
+            raise CampaignRequiredException
     except ParseError as err:
         raise click.FileError(err.path, hint=err.strerror)
 
     headers = ["Name", "Description"]
     if type_:
         if type_ not in target.types:
-            raise click.BadParameter(f"'{type_}' is not one of {type_list(target.types)}", param_hint="'-t' / '--type'")
+            raise BadCharacterTypeException(type_, type_list(target.types), "'-t' / '--type'")
 
         title = f"Tags for {target.get_type(type_).name} in {target.name}"
         tags = target.type_tags(type_)
@@ -198,14 +199,14 @@ def tag(settings, system_key, type_, tag_name, context):
             target = campaign
             system = campaign.system
         else:
-            raise click.UsageError("Not a campaign, so the --system option must be provided")
+            raise CampaignRequiredException
     except ParseError as err:
         raise click.FileError(err.path, hint=err.strerror)
 
     headers = ["Name", "Description"]
     if type_:
         if type_ not in target.types:
-            raise click.BadParameter(f"'{type_}' is not one of {type_list(target.types)}", param_hint="'-t' / '--type'")
+            raise BadCharacterTypeException(type_, type_list(target.types), "'-t' / '--type'")
         spec = target.get_type_tag(tag_name, type_)
     else:
         spec = target.get_tag(tag_name)
