@@ -2,4 +2,4 @@
 Package for the npc command-line program
 """
 
-from .cli import cli
+from .commands.main_group import cli
