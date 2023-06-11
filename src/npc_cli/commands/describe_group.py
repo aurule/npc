@@ -55,6 +55,8 @@ def system(settings, system):
         raise click.FileError(err.path, hint=err.strerror)
 
     echo(f"=== {game_system.name} ===")
+    echo(game_system.desc)
+    echo("")
     echo(game_system.doc, nl=False)
     if game_system.links:
         echo(f"\nRelevant Links:")
