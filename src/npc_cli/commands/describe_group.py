@@ -170,3 +170,56 @@ def tags(settings, system_key, type_):
 
     data = tag_table_data(tags)
     echo(tabularize(data, headers = headers, title = title))
+
+#######################
+# Describe tag details
+#######################
+
+@describe.command()
+@click.option("-s", "--system", "system_key",
+    type=click.Choice(arg_settings.get_system_keys(), case_sensitive=False),
+    help="ID of the game system to use")
+@click.option("-t", "--type", "type_",
+    help="ID of the character type to use for finding the tag")
+@click.option("-a", "--tag", "tag_name",
+    required=True,
+    help="Name of the tag to show")
+@click.option("-c", "--context",
+    help="Name of the tag's parent, if looking for a subtag")
+@pass_settings
+def tag(settings, system_key, type_, tag_name, context):
+    """Show details for the named tag"""
+    campaign = cwd_campaign(settings)
+    try:
+        if system_key:
+            target = settings.get_system(system_key)
+            system = target
+        elif campaign:
+            target = campaign
+            system = campaign.system
+        else:
+            raise click.UsageError("Not a campaign, so the --system option must be provided")
+    except ParseError as err:
+        raise click.FileError(err.path, hint=err.strerror)
+
+    headers = ["Name", "Description"]
+    if type_:
+        if type_ not in target.types:
+            raise click.BadParameter(f"'{type_}' is not one of {type_list(target.types)}", param_hint="'-t' / '--type'")
+        spec = target.get_type_tag(tag_name, type_)
+    else:
+        spec = target.get_tag(tag_name)
+
+    if spec.needs_context:
+        if not context:
+            raise click.UsageError(f"Tag '{tag_name}' is a subtag, so the --context option must be provided")
+        spec = spec.in_context(context)
+        title = f"Tag: @{spec.name} (subtag of @{context})"
+    else:
+        title = f"Tag: @{spec.name}"
+
+    echo(title)
+    echo(spec.desc)
+    for line in wrapped_paragraphs(spec.doc):
+        echo("")
+        echo(line)
