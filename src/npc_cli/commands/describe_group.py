@@ -22,7 +22,7 @@ def describe():
 @describe.command()
 @pass_settings
 def systems(settings):
-    """Show the configured game systems"""
+    """Show all configured game systems"""
     systems = [settings.get_system(key) for key in settings.get_system_keys()]
     system_headers = ["Name", "Key", "Description"]
     system_data = [[system.name, system.key, system.desc] for system in systems]
@@ -74,7 +74,7 @@ def system(settings, system):
     help="ID of the game system to use")
 @pass_settings
 def types(settings, system):
-    """Show the configured character types"""
+    """Show all configured character types"""
     campaign = cwd_campaign(settings)
     try:
         if system:
@@ -101,10 +101,10 @@ def types(settings, system):
 @click.option("-s", "--system", "system_key",
     type=click.Choice(arg_settings.get_system_keys(), case_sensitive=False),
     help="ID of the game system to use")
-@click.option("-t", "--type", "type_", help="Show tags for only this character type")
+@click.option("-t", "--type", "type_", help="Only show valid tags for this character type")
 @pass_settings
 def tags(settings, system_key, type_):
-    """Show the configured tags for this campaign
+    """Show all configured tags for this campaign
 
     Can show the tags available to all character types, or just the ones for a specific type.
     """
@@ -124,7 +124,7 @@ def tags(settings, system_key, type_):
     headers = ["Name", "Description"]
     if type_:
         if type_ not in target.types:
-            raise click.BadParameter(f"'{type_}' is not one of {type_list(target.types)}", param_hint="'-p' / '--type'")
+            raise click.BadParameter(f"'{type_}' is not one of {type_list(target.types)}", param_hint="'-t' / '--type'")
 
         title = f"Tags for {target.get_type(type_).name} in {target.name}"
         tags = target.type_tags(type_).values()
