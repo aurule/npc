@@ -17,6 +17,8 @@ class System():
 
         self.name: str = system_def.get("name", "")
         self.desc: str = system_def.get("desc", "")
+        self.doc: str = system_def.get("doc", "")
+        self.links: str = system_def.get("links", [])
         self.extends: str = system_def.get("extends")
         self.settings = settings
 
