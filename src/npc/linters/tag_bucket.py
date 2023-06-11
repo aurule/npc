@@ -13,6 +13,7 @@ class TagBucket:
     def __init__(self, character: Character = None):
         self.character = character
         self.tags = defaultdict(list)
+        self.name = "Tag Bucket"
 
     def accepts_tag(self, tag_name: str) -> bool:
         """Indicate that TagBucket objects accept all tags
