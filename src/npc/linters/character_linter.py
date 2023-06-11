@@ -14,8 +14,19 @@ class CharacterLinter:
         self.errors = []
 
     def lint(self) -> list:
+        """Check our character for problems
+
+        Runs a character linter and then various tag linters. Does not check that the tags and character
+        attributes actually match.
+
+        Returns:
+            list: List of ValidationError objects, or empty.
+        """
         character_validator = CharacterValidator(self.campaign)
         self.errors = character_validator.validate(self.character)
+
+        if not (self.character.file_loc and self.character.file_path.exists()):
+            return self.errors
 
         tag_bucket = TagBucket(self.character)
 
@@ -23,9 +34,16 @@ class CharacterLinter:
         factory = CharacterFactory(self.campaign)
         tag_context_stack = [tag_bucket]
         for rawtag in reader.tags():
-            factory.apply_raw_tag(rawtag, tag_bucket, tag_context_stack)
+            factory.apply_raw_tag(rawtag, tag_bucket, tag_context_stack, mapped=False)
 
-        self.check_tags(tag_bucket, self.campaign.tags.values())
+        specs = (
+            spec
+            for spec in self.campaign.tags.values()
+            if not spec.needs_context
+        )
+        self.check_tags(tag_bucket, specs)
+
+        return self.errors
 
     def check_tags(self, bucket: TagBucket, available_specs: list) -> list:
         """Check a bucket of tags for errors
@@ -39,7 +57,7 @@ class CharacterLinter:
             available_specs (list[TagSpec]): Specs to use for validating the tags
 
         Returns:
-            list: List of TagError objects, or empty.
+            list: List of TagValidationError objects, or empty.
         """
         handled_names = []
 
