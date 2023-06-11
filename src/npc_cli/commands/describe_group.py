@@ -2,7 +2,7 @@ import click
 from click import echo
 
 from npc.util import ParseError
-from npc_cli.presenters import tabularize, type_list
+from npc_cli.presenters import tabularize, type_list, wrapped_paragraphs
 from npc_cli.helpers import cwd_campaign
 
 from .main_group import cli, arg_settings, pass_settings
@@ -56,8 +56,9 @@ def system(settings, system):
 
     echo(f"=== {game_system.name} ===")
     echo(game_system.desc)
-    echo("")
-    echo(game_system.doc, nl=False)
+    for line in wrapped_paragraphs(game_system.doc):
+        echo("")
+        echo(line)
     if game_system.links:
         echo(f"\nRelevant Links:")
         for link in game_system.links:

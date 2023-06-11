@@ -1,3 +1,6 @@
+from click import wrap_text
+from typing import Generator
+
 from npc.campaign import Campaign
 
 def directory_list(dirs: list) -> str:
@@ -84,3 +87,18 @@ def tabularize(rows: list[list], headers: list[str], title: str = None) -> str:
         lines.append("| " + " | ".join([f"{row[colnum]:<{width}}" for colnum, width in enumerate(colwidths)]) + " |")
 
     return "\n".join(lines)
+
+def wrapped_paragraphs(bigstring: str) -> Generator[str, None, None]:
+    """Turn a large string into multiple word-wrapped strings
+
+    This treats each line in bigstring as a single paragraph and does word wrapping using Click's wrap_text
+    function.
+
+    Args:
+        bigstring (str): The string to break into paragraphs and wrap
+
+    Yields:
+        One word-wrapped string per line in bigstring.
+    """
+    for line in bigstring.splitlines():
+        yield wrap_text(line)
