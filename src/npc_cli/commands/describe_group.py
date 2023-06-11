@@ -2,7 +2,7 @@ import click
 from click import echo
 
 from npc.util import ParseError
-from npc_cli.presenters import tabularize, type_list, wrapped_paragraphs
+from npc_cli.presenters import tabularize, type_list, wrapped_paragraphs, tag_table_data
 from npc_cli.helpers import cwd_campaign
 
 from .main_group import cli, arg_settings, pass_settings
@@ -163,9 +163,10 @@ def tags(settings, system_key, type_):
             raise click.BadParameter(f"'{type_}' is not one of {type_list(target.types)}", param_hint="'-t' / '--type'")
 
         title = f"Tags for {target.get_type(type_).name} in {target.name}"
-        tags = target.type_tags(type_).values()
+        tags = target.type_tags(type_)
     else:
         title = f"Tags in {target.name}"
-        tags = target.tags.values()
-    data = [[tag.name, tag.desc] for tag in tags if not tag.needs_context]
+        tags = target.tags
+
+    data = tag_table_data(tags)
     echo(tabularize(data, headers = headers, title = title))

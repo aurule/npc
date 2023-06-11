@@ -46,7 +46,7 @@ def campaign_info(campaign: Campaign) -> str:
     ]
     return "\n".join(infos)
 
-def tabularize(rows: list[list], headers: list[str], title: str = None) -> str:
+def tabularize(data: list[tuple], headers: tuple[str], title: str = None) -> str:
     """Generate a multimarkdown-style table
 
     Creates a table with the given data, headers, and optional title. Tables look like:
@@ -61,14 +61,14 @@ def tabularize(rows: list[list], headers: list[str], title: str = None) -> str:
     | Changeling | changeling | A human who was captured by the fae and returned to the mundane world |
 
     Args:
-        rows (list[list]): List of row data. Each row is a list whose contents are the values of each column.
-        headers (list[str]): List of header strings.
+        data (list[tuple]): List of row data. Each row is a tuple whose contents are the values of each column.
+        headers (tuple[str]): List of header strings.
         title (str): Title to add to the table (default: `None`)
 
     Returns:
         str: Formatted table of data
     """
-    rows.insert(0, headers)
+    rows = [headers, *data]
     colwidths: list = []
     for index in range(len(headers)):
         colwidths.append(max([len(row[index]) for row in rows]))
@@ -102,3 +102,20 @@ def wrapped_paragraphs(bigstring: str) -> Generator[str, None, None]:
     """
     for line in bigstring.splitlines():
         yield wrap_text(line)
+
+def tag_table_data(tags: dict) -> Generator[tuple, None, None]:
+    """Generate tag and subtag table lines
+
+    Args:
+        tags (dict): Dict of tag specs to show
+
+    Yields:
+        tuple of tag info
+    """
+    for tag in tags.values():
+        if tag.needs_context:
+            continue
+        yield [tag.name, tag.desc]
+        for subtag_name in tag.subtags:
+            subtag = tags.get(subtag_name).in_context(tag.name)
+            yield [f"\u2514 {subtag.name}", subtag.desc]
