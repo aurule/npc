@@ -47,6 +47,7 @@ class CharacterCollection():
                 mnemonic = reader.mnemonic(),
                 body = reader.body(),
                 tags = reader.tags(),
+                path = reader.character_path,
             )
 
     @cached_property
