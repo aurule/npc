@@ -11,6 +11,9 @@ class SubTagSpec():
         self.needs_context  = True
         self.contexts       = {}
 
+    def __repr__(self) -> str:
+        return f"SubTagSpec(name={self.name!r}, contexts={list(self.contexts.keys())})"
+
     def add_context(self, parent_key: str, props_obj: TagSpec):
         """Add a context to this subtag
 

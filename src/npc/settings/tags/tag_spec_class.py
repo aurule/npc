@@ -44,6 +44,9 @@ class TagSpec():
             logger.warning(f"Tag {self.name} has list of accepted values, but is flagged no_value. Removing flag.")
             self.no_value = False
 
+    def __repr__(self) -> str:
+        return f"TagSpec(name={self.name!r}, subtags={self.subtags!r})"
+
     def add_context(self, parent_key: str, *args):
         raise TypeError(f"The tag {parent_key} is trying to use {self.name} as a subtag, but {self.name} is already defined as a regular tag")
 
@@ -58,3 +61,6 @@ class UndefinedTagSpec(TagSpec):
 
     def __init__(self, name: str):
         super().__init__(name, tag_def={})
+
+    def __repr__(self) -> str:
+        return f"UndefinedTagSpec(name={self.name!r})"
