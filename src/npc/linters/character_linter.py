@@ -28,19 +28,18 @@ class CharacterLinter:
         if not (self.character.file_loc and self.character.file_path.exists()):
             return self.errors
 
-        tag_bucket = TagBucket(self.character)
-
         reader = CharacterReader(self.character.file_path)
         factory = CharacterFactory(self.campaign)
-        tag_context_stack = [tag_bucket]
+        tag_bucket = TagBucket(self.character)
+        tag_context_stack: list = [tag_bucket]
         for rawtag in reader.tags():
             factory.apply_raw_tag(rawtag, tag_bucket, tag_context_stack, mapped=False)
 
-        specs = (
+        specs = [
             spec
             for spec in self.campaign.tags.values()
             if not spec.needs_context
-        )
+        ]
         self.check_tags(tag_bucket, specs)
 
         return self.errors
@@ -85,6 +84,7 @@ class CharacterLinter:
         for spec in remaining_specs:
             logger.debug(f"tag {spec.name} was found")
             self.validate_spec(spec, bucket.tags[spec.name])
+            handled_names.append(spec.name)
 
         unknown_tags = (
             key
