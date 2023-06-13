@@ -2,8 +2,9 @@ import click
 from click import echo
 
 from npc import characters, linters
+from npc.reporters import tag_reporter
 from npc.util import edit_files
-from npc_cli.presenters import type_list
+from npc_cli.presenters import type_list, tabularize
 from npc_cli.helpers import cwd_campaign, write_new_character
 from npc_cli.errors import CampaignNotFoundException, BadCharacterTypeException
 
@@ -104,3 +105,35 @@ def lint(settings, edit):
 
     if edit and error_characters:
         edit_files(error_characters, settings = settings)
+
+#######################
+# Show tag stastistics
+#######################
+
+REPORT_TYPES = ("usage", "values")
+
+@cli.command()
+@click.option("-t", "--tag", "tag_name",
+    help="Tag to analyze")
+@click.option("-r", "--report-on", "report_type",
+    type=click.Choice(REPORT_TYPES, case_sensitive=False),
+    default="values",
+    help="What kind of data to report on")
+@pass_settings
+def report(settings, tag_name, report_type):
+    campaign = cwd_campaign(settings)
+    if campaign is None:
+        raise CampaignNotFoundException
+
+    campaign.characters.refresh()
+
+    match report_type:
+        case "usage":
+            pass
+        case "values":
+            data = tag_reporter.value_counts_report(tag_name)
+            headers = ("Value", "Count")
+
+    title: str = f"@{tag_name} tag {report_type} report"
+
+    echo(tabularize(data, headers=headers, title=title))
