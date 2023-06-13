@@ -12,6 +12,7 @@ class CharacterValidationError(ValidationError):
 class CharacterMissingAttributeError(CharacterValidationError):
     def __init__(self, character_name: str, attribute: str):
         super().__init__(f"missing {attribute}", character_name)
+        self.preamble = f"Attribute error"
         self.attribute: str = attribute
 
     def __repr__(self) -> str:
