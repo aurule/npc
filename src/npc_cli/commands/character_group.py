@@ -72,6 +72,10 @@ def new(settings, type_key, name, mnemonic, desc, tags):
 
     edit_files([character.file_path], settings = settings)
 
+#######################
+# Lint character files
+#######################
+
 @cli.command()
 @click.option("--edit/--no-edit",
     default=False,
