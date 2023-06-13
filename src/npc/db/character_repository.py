@@ -48,3 +48,13 @@ def tags(character: Character) -> Select:
     return select(Tag) \
         .filter(Tag.character_id == character.id) \
         .order_by(Tag.id)
+
+def all() -> Select:
+    """Create a db query to get all Character records
+
+    This is about the simplest query possible, and exists for completeness and potential future expansion.
+
+    Returns:
+        Select: Select object for the character query
+    """
+    return select(Character)

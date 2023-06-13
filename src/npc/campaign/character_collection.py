@@ -77,3 +77,15 @@ class CharacterCollection():
             session.commit()
 
         return character.id
+
+    def all(self):
+        """Get all character records
+
+        These records will be detached from any session, so a different manual session will be needed to get
+        their tags.
+
+        Returns:
+            result: Database result of the character objects
+        """
+        with self.db.session() as session:
+            return session.scalars(character_repository.all())
