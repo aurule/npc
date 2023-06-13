@@ -2,6 +2,7 @@ import click
 from click import echo
 
 from npc import characters
+from npc.util import edit_files
 from npc_cli.presenters import type_list
 from npc_cli.helpers import cwd_campaign, write_new_character
 from npc_cli.errors import CampaignNotFoundException, BadCharacterTypeException
@@ -36,7 +37,7 @@ def new(settings, type_key, name, mnemonic, desc, tags):
     """Create a new character
 
     This command only works within an existing campaign.
-    If a name and note are not given, you'll be prompted to add them.
+    If a name and mnemonic are not given, you'll be prompted to add them.
 
     \b
     Examples:
@@ -69,4 +70,4 @@ def new(settings, type_key, name, mnemonic, desc, tags):
 
     write_new_character(character, campaign)
 
-    npc.util.edit_files([character.file_path], settings = settings)
+    edit_files([character.file_path], settings = settings)
