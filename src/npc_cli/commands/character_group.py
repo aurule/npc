@@ -1,7 +1,7 @@
 import click
 from click import echo
 
-from npc import characters
+from npc import characters, linters
 from npc.util import edit_files
 from npc_cli.presenters import type_list
 from npc_cli.helpers import cwd_campaign, write_new_character
@@ -71,3 +71,32 @@ def new(settings, type_key, name, mnemonic, desc, tags):
     write_new_character(character, campaign)
 
     edit_files([character.file_path], settings = settings)
+
+@cli.command()
+@click.option("--edit/--no-edit",
+    default=False,
+    help="Whether to open all character files with errors")
+@pass_settings
+def lint(settings, edit):
+    """Check character files for errors
+
+    This command only works within an existing campaign.
+    """
+    campaign = cwd_campaign(settings)
+    if campaign is None:
+        raise CampaignNotFoundException
+
+    campaign.characters.refresh()
+
+    error_characters = []
+    for character in campaign.characters.all():
+        linter = linters.CharacterLinter(character, campaign)
+        linter.lint()
+        if linter.errors:
+            error_characters.append(character.file_path)
+            echo(f"{character.name} has {len(linter.errors)} errors:")
+            for error in linter.errors:
+                echo(f"* {error.message}")
+
+    if edit and error_characters:
+        edit_files(error_characters, settings = settings)
