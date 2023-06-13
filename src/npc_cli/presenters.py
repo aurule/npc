@@ -71,7 +71,7 @@ def tabularize(data: list[tuple], headers: tuple[str], title: str = None) -> str
     rows = [headers, *data]
     colwidths: list = []
     for index in range(len(headers)):
-        colwidths.append(max([len(row[index]) for row in rows]))
+        colwidths.append(max([len(str(row[index])) for row in rows]))
 
     lines: list[str] = [
         "| " + " | ".join([f"{rows[0][colnum]:<{width}}" for colnum, width in enumerate(colwidths)]) + " |",

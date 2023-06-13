@@ -14,3 +14,8 @@ def test_shows_data():
     table = tabularize([("first", "second")], ("Test", "Header"))
 
     assert "first" in table
+
+def test_shows_int_data():
+    table = tabularize([(1, "second")], ("Test", "Header"))
+
+    assert "1" in table
