@@ -1,4 +1,9 @@
-from sqlalchemy import select, Select
+"""Repository of character-related queries
+
+These queries get data that's related to a character or its tags.
+"""
+
+from sqlalchemy import select, Select, func, desc
 from npc.characters import Tag, Character
 
 def tag_values_by_name(character: Character, *names: str) -> Select:
@@ -58,3 +63,19 @@ def all() -> Select:
         Select: Select object for the character query
     """
     return select(Character)
+
+def attr_counts(name: str) -> Select:
+    """Create a db query to get a count for all values of an attribute
+
+    Builds a query that counts the appearances of each value of an attribute
+
+    Args:
+        name (str): Name of the attribute to count. Must appear in Character.MAPPED_TAGS
+
+    Returns:
+        Select: Select object for the character query
+    """
+    attr = getattr(Character, Character.MAPPED_TAGS.get(name))
+    return select(attr, func.count(1).label("attr_count")) \
+        .group_by(attr) \
+        .order_by(desc("attr_count"))
