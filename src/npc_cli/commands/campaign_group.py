@@ -18,7 +18,7 @@ from .main_group import cli, arg_settings, pass_settings
 @click.option("-d", "--desc", help="Description of the campaign", default="Campaign description")
 @click.option("-s", "--system",
     type=click.Choice(arg_settings.get_system_keys(), case_sensitive=False),
-    required=True,
+    prompt=True,
     help="ID of the game system to use")
 @click.argument(
     "campaign_path",
