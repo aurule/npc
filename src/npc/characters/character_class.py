@@ -32,7 +32,14 @@ class Character(BaseModel):
     """
 
     # Names of tags which are represented by properties on the Character object, instead of as associated Tags
-    MAPPED_TAGS = {"realname", "delist", "nolint", "sticky", "type", "description"}
+    MAPPED_TAGS = {
+        "delist": "delist",
+        "description": "desc",
+        "nolint": "nolint",
+        "realname": "realname",
+        "sticky": "sticky",
+        "type": "type_key",
+    }
 
     DEFAULT_TYPE = "invalid"
 

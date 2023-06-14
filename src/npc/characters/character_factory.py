@@ -136,25 +136,19 @@ class CharacterFactory():
         Returns:
             bool: True if the tag was handled, false if not
         """
-        if tag.name not in Character.MAPPED_TAGS:
-            return False
-
+        attr_name = Character.MAPPED_TAGS.get(tag.name)
         match tag.name:
-            case "type":
-                character.type_key = tag.value
-            case "realname":
-                character.realname = tag.value
-            case "sticky":
-                character.sticky = True
-            case "nolint":
-                character.nolint = True
-            case "delist":
-                character.delist = True
+            case "type" | "realname":
+                setattr(character, attr_name, tag.value)
+            case "sticky" | "nolint" | "delist":
+                setattr(character, attr_name, True)
             case "description":
-                if not character.desc:
-                    character.desc = tag.value
+                if not getattr(character, attr_name):
+                    setattr(character, attr_name, tag.value)
                 else:
-                    character.desc = f"{character.desc}\n\n{tag.value}"
+                    setattr(character, attr_name, f"{character.desc}\n\n{tag.value}")
+            case _:
+                return False
 
         return True
 
