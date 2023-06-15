@@ -19,7 +19,7 @@ class CharacterFactory():
         mnemonic: str = None,
         body: str = None,
         path: str = None,
-        desc: str = None,
+        desc: str = "",
         tags: list[RawTag] = None,
     ) -> Character:
         """Make a Character object from passed values
@@ -44,9 +44,6 @@ class CharacterFactory():
         """
         if tags is None:
             tags = []
-
-        if desc is None:
-            desc = ""
 
         character = Character(
             type_key=type_key,
