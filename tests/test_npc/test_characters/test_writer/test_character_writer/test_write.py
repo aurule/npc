@@ -39,7 +39,7 @@ def test_overwrites_existing_file(tmp_campaign):
         contents = f.read()
     assert "contents!" in contents
 
-def test_writes_tags(tmp_campaign):
+def test_writes_attr_tags(tmp_campaign):
     db = DB(clearSingleton=True)
     loc = tmp_campaign.characters_dir / "Test Mann.npc"
     character = create_character([], tmp_campaign, db, path=loc, body="")
@@ -50,6 +50,18 @@ def test_writes_tags(tmp_campaign):
     with loc.open() as f:
         contents = f.read()
     assert "@type person" in contents
+
+def test_writes_real_tags(tmp_campaign):
+    db = DB(clearSingleton=True)
+    loc = tmp_campaign.characters_dir / "Test Mann.npc"
+    character = create_character([("race", "elf")], tmp_campaign, db, path=loc, body="")
+    writer = CharacterWriter(tmp_campaign, db=db)
+
+    writer.write(character)
+
+    with loc.open() as f:
+        contents = f.read()
+    assert "@race elf" in contents
 
 def test_writes_body(tmp_campaign):
     db = DB(clearSingleton=True)
