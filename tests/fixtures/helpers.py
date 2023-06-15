@@ -3,6 +3,8 @@ import pytest
 from contextlib import contextmanager
 from importlib import resources
 from pathlib import Path
+from functools import wraps
+from click.testing import CliRunner
 
 from npc.campaign import init, Campaign
 
@@ -11,7 +13,7 @@ def fixture_file(*fixture_path) -> Path:
     return base.joinpath(*fixture_path)
 
 @pytest.fixture
-def tmp_campaign(tmp_path):
+def tmp_campaign(tmp_path: Path) -> Campaign:
     return init(tmp_path, name="Test Campaign", system="generic")
 
 @contextmanager
