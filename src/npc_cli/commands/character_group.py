@@ -110,7 +110,7 @@ def lint(settings, edit):
 # Show tag stastistics
 #######################
 
-REPORT_TYPES = ("usage", "values")
+REPORT_TYPES = ("values")
 
 @cli.command()
 @click.option("-t", "--tag", "tag_name",
@@ -128,8 +128,6 @@ def report(settings, tag_name, report_type):
     campaign.characters.refresh()
 
     match report_type:
-        case "usage":
-            pass
         case "values":
             data = tag_reporter.value_counts_report(tag_name)
             headers = ("Value", "Count")
