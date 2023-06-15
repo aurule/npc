@@ -29,3 +29,19 @@ def change_cwd(new_cwd):
 def runner() -> CliRunner:
     """Fixture that provides a CliRunner object"""
     return CliRunner()
+
+def isolated(func):
+    """Decorator to isolate a test within its tmp_path or tmp_campaign's root
+
+    Requires that the test args include either tmp_path or tmp_campaign
+    """
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+        match kwargs:
+            case {"tmp_campaign": campaign}:
+                jail = campaign.root
+            case {"tmp_path": tpath}:
+                jail = tpath
+        with change_cwd(jail):
+            func(*args, **kwargs)
+    return wrapper
