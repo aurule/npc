@@ -110,7 +110,7 @@ def lint(settings, edit):
 # Show tag stastistics
 #######################
 
-REPORT_TYPES = ("values")
+REPORT_TYPES = ("values",)
 
 @cli.command()
 @click.option("-t", "--tag", "tag_name",
@@ -118,9 +118,13 @@ REPORT_TYPES = ("values")
 @click.option("-r", "--report-on", "report_type",
     type=click.Choice(REPORT_TYPES, case_sensitive=False),
     default="values",
-    help="What kind of data to report on")
+    help="What kind of data to report on (default 'values')")
 @pass_settings
 def report(settings, tag_name, report_type):
+    """Show stats about the characters in this campaign
+
+    This command only works within an existing campaign
+    """
     campaign = cwd_campaign(settings)
     if campaign is None:
         raise CampaignNotFoundException
