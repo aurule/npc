@@ -24,3 +24,8 @@ def change_cwd(new_cwd):
         yield
     finally:
         os.chdir(old_cwd)
+
+@pytest.fixture
+def runner() -> CliRunner:
+    """Fixture that provides a CliRunner object"""
+    return CliRunner()
