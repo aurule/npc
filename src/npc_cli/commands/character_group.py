@@ -80,7 +80,7 @@ def new(settings, type_key, name, mnemonic, desc, tags):
 @cli.command()
 @click.option("--edit/--no-edit",
     default=False,
-    help="Whether to open all character files with errors")
+    help="Whether to open all character files with errors (default False)")
 @pass_settings
 def lint(settings, edit):
     """Check character files for errors
