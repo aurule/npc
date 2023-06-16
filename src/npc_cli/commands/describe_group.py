@@ -86,7 +86,7 @@ def types(settings, system):
             chartypes = campaign.types
             title = f"Character Types in {campaign.name}"
         else:
-            raise CampaignRequiredException
+            raise CampaignRequiredException(['-s', '--system'])
     except ParseError as err:
         raise click.FileError(err.path, hint=err.strerror)
 
@@ -120,7 +120,7 @@ def type(settings, system, type_):
         raise click.FileError(err.path, hint=err.strerror)
 
     if type_ not in target.types:
-        raise BadCharacterTypeException(type_, type_list(target.types), "'-t' / '--type'")
+        raise BadCharacterTypeException(type_, type_list(target.types), ['-t', '--type'])
     chartype = target.get_type(type_)
 
     echo(f"Character Type: {chartype.name}")
@@ -161,7 +161,7 @@ def tags(settings, system_key, type_):
     headers = ["Name", "Description"]
     if type_:
         if type_ not in target.types:
-            raise BadCharacterTypeException(type_, type_list(target.types), "'-t' / '--type'")
+            raise BadCharacterTypeException(type_, type_list(target.types), ['-t', '--type'])
 
         title = f"Tags for {target.get_type(type_).name} in {target.name}"
         tags = target.type_tags(type_)
@@ -206,7 +206,7 @@ def tag(settings, system_key, type_, tag_name, context):
     headers = ["Name", "Description"]
     if type_:
         if type_ not in target.types:
-            raise BadCharacterTypeException(type_, type_list(target.types), "'-t' / '--type'")
+            raise BadCharacterTypeException(type_, type_list(target.types), ['-t', '--type'])
         spec = target.get_type_tag(tag_name, type_)
     else:
         spec = target.get_tag(tag_name)

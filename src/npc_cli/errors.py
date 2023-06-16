@@ -9,5 +9,6 @@ class CampaignNotFoundException(ClickException):
         super().__init__("Not a campaign (or any of the parent directories)")
 
 class CampaignRequiredException(UsageError):
-    def __init__(self, hint="--system"):
-        super().__init__(f"Not a campaign, so the '{hint}' option must be provided")
+    def __init__(self, hint=("-s", "--system")):
+        formatted_hint = "' '".join(hint)
+        super().__init__(f"Not a campaign, so the '{formatted_hint}' option must be provided")
