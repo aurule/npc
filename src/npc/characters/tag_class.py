@@ -20,7 +20,6 @@ class Tag(BaseModel):
         character_id    int
         value           str
         subtags         rel     Tag
-        parent_tag      rel     Tag
         parent_tag_id   int
     """
 

@@ -1,5 +1,6 @@
 from tests.fixtures import tmp_campaign
 from npc.characters import RawTag
+from npc.db import DB
 
 from npc.characters import CharacterFactory
 
@@ -49,6 +50,17 @@ def test_sets_default_flags(tmp_campaign):
     assert not character.nolint
     assert not character.sticky
 
+def test_basic_char_is_db_safe(tmp_campaign):
+    factory = CharacterFactory(tmp_campaign)
+    db = DB(clearSingleton=True)
+    character = factory.make("Test Mann")
+
+    with db.session() as session:
+        session.add(character)
+        session.commit()
+
+    assert character.id
+
 class TestNestedTag():
     def test_adds_deep_nested_tags(self, tmp_campaign):
         new_defs = {
@@ -90,6 +102,22 @@ class TestNestedTag():
         character = factory.make("Test Mann", tags=tags)
 
         assert character.tags[0].subtags[0].value == "Lead"
+
+    def test_nested_tag_char_is_db_safe(self, tmp_campaign):
+        factory = CharacterFactory(tmp_campaign)
+        tags = [
+            RawTag("group", "Testers"),
+            RawTag("rank", "Lead"),
+        ]
+        db = DB(clearSingleton=True)
+
+        character = factory.make("Test Mann", tags=tags)
+
+        with db.session() as session:
+            session.add(character)
+            session.commit()
+
+        assert character.id
 
 class TestMetatagSpecsStatic():
     def test_adds_tags(self, tmp_campaign):

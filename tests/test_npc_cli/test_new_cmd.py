@@ -20,3 +20,15 @@ def test_makes_character_file(tmp_campaign, runner):
     result = runner.invoke(cli, "new person -n test -m test")
 
     assert tmp_campaign.characters_dir.joinpath("test - test.npc").exists()
+
+@isolated
+def test_makes_character_with_tags(tmp_campaign, runner):
+    result = runner.invoke(cli, "new person -n test -m test -t org Shiny")
+
+    assert tmp_campaign.characters_dir.joinpath("test - test.npc").exists()
+
+@isolated
+def test_makes_character_with_subtags(tmp_campaign, runner):
+    result = runner.invoke(cli, "new person -n test -m test -t org Shiny -t role Happy")
+
+    assert tmp_campaign.characters_dir.joinpath("test - test.npc").exists()
