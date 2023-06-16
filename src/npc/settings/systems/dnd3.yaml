@@ -16,3 +16,8 @@ dnd3:
       subtags:
         level:
           desc: Number of levels the character has in this class
+    faith:
+      desc: Name of the deity the character worships
+      doc: >
+        With whole classes built around worship, it can be very important to
+        keep track of which god(s) a character prays to.
