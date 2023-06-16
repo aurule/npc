@@ -32,10 +32,8 @@ class Tag(BaseModel):
     name: Mapped[str] = mapped_column(String(100))
     value: Mapped[Optional[str]] = mapped_column(Text)
     subtags: Mapped[Optional[List["Tag"]]] = relationship(
-        back_populates="parent_tag",
         cascade="all, delete-orphan",
     )
-    parent_tag: Mapped[Optional["Tag"]] = relationship()
     parent_tag_id: Mapped[Optional[int]] = mapped_column(ForeignKey("tags.id"))
 
     def __repr__(self) -> str:
