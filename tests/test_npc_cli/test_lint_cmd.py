@@ -5,14 +5,15 @@ from npc_cli import cli
 
 @isolated
 def test_aborts_on_missing_campaign(tmp_path, runner):
-    result = runner.invoke(cli, ["lint"])
+    result = runner.invoke(cli, "lint")
 
     assert "Not a campaign" in result.output
 
 @isolated
 def test_shows_bad_characters(tmp_campaign, runner):
-    runner.invoke(cli, ['new', "person", "-n", "Test Mann", "-m", "tester"])
-    result = runner.invoke(cli, ["lint"])
+    runner.invoke(cli, "new person -n 'Test Mann' -m tester")
+
+    result = runner.invoke(cli, "lint")
 
     assert "Test Mann" in result.output
     assert "missing description" in result.output

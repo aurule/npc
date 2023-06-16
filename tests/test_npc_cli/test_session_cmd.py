@@ -7,6 +7,6 @@ from npc_cli import cli
 class TestCampaignLocation():
     @isolated
     def test_aborts_on_missing_campaign(self, tmp_path, runner):
-        result = runner.invoke(cli, ['session'])
+        result = runner.invoke(cli, 'session')
 
         assert "Not a campaign" in result.output
