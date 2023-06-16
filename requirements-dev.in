@@ -2,5 +2,6 @@
 Sphinx >= 6.0
 sphinx_rtd_theme
 readthedocs-sphinx-search
+rich
 pip-tools >= 6.0
 vulture >= 2.7
