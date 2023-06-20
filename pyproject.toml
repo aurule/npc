@@ -17,13 +17,7 @@ classifiers = [
     'License :: OSI Approved :: MIT License',
     'Programming Language :: Python :: 3',
 ]
-dependencies = [
-	"Mako >= 1.2.0",
-	"Markdown >= 3.4.0",
-	"PyYAML >= 6.0.0",
-	"click >= 8.1.0",
-]
-dynamic = ["version"]
+dynamic = ["version", "dependencies"]
 
 [project.urls]
 documentation = "https://npc.readthedocs.io/en/latest/"
@@ -55,3 +49,7 @@ norecursedirs = "fixtures"
 env = [
 	"TESTING=true",
 ]
+
+[tool.setuptools.dynamic]
+dependencies = {file = "requirements.txt"}
+version = {attr = "npc.__version__"}
