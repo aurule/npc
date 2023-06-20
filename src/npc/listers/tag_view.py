@@ -1,12 +1,29 @@
 from npc.characters import Tag
 
 class TagView:
+    """A static representation of a tag's values and subtags
+
+    This class dynamically creates attributes for each subtag name during initialization. This lets templates
+    easily access subtag values.
+    """
     def __init__(self, tag: Tag):
-        self.name = tag.name
-        self.value = tag.value
+        from .tag_view_collection import TagViewCollection
 
-        # for subtag in tag
-        #   see if we have an attribute with the subtag's name
-        #   if not, create it and assign a new TagViewCollection(name)
-        #   collection.append_tag(subtag)
+        self.name: str = tag.name
+        self.value: str = tag.value
 
+        for subtag in tag.subtags:
+            if not hasattr(self, subtag.name):
+                setattr(self, subtag.name, TagViewCollection())
+            getattr(self, subtag.name).append_tag(subtag)
+
+    def __str__(self) -> str:
+        """Return a printable representation of this view
+
+        Since this object is meant to be used in templates, this default string implemntation returns the
+        value of the view's associated tag.
+
+        Returns:
+            str: Our value string
+        """
+        return self.value
