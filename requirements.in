@@ -1,5 +1,5 @@
 click >= 8.0
-Mako
+Jinja2 >= 3.1
 Markdown
 PyYAML >= 6.0
 SQLAlchemy >= 2.0
