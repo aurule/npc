@@ -7,6 +7,7 @@ class CharacterLister:
         *,
         lang: str = "html"):
         self.collection = collection
+        self.campaign = self.collection.campaign
         self.lang = lang
 
         # for character in collection.all()
