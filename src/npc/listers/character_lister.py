@@ -4,14 +4,16 @@ from npc.campaign import Campaign, CharacterCollection
 from npc.templates import CharacterFallbackLoader
 
 class CharacterLister:
-    def __init__(self, campaign: Campaign, *, characters: CharacterCollection = None, lang: str = "html"):
-        self.campaign = campaign
-        self.lang = lang
+    SUPPORTED_OUTPUT_TYPES = {"html", "markdown"}
+    LANG_SUFFIXES = {
+        "html": "html",
+        "markdown": "md",
+    }
 
-        if characters:
-            self.characters = characters
-        else:
-            self.characters = campaign.characters
+    def __init__(self, characters: CharacterCollection, *, lang: str = "html"):
+        self.characters = characters
+        self.campaign = characters.campaign
+        self.lang = lang
 
         # settings are in campaign.settings.get("campaign.characters.listing")
 
@@ -27,6 +29,12 @@ class CharacterLister:
         #   sorting is applied after group sort
 
         # need to get the correct extension based on language
+
+        jenv = Environment(
+            loader = CharacterFallbackLoader(self.campaign),
+            auto_reload = False,
+            autoescape = False,
+        )
 
         # apply group_by grouping and sorting to campaign.characters
         # add sort_by to that query
@@ -44,3 +52,14 @@ class CharacterLister:
         #   make a CharacterView
         #   pass the view through the template
         #       header level is character_header_level
+
+    @property
+    def template_suffix(self) -> str:
+        return LANG_SUFFIXES.get(self.lang, self.lang)
+
+    @property
+    def group_template_name(self) -> str:
+        return f"group_heading.{self.template_suffix}"
+
+    def character_template_name(self, character: Character) -> str:
+        return f"{character.type_key}.{self.template_suffix}"
