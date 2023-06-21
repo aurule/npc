@@ -254,8 +254,10 @@ campaign:
         tags: [entitlement, group]
     listing:
       format: markdown
-      sorting:
-        - last
+      group_by:
+        - last_name
+      sort_by:
+        - name
       base_header_level: 1
       metadata:
         title: NPC Listing
