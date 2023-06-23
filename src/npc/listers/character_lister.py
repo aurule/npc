@@ -1,5 +1,6 @@
 from jinja2 import Environment
 
+from npc.characters import Character
 from npc.campaign import Campaign, CharacterCollection
 from npc.templates import CharacterFallbackLoader
 
@@ -10,9 +11,9 @@ class CharacterLister:
         "markdown": "md",
     }
 
-    def __init__(self, characters: CharacterCollection, *, lang: str = "html"):
-        self.characters = characters
-        self.campaign = characters.campaign
+    def __init__(self, collection: CharacterCollection, *, lang: str = "html"):
+        self.collection = collection
+        self.campaign = collection.campaign
         self.lang = lang
 
         # settings are in campaign.settings.get("campaign.characters.listing")
