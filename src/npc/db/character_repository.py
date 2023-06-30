@@ -4,6 +4,7 @@ These queries get data that's related to a character or its tags.
 """
 
 from sqlalchemy import select, Select, func, desc
+from sqlalchemy.orm import selectinload
 from npc.characters import Tag, Character
 
 def tag_values_by_name(character: Character, *names: str) -> Select:
