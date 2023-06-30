@@ -257,7 +257,7 @@ campaign:
       group_by:
         - last_name
       sort_by:
-        - name
+        - full_name
       base_header_level: 1
       metadata:
         title: NPC Listing
