@@ -64,6 +64,15 @@ def all() -> Select:
     """
     return select(Character)
 
+def with_tags() -> Select:
+    """Create a db query to get all Character records and eager-load their tags
+
+    Returns:
+        Select: Select object for the character query with eager loading of the tags relationship
+    """
+    return all() \
+        .options(selectinload(Character.tags))
+
 def attr_counts(name: str) -> Select:
     """Create a db query to get a count for all values of an attribute
 
