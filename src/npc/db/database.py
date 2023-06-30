@@ -1,7 +1,8 @@
 from contextlib import contextmanager
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, event
 from sqlalchemy.orm import DeclarativeBase, Session
 
+from . import custom_functions
 from npc.util import Singleton
 
 class DB(metaclass=Singleton):
@@ -14,6 +15,11 @@ class DB(metaclass=Singleton):
     def __init__(self):
         self.engine = create_engine("sqlite://")
         BaseModel.metadata.create_all(self.engine)
+
+        @event.listens_for(self.engine, "connect")
+        def inject_functions(conn, rec):
+            conn.create_function("last_word", 1, custom_functions.last_word)
+            conn.create_function("first_word", 1, custom_functions.first_word)
 
     @contextmanager
     def session(self):
