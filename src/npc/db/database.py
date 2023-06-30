@@ -14,12 +14,13 @@ class DB(metaclass=Singleton):
     """
     def __init__(self):
         self.engine = create_engine("sqlite://")
-        BaseModel.metadata.create_all(self.engine)
 
         @event.listens_for(self.engine, "connect")
         def inject_functions(conn, rec):
             conn.create_function("last_word", 1, custom_functions.last_word)
             conn.create_function("first_word", 1, custom_functions.first_word)
+
+        BaseModel.metadata.create_all(self.engine)
 
     @contextmanager
     def session(self):
