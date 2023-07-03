@@ -255,7 +255,7 @@ campaign:
     listing:
       format: markdown
       group_by:
-        - last_name
+        - last_initial
       sort_by:
         - full_name
       base_header_level: 1
