@@ -89,3 +89,19 @@ class CharacterCollection():
         """
         with self.db.session() as session:
             return session.scalars(character_repository.all())
+
+    def apply_query(self, query):
+        """Run an arbitrary query against this collection
+
+        This is a convenience method to avoid working directly with the collection's db instance. Obviously,
+        since this will happily execute any query, care should be taken to ensure the queries make sense for
+        a character collection.
+
+        Args:
+            query (Query): Database query object
+
+        Returns:
+            Query: Database result from the query
+        """
+        with self.db.session() as session:
+            return session.execute(query)
