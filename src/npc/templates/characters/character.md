@@ -1,1 +1,1 @@
-{{ "#" * header_level}} {{ character.name }}
+{{ "#" * header_level}} {{ character.realname }}
