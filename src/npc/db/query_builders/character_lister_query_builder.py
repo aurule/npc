@@ -44,7 +44,7 @@ class CharacterListerQueryBuilder:
         """
         return len(self.sorted_by)
 
-    def group_by(self, entity_name: str):
+    def group_by(self, *entity_names: list[str]):
         """Add a grouping clause to the query
 
         Chooses the correct sql partial to group the characters by the given
@@ -56,12 +56,13 @@ class CharacterListerQueryBuilder:
         included in the result set as a new column starting with "group".
 
         Args:
-            entity_name (str): Name of the thing to group by
+            entity_names (list[str]): Name of the thing to group by
         """
-        self.pick_partial(entity_name, f"group{self.next_group_index}")
-        self.grouped_by.append(entity_name)
+        for entity_name in entity_names:
+            self.pick_partial(entity_name, f"group{self.next_group_index}")
+            self.grouped_by.append(entity_name)
 
-    def sort_by(self, entity_name: str):
+    def sort_by(self, *entity_names: list[str]):
         """Add a sorting clause to the query
 
         Chooses the correct sql partial to sort the characters by the given
@@ -76,10 +77,11 @@ class CharacterListerQueryBuilder:
         the label on the column.
 
         Args:
-            entity_name (str): Name of the thing to sort by
+            entity_names (list[str]): Name of the thing to sort by
         """
-        self.pick_partial(entity_name, f"sort{self.next_sort_index}")
-        self.sorted_by.append(entity_name)
+        for entity_name in entity_names:
+            self.pick_partial(entity_name, f"sort{self.next_sort_index}")
+            self.sorted_by.append(entity_name)
 
     def pick_partial(self, entity_name: str, label: str):
         """Determine which sql partial to add to the query, and apply it
