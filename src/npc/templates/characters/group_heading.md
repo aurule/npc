@@ -1,1 +1,1 @@
-{{ "#" * header_level}} {{ group_title }}
+{{ "#" * header_level}} {{ group.title }}
