@@ -28,7 +28,7 @@ class CharacterView:
     def __str__(self) -> str:
         """Return a printable representation of this view
 
-        Since this object is meant to be used in templates, this default string implemntation returns the
+        Since this object is meant to be used in templates, this default string implementation returns the
         realname of the view's associated character.
 
         Returns:
