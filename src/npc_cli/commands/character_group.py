@@ -1,7 +1,8 @@
 import click
+import io
 from click import echo, BadParameter
 
-from npc import characters, linters
+from npc import characters, linters, listers
 from npc.util import edit_files
 from npc_cli.presenters import type_list
 from npc_cli.helpers import cwd_campaign, write_new_character
@@ -104,3 +105,25 @@ def lint(settings, edit):
 
     if edit and error_characters:
         edit_files(error_characters, settings = settings)
+
+#######################
+# List character files
+#######################
+
+@cli.command()
+@pass_settings
+def list(settings):
+    """Generate a public listing of characters
+
+    This command only works within an existing campaign.
+    """
+    campaign = cwd_campaign(settings)
+    if campaign is None:
+        raise CampaignNotFoundException
+
+    campaign.characters.refresh()
+
+    output = io.StringIO()
+    lister = listers.CharacterLister(campaign.characters)
+    lister.list(target=output)
+    print(output.getvalue())
