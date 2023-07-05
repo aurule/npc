@@ -82,7 +82,7 @@ class CharacterLister:
                             }
                         )
                     )
-                    write("\n")
+                    write("\n\n")
 
             character = row[0]
             character_template = gt(self.character_template_name(character.type_key))
@@ -94,7 +94,7 @@ class CharacterLister:
                     }
                 )
             )
-            write("\n")
+            write("\n\n")
 
     @cached_property
     def template_suffix(self) -> str:
