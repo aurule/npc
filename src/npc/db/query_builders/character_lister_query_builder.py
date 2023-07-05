@@ -105,18 +105,24 @@ class CharacterListerQueryBuilder:
     def apply_tag_partial(self, tag_name: str, label: str):
         """Query a tag value
 
-        This adds an explicit join on the table in order to create the new column.
+        This uses a scalar subquery to get the value of the first matching tag for a character, or None if
+        they have no such tag.
 
         Args:
             tag_name (str): Name of the tag to query
             label (str): Label for the tag's column
         """
-        grouping = aliased(Tag)
+        subq = (
+            select(Tag.value)
+            .where(Tag.character_id == Character.id)
+            .where(Tag.name == tag_name)
+            .order_by(Tag.id)
+            .limit(1)
+            .scalar_subquery()
+        )
         self.query = self.query \
-          .add_columns(grouping.value.label(label)) \
-          .join(grouping, isouter=True) \
-          .where(grouping.name == tag_name) \
-          .order_by(label)
+            .add_columns(subq.label(label)) \
+            .order_by(label)
 
     def apply_type_partial(self, label: str):
         """Query the character's type using the type_key property

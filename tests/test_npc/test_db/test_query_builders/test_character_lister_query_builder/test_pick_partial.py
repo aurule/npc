@@ -12,4 +12,4 @@ def test_falls_back_on_tag_partial():
 
     builder.pick_partial("surprise", "test")
 
-    assert "tags_1" in str(builder.query)
+    assert "tags.value" in str(builder.query)
