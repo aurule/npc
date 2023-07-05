@@ -59,3 +59,19 @@ def test_default_str_value(tmp_campaign):
     view = CharacterView(character)
 
     assert str(view) == character.realname
+
+def test_has_tag_true_with_tag(tmp_campaign):
+    factory = CharacterFactory(tmp_campaign)
+    character = factory.make("Test Mann", type_key="person", tags=[RawTag("title", "bro")])
+
+    view = CharacterView(character)
+
+    assert view.has_tag("title")
+
+def test_has_tag_false_without_tag(tmp_campaign):
+    factory = CharacterFactory(tmp_campaign)
+    character = factory.make("Test Mann", type_key="person")
+
+    view = CharacterView(character)
+
+    assert not view.has_tag("title")
