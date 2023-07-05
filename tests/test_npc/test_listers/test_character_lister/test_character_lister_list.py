@@ -38,7 +38,6 @@ class TestCharacters:
     def test_char_header_higher_than_groups(self):
         db = DB(clearSingleton=True)
         campaign = Campaign(fixture_file("listing", "basic_groups"))
-        campaign.patch_campaign_settings({"characters": {"listing": {"group_by": ["last_initial"]}}})
         campaign.characters.db = db
         campaign.characters.refresh()
         lister = CharacterLister(campaign.characters, lang="markdown")
@@ -54,7 +53,6 @@ class TestGroupings:
     def test_group_header_levels_increment(self):
         db = DB(clearSingleton=True)
         campaign = Campaign(fixture_file("listing", "basic_groups"))
-        campaign.patch_campaign_settings({"characters": {"listing": {"group_by": ["last_initial", "first_initial"]}}})
         campaign.characters.db = db
         campaign.characters.refresh()
         lister = CharacterLister(campaign.characters, lang="markdown")
@@ -70,7 +68,6 @@ class TestGroupings:
     def test_resets_subgroups(self):
         db = DB(clearSingleton=True)
         campaign = Campaign(fixture_file("listing", "basic_groups"))
-        campaign.patch_campaign_settings({"characters": {"listing": {"group_by": ["last_initial", "first_initial"]}}})
         campaign.characters.db = db
         campaign.characters.refresh()
         lister = CharacterLister(campaign.characters, lang="markdown")
@@ -86,11 +83,9 @@ class TestGroupings:
         assert "## T" in result
         assert "### Test Mann" in result
 
-    @pytest.mark.xfail(reason="query builder excludes characters without named tag")
     def test_labels_null_group_static(self):
         db = DB(clearSingleton=True)
         campaign = Campaign(fixture_file("listing", "missing_groups"))
-        campaign.patch_campaign_settings({"characters": {"listing": {"group_by": ["org"]}}})
         campaign.characters.db = db
         campaign.characters.refresh()
         lister = CharacterLister(campaign.characters, lang="markdown")
@@ -99,4 +94,4 @@ class TestGroupings:
         lister.list(target=target)
 
         result = target.getvalue()
-        assert "No Org" in result
+        assert "# No org" in result
