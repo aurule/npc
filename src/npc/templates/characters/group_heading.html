@@ -1,1 +1,1 @@
-<h{{ header_level }}>{{ group.title }}</h{{ header_level }}>
+<h{{ header_level }}>{{ group.title | default("No " + group.grouping, true) }}</h{{ header_level }}>
