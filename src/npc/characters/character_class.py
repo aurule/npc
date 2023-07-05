@@ -61,7 +61,7 @@ class Character(BaseModel):
     type_key: Mapped[str] = mapped_column(String(128), default=DEFAULT_TYPE)
 
     def __repr__(self) -> str:
-        return f"Character(id={self.id!r}, realname={self.realname!r})"
+        return f"Character(id={self.id!r}, realname={self.realname!r}, delist={self.delist!r})"
 
     def accepts_tag(self, tag_name: str) -> bool:
         """Indicate that Character objects accept all tags
