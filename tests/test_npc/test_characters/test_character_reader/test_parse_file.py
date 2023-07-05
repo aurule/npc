@@ -43,6 +43,14 @@ def test_tags_includes_descriptions():
     assert reader._tags[0].value == "Test Mann is a helpful test helper."
     assert reader._tags[1].value == "He has two paragraphs of descriptive text, because why not?"
 
+def test_tags_includes_flags():
+    file = fixture_file("sheets", "reader", "Test Mann - testing bro.npc")
+    reader = CharacterReader(file)
+
+    reader.parse_file()
+
+    assert reader._tags[4].name == "sticky"
+
 def test_uses_defaults_for_blank_file():
     file = fixture_file("sheets", "reader", "Blank Mann - nada.npc")
     reader = CharacterReader(file)

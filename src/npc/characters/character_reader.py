@@ -18,7 +18,7 @@ class CharacterReader:
 
     NAME_SEPARATOR = " - "
     SECTION_HEADER_RE = re.compile(r"^--")
-    TAG_RE = re.compile(r"^@(?P<name>\w+)\s+(?P<value>.*)$")
+    TAG_RE = re.compile(r"^@(?P<name>\w+)(\s+(?P<value>.*))?$")
 
     def __init__(self, character_path: Path):
         self.character_path: Path = character_path
