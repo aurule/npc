@@ -1,0 +1,7 @@
+campaign:
+  characters:
+    listing:
+      group_by:
+      - org
+  name: Test Campaign
+  system: generic
