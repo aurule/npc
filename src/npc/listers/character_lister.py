@@ -83,11 +83,13 @@ class CharacterLister:
 
             character = row[0]
             character_template = gt(self.character_template_name(character.type_key))
+            character_view = CharacterView(character)
             write(
                 character_template.render(
                     {
                         "header_level": character_header_level,
-                        "character": CharacterView(character),
+                        "character": character_view,
+                        "has": character_view.has_tag
                     }
                 )
             )
