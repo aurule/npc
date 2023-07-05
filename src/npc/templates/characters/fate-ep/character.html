@@ -1,6 +1,32 @@
-<h{{ header_level }}>
-{{ character.realname }}
-{% character.has_tag("dead") %}
+<h{{ header_level -}}>
+{{ character.realname }} {% if has("dead") -%}
     (Deceased)
-{% endif %}
+{% endif -%}
 </h{{ header_level }}>
+{% if has("name") -%}
+    <div><em>AKA {{ character.name.all() | join(", ") }}</em></div>
+{% endif -%}
+{% if has("title") -%}
+    <div>{{ character.title.all() | join(", ") }}</div>
+{% endif -%}
+
+<div>
+{% if has("race") -%}
+    {{ character.race.first() | title }}
+{% else -%}
+    {{ character.type | title }}
+{% endif -%}
+{% if has("foreign") -%}
+    (foreign)
+{% endif -%}
+{% if has("wanderer") -%}
+    , Wanderer
+{% endif -%}
+{% if has("group") -%}
+    , {{ character.group.first() }} ({{ character.group.first().rank.all() | join(", ") }})
+{% endif -%}
+{% if has("pronouns") -%}
+    ; {{ character.pronouns.all() | join(", ") }}
+{% endif -%}
+</div>
+
