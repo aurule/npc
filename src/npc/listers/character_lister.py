@@ -60,25 +60,22 @@ class CharacterLister:
         num_groups: int = builder.next_group_index
         base_header_level: int = settings.get("campaign.characters.listing.base_header_level")
         character_header_level: int = base_header_level + num_groups
-        current_group_values: list[str] = [None] * num_groups
+        current_group_values: list[str] = []
         results = self.collection.apply_query(builder.query)
 
         group_template = gt(self.group_template_name)
         for row in results:
             for group_index in range(num_groups):
                 row_value = row[group_index + 1]
-                if row_value != current_group_values[group_index]:
-                    current_group_values[group_index] = row_value
-                    for reset_index in range(group_index + 1, num_groups):
-                        # Clear nested groups to keep their values local to the parent group. This results in
-                        # repeated clearing of children if their values all change at once. Oh well.
-                        current_group_values[reset_index] = None
-
+                if group_index >= len(current_group_values) or current_group_values[group_index] != row_value:
+                    current_group_values[group_index::] = [row_value]
                     write(
                         group_template.render(
                             {
                                 "header_level": base_header_level + group_index,
-                                "group": GroupView(row_value),
+                                "group": GroupView(
+                                    title=row_value,
+                                    grouping=builder.grouped_by[group_index]),
                             }
                         )
                     )
