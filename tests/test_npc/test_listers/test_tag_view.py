@@ -40,3 +40,18 @@ def test_default_str_value():
     view = TagView(tag)
 
     assert str(view) == tag.value
+
+def test_has_true_with_tag():
+    subtag = Tag(name="when", value="now")
+    tag = Tag(name="test", value="testing", subtags=[subtag])
+
+    view = TagView(tag)
+
+    assert view.has("when")
+
+def test_has_false_without_tag():
+    tag = Tag(name="test", value="testing")
+
+    view = TagView(tag)
+
+    assert not view.has("when")

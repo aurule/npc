@@ -27,3 +27,16 @@ class TagView:
             str: Our value string
         """
         return self.value
+
+    def has(self, tag_name: str) -> bool:
+        """Get whether a named subtag is present
+
+        This is just a convenience wrapper around hasattr.
+
+        Args:
+            tag_name (str): Name of the subtag to check
+
+        Returns:
+            bool: True if this tag has at least one subtag with the given name, false otherwise
+        """
+        return hasattr(self, tag_name)
