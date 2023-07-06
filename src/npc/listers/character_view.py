@@ -36,7 +36,7 @@ class CharacterView:
         """
         return self.realname
 
-    def has_tag(self, tag_name: str) -> bool:
+    def has(self, tag_name: str) -> bool:
         """Get whether a named tag is present
 
         This is just a convenience wrapper around hasattr.
@@ -45,6 +45,6 @@ class CharacterView:
             tag_name (str): Name of the tag to check
 
         Returns:
-            bool: True if the character has at least one tag with the given name, false otherwise
+            bool: True if this character has at least one tag with the given name, false otherwise
         """
         return hasattr(self, tag_name)

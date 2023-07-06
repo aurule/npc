@@ -89,7 +89,7 @@ class CharacterLister:
                     {
                         "header_level": character_header_level,
                         "character": character_view,
-                        "has": character_view.has_tag
+                        "has": character_view.has
                     }
                 )
             )
