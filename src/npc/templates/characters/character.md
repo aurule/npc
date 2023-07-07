@@ -1,1 +1,1 @@
-{{ "#" * header_level}} {{ character.realname }}
+{% extends "character-base.html" %}
