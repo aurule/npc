@@ -1,1 +1,35 @@
-<h{{ header_level }}>{{ character.realname }}</h{{ header_level }}>
+{% block name %}
+    <h{{ header_level }}>{{ character.realname }}</h{{ header_level }}>
+{% endblock %}
+
+{% block aka %}
+    {# titles and other names the character has #}
+{% endblock %}
+
+{% block vitals %}
+    {# vital info: race, age, location, pronouns, etc. #}
+{% endblock %}
+
+{% block groups %}
+    {# group and org membership #}
+{% endblock %}
+
+{% block portrait %}
+    {# portrait image. Only used if portrait tag is set. #}
+{% endblock %}
+
+{% block system %}
+    {# extra info specific to a game system. Like FATE aspects and such. Blank by default. #}
+{% endblock %}
+
+{% block appearance %}
+    {# character appearance #}
+{% endblock %}
+
+{% block description %}
+    {# character description #}
+{% endblock %}
+
+{% block dead %}
+    {# details about the character's death #}
+{% endblock %}
