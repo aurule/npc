@@ -1,35 +1,96 @@
-{% block name %}
-    <h{{ header_level }}>{{ character.realname }}</h{{ header_level }}>
-{% endblock %}
+{% block name -%}
+    <h{{ header_level -}}>
+    {{ character.realname }} {% if has("dead") -%}
+        (Deceased)
+    {% endif -%}
+    </h{{ header_level }}>
+{% endblock -%}
 
-{% block aka %}
+{% block aka -%}
     {# titles and other names the character has #}
-{% endblock %}
+    {% if has("name") -%}
+        <div><em>AKA {{ character.name.all() | join(", ") }}</em></div>
+    {% endif -%}
+    {% if has("title") -%}
+        <div>{{ character.title.all() | join(", ") }}</div>
+    {% endif -%}
+{% endblock -%}
 
-{% block vitals %}
+{% block vitals -%}
     {# vital info: race, age, location, pronouns, etc. #}
-{% endblock %}
+    <div>
+    {% if has("race") -%}
+        {{ character.race.first() | title }}
+    {% else -%}
+        {{ character.type | title }}
+    {% endif -%}
+    {% if has("foreign") -%}
+        (foreign)
+    {% endif -%}
+    {% if has("wanderer") -%}
+        , Wanderer
+    {% endif -%}
+    {% if has("group") -%}
+        , {{ character.group.first() }} ({{ character.group.first().rank.all() | join(", ") }})
+    {% endif -%}
+    {% if has("pronouns") -%}
+        ; {{ character.pronouns.all() | join(", ") }}
+    {% endif -%}
+    </div>
+{% endblock -%}
 
-{% block groups %}
+{% block groups -%}
     {# group and org membership #}
-{% endblock %}
+    {% if has("group") and character.group.rest() -%}
+        <div>
+        {% for g in character.group.rest() -%}
+            {{ g }} ({{ g.rank.all() | join(", ") }})
+        {% endfor -%}
+        </div>
+    {% endif -%}
+{% endblock -%}
 
-{% block portrait %}
+{% block portrait -%}
     {# portrait image. Only used if portrait tag is set. #}
-{% endblock %}
+    {% if has("portrait") -%}
+        <img src="/{{ character.portrait.first() }}" class="align-right decor-shadow" width="150px" loading="lazy">
+    {% endif -%}
+{% endblock -%}
 
-{% block system %}
+{% block location -%}
+    {# details of the character's location #}
+    {% if has("location") -%}
+        <div>
+        {{ character.location.first() }}
+        {% if has("region") -%}
+            - {{ character.region.first() }}
+        {% endif -%}
+        {% if has("locale") -%}
+            - {{ character.locale.first() }}
+        {% endif -%}
+        </div>
+    {% endif -%}
+{% endblock -%}
+
+{% block system -%}
     {# extra info specific to a game system. Like FATE aspects and such. Blank by default. #}
-{% endblock %}
+{% endblock -%}
 
-{% block appearance %}
+{% block appearance -%}
     {# character appearance #}
-{% endblock %}
+    {% if has("appearance") -%}
+        {{ ["*Appearance:* ", character.appearance.all() | join(' ')] | join(' ') | md }}
+    {% endif -%}
+{% endblock -%}
 
-{% block description %}
+{% block description -%}
     {# character description #}
-{% endblock %}
+    {{ character.description | md }}
+{% endblock -%}
 
-{% block dead %}
+{% block dead -%}
     {# details about the character's death #}
-{% endblock %}
+    {% if has("dead") and character.dead.first().value -%}
+        {{ ["*Dead:*", character.dead.all() | join(' ')] | join(' ') | md }}
+    {% endif -%}
+{% endblock -%}
