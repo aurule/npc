@@ -21,15 +21,11 @@ class CharacterLister:
             necessarily an exhaustive list, since users can add their own templates using whatever ext suits
             their fancy.
         LANG_SUFFIXES: Mapping of language names to template suffixes. Only works for the built-in languages.
-        SHARED_VIEW_PARAMS: Shared view params passed to all templates
     """
     SUPPORTED_LANGUAGES = {"html", "markdown"}
     LANG_SUFFIXES = {
         "html": "html",
         "markdown": "md",
-    }
-    SHARED_VIEW_PARAMS = {
-        "md": mistletoe.markdown
     }
 
     def __init__(self, collection: CharacterCollection, *, lang: str = None):
@@ -54,6 +50,7 @@ class CharacterLister:
             auto_reload = False,
             autoescape = False,
         )
+        jenv.filters["md"] = mistletoe.markdown
         gt = jenv.get_template
         write = target.write
 
@@ -81,7 +78,6 @@ class CharacterLister:
                                 "group": GroupView(
                                     title=row_value,
                                     grouping=builder.grouped_by[group_index]),
-                                **self.SHARED_VIEW_PARAMS
                             }
                         )
                     )
@@ -96,7 +92,6 @@ class CharacterLister:
                         "header_level": character_header_level,
                         "character": character_view,
                         "has": character_view.has,
-                        **self.SHARED_VIEW_PARAMS
                     }
                 )
             )
