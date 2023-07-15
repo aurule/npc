@@ -1,96 +1,96 @@
-{% block name -%}
+{%- block name -%}
     <h{{ header_level -}}>
-    {{ character.realname }} {% if has("dead") -%}
+    {{- character.realname }} {% if has("dead") -%}
         (Deceased)
-    {% endif -%}
+    {%- endif -%}
     </h{{ header_level }}>
-{% endblock -%}
+{%- endblock -%}
 
-{% block aka -%}
+{%- block aka -%}
     {# titles and other names the character has #}
-    {% if has("name") -%}
+    {%- if has("name") -%}
         <div><em>AKA {{ character.name.all() | join(", ") }}</em></div>
-    {% endif -%}
-    {% if has("title") -%}
+    {%- endif -%}
+    {%- if has("title") -%}
         <div>{{ character.title.all() | join(", ") }}</div>
-    {% endif -%}
-{% endblock -%}
+    {%- endif -%}
+{%- endblock -%}
 
-{% block vitals -%}
+{%- block vitals -%}
     {# vital info: race, age, location, pronouns, etc. #}
     <div>
-    {% if has("race") -%}
+    {%- if has("race") -%}
         {{ character.race.first() | title }}
-    {% else -%}
+    {%- else -%}
         {{ character.type | title }}
-    {% endif -%}
-    {% if has("foreign") -%}
+    {%- endif -%}
+    {%- if has("foreign") -%}
         (foreign)
-    {% endif -%}
-    {% if has("wanderer") -%}
+    {%- endif -%}
+    {%- if has("wanderer") -%}
         , Wanderer
-    {% endif -%}
-    {% if has("group") -%}
+    {%- endif -%}
+    {%- if has("group") -%}
         , {{ character.group.first() }} ({{ character.group.first().rank.all() | join(", ") }})
-    {% endif -%}
-    {% if has("pronouns") -%}
+    {%- endif -%}
+    {%- if has("pronouns") -%}
         ; {{ character.pronouns.all() | join(", ") }}
-    {% endif -%}
+    {%- endif -%}
     </div>
-{% endblock -%}
+{%- endblock -%}
 
-{% block groups -%}
+{%- block groups -%}
     {# group and org membership #}
-    {% if has("group") and character.group.rest() -%}
+    {%- if has("group") and character.group.rest() -%}
         <div>
-        {% for g in character.group.rest() -%}
+        {%- for g in character.group.rest() -%}
             {{ g }} ({{ g.rank.all() | join(", ") }})
-        {% endfor -%}
+        {%- endfor -%}
         </div>
-    {% endif -%}
-{% endblock -%}
+    {%- endif -%}
+{%- endblock -%}
 
-{% block portrait -%}
+{%- block portrait -%}
     {# portrait image. Only used if portrait tag is set. #}
-    {% if has("portrait") -%}
+    {%- if has("portrait") -%}
         <img src="/{{ character.portrait.first() }}" class="align-right decor-shadow" width="150px" loading="lazy">
-    {% endif -%}
-{% endblock -%}
+    {%- endif -%}
+{%- endblock -%}
 
-{% block location -%}
+{%- block location -%}
     {# details of the character's location #}
-    {% if has("location") -%}
+    {%- if has("location") -%}
         <div>
         {{ character.location.first() }}
-        {% if has("region") -%}
+        {%- if has("region") -%}
             - {{ character.region.first() }}
-        {% endif -%}
-        {% if has("locale") -%}
+        {%- endif -%}
+        {%- if has("locale") -%}
             - {{ character.locale.first() }}
-        {% endif -%}
+        {%- endif -%}
         </div>
-    {% endif -%}
-{% endblock -%}
+    {%- endif -%}
+{%- endblock -%}
 
-{% block system -%}
+{%- block system -%}
     {# extra info specific to a game system. Like FATE aspects and such. Blank by default. #}
-{% endblock -%}
+{%- endblock -%}
 
-{% block appearance -%}
+{%- block appearance -%}
     {# character appearance #}
-    {% if has("appearance") -%}
+    {%- if has("appearance") -%}
         {{ ["*Appearance:* ", character.appearance.all() | join(' ')] | join(' ') | md }}
-    {% endif -%}
-{% endblock -%}
+    {%- endif -%}
+{%- endblock -%}
 
-{% block description -%}
+{%- block description -%}
     {# character description #}
     {{ character.description | md }}
-{% endblock -%}
+{%- endblock -%}
 
-{% block dead -%}
+{%- block dead -%}
     {# details about the character's death #}
-    {% if has("dead") and character.dead.first().value -%}
+    {%- if has("dead") and character.dead.first().value -%}
         {{ ["*Dead:*", character.dead.all() | join(' ')] | join(' ') | md }}
-    {% endif -%}
-{% endblock -%}
+    {%- endif -%}
+{%- endblock -%}
