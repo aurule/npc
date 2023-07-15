@@ -1,1 +1,1 @@
-{% extends "character-base.html" %}
+{% extends "character-base.md" %}
