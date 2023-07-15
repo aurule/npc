@@ -45,6 +45,16 @@ class CharacterLister:
             self.lang: str = self.campaign.settings.get("campaign.characters.listing.format")
 
     def list(self, target: TextIO):
+        """Generate a complete listing of all characters
+
+        This gets the characters and generates a listing entry for each one, emitting it to the given target.
+
+        Grouping headers are created automatically for each level of group criteria. Whenever that criterion
+        changes, a new header is emitted.
+
+        Args:
+            target (TextIO): Target to receive the emitted listings
+        """
         jenv = Environment(
             loader = CharacterFallbackLoader(self.campaign),
             auto_reload = False,
