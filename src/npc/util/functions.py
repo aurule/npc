@@ -201,3 +201,29 @@ def run_editor(file_path: Path, editor: str = None, *, debug: bool = False):
             return True
     except FileNotFoundError as e:
         raise e
+
+def arg_or_default(var, default) -> any:
+    """Use var if defined, or default if not
+
+    This small helper is meant to reduce the boilerplate for functions which accept optional arguments.
+    When a function has something like argname=None, you can write:
+
+        self.thing = arg_or_default(argname, default_value)
+
+    Instead of
+
+        if argname:
+            self.thing = argname
+        else:
+            self.thing = default_value
+
+    Args:
+        var (any): The value to use if it is not falsey
+        default (any): The value to return if var is falsey
+
+    Returns:
+        any: Var if that is truthy, otherwise default
+    """
+    if var:
+        return var
+    return default
