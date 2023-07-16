@@ -7,6 +7,7 @@ from npc.characters import Character
 from npc.campaign import Campaign, CharacterCollection
 from npc.templates import CharacterFallbackLoader
 from npc.db.query_builders import CharacterListerQueryBuilder
+from npc.util import arg_or_default
 from .character_view import CharacterView
 from .group_view import GroupView
 
@@ -28,7 +29,13 @@ class CharacterLister:
         "markdown": "md",
     }
 
-    def __init__(self, collection: CharacterCollection, *, lang: str = None):
+    def __init__(self,
+        collection: CharacterCollection,
+        *,
+        lang: str = None,
+        group_by: list[str] = None,
+        sort_by: list[str] = None,
+        base_header_level: int = None):
         """Create a character lister
 
         Args:
@@ -39,10 +46,12 @@ class CharacterLister:
         """
         self.collection: CharacterCollection = collection
         self.campaign: Campaign = collection.campaign
-        if lang:
-            self.lang: str = lang
-        else:
-            self.lang: str = self.campaign.settings.get("campaign.characters.listing.format")
+
+        settings = self.campaign.settings
+        self.lang: str = arg_or_default(lang, settings.get("campaign.characters.listing.format"))
+        self.group_by: list[str] = arg_or_default(group_by, settings.get("campaign.characters.listing.group_by"))
+        self.sort_by: list[str] = arg_or_default(sort_by, settings.get("campaign.characters.listing.sort_by"))
+        self.base_header_level: int = arg_or_default(base_header_level, settings.get("campaign.characters.listing.base_header_level"))
 
     def list(self, target: TextIO):
         """Generate a complete listing of all characters
@@ -64,14 +73,12 @@ class CharacterLister:
         gt = jenv.get_template
         write = target.write
 
-        settings = self.campaign.settings
         builder = CharacterListerQueryBuilder()
-        builder.group_by(*settings.get("campaign.characters.listing.group_by"))
-        builder.sort_by(*settings.get("campaign.characters.listing.sort_by"))
+        builder.group_by(*self.group_by)
+        builder.sort_by(*self.sort_by)
 
         num_groups: int = builder.next_group_index
-        base_header_level: int = settings.get("campaign.characters.listing.base_header_level")
-        character_header_level: int = base_header_level + num_groups
+        character_header_level: int = self.base_header_level + num_groups
         current_group_values: list[str] = []
         results = self.collection.apply_query(builder.query)
 
@@ -84,7 +91,7 @@ class CharacterLister:
                     write(
                         group_template.render(
                             {
-                                "header_level": base_header_level + group_index,
+                                "header_level": self.base_header_level + group_index,
                                 "group": GroupView(
                                     title=row_value,
                                     grouping=builder.grouped_by[group_index]),
