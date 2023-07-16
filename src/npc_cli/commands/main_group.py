@@ -20,3 +20,5 @@ def cli(ctx):
     except OSError:
         term_width = None
     ctx.max_content_width = term_width
+
+    ctx.show_default = True
