@@ -111,11 +111,33 @@ def lint(settings, edit):
 #######################
 
 @cli.command()
+@click.option("-f", "--format", "lang",
+    default=None,
+    help="The format to use.")
+@click.option("-g", "--group-by", "group",
+    default=None,
+    multiple=True,
+    help="Tags to group by. Additional groups will be nested.")
+@click.option("-s", "--sort-by", "sort",
+    default=None,
+    multiple=True,
+    help="Tags to sort by. Applied in order within the final group.")
+@click.option("-h", "--header_level",
+    default=None,
+    type=click.IntRange(1, 6),
+    help="The minimum header level to use.")
+@click.option("-o", "--output",
+    type=click.File('w'),
+    required=True,
+    help='Where to put the listing. Use "-" for STDOUT.')
 @pass_settings
-def list(settings):
+def list(settings, lang, group, sort, output, header_level):
     """Generate a public listing of characters
 
     This command only works within an existing campaign.
+
+    All options default to getting their values from your settings. Use the keys under
+    campaign.characters.listing to see and change these default values.
     """
     campaign = cwd_campaign(settings)
     if campaign is None:
@@ -123,7 +145,10 @@ def list(settings):
 
     campaign.characters.refresh()
 
-    output = io.StringIO()
-    lister = listers.CharacterLister(campaign.characters)
+    lister = listers.CharacterLister(
+        campaign.characters,
+        lang=lang,
+        group_by=group,
+        sort_by=sort,
+        base_header_level=header_level)
     lister.list(target=output)
-    print(output.getvalue())
