@@ -40,3 +40,13 @@ def test_shows_subtag_breakdown_absent_context(tmp_campaign, runner):
 
     assert "Nose" in result.output
     assert "Bellybutton" in result.output
+
+@isolated
+def test_errors_in_subtag_breakdown_with_bad_context(tmp_campaign, runner):
+    runner.invoke(cli, 'new person -n test -m tester -t org Torso -t rank Bellybutton')
+    runner.invoke(cli, 'new person -n testy -m tester -t org Face -t rank Nose')
+    runner.invoke(cli, 'new person -n testy -m tester -t group Face -t rank Cheek')
+
+    result = runner.invoke(cli, 'report values -t rank -c nope')
+
+    assert "Invalid value for '-c' / '--context'" in result.output
