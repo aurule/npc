@@ -6,6 +6,7 @@ import mistletoe
 from npc.characters import Character
 from npc.campaign import Campaign, CharacterCollection
 from npc.templates import CharacterFallbackLoader
+from npc.templates.filters import trim_tags
 from npc.db.query_builders import CharacterListerQueryBuilder
 from npc.util import arg_or_default
 from .character_view import CharacterView
@@ -70,6 +71,7 @@ class CharacterLister:
             autoescape = False,
         )
         jenv.filters["md"] = mistletoe.markdown
+        jenv.filters["trim_tags"] = trim_tags
         gt = jenv.get_template
         write = target.write
 
