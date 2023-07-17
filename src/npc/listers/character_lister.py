@@ -71,7 +71,7 @@ class CharacterLister:
             autoescape = False,
         )
         jenv.filters["md"] = mistletoe.markdown
-        jenv.filters["trim_tags"] = trim_tags
+        jenv.filters["mdi"] = lambda v: trim_tags(mistletoe.markdown(v))
         gt = jenv.get_template
         write = target.write
 

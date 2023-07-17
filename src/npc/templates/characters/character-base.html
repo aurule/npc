@@ -79,7 +79,7 @@
 {%- block appearance -%}
     {# character appearance #}
     {%- if has("appearance") -%}
-        <p><i>Appearance:</i> {{ character.appearance.all() | join(' ') | md | trim_tags }}</p>
+        <p><i>Appearance:</i> {{ character.appearance.all() | join(' ') | mdi }}</p>
     {%- endif -%}
 {%- endblock -%}
 
@@ -91,6 +91,6 @@
 {%- block dead -%}
     {# details about the character's death #}
     {%- if has("dead") and character.dead.first().value -%}
-        <p><i>Dead:</i> {{ character.dead.all() | join(' ') | md | trim_tags }}</p>
+        <p><i>Dead:</i> {{ character.dead.all() | join(' ') | mdi }}</p>
     {%- endif -%}
 {%- endblock -%}
