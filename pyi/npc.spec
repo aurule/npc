@@ -18,7 +18,7 @@ cli_analysis = Analysis(
         ("../src/npc/settings/types/generic",       "npc/settings/types/generic"),
         ("../src/npc/settings/types/nwod",          "npc/settings/types/nwod"),
         ("../src/npc/settings/types/wod",           "npc/settings/types/wod"),
-        ("../src/npc/templates/characters",         "*"),
+        ("../src/npc/templates/characters",         "npc/templates/characters"),
     ],
     hiddenimports=[],
     hookspath=[],
