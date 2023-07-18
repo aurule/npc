@@ -1,0 +1,33 @@
+{%- extends "character-base.html" -%}
+
+{%- block aka -%}
+    {{ super() }}
+    {%- if has("court") -%}
+        <div>
+            {{ character.court.first() | title }} {% if character.court.has("role") -%}
+                ({{ character.court.role.all() | join(", ") }})
+            {%- endif -%}
+        </div>
+    {%- endif -%}
+{%- endblock -%}
+
+{%- block vitals -%}
+    <div>
+    {%- if has("seeming") -%}
+        {{ character.seeming.first() | title }}
+    {%- endif -%}
+    {%- if has("kith") -%}
+        {{ character.kith.first() | title }}
+    {%- endif -%}
+    </div>
+    {{ super() }}
+{%- endblock -%}
+
+{%- block appearance -%}
+    {%- if has("mien") -%}
+        <p><i>Mien:</i> {{ character.mien.all() | join(' ') | mdi }}</p>
+    {%- endif -%}
+    {%- if has("mask") -%}
+        <p><i>Mask:</i> {{ character.mask.all() | join(' ') | mdi }}</p>
+    {%- endif -%}
+{%- endblock -%}
