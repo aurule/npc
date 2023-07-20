@@ -1,9 +1,11 @@
+from functools import cache
 from sqlalchemy import Select
 from pathlib import Path
 
 from npc.util import win_sanitize
 from npc.characters import CharacterReader, Character, Tag
 from npc.db import DB, character_repository
+from .subpath_components import FirstValueComponent, StaticValueComponent, ConditionalValueComponent
 
 class Pathfinder:
     """Class for finding and manipulating character-specific paths"""
@@ -29,32 +31,14 @@ class Pathfinder:
 
         Returns:
             Path: Path for the character file. This is only a directory! No filename is included.
-
-        Raises:
-            KeyError: Raised if the tags key is missing from a subpath component
-            ValueError: Raised if the subpath component's selector is not found or not recognized
         """
         character_path: Path = self.base_path
-        for component in self.path_components:
-            match component.get("selector"):
-                case "first_value":
-                    tag_names = component.get("tags")
-                    if not tag_names:
-                        raise KeyError("Missing tags key for subpath component")
-
-                    stmt: Select = character_repository.tag_values_by_name(character, *tag_names)
-
-                    if exists:
-                        existing_dirs: list = [child.name for child in character_path.iterdir() if child.is_dir()]
-                        stmt = stmt.where(Tag.value.in_(existing_dirs))
-
-                    with self.db.session() as session:
-                        result_tag = session.execute(stmt).first()
-
-                    if result_tag:
-                        character_path = character_path.joinpath(result_tag[0])
-                case _:
-                    raise ValueError("Invalid subpath component selector")
+        for component in self.make_component_stack(exists):
+            component_value = component.value(character, character_path)
+            if component_value:
+                working_path = character_path.joinpath(component_value)
+                if (not exists) or working_path.exists():
+                    character_path = working_path
 
         return character_path
 
@@ -77,3 +61,33 @@ class Pathfinder:
         suffix = type_spec.default_sheet_suffix
 
         return "".join([sanitized_name, CharacterReader.NAME_SEPARATOR, sanitized_mnemonic, suffix])
+
+    @cache
+    def make_component_stack(self, exists: bool) -> list:
+        """Create a stack of subpath component objects
+
+        These can then be iterated repeatedly to apply their rules to multiple characters.
+
+        Args:
+            exists (bool): Whether to limit paths to directories that already exist
+
+        Returns:
+            list: List of subpath component objects
+
+        Raises:
+            ValueError: Raised if the subpath component's selector is not found or not recognized
+        """
+        comps = []
+
+        for spec in self.path_components:
+            match spec.get("selector"):
+                case "first_value":
+                    comps.append(FirstValueComponent(self.db, spec, exists))
+                case "static_value":
+                    comps.append(StaticValueComponent(self.db, spec, exists))
+                case "conditional_value":
+                    comps.append(ConditionalValueComponent(self.db, spec, exists))
+                case _:
+                    raise ValueError("Invalid subpath component selector")
+
+        return comps
