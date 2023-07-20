@@ -66,6 +66,31 @@ class TestWithExistingDirsOnly:
 
         assert result == tmp_campaign.characters_dir / "blep"
 
+    def test_first_component_not_exist_adds_second(self, tmp_campaign):
+        patch = {
+            "characters": {
+                "subpath_components": [
+                    {
+                        "selector": "first_value",
+                        "tags": ["brains"]
+                    },
+                    {
+                        "selector": "first_value",
+                        "tags": ["test"]
+                    }
+                ]
+            }
+        }
+        tmp_campaign.patch_campaign_settings(patch)
+        tmp_campaign.characters_dir.joinpath("blep").mkdir()
+        db = DB(clearSingleton=True)
+        character = create_character([("test", "blep"), ("brains", "sure")], tmp_campaign, db)
+        finder = Pathfinder(tmp_campaign, db=db)
+
+        result = finder.build_character_path(character, exists=True)
+
+        assert result == tmp_campaign.characters_dir / "blep"
+
 class TestWithNonExistingDirs:
     def test_has_tag_adds_tag(self, tmp_campaign):
         set_subpath_components(tmp_campaign, "test")
