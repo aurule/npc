@@ -77,7 +77,7 @@ def isolated(func):
             func(*args, **kwargs)
     return wrapper
 
-def create_character(tags: list[tuple], tmp_campaign: Campaign, db: DB, type_key="person", **kwargs) -> Character:
+def create_character(tags: list[tuple], campaign: Campaign, db: DB, type_key="person", **kwargs) -> Character:
     """Create a new character object
 
     The new character and its tags are fully populated in the db. This method does not create a corresponding
@@ -85,7 +85,7 @@ def create_character(tags: list[tuple], tmp_campaign: Campaign, db: DB, type_key
 
     Args:
         tags (list[tuple]): Tag tuples to associate with the character.
-        tmp_campaign (Campaign): Campaign to create the characters within
+        campaign (Campaign): Campaign to create the characters within
         db (DB): Database to store the characters
         type_key (str): Type for the character objects (default: `"person"`)
         **kwargs (dict): All remaining keyword args are passed to CharacterFactory.make()
@@ -93,7 +93,7 @@ def create_character(tags: list[tuple], tmp_campaign: Campaign, db: DB, type_key
     Returns:
         Character: Newly created character file. Its tags property is eager-loaded.
     """
-    factory = CharacterFactory(tmp_campaign)
+    factory = CharacterFactory(campaign)
     rawtags = [RawTag(*tag) for tag in tags]
 
     character = factory.make("Test Mann", tags=rawtags, type_key=type_key, **kwargs)
