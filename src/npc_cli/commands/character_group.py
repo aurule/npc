@@ -152,3 +152,31 @@ def list(settings, lang, group, sort, output, header_level):
         sort_by=sort,
         base_header_level=header_level)
     lister.list(target=output)
+
+#############################
+# Reorganize character files
+#############################
+
+@cli.command()
+@click.option("--keep-empty/--del-empty",
+    default=True,
+    help="Whether to keep empty directories after all files are moved.")
+@click.option("--dryrun/--apply",
+    default=True,
+    help="Whether to show the changes that would be made, or actually make those changes")
+@pass_settings
+def reorg(settings, keep_empty, dryrun):
+    """Reorganize character files
+
+    This command only works within an existing campaign.
+
+    As moving around a bunch of files can be disruptive, this command by default
+    runs in "dryrun" mode, where the changes which would be made are displayed,
+    but no files are actually moved. To apply changes, use the --apply flag.
+    """
+    campaign = cwd_campaign(settings)
+    if campaign is None:
+        raise CampaignNotFoundException
+
+    # use campaign helper to handle the logic
+    # need to call out any conflict warnings even with dryrun=False
