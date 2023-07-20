@@ -2,7 +2,6 @@ import pytest
 
 from tests.fixtures import tmp_campaign, create_character
 from npc.campaign import Campaign
-from npc.characters import Character, Tag, CharacterFactory, RawTag
 from npc.db import DB
 
 from npc.campaign import Pathfinder

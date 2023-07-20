@@ -2,7 +2,7 @@ import pytest
 import re
 
 from tests.fixtures import tmp_campaign, create_character
-from npc.characters import CharacterFactory, Character, RawTag
+from npc.characters import Character
 from npc.campaign import Campaign
 from npc.db import DB
 

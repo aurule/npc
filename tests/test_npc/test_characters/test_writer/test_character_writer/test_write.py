@@ -1,6 +1,5 @@
 from tests.fixtures import tmp_campaign, create_character
 
-from npc.characters import CharacterFactory, Character, RawTag
 from npc.campaign import Campaign
 from npc.db import DB
 
