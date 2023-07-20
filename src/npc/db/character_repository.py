@@ -3,7 +3,7 @@
 These queries get data that's related to a character or its tags.
 """
 
-from sqlalchemy import select, Select, func, desc
+from sqlalchemy import select, Select, Exists, func, desc
 from sqlalchemy.orm import selectinload
 from npc.characters import Tag, Character
 
@@ -54,6 +54,22 @@ def tags(character: Character) -> Select:
     return select(Tag) \
         .filter(Tag.character_id == character.id) \
         .order_by(Tag.id)
+
+def has_tags(character: Character, *names: str) -> Select:
+    """Create a db query to get whether the named Tag records exist for a character
+
+    Builds an existence query for the named tags, scoped to the character. Best used with the scalar() method
+    to get a single boolean-esque value.
+
+    Args:
+        character (Character): Character containing the tags to query
+        names (Tuple[str]): Tag names to include in the query
+
+    Returns:
+        Select: Select object for the tag existence query
+    """
+    exists_test: Exists = tags_by_name(character, *names).exists()
+    return select(func.count(1)).where(exists_test)
 
 def all() -> Select:
     """Create a db query to get all Character records
