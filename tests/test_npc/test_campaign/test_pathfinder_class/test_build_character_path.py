@@ -1,6 +1,6 @@
 import pytest
 
-from tests.fixtures import tmp_campaign
+from tests.fixtures import tmp_campaign, create_character
 from npc.campaign import Campaign
 from npc.characters import Character, Tag, CharacterFactory, RawTag
 from npc.db import DB
@@ -19,17 +19,6 @@ def set_subpath_components(campaign, *components):
         }
     }
     campaign.patch_campaign_settings(patch)
-
-def create_character(tags: list, tmp_campaign: Campaign, db: DB) -> Character:
-    factory = CharacterFactory(tmp_campaign)
-    rawtags = [RawTag(*tag) for tag in tags]
-
-    character = factory.make("Test Mann", type_key="person", tags=rawtags)
-    with db.session() as session:
-        session.add(character)
-        session.commit()
-        character.tags # load the tags immediately to prevent DetachedInstanceError later
-    return character
 
 class TestWithExistingDirsOnly:
     def test_tag_value_exists_adds_tag(self, tmp_campaign):

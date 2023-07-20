@@ -1,20 +1,10 @@
-from tests.fixtures import tmp_campaign
+from tests.fixtures import tmp_campaign, create_character
+
 from npc.characters import CharacterFactory, Character, RawTag
 from npc.campaign import Campaign
 from npc.db import DB
 
 from npc.characters import CharacterWriter
-
-def create_character(tags: list, tmp_campaign: Campaign, db: DB, type_key="person", **kwargs) -> Character:
-    factory = CharacterFactory(tmp_campaign)
-    rawtags = [RawTag(*tag) for tag in tags]
-
-    character = factory.make("Test Mann", tags=rawtags, type_key=type_key, **kwargs)
-    with db.session() as session:
-        session.add(character)
-        session.commit()
-        character.tags # load the tags immediately to prevent DetachedInstanceError later
-    return character
 
 def test_creates_missing_file(tmp_campaign):
     db = DB(clearSingleton=True)
