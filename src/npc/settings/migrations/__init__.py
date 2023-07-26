@@ -8,6 +8,8 @@
 # * renaming existing keys
 # * warning about removed keys
 # * warning about formatting changes
+# * moving existing supporting files
+# * warning about files we don't know how to use
 # special-case operations:
 # * moving from json to yaml, just for the first migration
 #
