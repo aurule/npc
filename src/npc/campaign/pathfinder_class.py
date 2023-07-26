@@ -12,7 +12,6 @@ class Pathfinder:
 
     def __init__(self, campaign, db: DB = None):
         self.campaign = campaign
-        self.path_components = campaign.settings.get("campaign.characters.subpath_components")
 
         if not db:
             self.db = DB()
@@ -78,7 +77,7 @@ class Pathfinder:
         """
         comps = []
 
-        for spec in self.path_components:
+        for spec in self.campaign.settings.get("campaign.characters.subpath_components"):
             match spec.get("selector"):
                 case "first_value":
                     comps.append(FirstValueComponent(self.db, spec, exists))
