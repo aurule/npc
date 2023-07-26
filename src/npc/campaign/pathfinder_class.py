@@ -13,7 +13,6 @@ class Pathfinder:
     def __init__(self, campaign, db: DB = None):
         self.campaign = campaign
         self.path_components = campaign.settings.get("campaign.characters.subpath_components")
-        self.base_path = campaign.characters_dir
 
         if not db:
             self.db = DB()
@@ -32,7 +31,7 @@ class Pathfinder:
         Returns:
             Path: Path for the character file. This is only a directory! No filename is included.
         """
-        character_path: Path = self.base_path
+        character_path: Path = self.campaign.characters_dir
         for component in self.make_component_stack(exists):
             component_value = component.value(character, character_path)
             if component_value:
