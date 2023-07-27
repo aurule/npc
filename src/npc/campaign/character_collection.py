@@ -18,6 +18,7 @@ class CharacterCollection():
 
         self.campaign = campaign
         self.root = campaign.characters_dir
+        self.count = 0
 
     def refresh(self):
         """Load npc files into the db
@@ -76,6 +77,7 @@ class CharacterCollection():
             session.add(character)
             session.commit()
 
+        self.count += 1
         return character.id
 
     def all(self):
