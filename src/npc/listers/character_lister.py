@@ -54,7 +54,7 @@ class CharacterLister:
         self.sort_by: list[str] = arg_or_default(sort_by, settings.get("campaign.characters.listing.sort_by"))
         self.base_header_level: int = arg_or_default(base_header_level, settings.get("campaign.characters.listing.base_header_level"))
 
-    def list(self, target: TextIO):
+    def list(self, target: TextIO, progress_callback = None):
         """Generate a complete listing of all characters
 
         This gets the characters and generates a listing entry for each one, emitting it to the given target.
@@ -63,8 +63,14 @@ class CharacterLister:
         changes, a new header is emitted.
 
         Args:
-            target (TextIO): Target to receive the emitted listings
+            target            (TextIO):   Target to receive the emitted listings
+            progress_callback (Callable): Optional callback to update a progress bar
         """
+        def default_progress():
+            pass
+        if progress_callback is None:
+            progress_callback = default_progress
+
         jenv = Environment(
             loader = CharacterFallbackLoader(self.campaign),
             auto_reload = False,
@@ -115,6 +121,7 @@ class CharacterLister:
                 )
             )
             write("\n\n")
+            progress_callback()
 
     @cached_property
     def template_suffix(self) -> str:
