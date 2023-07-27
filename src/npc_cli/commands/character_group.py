@@ -151,7 +151,15 @@ def list(settings, lang, group, sort, output, header_level):
         group_by=group,
         sort_by=sort,
         base_header_level=header_level)
-    lister.list(target=output)
+
+    if output.name != '<stdout>':
+        with click.progressbar(length=campaign.characters.count) as bar:
+            def progress():
+                bar.update(1)
+
+            lister.list(target=output, progress_callback=progress)
+    else:
+        lister.list(target=output)
 
 #############################
 # Reorganize character files
