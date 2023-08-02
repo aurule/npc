@@ -1,0 +1,15 @@
+{%- block name -%}
+    <h{{ header_level -}}>
+    {{- character.realname }} {% if has("dead") -%}
+        (Deceased)
+    {%- endif -%}
+    </h{{ header_level }}>
+{%- endblock -%}
+
+{% if has("test") %}
+    {{ character.test.all() | join(' ') | md }}
+{% endif %}
+
+{% if has("test") %}
+    <span>{{ character.test.all() | join(' ') | mdi }}</span>
+{% endif %}

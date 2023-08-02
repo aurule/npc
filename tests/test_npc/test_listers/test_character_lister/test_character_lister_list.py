@@ -95,3 +95,30 @@ class TestGroupings:
 
         result = target.getvalue()
         assert "# No org" in result
+
+class TestFilters():
+    def test_renders_markdown(self):
+        db = DB(clearSingleton=True)
+        campaign = Campaign(fixture_file("listing", "markdown"))
+        campaign.characters.db = db
+        campaign.characters.refresh()
+        lister = CharacterLister(campaign.characters, lang="html")
+        target = StringIO()
+
+        lister.list(target=target)
+
+        result = target.getvalue()
+        assert "<p>A <em>testing</em> string with <strong>markdown</strong></p>" in result
+
+    def test_renders_inline_markdown(self):
+        db = DB(clearSingleton=True)
+        campaign = Campaign(fixture_file("listing", "markdown"))
+        campaign.characters.db = db
+        campaign.characters.refresh()
+        lister = CharacterLister(campaign.characters, lang="html")
+        target = StringIO()
+
+        lister.list(target=target)
+
+        result = target.getvalue()
+        assert "<span>A <em>testing</em> string with <strong>markdown</strong></span>" in result
