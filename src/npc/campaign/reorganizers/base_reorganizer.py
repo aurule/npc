@@ -35,15 +35,15 @@ class BaseReorganizer:
     """
 
     def __init__(self):
-        self.ideal_paths: list[RecordPaths] = []
+        self.record_paths: list[RecordPaths] = []
 
     def gather_paths(self):
         """Method to gather the ideal paths for a certain type of record
 
-        Subclasses should use this method to populate ideal_paths with RecordPaths instances.
+        Subclasses should use this method to populate record_paths with RecordPaths instances.
 
         This is not implemented by default, although the base reorganizer can be used by manually populating
-        the ideal_paths list.
+        the record_paths list.
 
         Raises:
             NotImplementedError: Subclasses should implement this method to get the current and ideal paths
