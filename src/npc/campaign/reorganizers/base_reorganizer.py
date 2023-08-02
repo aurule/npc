@@ -15,18 +15,6 @@ class RecordPaths:
     current_path: Path
     ideal_path: Path
 
-@dataclass
-class ConflictMessage:
-    """Container for path conflict warning messages
-
-    Attributes:
-        id: ID of the record
-        message: Text describing the path conflict
-    """
-
-    id: int
-    message: str
-
 class BaseReorganizer:
     """Class for handling file reorganization
 
@@ -51,9 +39,28 @@ class BaseReorganizer:
         """
         raise NotImplementedError
 
-    def check_conflicts(self) -> list[ConflictMessage]:
-        pass
-        # if an ideal path appears more than once, that's bad
+    def check_conflicts(self) -> list[str]:
+        """Check for problems with the generated ideal paths
+
+        This checks for problems in the ideal paths that cannot be resolved automatically. Currently, just one
+        check is performed:
+
+        1. Every ideal path must be unique
+
+        Returns:
+            list[str]: List of error messages. If it's empty, all is well.
+        """
+        messages: list[str] = []
+        conflicting_paths: set[Path] = set()
+
+        unique_paths: set[Path] = set()
+        for recpath in self.record_paths:
+            if recpath.ideal_path in unique_paths:
+                conflicting_paths.add(recpath.ideal_path)
+            else:
+                unique_paths.add(recpath.ideal_path)
+
+        return [f"Multiple files want to use the path '{cpath}'" for cpath in conflicting_paths]
 
     def make_movement_plan(self) -> list[RecordPaths]:
         pass
