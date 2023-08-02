@@ -49,10 +49,18 @@ class BaseReorganizer:
 
         return [f"Multiple files want to use the path '{cpath}'" for cpath in conflicting_paths]
 
-        pass
-        # skip all entries where a current path matches its ideal path
-        # if a current path is an ideal path, move it first
     def make_movement_plan(self) -> list[Relocation]:
+        """Create an ordered list of files moves to reach all of the ideal paths
+
+        This method removes any Relocation which are already satisfied. Then it makes sure that any
+        Relocation whose current path is another record's ideal path are moved out of the way first.
+
+        Returns:
+            list[Relocation]: List of Relocation objects which can safely be executed
+        """
+        plan: list[Relocation] = [r for r in self.relocations if not r.satisfied]
+
+        return sorted(plan)
 
     def execute_movement_plan(self, plan: list[Relocation]):
         pass
