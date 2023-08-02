@@ -1,6 +1,6 @@
 from npc.campaign.reorganizers import BaseReorganizer
 
-from npc.campaign.reorganizers.base_reorganizer import RecordPaths
+from npc.campaign.reorganizers.relocation_class import Relocation
 
 def test_returns_empty_with_no_paths():
     reorganizer = BaseReorganizer()
@@ -11,9 +11,9 @@ def test_returns_empty_with_no_paths():
 
 def test_returns_empty_without_conflicts():
     reorganizer = BaseReorganizer()
-    reorganizer.record_paths = [
-        RecordPaths(id = 1, current_path = "/test/first.txt", ideal_path = "test/first - first.txt"),
-        RecordPaths(id = 2, current_path = "/test/second.txt", ideal_path = "test/second - second.txt"),
+    reorganizer.relocations = [
+        Relocation(id = 1, current_path = "/test/first.txt", ideal_path = "test/first - first.txt"),
+        Relocation(id = 2, current_path = "/test/second.txt", ideal_path = "test/second - second.txt"),
     ]
 
     result = reorganizer.check_conflicts()
@@ -22,9 +22,9 @@ def test_returns_empty_without_conflicts():
 
 def test_returns_conflict_message():
     reorganizer = BaseReorganizer()
-    reorganizer.record_paths = [
-        RecordPaths(id = 1, current_path = "/test/first.txt", ideal_path = "test/first - first.txt"),
-        RecordPaths(id = 2, current_path = "/test/second.txt", ideal_path = "test/first - first.txt"),
+    reorganizer.relocations = [
+        Relocation(id = 1, current_path = "/test/first.txt", ideal_path = "test/first - first.txt"),
+        Relocation(id = 2, current_path = "/test/second.txt", ideal_path = "test/first - first.txt"),
     ]
 
     result = reorganizer.check_conflicts()
@@ -33,10 +33,10 @@ def test_returns_conflict_message():
 
 def test_returns_one_conflict_message_per_path():
     reorganizer = BaseReorganizer()
-    reorganizer.record_paths = [
-        RecordPaths(id = 1, current_path = "/test/first.txt", ideal_path = "test/first - first.txt"),
-        RecordPaths(id = 2, current_path = "/test/second.txt", ideal_path = "test/first - first.txt"),
-        RecordPaths(id = 3, current_path = "/test/third.txt", ideal_path = "test/first - first.txt"),
+    reorganizer.relocations = [
+        Relocation(id = 1, current_path = "/test/first.txt", ideal_path = "test/first - first.txt"),
+        Relocation(id = 2, current_path = "/test/second.txt", ideal_path = "test/first - first.txt"),
+        Relocation(id = 3, current_path = "/test/third.txt", ideal_path = "test/first - first.txt"),
     ]
 
     result = reorganizer.check_conflicts()

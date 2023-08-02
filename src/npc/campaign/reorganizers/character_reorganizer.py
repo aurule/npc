@@ -1,6 +1,7 @@
 from npc.db import DB
 
-from .base_reorganizer import BaseReorganizer, RecordPaths
+from .base_reorganizer import BaseReorganizer
+from .relocation_class import Relocation
 
 class CharacterReorganizer(BaseReorganizer):
     """Reorganizer for characters
