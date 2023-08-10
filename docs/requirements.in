@@ -1,3 +1,4 @@
 Sphinx >= 6.0
-sphinx_rtd_theme
+furo
 readthedocs-sphinx-search
+sphinx_inline_tabs
