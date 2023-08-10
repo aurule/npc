@@ -24,7 +24,7 @@ packaging==23.1
     # via pytest
 pluggy==1.2.0
     # via pytest
-pygments==2.15.1
+pygments==2.16.1
     # via rich
 pytest==7.4.0
     # via
@@ -43,7 +43,7 @@ pytest-pretty==1.2.0
     # via -r requirements-ci.in
 pyyaml==6.0.1
     # via -r requirements.in
-rich==13.4.2
+rich==13.5.2
     # via pytest-pretty
 sqlalchemy==2.0.19
     # via -r requirements.in
