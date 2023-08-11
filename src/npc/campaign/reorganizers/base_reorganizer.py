@@ -1,4 +1,5 @@
 from pathlib import Path
+from shutil import move
 
 from .relocation_class import Relocation
 
@@ -62,6 +63,27 @@ class BaseReorganizer:
 
         return sorted(plan)
 
-    def execute_movement_plan(self, plan: list[Relocation]):
-        pass
-        # execute the movement plan in order
+    def execute_movement_plan(self, plan: list[Relocation], progress_callback = None):
+        """Move files in order as given in the list
+
+        Each relocation object is executed, causing the file at its current_path to be moved to the
+        ideal_path. If the ideal_path's parents do not exist, they are created first.
+
+        This method can theoretically throw all kinds of filesystem errors if something goes wrong. See
+        the documentation for shutil.move for details.
+
+        Args:
+            plan (list[Relocation]): List of relocation objects that describe file moves
+            progress_callback (Callable): Optional callback to update a progress bar
+        """
+        def default_progress():
+            pass
+        if progress_callback is None:
+            progress_callback = default_progress
+
+        for reloc in plan:
+            if not reloc.ideal_path.exists():
+                reloc.ideal_path.parent.mkdir(parents=True, exist_ok=True)
+
+            move(reloc.current_path, reloc.ideal_path)
+            progress_callback()

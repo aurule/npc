@@ -102,3 +102,18 @@ def create_character(tags: list[tuple], campaign: Campaign, db: DB, type_key="pe
         session.commit()
         character.tags # load the tags immediately to prevent DetachedInstanceError later
     return character
+
+class ProgressCounter:
+    """Drop-in progress bar fixture
+
+    Instead of rendering a bar, this just increments an internal count each time its progress method is called.
+    """
+    def __init__(self):
+        self.count = 0
+
+    def progress(self):
+        """Progress bar increment method
+
+        Pass this as the progress_callback to test that it was called.
+        """
+        self.count += 1
