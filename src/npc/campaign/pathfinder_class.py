@@ -12,11 +12,7 @@ class Pathfinder:
 
     def __init__(self, campaign, db: DB = None):
         self.campaign = campaign
-
-        if not db:
-            self.db = DB()
-        else:
-            self.db = db
+        self.db = db if db else DB()
 
     def build_character_path(self, character: Character, *, exists: bool = True) -> Path:
         """Construct a character path based on the campaign settings
