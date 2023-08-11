@@ -26,6 +26,15 @@ def fixture_file(*fixture_path: list[str]) -> Path:
     return base.joinpath(*fixture_path)
 
 @pytest.fixture
+def db() -> DB:
+    """Pytest fixture to supply an isolated database object
+
+    Returns:
+        DB: Database object that will not be reused elsewhere
+    """
+    return DB(clearSingleton=True)
+
+@pytest.fixture
 def tmp_campaign(tmp_path: Path) -> Campaign:
     """Pytest fixture to supply a campaign object initialized to a temporary directory
 
