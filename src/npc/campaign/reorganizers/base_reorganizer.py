@@ -98,4 +98,15 @@ class BaseReorganizer:
                 reloc.ideal_path.parent.mkdir(parents=True, exist_ok=True)
 
             move(reloc.current_path, reloc.ideal_path)
+            self.after_move(reloc)
             progress_callback()
+
+    def after_move(self, relocation: Relocation):
+        """Optional hook for performing some action after a file has been moved
+
+        This is intended for quick operations like updating a database field with the new path.
+
+        Args:
+            relocation (Relocation): The relocation that was just executed.
+        """
+        return
