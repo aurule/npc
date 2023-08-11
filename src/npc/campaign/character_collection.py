@@ -65,7 +65,8 @@ class CharacterCollection():
     def create(self, **kwargs) -> int:
         """Make and save a new character object
 
-        The character object is created using the given kwargs and immediately persisted to the database.
+        The character object is created using the given kwargs and immediately persisted to the database. Our
+        count of total characters is also updated.
 
         Returns:
             int: ID of the newly created character
@@ -80,17 +81,32 @@ class CharacterCollection():
         self.count += 1
         return character.id
 
-    def all(self):
+    def all(self) -> list[Character]:
         """Get all character records
 
         These records will be detached from any session, so a different manual session will be needed to get
         their tags.
 
         Returns:
-            result: Database result of the character objects
+            list[Character]: List of the character objects
         """
         with self.db.session() as session:
             return session.scalars(character_repository.all())
+
+    def get(self, id: int) -> Character:
+        """Get a single character record by ID
+
+        This record is detached from its session, so a different session will need to be used for further
+        manipulation or getting tags.
+
+        Args:
+            id (int): ID of the character record
+
+        Returns:
+            Character: Character record associated with the given ID
+        """
+        with self.db.session() as session:
+            return session.scalar(character_repository.get(id))
 
     def apply_query(self, query):
         """Run an arbitrary query against this collection
