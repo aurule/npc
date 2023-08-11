@@ -3,7 +3,7 @@
 These queries get data that's related to a character or its tags.
 """
 
-from sqlalchemy import select, Select, Exists, func, desc
+from sqlalchemy import desc, Exists, func, select, Select, update, Update
 from sqlalchemy.orm import selectinload
 from npc.characters import Tag, Character
 
@@ -117,3 +117,19 @@ def attr_counts(name: str) -> Select:
     return select(attr, func.count(1).label("attr_count")) \
         .group_by(attr) \
         .order_by(desc("attr_count"))
+
+def update_attrs_by_id(id: int, values: dict) -> Update:
+    """Create a db query to update one or more character attributes
+
+    Builds a query that updates the named attributes on the character with the given ID.
+
+    Args:
+        id (int): ID of the character to update
+        values (dict): Dict of attribute names and values to set
+
+    Returns:
+        Update: Update object for the query
+    """
+    return update(Character) \
+        .where(Character.id == id) \
+        .values(values)
