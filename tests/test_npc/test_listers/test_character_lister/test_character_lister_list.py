@@ -1,6 +1,6 @@
 import pytest
 from io import StringIO
-from tests.fixtures import fixture_file
+from tests.fixtures import fixture_file, ProgressCounter
 from npc.db import DB
 from npc.campaign import Campaign
 
@@ -122,3 +122,17 @@ class TestFilters():
 
         result = target.getvalue()
         assert "<span>A <em>testing</em> string with <strong>markdown</strong></span>" in result
+
+class TestProgressBar():
+    def test_updates_progress(self):
+        db = DB(clearSingleton=True)
+        campaign = Campaign(fixture_file("listing", "show_all"))
+        campaign.characters.db = db
+        campaign.characters.refresh()
+        lister = CharacterLister(campaign.characters, lang="markdown")
+        target = StringIO()
+        counter = ProgressCounter()
+
+        lister.list(target=target, progress_callback=counter.progress)
+
+        assert counter.count == 2
