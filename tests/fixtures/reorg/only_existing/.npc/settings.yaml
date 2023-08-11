@@ -1,0 +1,12 @@
+campaign:
+  characters:
+    listing:
+      group_by:
+      - last_initial
+  name: Test Campaign
+  system: generic
+  characters:
+    subpath_components:
+      - selector: first_value
+        tags: [org]
+
