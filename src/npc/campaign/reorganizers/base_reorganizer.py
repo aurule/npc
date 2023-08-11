@@ -13,6 +13,18 @@ class BaseReorganizer:
     def __init__(self):
         self.relocations: list[Relocation] = []
 
+    def add_relocation(self, id: int, current_path: Path, ideal_path: Path):
+        """Simple helper method to add a relocation to our list
+
+        Intended to make subclasses easier to use.
+
+        Args:
+            id (int): ID of the record to move
+            current_path (Path): Current path of the record's file
+            ideal_path (Path): Target path of the record's file
+        """
+        self.relocations.append(Relocation(id, current_path, ideal_path))
+
     def gather_paths(self):
         """Method to gather the ideal paths for a certain type of record
 
