@@ -230,4 +230,5 @@ def reorg(settings, keep_empty, interactive, use_existing):
 
         reorganizer.execute_movement_plan(plan, progress_callback=progress)
 
-    # if not keep_empty, remove empty dirs
+    if not keep_empty:
+        campaign.characters.prune_empty_dirs()

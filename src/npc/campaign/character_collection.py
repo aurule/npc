@@ -123,3 +123,16 @@ class CharacterCollection():
         """
         with self.db.session() as session:
             return session.execute(query)
+
+    def prune_empty_dirs(self):
+        """Remove all empty directories within our root
+
+        All empty directories are deleted. If this causes a parent dir to become empty, it is then also
+        deleted.
+        """
+        all_dirs = [dirpath for dirpath in self.root.glob("**/*/")]
+        for dirpath in reversed(all_dirs):
+            try:
+                dirpath.rmdir()
+            except OSError as e:
+                continue
