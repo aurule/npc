@@ -8,6 +8,8 @@ alabaster==0.7.13
     # via sphinx
 babel==2.12.1
     # via sphinx
+beautifulsoup4==4.12.2
+    # via furo
 build==0.10.0
     # via pip-tools
 certifi==2023.7.22
@@ -18,12 +20,14 @@ click==8.1.6
     # via
     #   -r requirements.in
     #   pip-tools
+colorama==0.4.6
+    # via sphinx-autobuild
 coverage[toml]==7.2.7
     # via pytest-cov
 docutils==0.18.1
-    # via
-    #   sphinx
-    #   sphinx-rtd-theme
+    # via sphinx
+furo==2023.7.26
+    # via -r requirements-dev.in
 idna==3.4
     # via requests
 imagesize==1.4.1
@@ -34,6 +38,8 @@ jinja2==3.1.2
     # via
     #   -r requirements.in
     #   sphinx
+livereload==2.6.3
+    # via sphinx-autobuild
 markdown-it-py==3.0.0
     # via rich
 markupsafe==2.1.3
@@ -53,6 +59,7 @@ pluggy==1.2.0
     # via pytest
 pygments==2.16.1
     # via
+    #   furo
     #   rich
     #   sphinx
 pyproject-hooks==1.0.0
@@ -82,28 +89,33 @@ rich==13.5.2
     # via
     #   -r requirements-dev.in
     #   pytest-pretty
+six==1.16.0
+    # via livereload
 snowballstemmer==2.2.0
     # via sphinx
+soupsieve==2.4.1
+    # via beautifulsoup4
 sphinx==6.2.1
     # via
     #   -r requirements-dev.in
-    #   sphinx-rtd-theme
+    #   furo
+    #   sphinx-autobuild
+    #   sphinx-basic-ng
     #   sphinxcontrib-applehelp
     #   sphinxcontrib-devhelp
     #   sphinxcontrib-htmlhelp
-    #   sphinxcontrib-jquery
     #   sphinxcontrib-qthelp
     #   sphinxcontrib-serializinghtml
-sphinx-rtd-theme==1.2.2
+sphinx-autobuild==2021.3.14
     # via -r requirements-dev.in
+sphinx-basic-ng==1.0.0b2
+    # via furo
 sphinxcontrib-applehelp==1.0.6
     # via sphinx
 sphinxcontrib-devhelp==1.0.4
     # via sphinx
 sphinxcontrib-htmlhelp==2.0.3
     # via sphinx
-sphinxcontrib-jquery==4.1
-    # via sphinx-rtd-theme
 sphinxcontrib-jsmath==1.0.1
     # via sphinx
 sphinxcontrib-qthelp==1.0.5
@@ -114,6 +126,8 @@ sqlalchemy==2.0.19
     # via -r requirements.in
 toml==0.10.2
     # via vulture
+tornado==6.3.2
+    # via livereload
 typing-extensions==4.7.1
     # via sqlalchemy
 urllib3==2.0.4

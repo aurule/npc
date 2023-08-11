@@ -32,6 +32,10 @@ help:
 docs:
 	${MAKE} -C docs html
 
+.PHONY: livedocs
+livedocs:
+	sphinx-autobuild docs docs/_build/html
+
 # INSTALLERS
 
 .PHONY: bin

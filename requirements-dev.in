@@ -1,7 +1,9 @@
 -r requirements-ci.in
 Sphinx >= 6.0
-sphinx_rtd_theme
+furo
 readthedocs-sphinx-search
 rich
+sphinx-autobuild
+sphinx_inline_tabs
 pip-tools >= 6.0
 vulture >= 2.7
