@@ -1,10 +1,11 @@
 import click
 import io
-from click import echo, BadParameter
+from click import echo, ClickException
 
 from npc import characters, linters, listers
 from npc.util import edit_files
-from npc_cli.presenters import type_list
+from npc.campaign.reorganizers import CharacterReorganizer
+from npc_cli.presenters import type_list, tabularize
 from npc_cli.helpers import cwd_campaign, write_new_character
 from npc_cli.errors import CampaignNotFoundException, BadCharacterTypeException
 
@@ -166,25 +167,67 @@ def list(settings, lang, group, sort, output, header_level):
 #############################
 
 @cli.command()
+@click.option("--interactive/--batch",
+    default=True,
+    help="Whether to prompt before making changes, or make them automatically.")
 @click.option("--keep-empty/--del-empty",
     default=True,
     help="Whether to keep empty directories after all files are moved.")
-@click.option("--dryrun/--apply",
+@click.option("--use-existing/--add-folders",
     default=True,
-    help="Whether to show the changes that would be made, or actually make those changes")
+    help="Whether to only use existing ones or allow making new folders")
 @pass_settings
-def reorg(settings, keep_empty, dryrun):
+def reorg(settings, keep_empty, interactive, use_existing):
     """Reorganize character files
 
     This command only works within an existing campaign.
 
     As moving around a bunch of files can be disruptive, this command by default
-    runs in "dryrun" mode, where the changes which would be made are displayed,
-    but no files are actually moved. To apply changes, use the --apply flag.
+    uses "interactive" mode, where the changes which would be made are displayed
+    and you are prompted whether to apply them. In batch mode, the changes are
+    applied automatically.
+
+    If two or more characters would try to claim the same file, errors are
+    shown.
     """
     campaign = cwd_campaign(settings)
     if campaign is None:
         raise CampaignNotFoundException
 
-    # use campaign helper to handle the logic
-    # need to call out any conflict warnings even with dryrun=False
+    campaign.characters.refresh()
+
+    reorganizer = CharacterReorganizer(campaign, exists=use_existing)
+    reorganizer.gather_paths()
+
+    errors = reorganizer.check_conflicts()
+    if errors:
+        echo("Found these problems:")
+        echo("\n".join([f" - {err}" for err in errors]))
+        raise ClickException("Cannot reorganize characters until these problems are fixed.")
+
+    plan = reorganizer.make_movement_plan()
+    if not plan:
+        echo("Nothing needs to be moved")
+        return
+
+    if interactive:
+        headers = ("Character", "Destination")
+        base = campaign.characters_dir
+        data = [
+            (
+             str(p.current_path.stem),
+             str(p.ideal_path.relative_to(base))
+            ) for p in plan
+        ]
+        echo("These characters will be moved:\n")
+        echo(tabularize(data, headers))
+        if not click.confirm("\nDo you want to apply these changes?"):
+            raise click.Abort
+
+    with click.progressbar(length=len(plan)) as bar:
+        def progress():
+            bar.update(1)
+
+        reorganizer.execute_movement_plan(plan, progress_callback=progress)
+
+    # if not keep_empty, remove empty dirs
