@@ -90,6 +90,18 @@ def with_tags() -> Select:
     return all() \
         .options(selectinload(Character.tags))
 
+def get(id: int) -> Select:
+    """Create a db query to get a single Character record
+
+    Args:
+        id (int): ID of the character record to get
+
+    Returns:
+        Select: Select object for the character query
+    """
+    return select(Character) \
+        .where(Character.id == id)
+
 def attr_counts(name: str) -> Select:
     """Create a db query to get a count for all values of an attribute
 
