@@ -23,7 +23,7 @@ def fixture_file(*fixture_path: list[str]) -> Path:
         Path: Pathlike object referencing the named fixture
     """
     base: Path = resources.files("tests.fixtures")
-    return base.joinpath(*fixture_path)
+    return base.joinpath("data", *fixture_path)
 
 @pytest.fixture
 def db() -> DB:
