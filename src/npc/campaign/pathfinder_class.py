@@ -40,7 +40,8 @@ class Pathfinder:
         """Create a filename using a character's attributes
 
         Sanitizes the name and mnemonic, then uses them to make a new filename. The format is
-        "name - mnemonic.npc".
+        "name - mnemonic.npc". The suffix used is based on the character type's default sheet. See
+        TypeSpec.default_sheet_suffix.
 
         Args:
             character (Character): Character to make a filename for
