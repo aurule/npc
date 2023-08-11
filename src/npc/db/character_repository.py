@@ -81,7 +81,7 @@ def all() -> Select:
     """
     return select(Character)
 
-def with_tags() -> Select:
+def all_with_tags() -> Select:
     """Create a db query to get all Character records and eager-load their tags
 
     Returns:

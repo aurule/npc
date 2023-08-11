@@ -23,7 +23,7 @@ class CharacterListerQueryBuilder:
 
     def __init__(self):
         self.query: Select = character_repository \
-            .with_tags() \
+            .all_with_tags() \
             .where(Character.delist == False)
         self.grouped_by: list[str] = []
         self.sorted_by: list[str] = []
