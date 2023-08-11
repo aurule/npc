@@ -1,6 +1,5 @@
-from npc.db import DB
 from npc.characters import Tag, CharacterFactory, RawTag
-from tests.fixtures import tmp_campaign
+from tests.fixtures import tmp_campaign, db
 
 from npc.reporters.tag_reporter import value_counts_report
 
@@ -15,16 +14,14 @@ def seed(db, campaign):
         session.add(char3)
         session.commit()
 
-def test_counts_mapped_tags_from_character(tmp_campaign):
-    db = DB(clearSingleton=True)
+def test_counts_mapped_tags_from_character(tmp_campaign, db):
     seed(db, tmp_campaign)
 
     result = value_counts_report("type", db=db)
 
     assert ("person", 3) in result
 
-def test_counts_normal_tags(tmp_campaign):
-    db = DB(clearSingleton=True)
+def test_counts_normal_tags(tmp_campaign, db):
     seed(db, tmp_campaign)
 
     result = value_counts_report("title", db=db)

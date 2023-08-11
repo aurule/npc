@@ -1,6 +1,5 @@
-from npc.db import DB
 from npc.characters import Tag, CharacterFactory, RawTag
-from tests.fixtures import tmp_campaign
+from tests.fixtures import tmp_campaign, db
 
 from npc.reporters.tag_reporter import subtag_value_counts_report
 
@@ -15,8 +14,7 @@ def seed(db, campaign):
         session.add(char3)
         session.commit()
 
-def test_counts_subtags(tmp_campaign):
-    db = DB(clearSingleton=True)
+def test_counts_subtags(tmp_campaign, db):
     seed(db, tmp_campaign)
 
     result = subtag_value_counts_report("role", "org", db=db)

@@ -1,14 +1,12 @@
 import pytest
 from io import StringIO
-from tests.fixtures import fixture_file, ProgressCounter
-from npc.db import DB
+from tests.fixtures import fixture_file, ProgressCounter, db
 from npc.campaign import Campaign
 
 from npc.listers import CharacterLister
 
 class TestCharacters:
-    def test_includes_names(self):
-        db = DB(clearSingleton=True)
+    def test_includes_names(self, db):
         campaign = Campaign(fixture_file("listing", "show_all"))
         campaign.characters.db = db
         campaign.characters.refresh()
@@ -21,8 +19,7 @@ class TestCharacters:
         assert "Test Mann" in result
         assert "Frank" in result
 
-    def test_excludes_delist(self):
-        db = DB(clearSingleton=True)
+    def test_excludes_delist(self, db):
         campaign = Campaign(fixture_file("listing", "skip_delist"))
         campaign.characters.db = db
         campaign.characters.refresh()
@@ -35,8 +32,7 @@ class TestCharacters:
         assert "Test Mann" in result
         assert "Frank" not in result
 
-    def test_char_header_higher_than_groups(self):
-        db = DB(clearSingleton=True)
+    def test_char_header_higher_than_groups(self, db):
         campaign = Campaign(fixture_file("listing", "basic_groups"))
         campaign.characters.db = db
         campaign.characters.refresh()
@@ -50,8 +46,7 @@ class TestCharacters:
         assert "## Test Mann" in result
 
 class TestGroupings:
-    def test_group_header_levels_increment(self):
-        db = DB(clearSingleton=True)
+    def test_group_header_levels_increment(self, db):
         campaign = Campaign(fixture_file("listing", "basic_groups"))
         campaign.characters.db = db
         campaign.characters.refresh()
@@ -65,8 +60,7 @@ class TestGroupings:
         assert "## T" in result
         assert "### Test Mann" in result
 
-    def test_resets_subgroups(self):
-        db = DB(clearSingleton=True)
+    def test_resets_subgroups(self, db):
         campaign = Campaign(fixture_file("listing", "basic_groups"))
         campaign.characters.db = db
         campaign.characters.refresh()
@@ -83,8 +77,7 @@ class TestGroupings:
         assert "## T" in result
         assert "### Test Mann" in result
 
-    def test_labels_null_group_static(self):
-        db = DB(clearSingleton=True)
+    def test_labels_null_group_static(self, db):
         campaign = Campaign(fixture_file("listing", "missing_groups"))
         campaign.characters.db = db
         campaign.characters.refresh()
@@ -97,8 +90,7 @@ class TestGroupings:
         assert "# No org" in result
 
 class TestFilters():
-    def test_renders_markdown(self):
-        db = DB(clearSingleton=True)
+    def test_renders_markdown(self, db):
         campaign = Campaign(fixture_file("listing", "markdown"))
         campaign.characters.db = db
         campaign.characters.refresh()
@@ -110,8 +102,7 @@ class TestFilters():
         result = target.getvalue()
         assert "<p>A <em>testing</em> string with <strong>markdown</strong></p>" in result
 
-    def test_renders_inline_markdown(self):
-        db = DB(clearSingleton=True)
+    def test_renders_inline_markdown(self, db):
         campaign = Campaign(fixture_file("listing", "markdown"))
         campaign.characters.db = db
         campaign.characters.refresh()
@@ -124,8 +115,7 @@ class TestFilters():
         assert "<span>A <em>testing</em> string with <strong>markdown</strong></span>" in result
 
 class TestProgressBar():
-    def test_updates_progress(self):
-        db = DB(clearSingleton=True)
+    def test_updates_progress(self, db):
         campaign = Campaign(fixture_file("listing", "show_all"))
         campaign.characters.db = db
         campaign.characters.refresh()

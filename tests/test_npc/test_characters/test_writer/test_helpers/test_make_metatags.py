@@ -1,11 +1,11 @@
 import pytest
+from tests.fixtures import db
 from npc.settings import MetatagSpec
 from npc.characters import Character, Tag, CharacterFactory
-from npc.db import DB
 
 from npc.characters.writer.helpers import make_metatags
 
-def test_returns_matching_metatag():
+def test_returns_matching_metatag(db):
     metatag_def = {
         "desc": "A testing tag",
         "static": {
@@ -19,7 +19,6 @@ def test_returns_matching_metatag():
     tag2 = Tag(id=2, name="brains", value="abby normal")
     tag3 = Tag(id=3, name="brawn", value="chonk")
     character.tags = [tag1, tag2, tag3]
-    db = DB(clearSingleton=True)
     with db.session() as session:
         session.add(character)
         session.commit()
@@ -28,7 +27,7 @@ def test_returns_matching_metatag():
 
     assert result_tags[0].spec.name == "monster"
 
-def test_returns_used_ids():
+def test_returns_used_ids(db):
     metatag_def = {
         "desc": "A testing tag",
         "static": {
@@ -42,7 +41,6 @@ def test_returns_used_ids():
     tag2 = Tag(id=2, name="brains", value="abby normal")
     tag3 = Tag(id=3, name="brawn", value="chonk")
     character.tags = [tag1, tag2, tag3]
-    db = DB(clearSingleton=True)
     with db.session() as session:
         session.add(character)
         session.commit()
@@ -54,7 +52,7 @@ def test_returns_used_ids():
     assert 2 in result_ids
     assert 3 in result_ids
 
-def test_returns_multiple_metatags_when_greedy():
+def test_returns_multiple_metatags_when_greedy(db):
     metatag_def = {
         "desc": "A testing tag",
         "static": {
@@ -72,7 +70,6 @@ def test_returns_multiple_metatags_when_greedy():
     tag5 = Tag(id=5, name="brains", value="mega")
     tag6 = Tag(id=6, name="brawn", value="meh")
     character.tags = [tag1, tag2, tag3, tag4, tag5, tag6]
-    db = DB(clearSingleton=True)
     with db.session() as session:
         session.add(character)
         session.commit()
@@ -81,7 +78,7 @@ def test_returns_multiple_metatags_when_greedy():
 
     assert result_tags[1].spec.name == "monster"
 
-def test_returns_used_ids_from_multiple():
+def test_returns_used_ids_from_multiple(db):
     metatag_def = {
         "desc": "A testing tag",
         "static": {
@@ -99,7 +96,6 @@ def test_returns_used_ids_from_multiple():
     tag5 = Tag(id=5, name="brains", value="mega")
     tag6 = Tag(id=6, name="brawn", value="meh")
     character.tags = [tag1, tag2, tag3, tag4, tag5, tag6]
-    db = DB(clearSingleton=True)
     with db.session() as session:
         session.add(character)
         session.commit()
