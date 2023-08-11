@@ -118,14 +118,14 @@ npc:
       subtags:
         job:
           desc: Name of the character's job at their employer
-    tie:
-      desc: Name of a person to whom the character is socially tied
+    link:
+      desc: Name of a person to whom the character has a social connection
       doc: >
-        Useful for noting families and other loose relationships that form
-        outside of regimented groups.
+        Useful for noting families and loose relationships that form outside of
+        regimented groups.
       subtags:
         rel:
-          desc: The nature of the relationship the character has to the tied person
+          desc: The nature of the relationship the character has to the linked person
           doc: >
             This subtag should almost always be used, as the nature of a
             relationship is at least as important as the fact that it exists.
