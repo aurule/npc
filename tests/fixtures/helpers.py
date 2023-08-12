@@ -86,6 +86,15 @@ def isolated(func):
             func(*args, **kwargs)
     return wrapper
 
+def clean_db(func):
+    """Decorator to reset the database singleton before a test
+    """
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+        DB(clearSingleton=True)
+        func(*args, **kwargs)
+    return wrapper
+
 def create_character(tags: list[tuple], campaign: Campaign, db: DB, type_key="person", **kwargs) -> Character:
     """Create a new character object
 
