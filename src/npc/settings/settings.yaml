@@ -243,15 +243,9 @@ campaign:
     ignore_subpaths: []
     subpath_components:
       - selector: first_value
-        tags: [type]
+        tags: [location]
       - selector: first_value
-        tags: [court]
-      - selector: first_value
-        tags: [freehold]
-      - selector: first_value
-        tags: [motley]
-      - selector: first_value
-        tags: [entitlement, group]
+        tags: [org, employer]
     listing:
       format: markdown
       group_by:
