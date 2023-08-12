@@ -227,3 +227,19 @@ def arg_or_default(var, default) -> any:
     if var:
         return var
     return default
+
+def prune_empty_dirs(root_path: Path):
+    """Remove all empty directories within a given root
+
+    All empty directories are deleted. If this causes a parent dir to become empty, it is then also
+    deleted. The root dir is never deleted.
+
+    Args:
+        root_path (Path): Directory whose descendents will be pruned
+    """
+    all_dirs = [dirpath for dirpath in root_path.rglob("*/")]
+    for dirpath in reversed(all_dirs):
+        try:
+            dirpath.rmdir()
+        except OSError as e:
+            continue

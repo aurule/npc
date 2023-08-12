@@ -3,7 +3,7 @@ import io
 from click import echo, ClickException
 
 from npc import characters, linters, listers
-from npc.util import edit_files
+from npc.util import edit_files, prune_empty_dirs
 from npc.campaign.reorganizers import CharacterReorganizer
 from npc_cli.presenters import type_list, tabularize
 from npc_cli.helpers import cwd_campaign, write_new_character
@@ -231,4 +231,4 @@ def reorg(settings, keep_empty, interactive, use_existing):
         reorganizer.execute_movement_plan(plan, progress_callback=progress)
 
     if not keep_empty:
-        campaign.characters.prune_empty_dirs()
+        prune_empty_dirs(campaign.characters_dir)
