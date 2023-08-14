@@ -28,6 +28,8 @@ docutils==0.18.1
     # via sphinx
 furo==2023.7.26
     # via -r requirements-dev.in
+greenlet==2.0.2
+    # via sqlalchemy
 idna==3.4
     # via requests
 imagesize==1.4.1
@@ -101,6 +103,7 @@ sphinx==6.2.1
     #   furo
     #   sphinx-autobuild
     #   sphinx-basic-ng
+    #   sphinx-inline-tabs
     #   sphinxcontrib-applehelp
     #   sphinxcontrib-devhelp
     #   sphinxcontrib-htmlhelp
@@ -110,6 +113,8 @@ sphinx-autobuild==2021.3.14
     # via -r requirements-dev.in
 sphinx-basic-ng==1.0.0b2
     # via furo
+sphinx-inline-tabs==2023.4.21
+    # via -r requirements-dev.in
 sphinxcontrib-applehelp==1.0.6
     # via sphinx
 sphinxcontrib-devhelp==1.0.4
@@ -126,7 +131,7 @@ sqlalchemy==2.0.19
     # via -r requirements.in
 toml==0.10.2
     # via vulture
-tornado==6.3.2
+tornado==6.3.3
     # via livereload
 typing-extensions==4.7.1
     # via sqlalchemy
