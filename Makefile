@@ -13,8 +13,9 @@ unused:
 
 requirements = requirements.txt requirements-ci.txt requirements-dev.txt docs/requirements.txt
 $(requirements): %.txt: %.in
-	pip-compile $< --resolver=backtracking --quiet
+	pip-compile $< --resolver=backtracking --strip-extras --quiet
 
+.PHONY: requirements $(requirements)
 requirements: $(requirements)
 
 .PHONY: clean
