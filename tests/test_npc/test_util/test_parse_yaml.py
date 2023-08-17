@@ -6,7 +6,7 @@ from tests.fixtures import fixture_file
 
 class TestWithValidFile:
     def test_returns_parsed_data(self):
-        valid_file: Path = fixture_file("valid.yaml")
+        valid_file: Path = fixture_file("yaml", "valid.yaml")
 
         result: dict = parse_yaml(valid_file)
 
@@ -14,7 +14,7 @@ class TestWithValidFile:
 
 class TestWithMalformedFile:
     def test_throws_parse_error(self):
-        invalid_file: Path = fixture_file("invalid.yaml")
+        invalid_file: Path = fixture_file("yaml", "invalid.yaml")
 
         with pytest.raises(ParseError):
             parse_yaml(invalid_file)

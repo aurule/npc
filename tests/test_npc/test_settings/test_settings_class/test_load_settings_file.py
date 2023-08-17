@@ -5,7 +5,7 @@ from npc.settings import Settings
 def test_loads_valid_settings():
     settings = Settings()
 
-    settings.load_settings_file(fixture_file("settings", "valid.yaml"))
+    settings.load_settings_file(fixture_file("yaml", "valid.yaml"))
 
     assert settings.get("valid") == True
 
@@ -19,14 +19,14 @@ def test_ignores_missing_files(tmp_path):
 def test_ignores_parse_errors():
     settings = Settings()
 
-    settings.load_settings_file(fixture_file("settings", "invalid.yaml"))
+    settings.load_settings_file(fixture_file("yaml", "invalid.yaml"))
 
     assert settings.get("npc.tags")
 
 def test_loads_into_namespace():
     settings = Settings()
 
-    settings.load_settings_file(fixture_file("settings", "valid.yaml"), namespace = "test")
+    settings.load_settings_file(fixture_file("yaml", "valid.yaml"), namespace = "test")
 
     assert settings.get("test.valid") == True
 
