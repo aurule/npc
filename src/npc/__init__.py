@@ -2,6 +2,16 @@
 Package for reading and manipulating campaign information.
 """
 
-from . import campaign, characters, settings, util, validation
-
-__version__ = "2.0.0 dev"
+__all__ = [
+    "campaign",
+    "characters",
+    "linters",
+    "listers",
+    "reporters",
+    "settings",
+    "templates",
+    "util",
+    "validation",
+]
+__author__ = "Paige Andrews"
+__version__ = "2.0.0a1"
