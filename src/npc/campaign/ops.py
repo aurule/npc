@@ -37,12 +37,15 @@ def init(campaign_path: str, *, name: str, system: str, desc: str = None, settin
     Returns:
         Settings: Settings object with the new campaign loaded
     """
-    config_contents: dict = {"campaign": {"name": name, "system": system}}
-    if desc is not None:
-        config_contents["campaign"]["desc"] = desc
-
     if settings is None:
         settings = Settings()
+
+    config_contents: dict = {
+        "npc": {"version": settings.versions["package"]},
+        "campaign": {"name": name, "system": system},
+    }
+    if desc is not None:
+        config_contents["campaign"]["desc"] = desc
 
     campaign_dir = Path(campaign_path)
     config_dir = campaign_dir / ".npc"
@@ -50,7 +53,7 @@ def init(campaign_path: str, *, name: str, system: str, desc: str = None, settin
     config_dir.mkdir(exist_ok = True)
     config_file = config_dir / "settings.yaml"
     if config_file.exists():
-        logger.info("Campaign settings dir exists, leaving it alone")
+        logger.info("Campaign settings exists, leaving it alone")
     else:
         with config_file.open('w', newline="\n") as f:
             yaml.dump(config_contents, f)

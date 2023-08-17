@@ -53,6 +53,16 @@ class TestSettingsFile:
 
         assert settings_contents["campaign"]["desc"] == self.campaign_desc
 
+    def test_includes_current_version(self, tmp_path):
+        settings = Settings()
+        init(tmp_path, name = self.campaign_name, system = self.campaign_system, desc = self.campaign_desc, settings = settings)
+
+        settings_file = tmp_path / ".npc" / "settings.yaml"
+        with settings_file.open("r") as f:
+            settings_contents = yaml.safe_load(f)
+
+        assert settings_contents["npc"]["version"] == settings.versions["package"]
+
 def test_creates_settings_object_when_none_supplied(tmp_path):
     campaign = init(tmp_path, name = "test", system = "fate")
 
