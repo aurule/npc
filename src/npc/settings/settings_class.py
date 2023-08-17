@@ -8,6 +8,7 @@ from importlib import resources
 from functools import cached_property
 
 from pathlib import Path
+from npc import __version__ as npc_version
 from npc.util import DataStore, ParseError
 from npc.util.functions import merge_data_dicts, prepend_namespace
 from .tags import make_deprecated_tag_specs
@@ -35,6 +36,9 @@ class Settings(DataStore):
 
         self.install_base = resources.files("npc")
         self.default_settings_path = self.install_base / "settings"
+        self.versions = {
+            "package": npc_version
+        }
 
         # load defaults and user prefs
         self.refresh()
@@ -44,25 +48,35 @@ class Settings(DataStore):
         Clear internal data, and refresh the default and personal settings files
         """
         self.data = {}
-        self.load_settings_file(self.default_settings_path / "settings.yaml")
+        self.load_settings_file(self.default_settings_path / "settings.yaml", version_key="internal")
         self.load_systems(self.default_settings_path / "systems")
-        self.load_settings_file(self.personal_dir / "settings.yaml")
+        self.load_settings_file(self.personal_dir / "settings.yaml", version_key="user")
         self.load_systems(self.personal_dir / "systems")
 
-    def load_settings_file(self, settings_file: Path, namespace: str = None) -> None:
+    def load_settings_file(self, settings_file: Path, namespace: str = None, *, version_key: str = None) -> None:
         """Open, parse, and merge settings from another file
 
         This is the primary way to load more settings info. Passing in a file path that does not exist will
-        result in a logged message and no error, since all setting files are optional.
+        result in a log message and no error, since all setting files are technically optional.
+
+        The version_key for any given file should be unique. These are the keys in use right now:
+        * internal
+        * user
+        * campaign
 
         Args:
             settings_file (Path): The file to load
             namespace (str): Optional namespace to use for new_data
+            version_key (str): Key to use when storing the file's stated npc version
         """
 
         loaded: dict = quiet_parse(settings_file)
         if loaded is None:
             return
+
+        if version_key:
+            file_version = loaded.get("npc", {}).pop("version", None)
+            self.versions[version_key] = file_version
 
         self.merge_data(loaded, namespace)
 
