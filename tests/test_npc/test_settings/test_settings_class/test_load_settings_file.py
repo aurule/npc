@@ -47,6 +47,14 @@ class TestVersionHandling():
 
         assert settings.versions.get("test") == "2.3.4-test"
 
+    def test_with_version_stores_path(self):
+        settings = Settings()
+        file_path = fixture_file("settings", "with_version.yaml")
+
+        settings.load_settings_file(file_path, file_key="test")
+
+        assert settings.paths.get("test") == file_path
+
     def test_without_version_stores_none(self):
         settings = Settings()
 

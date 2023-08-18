@@ -37,7 +37,10 @@ class Settings(DataStore):
         self.install_base = resources.files("npc")
         self.default_settings_path = self.install_base / "settings"
         self.versions = {
-            "package": npc_version
+            "package": npc_version,
+        }
+        self.paths = {
+            "package": None,
         }
 
         # load defaults and user prefs
@@ -77,6 +80,7 @@ class Settings(DataStore):
         if file_key:
             file_version = loaded.get("npc", {}).pop("version", None)
             self.versions[file_key] = file_version
+            self.paths[file_key] = settings_file
 
         self.merge_data(loaded, namespace)
 
