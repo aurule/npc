@@ -20,7 +20,7 @@ class Campaign:
             settings = Settings()
         self.settings = settings
 
-        self.settings.load_settings_file(self.settings_file, version_key="campaign")
+        self.settings.load_settings_file(self.settings_file, file_key="campaign")
         self.settings.load_systems(self.settings_dir / "systems")
 
         self.characters = CharacterCollection(self)
@@ -361,7 +361,7 @@ class Campaign:
         """Update some values in the campaign settings and corresponding file
 
         Updates the internal campaign settings with data, then writes those changes to the current campaign's
-        settings file.
+        settings file. The data is wrapped in the campaign namespace automatically.
 
         If campaign_dir is not set, this returns immediately.
 

@@ -31,7 +31,7 @@ def test_loads_into_namespace():
     assert settings.get("test.valid") == True
 
 class TestVersionHandling():
-    def test_without_version_key_does_not_store(self):
+    def test_without_file_key_does_not_store(self):
         settings = Settings()
 
         settings.load_settings_file(fixture_file("settings", "with_version.yaml"))
@@ -43,20 +43,20 @@ class TestVersionHandling():
     def test_with_version_stores_in_key(self):
         settings = Settings()
 
-        settings.load_settings_file(fixture_file("settings", "with_version.yaml"), version_key="test")
+        settings.load_settings_file(fixture_file("settings", "with_version.yaml"), file_key="test")
 
         assert settings.versions.get("test") == "2.3.4-test"
 
     def test_without_version_stores_none(self):
         settings = Settings()
 
-        settings.load_settings_file(fixture_file("settings", "no_version.yaml"), version_key="test")
+        settings.load_settings_file(fixture_file("settings", "no_version.yaml"), file_key="test")
 
         assert settings.versions.get("test", "error!") is None
 
     def test_removes_version_from_data(self):
         settings = Settings()
 
-        settings.load_settings_file(fixture_file("settings", "with_version.yaml"), version_key="test")
+        settings.load_settings_file(fixture_file("settings", "with_version.yaml"), file_key="test")
 
         assert settings.get("npc.version") is None

@@ -48,18 +48,18 @@ class Settings(DataStore):
         Clear internal data, and refresh the default and personal settings files
         """
         self.data = {}
-        self.load_settings_file(self.default_settings_path / "settings.yaml", version_key="internal")
+        self.load_settings_file(self.default_settings_path / "settings.yaml", file_key="internal")
         self.load_systems(self.default_settings_path / "systems")
-        self.load_settings_file(self.personal_dir / "settings.yaml", version_key="user")
+        self.load_settings_file(self.personal_dir / "settings.yaml", file_key="user")
         self.load_systems(self.personal_dir / "systems")
 
-    def load_settings_file(self, settings_file: Path, namespace: str = None, *, version_key: str = None) -> None:
+    def load_settings_file(self, settings_file: Path, namespace: str = None, *, file_key: str = None) -> None:
         """Open, parse, and merge settings from another file
 
         This is the primary way to load more settings info. Passing in a file path that does not exist will
         result in a log message and no error, since all setting files are technically optional.
 
-        The version_key for any given file should be unique. These are the keys in use right now:
+        The file_key for any given file should be unique. These are the keys in use right now:
         * internal
         * user
         * campaign
@@ -67,16 +67,16 @@ class Settings(DataStore):
         Args:
             settings_file (Path): The file to load
             namespace (str): Optional namespace to use for new_data
-            version_key (str): Key to use when storing the file's stated npc version
+            file_key (str): Key to use when storing the file's stated npc version
         """
 
         loaded: dict = quiet_parse(settings_file)
         if loaded is None:
             return
 
-        if version_key:
+        if file_key:
             file_version = loaded.get("npc", {}).pop("version", None)
-            self.versions[version_key] = file_version
+            self.versions[file_key] = file_version
 
         self.merge_data(loaded, namespace)
 
