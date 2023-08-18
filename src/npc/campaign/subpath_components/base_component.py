@@ -22,4 +22,11 @@ class BaseSubpathComponent(ABC):
         """The value of this component
 
         This might be a tag value, static string, some other piece of data, or None.
+
+        Args:
+            character (Character): The character to get values from
+            current_path (Path): The constructed path so far
+
+        Returns:
+            str: Value of this subpath component
         """
