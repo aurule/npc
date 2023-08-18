@@ -39,7 +39,7 @@ class Settings(DataStore):
         self.versions = {
             "package": npc_version,
         }
-        self.paths = {
+        self.loaded_paths = {
             "package": None,
         }
 
@@ -70,7 +70,7 @@ class Settings(DataStore):
         Args:
             settings_file (Path): The file to load
             namespace (str): Optional namespace to use for new_data
-            file_key (str): Key to use when storing the file's stated npc version
+            file_key (str): Key to use when storing the file's stated npc version and path
         """
 
         loaded: dict = quiet_parse(settings_file)
@@ -80,7 +80,7 @@ class Settings(DataStore):
         if file_key:
             file_version = loaded.get("npc", {}).pop("version", None)
             self.versions[file_key] = file_version
-            self.paths[file_key] = settings_file
+            self.loaded_paths[file_key] = settings_file
 
         self.merge_data(loaded, namespace)
 
