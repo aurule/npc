@@ -19,3 +19,5 @@
 # fancy interface for it, just tell them what needs to be manually changed for now.
 #
 # Need to be able to give a summary of the changes and apply as many automated fixes as possible.
+
+from .settings_migrator_class import SettingsMigrator

@@ -1,0 +1,12 @@
+campaign_name: campaign.name
+editor: npc.editor
+paths:
+  required:
+    additional_paths: campaign.create_on_init
+listing:
+  default_format: campaign.listing.format
+  sort_by: campaign.listing.sort_by
+  base_header_level: campaign.listing.base_header_level
+  metadata:
+    title: campaign.listing.metadata.title
+    timestamp: campaign.listing.metadata.timestamp

@@ -1,4 +1,5 @@
 from abc import ABC, abstractmethod
+from packaging import version
 
 from npc.settings import Settings
 
@@ -70,3 +71,20 @@ class SettingsMigration(ABC):
             raise NotImplementedError
 
         return self.sequence < other.sequence
+
+    def path_for_key(self, file_key: str) -> Path:
+        return self.settings.loaded_paths.get(file_key)
+
+    def version_for_key(self, file_key: str) -> version.Version:
+        error_version = version.Version("0.0.0")
+        version_str = self.settings.versions.get(file_key)
+
+        if not version_str:
+            # log that there's no version for file_key
+            return error_version
+
+        try:
+            return version.parse(version_str)
+        except version.InvalidVersion:
+            # log that version_str for file_key is not a valid version number
+            return error_version
