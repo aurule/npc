@@ -86,3 +86,11 @@ def find_campaign_root(starting_dir: str) -> Path:
             return None
 
     return current_dir
+
+def check_legacy_campaign(campaign_root: Path) -> bool:
+    pass
+    # assumes campaign root is a .npc dir
+    # legacy if:
+    #   settings.json exists
+    #   the key npc.version does not exist
+    #   npc.version is less than 2.0.0
