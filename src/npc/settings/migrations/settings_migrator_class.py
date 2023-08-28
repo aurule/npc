@@ -3,6 +3,7 @@ from functools import cached_property
 from pathlib import Path
 
 from npc.settings import Settings
+from .settings_migration import SettingsMigration
 
 class SettingsMigrator:
     def __init__(self, settings: Settings):
@@ -25,7 +26,7 @@ class SettingsMigrator:
         # apply all migrations to the possible keys
 
     @cached_property
-    def migrations(self) -> list[Migration]:
+    def migrations(self) -> list[SettingsMigration]:
         """Get an instance of all known migration subclasses
 
         This simply gets a list of classes which subclass Migration and instantiates them.
