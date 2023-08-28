@@ -29,6 +29,9 @@ class Migration1to2(SettingsMigration):
             file_key (str): Key of the settings file to modify
         """
         pass
+        # if there is no json and no yaml file:
+        #   create a minimal settings.yaml with npc.version and a comment explaining the missing components
+        # if there is an existing json file:
         # create a yaml file from the existing json file
         #   translate keys using legacy_keys.yaml
         #   warn about custom templates being incompatible and needing to be converted
