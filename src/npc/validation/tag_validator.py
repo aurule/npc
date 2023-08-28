@@ -2,7 +2,8 @@ from npc.characters import Tag
 from npc.validation.errors.tag_errors import *
 
 class TagValidator:
-    """Validator for Tag correctness"""
+    """Validator for basic Tag correctness"""
+
     def __init__(self, spec):
         self.spec = spec
 

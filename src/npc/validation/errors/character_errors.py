@@ -1,6 +1,10 @@
 from . import ValidationError
 
 class CharacterValidationError(ValidationError):
+    """Base character validation error object
+
+    Alters the preamble of the ValidationError class and stores the character name.
+    """
     def __init__(self, detail: str, character_name: str):
         super().__init__(detail)
         self.character_name: str = character_name

@@ -8,6 +8,12 @@ import logging
 logger = logging.getLogger(__name__)
 
 class CharacterLinter:
+    """Lint a character file
+
+    This uses the character validator to check for obvious errors, then checks more opinionated attributes
+    as well.
+    """
+
     def __init__(self, character: Character, campaign: Campaign):
         self.character = character
         self.campaign = campaign

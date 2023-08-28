@@ -1,6 +1,11 @@
 from . import ValidationError
 
 class TagValidationError(ValidationError):
+    """Core tag validation error class
+
+    Stores the tag name and changes the preamble from the ValidationError class.
+    """
+
     def __init__(self, detail: str, tag_name: str):
         super().__init__(detail)
         self.tag_name: str = tag_name
