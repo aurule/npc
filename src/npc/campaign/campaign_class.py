@@ -2,6 +2,7 @@ import re
 import yaml
 from pathlib import Path
 from functools import cached_property, cache
+from packaging.version import Version
 
 from npc.settings import Settings, PlanningFilename, System
 from npc.util.functions import merge_data_dicts, prepend_namespace
@@ -112,6 +113,21 @@ class Campaign:
             Path: Path to the campaign's settings file, or None if campaign_dir is not set
         """
         return self.settings_dir / "settings.yaml"
+
+    @property
+    def outdated(self) -> bool:
+        """Get whether this campaign is out of date
+
+        This simply compares the campaign's stated npc version against the package version. If the campaign
+        has a lower version number it is considered outdated.
+
+        Returns:
+            bool: True if the campaign has a lower version number than the package
+        """
+        core_version = Version(self.settings.versions["package"])
+        our_version = Version(self.settings.versions["campaign"])
+
+        return our_version < core_version
 
     @cached_property
     def types(self) -> dict:
