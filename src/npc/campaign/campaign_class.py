@@ -124,8 +124,12 @@ class Campaign:
         Returns:
             bool: True if the campaign has a lower version number than the package
         """
+        campaign_version_str = self.settings.versions.get("campaign")
+        if not campaign_version_str:
+            return True
+
         core_version = Version(self.settings.versions["package"])
-        our_version = Version(self.settings.versions["campaign"])
+        our_version = Version(campaign_version_str)
 
         return our_version < core_version
 
