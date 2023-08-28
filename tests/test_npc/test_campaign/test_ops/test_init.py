@@ -4,6 +4,7 @@ from tests.fixtures import tmp_campaign
 
 from npc.campaign import init
 from npc.settings import Settings
+from npc import __version__ as npc_version
 
 class TestSettingsFile:
     campaign_name = "Test Campaign"
@@ -34,6 +35,15 @@ class TestSettingsFile:
             settings_contents = yaml.safe_load(f)
 
         assert settings_contents["campaign"]["system"] == self.campaign_system
+
+    def test_includes_version(self, tmp_path):
+        init(tmp_path, name = self.campaign_name, system = self.campaign_system)
+
+        settings_file = tmp_path / ".npc" / "settings.yaml"
+        with settings_file.open("r") as f:
+            settings_contents = yaml.safe_load(f)
+
+        assert settings_contents["npc"]["version"] == npc_version
 
     def test_omits_empty_desc(self, tmp_path):
         init(tmp_path, name = self.campaign_name, system = self.campaign_system)
