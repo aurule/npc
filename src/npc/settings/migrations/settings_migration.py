@@ -1,13 +1,19 @@
 from abc import ABC, abstractmethod
 from packaging import version
+from pathlib import Path
 
 from npc.settings import Settings
+
+import logging
+logger = logging.getLogger(__name__)
 
 class SettingsMigration(ABC):
     """Core migration class
 
     Defines the interface and some helpers for settings migrations.
     """
+
+    DEFAULT_VERSION = "0.0.0"
 
     def __init__(self, settings: Settings):
         self.settings = settings
@@ -38,8 +44,8 @@ class SettingsMigration(ABC):
             file_key (str): Key of the settings file to modify
         """
 
-    @abstractmethod
     @property
+    @abstractmethod
     def sequence(self) -> int:
         """Get the SettingsMigration's sequence number
 
@@ -67,24 +73,46 @@ class SettingsMigration(ABC):
         Raises:
             NotImplementedError: Migrations cannot be compared against any other type
         """
-        if not issubclass(other, self.__class__):
+        if not issubclass(other.__class__, self.__class__):
             raise NotImplementedError
 
         return self.sequence < other.sequence
 
     def path_for_key(self, file_key: str) -> Path:
+        """Get the file path associated with the given settings file key
+
+        This is a simple delegation helper to make migration code easier to write.
+
+        Args:
+            file_key (str): Key of the settings file to fetch
+
+        Returns:
+            Path: Path to the settings file matching the key, or None if the key is not found
+        """
         return self.settings.loaded_paths.get(file_key)
 
     def version_for_key(self, file_key: str) -> version.Version:
-        error_version = version.Version("0.0.0")
+        """Get a Version object for the saved version for the given key
+
+        When a version is present for file_key, it gets parsed into a Version object and returned. When it
+        isn't set -- or cannot be parsed -- a Version object using DEFAULT_VERSION is returned instead.
+
+        Args:
+            file_key (str): Key of the settings file whose version to fetch
+
+        Returns:
+            version.Version: Version object with the key's associated version, or DEFAULT_VERSION if missing
+                or unusable.
+        """
+        error_version = version.Version(self.DEFAULT_VERSION)
         version_str = self.settings.versions.get(file_key)
 
         if not version_str:
-            # log that there's no version for file_key
+            logger.debug(f"No version for {file_key}")
             return error_version
 
         try:
             return version.parse(version_str)
         except version.InvalidVersion:
-            # log that version_str for file_key is not a valid version number
+            logger.debug(f"Unusable version '{version_str}' for {file_key}")
             return error_version
