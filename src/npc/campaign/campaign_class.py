@@ -57,7 +57,7 @@ class Campaign:
         Returns:
             str: Description of the campaign
         """
-        return self.settings.get("campaign.system")
+        return self.settings.get("campaign.system", "generic")
 
     @property
     def system(self) -> System:
