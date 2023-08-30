@@ -8,8 +8,10 @@ class DataStore:
 
     Has the base logic for storing a dict of data, with methods for fetching and modifying it.
     """
-    def __init__(self):
+    def __init__(self, data_in = None):
         self.data: dict = {}
+        if data_in:
+            self.merge_data(data_in)
 
     def get(self, key, default=None) -> any:
         """
