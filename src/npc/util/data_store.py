@@ -34,10 +34,42 @@ class DataStore:
             try:
                 current_data = current_data[k]
             except (KeyError, TypeError):
-                logger.debug("Key not found: {}".format(key))
+                logger.debug(f"Key not found: {key}")
                 return default
         return current_data
 
+    def set(self, key: str, value: any):
+        """Write a value to a key
+
+        As with get, use the period character to indicate a nested key. The final member of the key will have
+        its value overwritten completely.
+
+        Args:
+            key (str): Period-delimited key to set
+            value (any): New value for the final member of the key
+
+        Raises:
+            TypeError: Raised when accessing a list
+        """
+        key_parts: list = key.split('.')
+        terminus: str = key_parts.pop()
+        current_data = self.data
+        for k in key_parts:
+            try:
+                current_data = current_data[k]
+            except KeyError:
+                logger.debug(f"Key not found: {key}")
+                current_data[k] = {}
+                current_data = current_data[k]
+            except TypeError:
+                logger.error(f"Cannot access list at {key} as a dict")
+                raise TypeError(f"Cannot access list at {key} as a dict")
+
+        try:
+            current_data[terminus] = value
+        except TypeError:
+            logger.error(f"Cannot write string key '{terminus}' to list at '{'.'.join(key_parts)}'")
+            raise TypeError(f"Cannot write string key '{terminus}' to list at '{'.'.join(key_parts)}'")
 
     def merge_data(self, new_data: dict, namespace: str = None) -> None:
         """Merge a dict of data with this object
