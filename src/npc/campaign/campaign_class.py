@@ -21,6 +21,7 @@ class Campaign:
             settings = Settings()
         self.settings = settings
 
+        self.settings.campaign_dir = campaign_path
         self.settings.load_settings_file(self.settings_file, file_key="campaign")
         self.settings.load_systems(self.settings_dir / "systems")
 
