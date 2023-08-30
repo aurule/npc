@@ -269,7 +269,7 @@ class Settings(DataStore):
         """Get the list of directories to create on campaign initialization
 
         This includes self.required_dirs, as well as any directory listed in the settings key
-        campaign.create_on_init. All paths are relative to self.campaign_dir.
+        campaign.create_on_init. All paths are to be interpreted as relative to the campaign's root.
 
         Returns:
             list: List of directory names to create on campaign init

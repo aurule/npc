@@ -74,7 +74,7 @@ class Campaign:
         """Get the path to the current campaign's plot directory
 
         Returns:
-            Path: Path to the campaign's plot directory, or None if campaign_dir is not set
+            Path: Path to the campaign's plot directory, or None if root is not set
         """
 
         return self.root / self.settings.get("campaign.plot.path")
@@ -84,7 +84,7 @@ class Campaign:
         """Get the path to the current campaign's sessions directory
 
         Returns:
-            Path: Path to the campaign's sessions directory, or None if campaign_dir is not set
+            Path: Path to the campaign's sessions directory, or None if root is not set
         """
         return self.root / self.settings.get("campaign.session.path")
 
@@ -93,7 +93,7 @@ class Campaign:
         """Get the path to the current campaign's characters directory
 
         Returns:
-            Path: Path to the campaign's characters directory, or None if campaign_dir is not set
+            Path: Path to the campaign's characters directory, or None if root is not set
         """
         return self.root / self.settings.get("campaign.characters.path")
 
@@ -102,7 +102,7 @@ class Campaign:
         """Get the path to the current campaign settings directory
 
         Returns:
-            Path: Path to the campaign's settings dir, or None if campaign_dir is not set
+            Path: Path to the campaign's settings dir, or None if root is not set
         """
         return self.root / ".npc"
 
@@ -111,7 +111,7 @@ class Campaign:
         """Get the path to the current campaign settings file
 
         Returns:
-            Path: Path to the campaign's settings file, or None if campaign_dir is not set
+            Path: Path to the campaign's settings file, or None if root is not set
         """
         return self.settings_dir / "settings.yaml"
 
@@ -384,7 +384,7 @@ class Campaign:
         Updates the internal campaign settings with data, then writes those changes to the current campaign's
         settings file. The data is wrapped in the campaign namespace automatically.
 
-        If campaign_dir is not set, this returns immediately.
+        If root is not set, this returns immediately.
 
         Args:
             data (dict): Data to change
