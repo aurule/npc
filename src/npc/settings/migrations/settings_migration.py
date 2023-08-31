@@ -3,6 +3,8 @@ from packaging import version
 from pathlib import Path
 
 from npc.settings import Settings
+from npc.util import DataStore
+from npc.util.functions import parse_yaml
 
 import logging
 logger = logging.getLogger(__name__)
@@ -33,7 +35,7 @@ class SettingsMigration(ABC):
         """
 
     @abstractmethod
-    def migrate(self, file_key: str):
+    def migrate(self, file_key: str) -> list:
         """Apply this SettingsMigration to a named settings file
 
         The file location is stored in settings.loaded_files. If the SettingsMigration succeeds, this method should
@@ -42,6 +44,9 @@ class SettingsMigration(ABC):
 
         Args:
             file_key (str): Key of the settings file to modify
+
+        Returns:
+            list: List of messages for the user
         """
 
     @property
@@ -116,3 +121,23 @@ class SettingsMigration(ABC):
         except version.InvalidVersion:
             logger.debug(f"Unusable version '{version_str}' for {file_key}")
             return error_version
+
+    def config_dir_path(self, file_key: str) -> Path:
+        """Get the configuration dir for a file key
+
+        This cannot handle arbitrary settings file keys. Only the user and campaign keys have a defined
+        return value. Every other key results in None.
+
+        Args:
+            file_key (str): Key of the settings file whose location to get
+
+        Returns:
+            Path: Path to the key's related config dir, or None
+        """
+        match(file_key):
+            case "user":
+                return self.settings.personal_dir
+            case "campaign":
+                return self.settings.campaign_dir / ".npc"
+
+        return None
