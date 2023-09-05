@@ -141,3 +141,12 @@ class SettingsMigration(ABC):
                 return self.settings.campaign_dir / ".npc"
 
         return None
+
+    def load_yaml(self, file_key: str) -> DataStore:
+        file_path = self.config_dir_path(file_key) / "settings.yaml"
+        store = DataStore()
+        if not file_path.exists():
+            return store
+
+        store.merge_data(parse_yaml(file_path))
+        return store
