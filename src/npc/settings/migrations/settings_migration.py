@@ -168,18 +168,22 @@ class SettingsMigration(ABC):
         store.merge_data(parse_yaml(file_path))
         return store
 
-    def write_settings(self, file_key: str, data: dict):
-        """Write new data to a named settings file
+    def write_settings(self, file_key: str, data_out: dict):
+        """Write new data_out to a named settings file
 
-        The data provided is emitted as yaml directly to the named file.
+        The data_out provided is emitted as yaml directly to the named file. If data_out is actually a
+        DataStore, then the store's internal dict is emitted instead.
 
         Args:
             file_key (str): Key of the settings file to write
-            data (dict): Data to write into the settings file as yaml
+            data_out (dict|DataStore): Data to write into the settings file as yaml
         """
+        if isinstance(data_out, DataStore):
+            data_out = data_out.data
+
         settings_path = self.path_for_key(file_key)
         with settings_path.open("w", newline="\n") as settings_file:
-            yaml.dump(data, settings_file, default_flow_style=False)
+            yaml.dump(data_out, settings_file, default_flow_style=False)
 
     def refresh_settings(self, file_key: str):
         """Reload the named settings file in our settings object
