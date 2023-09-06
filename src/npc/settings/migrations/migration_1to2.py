@@ -1,5 +1,6 @@
 from packaging.version import Version, parse, InvalidVersion
 import yaml
+from shutil import move
 
 from .settings_migration import SettingsMigration
 from npc.util import DataStore, parse_yaml
@@ -128,6 +129,25 @@ class Migration1to2(SettingsMigration):
             store.merge_data(parse_yaml(yaml_path))
 
         return store
+
+    def archive_legacy_files(self, file_key: str):
+        """Move old files to a new legacy/ directory
+
+        All existing files are moved to a new legacy/ directory under the file_key's path. If there are no
+        files, the new directory is not created.
+
+        Args:
+            file_key (str): Key of the settings location to archive
+        """
+        settings_dir = self.config_dir_path(file_key)
+        legacy_contents = list(settings_dir.glob("*"))
+        if not legacy_contents:
+            return
+
+        legacy_dir = settings_dir.joinpath("legacy").mkdir(exist_ok=True)
+        for legacy_path in legacy_contents:
+            new_path = legacy_path.parent / "legacy" / legacy_path.name
+            move(legacy_path, new_path)
 
     def create_min_settings(self, file_key: str):
         """Create a minimal settings file
