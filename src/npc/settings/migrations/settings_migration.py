@@ -142,7 +142,7 @@ class SettingsMigration(ABC):
 
         return None
 
-    def load_yaml(self, file_key: str) -> DataStore:
+    def load_settings(self, file_key: str) -> DataStore:
         """Load the given settings file into a new data store
 
         If something goes wrong (the file_key is not recognized, its directory does not exist, or the file is

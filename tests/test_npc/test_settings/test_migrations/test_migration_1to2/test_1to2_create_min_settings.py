@@ -18,5 +18,5 @@ def test_sets_version(tmp_path):
 
     migration.create_min_settings("campaign")
 
-    data = migration.load_yaml("campaign")
+    data = migration.load_settings("campaign")
     assert data.get("npc.version") == "2.0.0"

@@ -2,7 +2,7 @@ from packaging.version import Version, parse, InvalidVersion
 import yaml
 
 from .settings_migration import SettingsMigration
-from npc.util import DataStore
+from npc.util import DataStore, parse_yaml
 from npc.util.legacy import load_json
 
 import logging
