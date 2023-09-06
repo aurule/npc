@@ -6,6 +6,7 @@ import yaml
 from npc.settings import Settings
 from npc.util import DataStore
 from npc.util.functions import parse_yaml
+from .migration_message import MigrationMessage
 
 import logging
 logger = logging.getLogger(__name__)
@@ -36,7 +37,7 @@ class SettingsMigration(ABC):
         """
 
     @abstractmethod
-    def migrate(self, file_key: str) -> list:
+    def migrate(self, file_key: str) -> list[MigrationMessage]:
         """Apply this SettingsMigration to a named settings file
 
         The file location is stored in settings.loaded_files. If the SettingsMigration succeeds, this method should
@@ -47,7 +48,7 @@ class SettingsMigration(ABC):
             file_key (str): Key of the settings file to modify
 
         Returns:
-            list: List of messages for the user
+            list: List of MigrationMessage objects detailing the changes made
         """
 
     @property

@@ -3,6 +3,7 @@ import yaml
 from shutil import move
 
 from .settings_migration import SettingsMigration
+from .migration_message import MigrationMessage
 from npc.util import DataStore, parse_yaml
 from npc.util.legacy import load_json
 
@@ -37,28 +38,40 @@ class Migration1to2(SettingsMigration):
         minimum_version = Version(self.MINIMUM_VERSION)
         return settings_version < minimum_version
 
-    def migrate(self, file_key: str) -> list:
+    def migrate(self, file_key: str) -> list[MigrationMessage]:
         """Apply this SettingsMigration to a named settings file
 
-        The file location is stored in settings.loaded_files. If the SettingsMigration succeeds, this method should
-        always alter the file such that should_apply returns False in the future. This usually means updating
-        the npc.version string to some minimum version.
+        This migration checks and corrects for a number of settings states:
+
+        1. If a modern settings.yaml exists, but is missing its version, a new version is added.
+        2. If no settings files exist at all, a new, minimal file is created. All other contents in the .npc
+            directory are moved to a new legacy/ folder.
+        3. If a legacy settings file exists, its data is used to populate a new settings.yaml file. All other
+            contents in the .npc directory are moved to a new legacy/ folder.
 
         Args:
             file_key (str): Key of the settings file to modify
+
+        Returns:
+            list: List of MigrationMessage objects detailing the changes made
         """
 
         if self.modern_format(file_key):
-            self.update_version(file_key, MINIMUM_VERSION)
-            # create a version update message
-            return []
+            self.update_version(file_key, self.MINIMUM_VERSION)
+            version_message = MigrationMessage(
+                f"Updated version to {self.MINIMUM_VERSION}",
+                file=self.path_for_key(file_key),
+                key="npc.version")
+            return [version_message]
 
         legacy_data = self.load_legacy(file_key)
         self.archive_legacy_files(file_key)
         if not legacy_data:
             self.create_min_settings(file_key)
-            # create a new file message
-            return []
+            file_message = MigrationMessage(
+                "Created missing file",
+                file=self.path_for_key(file_key))
+            return [file_message]
 
         return self.convert(file_key, legacy_data)
 
