@@ -90,7 +90,7 @@ class Migration1to2(SettingsMigration):
         """Load a legacy settings file
 
         This tries to load a legacy json or yaml settings file. As in npc < 2.0, the json format is preferred
-        and will be loaded in preference to the yaml file.
+        and will be loaded in preference to a yaml file.
 
         Args:
             file_key (str): Key of the settings location to load legacy files from
@@ -103,10 +103,13 @@ class Migration1to2(SettingsMigration):
         legacy_path = self.config_dir_path(file_key)
         json_path = legacy_path / "settings.json"
         yml_path = legacy_path / "settings.yml"
+        yaml_path = legacy_path / "settings.yaml"
         if json_path.exists():
             store.merge_data(load_json(json_path))
         elif yml_path.exists():
             store.merge_data(parse_yaml(yml_path))
+        elif yaml_path.exists():
+            store.merge_data(parse_yaml(yaml_path))
 
         return store
 
