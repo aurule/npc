@@ -48,44 +48,20 @@ class Migration1to2(SettingsMigration):
             file_key (str): Key of the settings file to modify
         """
 
-        # Check for a settings.yaml file
-        settings_path = self.path_for_key(file_key)
-        if settings_path:
-            legacy_data = self.load_yaml(file_key)
-            if data.get("npc") or data.get("campaign"):
-                data.set("npc.version", MINIMUM_VERSION)
-                with settings_path.open('w', newline="\n"):
-                    settings_path.write(data)
-                return []
+        if self.modern_format(file_key):
+            self.update_version(file_key, MINIMUM_VERSION)
+            # create a version update message
+            return []
 
-            return self.convert(file_key, data)
-
-        # Check for settings.json and settings.yml files
         legacy_data = self.load_legacy(file_key)
-
+        self.archive_legacy_files(file_key)
         if not legacy_data:
             self.create_min_settings(file_key)
+            # create a new file message
             return []
 
         return self.convert(file_key, legacy_data)
 
-    def convert(self, file_key: str, legacy_data: DataStore):
-        pass
-        # gotta make a new settings file
-        # move everything into /legacy
-        # translate keys using legacy_keys.yaml
-        # look for custom templates
-        #   warn that they're incompatible and need to be converted
-        # if paths.hierarchy is present, warn that it is replaced by campaign.subpath_components system
-        #   Either convert automatically, or warn the user will need to replace it
-        # look for old sheet template files and the types.key.sheet_template key
-        #   warn that the files need to go in a new dir with new names, and that the settings key will be removed
-        #   could move them automatically
-        # if plot or session templates exist
-        #   read in their contents and store in the settings file
-        # if listing.sort_by is set
-        #   translate the old constants to new constants
-        # warn that some tags have changed, advise running the linter
     def modern_format(self, file_key: str) -> bool:
         """Test whether a named settings file has a modern format
 
@@ -166,3 +142,20 @@ class Migration1to2(SettingsMigration):
         }
         with new_settings.open('w', newline="\n") as settings_file:
             yaml.dump(data, settings_file, default_flow_style=False)
+
+    def convert(self, file_key: str, legacy_data: DataStore):
+        pass
+        # gotta make a new settings file
+        # translate keys using legacy_keys.yaml
+        # look for custom templates
+        #   warn that they're incompatible and need to be converted
+        # if paths.hierarchy is present, warn that it is replaced by campaign.subpath_components system
+        #   Either convert automatically, or warn the user will need to replace it
+        # look for old sheet template files and the types.key.sheet_template key
+        #   warn that the files need to go in a new dir with new names, and that the settings key will be removed
+        #   could move them automatically
+        # if plot or session templates exist
+        #   read in their contents and store in the settings file
+        # if listing.sort_by is set
+        #   translate the old constants to new constants
+        # warn that some tags have changed, advise running the linter
