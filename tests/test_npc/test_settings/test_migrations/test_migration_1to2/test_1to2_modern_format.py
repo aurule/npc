@@ -4,6 +4,11 @@ from npc.settings import Settings
 
 from npc.settings.migrations.migration_1to2 import Migration1to2
 
+def test_false_on_bad_key(tmp_campaign):
+    migration = Migration1to2(tmp_campaign.settings)
+
+    assert not migration.modern_format("nope")
+
 def test_false_on_missing_file(tmp_campaign):
     tmp_campaign.settings_file.unlink()
     migration = Migration1to2(tmp_campaign.settings)
