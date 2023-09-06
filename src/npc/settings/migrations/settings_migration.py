@@ -143,8 +143,24 @@ class SettingsMigration(ABC):
         return None
 
     def load_yaml(self, file_key: str) -> DataStore:
-        file_path = self.config_dir_path(file_key) / "settings.yaml"
+        """Load the given settings file into a new data store
+
+        If something goes wrong (the file_key is not recognized, its directory does not exist, or the file is
+        missing) an empty store is returned instead.
+
+        Args:
+            file_key (str): Key of the settings file to open
+
+        Returns:
+            DataStore: New datastore containing the file's contents, or an empty one if there were errors
+        """
         store = DataStore()
+
+        try:
+            file_path = self.config_dir_path(file_key) / "settings.yaml"
+        except TypeError:
+            return store
+
         if not file_path.exists():
             return store
 
