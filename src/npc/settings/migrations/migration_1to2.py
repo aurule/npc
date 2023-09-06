@@ -23,7 +23,7 @@ class Migration1to2(SettingsMigration):
     def should_apply(self, file_key: str) -> bool:
         """Whether this SettingsMigration should run on the given settings file
 
-        This will often involve using packaging.version to compare version numbers from settings.versions.
+        This migration always runs when the detected settings version is below 2.0.0.
 
         Args:
             file_key (str): Key of the settings file to check
