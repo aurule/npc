@@ -13,6 +13,17 @@ class DataStore:
         if data_in:
             self.merge_data(data_in)
 
+    def __bool__(self) -> bool:
+        """Get whether this object is considered "filled"
+
+        A DataStore delegates its bool test to the underlying dict, so it is true when some data is in the
+        dict, and false if not.
+
+        Returns:
+            bool: True if the store has data, False if not
+        """
+        return bool(self.data)
+
     def get(self, key, default=None) -> any:
         """
         Get the value of a key
