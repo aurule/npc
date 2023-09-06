@@ -180,3 +180,19 @@ class SettingsMigration(ABC):
         settings_path = self.path_for_key(file_key)
         with settings_path.open("w", newline="\n") as settings_file:
             yaml.dump(data, settings_file, default_flow_style=False)
+
+    def refresh_settings(self, file_key: str):
+        """Reload the named settings file in our settings object
+
+        Since migrations are intended to change settings files, those files need to be updated in the attached
+        settings object. This is not perfect, as old data can be left behind, but it at least gives other
+        migrations in the chain a chance to run on the new data.
+
+        For long-running programs, it's probably best to create a new settings object once the full migration
+        pass is finished, then try to migrate that as well. Once no more migrations want to run on a fresh
+        settings object, you know the files are all up to spec.
+
+        Args:
+            file_key (str): Key of the settings file to reload
+        """
+        self.settings.load_settings_file(self.path_for_key(file_key), file_key=file_key)
