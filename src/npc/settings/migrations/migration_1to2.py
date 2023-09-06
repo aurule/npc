@@ -87,16 +87,28 @@ class Migration1to2(SettingsMigration):
         # warn that some tags have changed, advise running the linter
 
     def load_legacy(self, file_key: str) -> DataStore:
+        """Load a legacy settings file
+
+        This tries to load a legacy json or yaml settings file. As in npc < 2.0, the json format is preferred
+        and will be loaded in preference to the yaml file.
+
+        Args:
+            file_key (str): Key of the settings location to load legacy files from
+
+        Returns:
+            DataStore: DataStore containing the loaded legacy data, or empty if no legacy files were found
+        """
+        store = DataStore()
+
         legacy_path = self.config_dir_path(file_key)
         json_path = legacy_path / "settings.json"
         yml_path = legacy_path / "settings.yml"
-        store = DataStore()
         if json_path.exists():
             store.merge_data(load_json(json_path))
         elif yml_path.exists():
-            store.merge_data(parse_yaml(json_path))
-        else:
-            return None
+            store.merge_data(parse_yaml(yml_path))
+
+        return store
 
     def create_min_settings(self, file_key: str):
         """Create a minimal settings file
