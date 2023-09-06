@@ -85,6 +85,22 @@ class Migration1to2(SettingsMigration):
         # if listing.sort_by is set
         #   translate the old constants to new constants
         # warn that some tags have changed, advise running the linter
+    def modern_format(self, file_key: str) -> bool:
+        """Test whether a named settings file has a modern format
+
+        The settings file is considered modern if it has the right filename and either the npc or campaign
+        top-level key. Anything else is not a modern formatted settings file (and may not exist at all).
+
+        Args:
+            file_key (str): Key of the settings file to test
+
+        Returns:
+            bool: True if the file exists and has a modern format, False if not
+        """
+        if self.path_for_key(file_key):
+            data = self.load_settings(file_key)
+            return data.get("npc") or data.get("campaign")
+        return False
 
     def load_legacy(self, file_key: str) -> DataStore:
         """Load a legacy settings file
