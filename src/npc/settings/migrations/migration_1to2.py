@@ -1,4 +1,5 @@
 from packaging.version import Version, parse, InvalidVersion
+import yaml
 
 from .settings_migration import SettingsMigration
 from npc.util import DataStore
@@ -97,12 +98,20 @@ class Migration1to2(SettingsMigration):
         else:
             return None
 
-    def create_min_settings(self, file_key):
+    def create_min_settings(self, file_key: str):
+        """Create a minimal settings file
+
+        The settings file created contains nothing more than the npc version that will prevent this migration
+        from running for this file key.
+
+        Args:
+            file_key (str): Key of the settings file to create
+        """
         new_settings = self.config_dir_path(file_key) / "settings.yaml"
         data = {
             "npc": {
                 "version": self.MINIMUM_VERSION
             }
         }
-        with new_settings.open('w', newline="\n"):
-            new_settings.write(data)
+        with new_settings.open('w', newline="\n") as settings_file:
+            yaml.dump(data, settings_file, default_flow_style=False)
