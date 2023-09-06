@@ -1,6 +1,7 @@
 from abc import ABC, abstractmethod
 from packaging import version
 from pathlib import Path
+import yaml
 
 from npc.settings import Settings
 from npc.util import DataStore
@@ -166,3 +167,16 @@ class SettingsMigration(ABC):
 
         store.merge_data(parse_yaml(file_path))
         return store
+
+    def write_settings(self, file_key: str, data: dict):
+        """Write new data to a named settings file
+
+        The data provided is emitted as yaml directly to the named file.
+
+        Args:
+            file_key (str): Key of the settings file to write
+            data (dict): Data to write into the settings file as yaml
+        """
+        settings_path = self.path_for_key(file_key)
+        with settings_path.open("w", newline="\n") as settings_file:
+            yaml.dump(data, settings_file, default_flow_style=False)
