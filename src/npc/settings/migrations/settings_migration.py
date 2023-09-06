@@ -200,3 +200,18 @@ class SettingsMigration(ABC):
             file_key (str): Key of the settings file to reload
         """
         self.settings.load_settings_file(self.path_for_key(file_key), file_key=file_key)
+
+    def update_version(self, file_key: str, version_string: str):
+        """Update the npc version in the named file
+
+        This specific update operation is expected to be done fairly frequently, as migrations may often want
+        to check a file, but then not need to make any other changes. Thus, it gets a helper despite being so
+        simple.
+
+        Args:
+            file_key (str): Key of the settings file to update
+            version_string (str): The new version string for the file
+        """
+        data = self.load_settings(file_key)
+        data.set("npc.version", version_string)
+        self.write_settings(file_key, data)
