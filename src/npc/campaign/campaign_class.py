@@ -396,4 +396,4 @@ class Campaign:
         loaded: dict = quiet_parse(settings_file)
         loaded = merge_data_dicts(new_data, loaded)
         with settings_file.open('w', newline="\n") as f:
-            yaml.dump(loaded, f)
+            yaml.dump(loaded, f, default_flow_style=False)
