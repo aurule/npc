@@ -89,8 +89,11 @@ class DataStore:
         new_data is placed within a dict using namespace as the key.
 
         Args:
-            new_data (dict): Dict of data values to merge with this object
+            new_data (dict|DataStore): Dict of data values to merge with this object
             namespace (str): Optional namespace to use for new_data
         """
+        if isinstance(new_data, self.__class__):
+            new_data = new_data.data
+
         dict_to_merge = prepend_namespace(new_data, namespace)
         self.data = merge_data_dicts(dict_to_merge, self.data)

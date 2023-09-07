@@ -15,3 +15,12 @@ def test_merges_into_namespace():
     store.merge_data(new_vars, namespace = "npc")
 
     assert store.get("npc.editor") == "hello"
+
+def test_merges_datastore():
+    store = DataStore()
+    new_vars = {"npc": {"editor": "hello"}}
+    new_store = DataStore(new_vars)
+
+    store.merge_data(new_store)
+
+    assert store.get("npc.editor") == "hello"
