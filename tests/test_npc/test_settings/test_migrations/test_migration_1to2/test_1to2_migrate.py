@@ -69,7 +69,6 @@ class TestWithLegacyFile:
         legacy_file = tmp_campaign.settings_dir.joinpath("legacy", "settings.json")
         assert legacy_file.exists()
 
-    @pytest.mark.xfail(reason="Conversion not yet implemented")
     def test_does_not_archive_new_file(self, tmp_campaign):
         tmp_campaign.settings_file.unlink()
         legacy_settings = tmp_campaign.settings_dir.joinpath("settings.json")

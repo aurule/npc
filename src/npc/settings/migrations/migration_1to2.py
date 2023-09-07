@@ -157,18 +157,33 @@ class Migration1to2(SettingsMigration):
             yaml.dump(data, settings_file, default_flow_style=False)
 
     def convert(self, file_key: str, legacy_data: DataStore):
-        pass
-        # gotta make a new settings file
+        version_data = {
+            "npc": {
+                "version": self.MINIMUM_VERSION
+            }
+        }
+        new_data = DataStore(version_data)
+
         # translate keys using legacy_keys.yaml
-        # look for custom templates
-        #   warn that they're incompatible and need to be converted
+
+        # if listing.sort_by is set
+        #   translate the old constants to new constants
+
         # if paths.hierarchy is present, warn that it is replaced by campaign.subpath_components system
         #   Either convert automatically, or warn the user will need to replace it
+
+        # if plot or session templates exist
+        #   read in their contents and store in the settings file
+
         # look for old sheet template files and the types.key.sheet_template key
         #   warn that the files need to go in a new dir with new names, and that the settings key will be removed
         #   could move them automatically
-        # if plot or session templates exist
-        #   read in their contents and store in the settings file
-        # if listing.sort_by is set
-        #   translate the old constants to new constants
+
+        new_settings = self.config_dir_path(file_key) / "settings.yaml"
+        with new_settings.open('w', newline="\n") as settings_file:
+            yaml.dump(new_data, settings_file, default_flow_style=False)
+
+        # look for custom listing templates
+        #   warn that they're incompatible and need to be converted
+
         # warn that some tags have changed, advise running the linter
