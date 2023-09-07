@@ -44,15 +44,14 @@ class TestWithNoFile:
         assert tmp_campaign.settings_file.exists()
 
 class TestWithLegacyFile:
-    @pytest.mark.xfail(reason="Conversion not yet implemented")
     def test_migrates_old_settings(self, tmp_campaign):
         tmp_campaign.settings_file.unlink()
         legacy_settings = tmp_campaign.settings_dir.joinpath("settings.json")
         with legacy_settings.open("w") as f:
             f.write('{"campaign_name": "some old test"}')
-        legacy_settings.touch()
-
         migration = Migration1to2(tmp_campaign.settings)
+
+        migration.migrate("campaign")
 
         data = migration.load_settings("campaign")
         assert data.get("campaign.name") == "some old test"

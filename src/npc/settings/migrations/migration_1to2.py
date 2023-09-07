@@ -156,7 +156,8 @@ class Migration1to2(SettingsMigration):
         with new_settings.open('w', newline="\n") as settings_file:
             yaml.dump(data, settings_file, default_flow_style=False)
 
-    def convert(self, file_key: str, legacy_data: DataStore):
+    def convert(self, file_key: str, legacy_data: DataStore) -> list[MigrationMessage]:
+        messages = []
         version_data = {
             "npc": {
                 "version": self.MINIMUM_VERSION
@@ -164,7 +165,7 @@ class Migration1to2(SettingsMigration):
         }
         new_data = DataStore(version_data)
 
-        # translate keys using legacy_keys.yaml
+        new_data.merge_data(self.convert_legacy_keys(legacy_data))
 
         # if listing.sort_by is set
         #   translate the old constants to new constants
@@ -181,9 +182,41 @@ class Migration1to2(SettingsMigration):
 
         new_settings = self.config_dir_path(file_key) / "settings.yaml"
         with new_settings.open('w', newline="\n") as settings_file:
-            yaml.dump(new_data, settings_file, default_flow_style=False)
+            yaml.dump(new_data.data, settings_file, default_flow_style=False)
 
         # look for custom listing templates
         #   warn that they're incompatible and need to be converted
 
         # warn that some tags have changed, advise running the linter
+
+        return messages
+
+    def convert_legacy_keys(self, legacy_data: DataStore) -> DataStore:
+        """Convert simple legacy keys to their new location
+
+        This only handles those legacy keys whose values are still valid, but need to be written to a new key.
+
+        Args:
+            legacy_data (DataStore): The old data to convert
+
+        Returns:
+            DataStore: Store with the new data.
+        """
+        key_map = {
+            "campaign_name": "campaign.name",
+            "editor": "npc.editor",
+            "paths.required.additional_paths": "campaign.create_on_init",
+            "listing.default_format": "campaign.listing.format",
+            "listing.sort_by": "campaign.listing.sort_by",
+            "listing.base_header_level": "campaign.listing.base_header_level",
+            "listing.metadata.title": "campaign.listing.metadata.title",
+            "listing.metadata.timestamp": "campaign.listing.metadata.timestamp",
+        }
+
+        new_data = DataStore()
+
+        for (old_key, new_key) in key_map.items():
+            if old_val := legacy_data.get(old_key):
+                new_data.set(new_key, old_val)
+
+        return new_data
