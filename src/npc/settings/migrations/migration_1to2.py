@@ -167,8 +167,7 @@ class Migration1to2(SettingsMigration):
 
         new_data.merge_data(self.convert_legacy_keys(legacy_data))
 
-        # if listing.sort_by is set
-        #   translate the old constants to new constants
+        new_data.merge_data(self.convert_listing_sort(legacy_data))
 
         # if paths.hierarchy is present, warn that it is replaced by campaign.subpath_components system
         #   Either convert automatically, or warn the user will need to replace it
@@ -200,7 +199,7 @@ class Migration1to2(SettingsMigration):
             legacy_data (DataStore): The old data to convert
 
         Returns:
-            DataStore: Store with the new data.
+            DataStore: Store with the new data
         """
         key_map = {
             "campaign_name": "campaign.name",
@@ -218,5 +217,32 @@ class Migration1to2(SettingsMigration):
         for (old_key, new_key) in key_map.items():
             if old_val := legacy_data.get(old_key):
                 new_data.set(new_key, old_val)
+
+        return new_data
+
+    def convert_listing_sort(self, legacy_data: DataStore) -> DataStore:
+        """Convert old listing sort values to new ones
+
+        This both replaces old pseudo-tags (last, first, name) with new ones, and moves the sort values to the
+        new group_by and sort_by keys.
+
+        Args:
+            legacy_data (DataStore): The old data to convert
+
+        Returns:
+            DataStore: Store with the new data
+        """
+        specials_map = {
+            "last": "last_name",
+            "first": "first_name",
+            "name": "full_name",
+        }
+
+        new_data = DataStore()
+
+        if old_sort := legacy_data.get("listing.sort_by"):
+            updated_sort = [specials_map.get(s, s) for s in old_sort]
+            new_data.set("campaign.listing.group_by", updated_sort)
+            new_data.set("campaign.listing.sort_by", updated_sort)
 
         return new_data
