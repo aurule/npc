@@ -169,15 +169,15 @@ class Migration1to2(SettingsMigration):
 
         new_data.merge_data(self.convert_listing_sort(legacy_data))
 
+        # warn that old type-social, etc. are going away and that existing paths might implicitly use them
         # if paths.hierarchy is present, warn that it is replaced by campaign.subpath_components system
-        #   Either convert automatically, or warn the user will need to replace it
+        #   warn the user will need to replace it
 
         # if plot or session templates exist
         #   read in their contents and store in the settings file
 
         # look for old sheet template files and the types.key.sheet_template key
-        #   warn that the files need to go in a new dir with new names, and that the settings key will be removed
-        #   could move them automatically
+        #   move the files to their new locations
 
         new_settings = self.config_dir_path(file_key) / "settings.yaml"
         with new_settings.open('w', newline="\n") as settings_file:
