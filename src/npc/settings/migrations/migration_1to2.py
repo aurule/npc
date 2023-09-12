@@ -202,7 +202,7 @@ class Migration1to2(SettingsMigration):
             legacy_data (DataStore): The old data to convert
 
         Returns:
-            DataStore: Store with the new data
+            DataStore: Store with the converted legacy key data
         """
         key_map = {
             "campaign_name": "campaign.name",
@@ -233,7 +233,7 @@ class Migration1to2(SettingsMigration):
             legacy_data (DataStore): The old data to convert
 
         Returns:
-            DataStore: Store with the new data
+            DataStore: Store with the converted listings data
         """
         specials_map = {
             "last": "last_name",
