@@ -1,4 +1,5 @@
 from packaging.version import Version, parse, InvalidVersion
+import re
 import yaml
 from shutil import move
 
@@ -173,8 +174,10 @@ class Migration1to2(SettingsMigration):
         # if paths.hierarchy is present, warn that it is replaced by campaign.subpath_components system
         #   warn the user will need to replace it
 
-        # if plot or session templates exist
-        #   read in their contents and store in the settings file
+        new_data.merge_data(self.convert_session_templates(file_key, legacy_data))
+
+        # if paths.ignore.always
+        #   put in campaign.characters.ignore_subpaths, stripping Characters/ parent
 
         # look for old sheet template files and the types.key.sheet_template key
         #   move the files to their new locations
@@ -244,5 +247,42 @@ class Migration1to2(SettingsMigration):
             updated_sort = [specials_map.get(s, s) for s in old_sort]
             new_data.set("campaign.listing.group_by", updated_sort)
             new_data.set("campaign.listing.sort_by", updated_sort)
+
+        return new_data
+
+    def convert_session_templates(self, file_key: str, legacy_data: DataStore) -> DataStore:
+        """Convert old plot and session templates to new format
+
+        The old filenames from story.templates.session (and .plot) are slightly tweaked to replace the NNN
+        constant with the new ((NNN)). The total number of Ns remains the same, as it doesn't matter. THey're
+        then stored in campaign.session.filename_pattern.
+
+        Each file's contents are read in and stored as-is into campaign.session.file_contents.
+
+        If the legacy key is missing, the new key is not generated. If the key is present but not the file,
+        the key will be converted and the file contents will not be populated. This is useful for setting a
+        preferred filename format without changing the default contents.
+
+        Args:
+            file_key (str): Key of the settings file we're converting
+            legacy_data (DataStore): The old data to convert
+
+        Returns:
+            DataStore: Store with the converted session and plot template data
+        """
+        nn_re = re.compile(r"(NN+)")
+        def old_to_new(key: str):
+            if old_thing := legacy_data.get(f"story.templates.{key}"):
+                new_thing = nn_re.sub(r"((\1))", old_thing)
+                new_data.set(f"campaign.{key}.filename_pattern", new_thing)
+                old_path = self.config_dir_path(file_key) / old_thing
+                if old_path.exists():
+                    with old_path.open('r') as f:
+                        new_data.set(f"campaign.{key}.file_contents", f.read())
+
+        new_data = DataStore()
+
+        old_to_new("session")
+        old_to_new("plot")
 
         return new_data
