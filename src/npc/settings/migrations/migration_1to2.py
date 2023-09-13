@@ -170,14 +170,13 @@ class Migration1to2(SettingsMigration):
 
         new_data.merge_data(self.convert_listing_sort(legacy_data))
 
+        new_data.merge_data(self.convert_ignores(legacy_data))
+
         # warn that old type-social, etc. are going away and that existing paths might implicitly use them
         # if paths.hierarchy is present, warn that it is replaced by campaign.subpath_components system
         #   warn the user will need to replace it
 
         new_data.merge_data(self.convert_session_templates(file_key, legacy_data))
-
-        # if paths.ignore.always
-        #   put in campaign.characters.ignore_subpaths, stripping Characters/ parent
 
         # look for old sheet template files and the types.key.sheet_template key
         #   move the files to their new locations
@@ -247,6 +246,35 @@ class Migration1to2(SettingsMigration):
             updated_sort = [specials_map.get(s, s) for s in old_sort]
             new_data.set("campaign.listing.group_by", updated_sort)
             new_data.set("campaign.listing.sort_by", updated_sort)
+
+        return new_data
+
+    def convert_ignores(self, legacy_data: DataStore) -> DataStore:
+        """Convert old globally ignored character paths
+
+        The old paths required a Characters/ prefix, which is stripped from the new paths.
+
+        Args:
+            legacy_data (DataStore): The old data to convert
+
+        Returns:
+            DataStore: Store with the converted ignored character paths
+        """
+        new_data = DataStore()
+
+        campaign_base = self.settings.campaign_dir
+        if not campaign_base:
+            return new_data
+
+        character_base = campaign_base / self.settings.get("campaign.characters.path")
+
+        if old_ignores := legacy_data.get("paths.ignore.always"):
+            new_ignores = [ str(
+                               campaign_base \
+                               .joinpath(old_ignore) \
+                               .relative_to(character_base)
+                            ) for old_ignore in old_ignores]
+            new_data.set("campaign.characters.ignore_subpaths", new_ignores)
 
         return new_data
 
