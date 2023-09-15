@@ -2,6 +2,7 @@ from packaging.version import Version, parse, InvalidVersion
 import re
 import yaml
 from shutil import move
+from pathlib import Path
 
 from .settings_migration import SettingsMigration
 from .migration_message import MigrationMessage
@@ -134,10 +135,22 @@ class Migration1to2(SettingsMigration):
         if not legacy_contents:
             return
 
-        legacy_dir = settings_dir.joinpath("legacy").mkdir(exist_ok=True)
+        legacy_dir = settings_dir.joinpath("legacy")
+        legacy_dir.mkdir(exist_ok=True)
         for legacy_path in legacy_contents:
-            new_path = legacy_path.parent / "legacy" / legacy_path.name
+            new_path = legacy_dir / legacy_path.name
             move(legacy_path, new_path)
+
+    def legacy_path(self, file_key: str) -> Path:
+        """Get the path to the legacy files archive
+
+        Args:
+            file_key (str): Key of the settings location to access
+
+        Returns:
+            Path: Path to the legacy archive dir
+        """
+        return self.config_dir_path(file_key) / "legacy"
 
     def create_min_settings(self, file_key: str):
         """Create a minimal settings file
@@ -154,7 +167,7 @@ class Migration1to2(SettingsMigration):
                 "version": self.MINIMUM_VERSION
             }
         }
-        with new_settings.open('w', newline="\n") as settings_file:
+        with new_settings.open("w", newline="\n") as settings_file:
             yaml.dump(data, settings_file, default_flow_style=False)
 
     def convert(self, file_key: str, legacy_data: DataStore) -> list[MigrationMessage]:
@@ -165,30 +178,32 @@ class Migration1to2(SettingsMigration):
             }
         }
         new_data = DataStore(version_data)
-
         new_data.merge_data(self.convert_legacy_keys(legacy_data))
-
         new_data.merge_data(self.convert_listing_sort(legacy_data))
-
         new_data.merge_data(self.convert_ignores(legacy_data))
-
-        # warn that old type-social, etc. are going away and that existing paths might implicitly use them
-        # if paths.hierarchy is present, warn that it is replaced by campaign.subpath_components system
-        #   warn the user will need to replace it
-
         new_data.merge_data(self.convert_session_templates(file_key, legacy_data))
-
-        # look for old sheet template files and the types.key.sheet_template key
-        #   move the files to their new locations
-
         new_settings = self.config_dir_path(file_key) / "settings.yaml"
-        with new_settings.open('w', newline="\n") as settings_file:
+        with new_settings.open("w", newline="\n") as settings_file:
             yaml.dump(new_data.data, settings_file, default_flow_style=False)
 
-        # look for custom listing templates
-        #   warn that they're incompatible and need to be converted
+        messages.extend(self.convert_type_templates(file_key, legacy_data))
 
-        # warn that some tags have changed, advise running the linter
+        if self.legacy_path(file_key).joinpath("listing").exists():
+            messages.append(MigrationMessage(
+                "Mako templates are no longer supported. You will need to recreate them using Jinja."
+            ))
+
+        if legacy_data.get("paths.hierarchy"):
+            messages.append(MigrationMessage(
+                "The 'paths.hierarchy' key is replaced by 'campaign.subpath_components'. You will need to convert your path spec manually."
+            ))
+
+        messages.append(MigrationMessage(
+            "The meta-fields like `type-social` used in the old path.hierarchy string have been removed. You should check your character paths to make sure they're still correct."
+        ))
+        messages.append(MigrationMessage(
+            "Some tags have changed. You should run the linter to see what's outdated."
+        ))
 
         return messages
 
@@ -303,9 +318,9 @@ class Migration1to2(SettingsMigration):
             if old_thing := legacy_data.get(f"story.templates.{key}"):
                 new_thing = nn_re.sub(r"((\1))", old_thing)
                 new_data.set(f"campaign.{key}.filename_pattern", new_thing)
-                old_path = self.config_dir_path(file_key) / old_thing
+                old_path = self.legacy_path(file_key) / old_thing
                 if old_path.exists():
-                    with old_path.open('r') as f:
+                    with old_path.open("r") as f:
                         new_data.set(f"campaign.{key}.file_contents", f.read())
 
         new_data = DataStore()
@@ -314,3 +329,32 @@ class Migration1to2(SettingsMigration):
         old_to_new("plot")
 
         return new_data
+
+    def convert_type_templates(self, file_key: str, legacy_data: DataStore) -> list[MigrationMessage]:
+        messages: list[MigrationMessage] = []
+
+        types_dir = self.config_dir_path(file_key) / "types"
+        legacy_path = self.legacy_path(file_key)
+
+        old_types = legacy_data.get("types", [])
+        if old_types:
+            types_dir.mkdir(exist_ok=True)
+        for old_typekey in old_types:
+            old_template = legacy_data.get(f"types.{old_typekey}.sheet_template")
+            if not old_template:
+                continue
+
+            old_path = legacy_path / old_template
+            if not old_path.exists():
+                continue
+
+            new_path = types_dir / f"{old_typekey}{old_path.suffix}"
+            with old_path.open("r") as old_file:
+                with new_path.open("w", newline="\n") as new_file:
+                    new_file.write(old_file.read())
+            messages.append(MigrationMessage(
+                f"Created {old_typekey} sheet template from {old_template}. You may want to change the new template's suffix.",
+                file=new_path
+            ))
+
+        return messages
