@@ -1,7 +1,7 @@
 {%- block name -%}
     <h{{ header_level -}}>
-    {{- character.realname }} {% if has("dead") -%}
-        (Deceased)
+    {{- character.realname }}{% if has("dead") -%}
+        {{ " (Deceased)" }}
     {%- endif -%}
     </h{{ header_level }}>
 {%- endblock -%}
@@ -17,34 +17,34 @@
 {%- endblock -%}
 
 {%- block vitals -%}
-    {# vital info: race, age, location, pronouns, etc. #}
-    <div>
-    {%- if has("race") -%}
-        {{ character.race.first() | title }}
-    {%- else -%}
-        {{ character.type | title }}
-    {%- endif -%}
-    {%- if has("foreign") -%}
-        (foreign)
-    {%- endif -%}
-    {%- if has("wanderer") -%}
-        , Wanderer
-    {%- endif -%}
-    {%- if has("group") -%}
-        , {{ character.group.first() }} ({{ character.group.first().rank.all() | join(", ") }})
-    {%- endif -%}
-    {%- if has("pronouns") -%}
-        ; {{ character.pronouns.all() | join(", ") }}
-    {%- endif -%}
-    </div>
+{# vital info: race, age, location, pronouns, etc. #}
+{{ "\n<div>" }}
+{%- if has("race") -%}
+    {{ character.race.first() | title }}
+{%- else -%}
+    {{ character.type | title }}
+{%- endif -%}
+{%- if has("foreign") -%}
+    (foreign)
+{%- endif -%}
+{%- if has("wanderer") -%}
+    , Wanderer
+{%- endif -%}
+{%- if has("org") -%}
+    , {{ character.org.first() }} ({{ character.org.first().role.all() | join(", ") }})
+{%- endif -%}
+{%- if has("pronouns") -%}
+    ; {{ character.pronouns.all() | join(", ") }}
+{%- endif -%}
+</div>
 {%- endblock -%}
 
 {%- block groups -%}
     {# group and org membership #}
-    {%- if has("group") and character.group.rest() -%}
+    {%- if has("org") and character.org.rest() -%}
         <div>
-        {%- for g in character.group.rest() -%}
-            {{ g }} ({{ g.rank.all() | join(", ") }})
+        {%- for org in character.org.rest() -%}
+            {{ org }} ({{ org.role.all() | join(", ") }})
         {%- endfor -%}
         </div>
     {%- endif -%}
@@ -59,6 +59,7 @@
 
 {%- block location -%}
     {# details of the character's location #}
+    {# TODO add wanderer and foreign supplemental data, if present  #}
     {%- if has("location") -%}
         <div>
         {{ character.location.first() }}

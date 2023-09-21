@@ -1,0 +1,14 @@
+@realname Test Mann
+
+@name Other Mann
+@name Fake Boi
+
+@type person
+
+--Output--
+
+## Test Mann
+
+*AKA Other Mann, Fake Boi*
+
+Person
