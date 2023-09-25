@@ -31,8 +31,8 @@
     {%- if has("wanderer") -%}
         , Wanderer
     {%- endif -%}
-    {%- if has("group") -%}
-        , {{ character.group.first() }} ({{ character.group.first().rank.all() | join(", ") }})
+    {%- if has("org") -%}
+        , {{ character.org.first() }}
     {%- endif -%}
     {%- if has("pronouns") -%}
         ; {{ character.pronouns.all() | join(", ") }}

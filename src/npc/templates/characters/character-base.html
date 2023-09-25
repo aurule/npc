@@ -33,7 +33,7 @@
     , Wanderer
 {%- endif -%}
 {%- if has("org") -%}
-    , {{ character.org.first() }} ({{ character.org.first().role.all() | join(", ") }})
+    , {{ character.org.first() }}
 {%- endif -%}
 {%- if has("pronouns") -%}
     ; {{ character.pronouns.all() | join(", ") }}
