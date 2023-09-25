@@ -9,16 +9,18 @@
 {%- block aka -%}
     {# titles and other names the character has #}
     {%- if has("name") -%}
-        <div><em>AKA {{ character.name.all() | join(", ") }}</em></div>
+        {{"\n\n"}}<div><em>AKA {{ character.name.all() | join(", ") }}</em></div>
     {%- endif -%}
     {%- if has("title") -%}
-        <div>{{ character.title.all() | join(", ") }}</div>
+        {{"\n\n"}}<div>{{ character.title.all() | join(", ") }}</div>
     {%- endif -%}
 {%- endblock -%}
 
+{{- "\n" -}}
+
 {%- block vitals -%}
 {# vital info: race, age, location, pronouns, etc. #}
-{{ "\n<div>" }}
+<div>
 {%- if has("race") -%}
     {{ character.race.first() | title }}
 {%- else -%}
