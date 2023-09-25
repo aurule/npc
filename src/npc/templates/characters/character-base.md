@@ -26,7 +26,7 @@
     {%- endif -%}
 
     {%- if has("foreign") -%}
-        (foreign)
+        {{ " (foreign)" }}
     {%- endif -%}
     {%- if has("wanderer") -%}
         , Wanderer
