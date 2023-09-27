@@ -1,55 +1,10 @@
-{%- block name -%}
+<article>
+{% block name -%}
     <h{{ header_level -}}>
     {{- character.realname }}{% if has("dead") -%}
         {{ " (Deceased)" }}
     {%- endif -%}
     </h{{ header_level }}>
-{%- endblock -%}
-
-{%- block aka -%}
-    {# titles and other names the character has #}
-    {%- if has("name") -%}
-        {{"\n\n"}}<div><em>AKA {{ character.name.all() | join(", ") }}</em></div>
-    {%- endif -%}
-    {%- if has("title") -%}
-        {{"\n\n"}}<div>{{ character.title.all() | join(", ") }}</div>
-    {%- endif -%}
-{%- endblock -%}
-
-{{- "\n" -}}
-
-{%- block vitals -%}
-{# vital info: race, age, location, pronouns, etc. #}
-<div>
-{%- if has("race") -%}
-    {{ character.race.first() | title }}
-{%- else -%}
-    {{ character.type | title }}
-{%- endif -%}
-{%- if has("foreign") -%}
-    {{ " (foreign)" }}
-{%- endif -%}
-{%- if has("wanderer") -%}
-    , Wanderer
-{%- endif -%}
-{%- if has("org") -%}
-    , {{ character.org.first() }}
-{%- endif -%}
-{%- if has("pronouns") -%}
-    ; {{ character.pronouns.all() | join(", ") }}
-{%- endif -%}
-</div>
-{%- endblock -%}
-
-{%- block groups -%}
-    {# group and org membership #}
-    {%- if has("org") and character.org.rest() -%}
-        <div>
-        {%- for org in character.org.rest() -%}
-            {{ org }} ({{ org.role.all() | join(", ") }})
-        {%- endfor -%}
-        </div>
-    {%- endif -%}
 {%- endblock -%}
 
 {%- block portrait -%}
@@ -59,41 +14,131 @@
     {%- endif -%}
 {%- endblock -%}
 
+{%- block aka -%}
+    {# titles and other names the character has #}
+    {%- if has("name") -%}
+        {{"\n\n"}}<p><i>AKA {{ character.name.all() | join(", ") }}</i></p>
+    {%- endif -%}
+    {%- if has("title") -%}
+        {{"\n\n"}}<p>{{ character.title.all() | join(", ") }}</p>
+    {%- endif -%}
+{%- endblock -%}
+
+{{- "\n" -}}
+
+{%- block vitals -%}
+{# vital info: race, age, location, pronouns, etc. #}
+<p>
+{%- if has("race") -%}
+    {{ character.race.all() | join("/") }}
+{%- else -%}
+    {{ character.type | title }}
+{%- endif -%}
+{%- if has("age") -%}
+    , {{ character.age.all() | join("/") }}
+{%- endif -%}
+{%- if has("pronouns") -%}
+    , {{ character.pronouns.all() | join(", ") }}
+{%- endif -%}
+</p>
+{%- endblock -%}
+
+{%- block orgs -%}
+    {# group and org membership #}
+    {%- if has("org") -%}
+        {{- "\n\n<p><b>Member of:</b></p>\n<ul>" -}}
+        {%- for org in character.org.all() -%}
+            {{- "\n    <li>" -}}
+            {{- org.value -}}
+            {%- if org.has("rank") -%}
+                {{- ", " + org.rank.all() | join(", ") -}}
+            {%- endif -%}
+            {%- if org.has("role") -%}
+                {{- " (" + org.role.all() | join(", ") + ")"-}}
+            {%- endif -%}
+            </li>
+        {%- endfor -%}
+        {{- "\n</ul>" -}}
+    {%- endif -%}
+{%- endblock -%}
+
 {%- block location -%}
     {# details of the character's location #}
-    {# TODO add wanderer and foreign supplemental data, if present  #}
     {%- if has("location") -%}
-        <div>
-        {{ character.location.first() }}
-        {%- if has("region") -%}
-            - {{ character.region.first() }}
-        {%- endif -%}
-        {%- if has("locale") -%}
-            - {{ character.locale.first() }}
-        {%- endif -%}
-        </div>
+        {{- "\n\n<p>" -}}
+        {%- for location in character.location.all() -%}
+            {{- "\n" -}}
+            {%- if location.has("wanderer") -%}
+                {{- "Wanders " -}}
+            {%- else -%}
+                {{- "Found in " -}}
+            {%- endif -%}
+            {%- if location.has("region") -%}
+                {%- for region in location.region.all() -%}
+                    {%- if region.has("locale") -%}
+                        {{- region.locale.all() | join(" and ") + ", " -}}
+                    {% endif %}
+                    {{- region.value + ", " -}}
+                {%- endfor -%}
+            {%- endif -%}
+            {{- location -}}
+            {%- if not loop.last %}<br>{% endif -%}
+        {%- endfor -%}
+        {{- "\n</p>" -}}
+    {%- endif -%}
+{%- endblock -%}
+
+{%- block employment -%}
+    {# details about the charcters job #}
+    {%- if has("employer") -%}
+        {{- "\n\n<p>" -}}
+        {%- for employer in character.employer.all() -%}
+            {{- "\nEmployed by " + employer.value -}}
+            {%- if employer.has("job") -%}
+                {{- " as a " + employer.job.all() | join(" and ") -}}
+            {%- endif -%}
+            {%- if not loop.last %}<br>{% endif -%}
+        {%- endfor -%}
+        {{- "\n</p>" -}}
+    {%- endif -%}
+{%- endblock -%}
+
+{%- block links -%}
+    {# details about the charcters relationships #}
+    {%- if has("link") -%}
+        {{- "\n\n<p><b>Character ties:</b></p>\n<ul>" -}}
+        {%- for link in character.link.all() -%}
+            {{- "\n    <li>" -}}
+            {{- link.value -}}
+            {%- if link.has("rel") -%}
+                {{- ", " + link.rel.all() | join(", ") -}}
+            {%- endif -%}
+            </li>
+        {%- endfor -%}
+        {{- "\n</ul>" -}}
     {%- endif -%}
 {%- endblock -%}
 
 {%- block system -%}
-    {# extra info specific to a game system. Like FATE aspects and such. Blank by default. #}
+{# extra info specific to a game system. Like FATE aspects and such. Blank by default. #}
 {%- endblock -%}
 
 {%- block appearance -%}
     {# character appearance #}
     {%- if has("appearance") -%}
-        <p><i>Appearance:</i> {{ character.appearance.all() | join(' ') | mdi }}</p>
+        {{- "\n\n<p><i>Appearance:</i> " + character.appearance.all() | join(' ') | mdi + "</p>" -}}
     {%- endif -%}
 {%- endblock -%}
 
 {%- block description -%}
     {# character description #}
-    {{ character.description | md }}
+    {{- "\n\n" + character.description | md -}}
 {%- endblock -%}
 
 {%- block dead -%}
     {# details about the character's death #}
     {%- if has("dead") and character.dead.first().value -%}
-        <p><i>Dead:</i> {{ character.dead.all() | join(' ') | mdi }}</p>
+        {{- "\n\n<p><i>Deceased:</i> " + character.dead.all() | join(' ') | mdi + "</p>" -}}
     {%- endif -%}
-{%- endblock -%}
+{%- endblock %}
+</article>

@@ -1,3 +1,3 @@
 ## Test Mann
 
-Person; she/her
+Person, she/her

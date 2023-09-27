@@ -1,4 +1,5 @@
 @realname Test Mann
 
 @type person
-@foreign
+
+@location Biggityburg

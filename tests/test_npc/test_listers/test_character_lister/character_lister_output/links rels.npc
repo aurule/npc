@@ -1,0 +1,7 @@
+@realname Test Mann
+
+@type person
+
+@link Bro Mann
+@rel brother
+@rel lender
