@@ -16,9 +16,9 @@ class CharacterView:
     """
     def __init__(self, character: Character):
         self.type: str = character.type_key
-        self.description: str = character.desc
-        self.realname: str = character.realname
-        self.mnemonic: str = character.mnemonic
+        self.description: str = character.desc or ""
+        self.realname: str = character.realname or ""
+        self.mnemonic: str = character.mnemonic or ""
 
         for tag in character.tags:
             if not hasattr(self, tag.name):
