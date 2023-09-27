@@ -33,5 +33,10 @@ def test_character_files_output(db, tmp_campaign, output_format, character_file)
     expected_output = get_expected(output_format, character_file)
     if not expected_output:
         pytest.xfail("No expected output available")
-    print("===Expected===", expected_output, "===Received===", lister_output.getvalue(), sep="\n")
+    print(f"File: {character_file.name}",
+          "===Expected===",
+          expected_output,
+          "===Received===",
+          lister_output.getvalue(),
+          sep="\n")
     assert expected_output in lister_output.getvalue()
