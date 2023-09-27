@@ -94,6 +94,11 @@ npc:
             group see this character. A character with @group MIT Faculty might
             have the rank of Professor, Student, or Janitor. In the group Fifth
             Street Muggers, they might have the rank Lookout, or Pickpocket.
+
+            This tag is replaced by @role, since in practice, most rank values
+            actually described the role the character performed for their group.
+            The @org tag does support @rank, though, so explicit hierarchy ranks
+            can be expressed.
     org:
       desc: Official organization to which the character belongs
       doc: >
