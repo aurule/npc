@@ -152,14 +152,25 @@ npc:
             and a rank of Private or Sergeant.
     employer:
       desc: Name of a person or organization that pays the character for work
+      doc: >
+        This can have a lot of overlap with the character's orgs. Generally, if
+        the character belongs to the group socially, then use the @org tag. If
+        they belong to the group primarily for pay, use @employer. If they're
+        dedicated to both the social aspect and the pay, then use both together.
+
+        Some characters are fully self-employed. For them, use "himself" or
+        similar for the employer.
       subtags:
         job:
           desc: Name of the character's job at their employer
+          doc: >
+            This is usually how the character describes their work expertise,
+            regardless of whether their job has an official title or not.
     link:
       desc: Name of a person to whom the character has a social connection
       doc: >
-        Useful for noting families and loose relationships that form outside of
-        regimented groups.
+        Useful for noting families and informal relationships that form outside
+        of regimented groups.
       subtags:
         rel:
           desc: The nature of the relationship the character has to the linked person
