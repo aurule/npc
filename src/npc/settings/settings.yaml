@@ -64,20 +64,52 @@ npc:
         Relative paths are usually easiest to work with.
     location:
       desc: Broad description of where the character lives
-    region:
-      desc: More specific area in which the character lives. Typically contained within their location.
-    locale:
-      desc: Even more specific area in which the character lives. Typically contained within their region.
-    wanderer:
-      desc: Indicates that the character has no permanent home
       doc: >
-        Can optionally contain a description of their travel habits, etc.
-      allow_empty: true
+        A character's location depends greatly on the game's setting, and is
+        usually one step smaller than the game area. For example, a game set in
+        New England is likely to have a character's location be an individual
+        town or city. One set in New York City is likely to have it be a borough.
+      subtags:
+        wanderer:
+          desc: The character wanders within this location and has no single home.
+          doc: >
+            Itinerant characters usually stick to a known territory. For those
+            who don't, use a suitably broad location like a country or massive
+            geographic region.
+          no_value: true
+        region:
+          desc: Specific area in which the character lives.
+          doc: >
+            This tag starts to zoom in on where the character is. If their
+            location is a city, their region might be a district or zone. If
+            their location is a borough of NYC, their region might be a
+            neighborhood.
+
+            Not all characters need this much specificity. It's most helpful
+            when dealing with very large play areas, where the location only
+            tells you in which massive city a character is found.
+          subtags:
+            locale:
+              desc: Very specific area in which the character lives.
+              doc: >
+                This tag zooms all the way in on where the character is. If
+                their location is a city, and their region is a district, then
+                their locale might be a neighborhood. If their location is a
+                borough and their region is a neighborhood, their locale could
+                be a single block.
+
+                Most characters do not need this level of specificity. It can be
+                useful if the game deals with extremely local drama, where a
+                five minute walk can put you in another world, or if you want
+                to put your characters on an actual map.
     foreign:
-      desc: Indicates that the character lives somewhere outside the main play area
+      desc: The character lives somewhere outside the main play area
       doc: >
-        Can optionally contain a description of where they do live.
-      allow_empty: true
+        This tag is for GM organization more than anything else. It can help
+        automate sorting and listing so that NPCs visiting from outside the main
+        setting aren't lumped in with the locals that players interact with more
+        regularly.
+      no_value: true
     group:
       replaced_by: org
       desc: Name of a group that the character belongs to
