@@ -53,7 +53,9 @@ sphinx==7.2.2
     #   sphinxcontrib-serializinghtml
 sphinx-basic-ng==1.0.0b2
     # via furo
-sphinx-inline-tabs==2023.4.21
+sphinx-copybutton==0.5.2
+    # via -r docs/requirements.in
+sphinx-design==0.5.0
     # via -r docs/requirements.in
 sphinxcontrib-applehelp==1.0.7
     # via sphinx
