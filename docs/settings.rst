@@ -2,74 +2,65 @@
 
 .. _settings:
 
-Settings
+Configuration
 ===============================
 
-The settings for NPC allow you to customize its behavior at the user level and the campaign level. The various options are spread over a few files.
+You can change NPC's settings for your user and for each individual campaign. User settings override the built-in defaults, and campaign settings override user settings and defaults.
 
-See the command :ref:`cmd-settings` for editing these files.
+The command :ref:`cmd-settings` can be used to open the user settings file or current campaign settings file, but it's useful to open the entire settings directory too.
 
 File Locations
 --------------
 
-User settings are stored under :file:`.config/npc/` in the user home directory. Campaign settings are stored in :file:`.npc/` within the campaign's directory. User settings override default settings, and campaign settings override user and default settings.
+User settings are stored in a different directory based on the current operating system. On Mac OSX, it's :file:`~/Library/Application Support/NPC`. On Unix systems, it's :file:`~/.config/NPC`. On Windows, it's :file:`C:\\Users\\<user>\\AppData\\Roaming\\`.
+[#app_dir]_
 
-Settings Files
---------------
+Campaign settings are stored under :file:`.npc/` within the campaign's directory.
 
-All of the settings files can either be in `yaml`_ or `json`_ syntax. You should not use two files for the same settings, but if you do, the yaml file takes precedence. When using JSON, comments starting with a double slash ``//`` are supported, even though these are not part of the json syntax. The examples here show yaml for brevity.
+In either location, the settings file itself is :file:`settings.yaml`. Other files can be put in the settings directory (or certain subdirectories) to configure the game system or its character types, or to provide templates for character listings.
 
-:file:`settings.yaml`
-	The core settings file
-
-:file:`settings-changeling.yaml`
-	Supplemental settings for the changeling character type
-
-:file:`settings-werewolf.yaml`
-	Supplemental settings for the werewolf character type
-
-.. _settings-core:
-
-Core Settings
--------------
-
-These settings apply to the entirety of NPC. You can set all kinds of options in this file:
-
-* The paths used for character, session, and other campaign files
-* Define character types
-* Set up session and plot file :ref:`templates`
-* Set properties for reports and listings
-
-.. _settings-changeling:
-
-Changeling Settings
--------------------
-
-These settings only affect the creation and linting of changeling type characters. It is designed around :t:`Changeling: The Lost`. You can set the allowed seemings and their kiths, as well as written descriptions of the blessings for both seemings and kiths, and the curses for seemings.
-
-Validity
-~~~~~~~~
-
-Changeling settings have a few additional checks to make sure that they're usable. Any errors will show up when NPC is run and must be fixed before it will do anything.
-
-* All seemings must have an entry under ``blessings``
-* All seemings must have an entry under ``curses``
-* All kiths must have an entry under ``blessings``
-* Each kith must appear under exactly one seeming
-
-.. _settings-werewolf:
-
-Werewolf Settings
+The Settings File
 -----------------
 
-These settings only affect the creation and linting of werewolf type characters. It is designed around :t:`Werewolf: The Forsaken`. You can set the allowed auspices, tribes of the moon, and pure tribes.
+All settings files are written in `yaml`_ syntax. The main settings file, :file:`settings.yaml`, has two main sections. The ``npc`` section holds core info like the tags available to character files. The ``campaign`` section holds campaign-specific info, like where to find different files.
 
-Validity
-~~~~~~~~
+Version
+-------
 
-Werewolf settings have a few additional checks to make sure that they're usable. Any errors will show up when NPC is run and must be fixed before it will do anything.
+The ``npc.version`` key is **always** required and **must not** be changed manually. It defines the version of NPC which last touched the file.
 
-* Each tribe name must appear under exactly one of ``moon`` or ``pure``
+Tags
+----
+
+the ``npc.tags`` key defines every tag available to character files. The command :ref:`cmd-info` can show details about the configured tags for a given system or campaign. Adding a new tag is as easy as adding a new entry under ``npc.tags`` in either your user settings or the campaign's settings. You can also override and change an existing tag by adding an entry with that tag's name.
+
+Tag Format
+~~~~~~~~~~
+
+Each entry within ``npc.tags`` is the name of a tag, followed by these attributes:
+
+:desc: :bdg-warning:`required` A single line of text describing the basic purpose of this tag.
+
+:doc: A multiline block of text describing the details and nuances of this tag.
+
+:replaced_by: The name of a different tag which is used instead of this tag. The replacement should be limited to a specific scope, like a system or type. If the tag is replaced globally, deprecated the tag instead.
+
+:required: Whether this tag must appear in the character file.
+
+:min:
+	The minimum number of times this tag must appear in the character file. A positive number implies ``required=true``.
+
+:max: The maximum number of times this tag may appear in the character file.
+
+:values: Explicit list of allowed values for this tag.
+
+:allow_empty: Whether this tag can appear with no value.
+
+:no_value: Whether this tag must not have a value.
+
+:subtags: An object with additional tags which will be stored *within* this tag.
 
 .. _`yaml`: https://www.tutorialspoint.com/yaml/yaml_basics.htm
 .. _`json`: https://www.tutorialspoint.com/json/json_syntax.htm
+
+.. [#app_dir] This location is determined using `Click <https://click.palletsprojects.com/en/8.1.x/api/#click.get_app_dir>`_

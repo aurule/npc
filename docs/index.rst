@@ -6,18 +6,24 @@
 Welcome to NPC's documentation!
 ===============================
 
-NPC is a tool to make my life easier when I'm running tabletop RPG games. It automates and streamlines a few tedious tasks like creating new session logs and character sheets.
+NPC is a tool to make my life easier when I'm running tabletop RPG games. It automates and streamlines a few tedious tasks for me, like
 
-NPC is very much a personal project. It works well enough for me to use at my weekly game, but that's it. That said, if you use it and come up with suggestions or bugs, open an issue! I'll at least take a look!
+- Creating new session logs
+- Creating new plot planning files
+- Creating and organizing character files
+- Generating a list of characters to publish
+- And more!
+
+NPC is very much a personal project. It works well enough for me to use for my weekly games, and I think it might be useful for others. That said, if you use it and come up with suggestions or bugs, open an issue! I'll at least take a look!
 
 .. toctree::
    :maxdepth: 2
    :hidden:
    :glob:
 
-   invocation
-   commands
+   installation
    settings
+   commands
    characters
    tags/*
    directives
