@@ -4,6 +4,7 @@ furo
 readthedocs-sphinx-search
 rich
 sphinx-autobuild
-sphinx_inline_tabs
+sphinx-design
+sphinx-copybutton
 pip-tools >= 6.0
 vulture >= 2.7
