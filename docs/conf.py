@@ -20,7 +20,7 @@ from npc import __version__
 # -- Project information -----------------------------------------------------
 
 project = 'NPC'
-copyright = '2021, Paige Andrews'
+copyright = '2015-2023, Paige Andrews'
 author = 'Paige Andrews'
 
 # The full version, including alpha/beta/rc tags
