@@ -32,6 +32,8 @@ Various commands support both the ``--search`` and ``--ignore`` options. These i
 3. When a directory is passed to ``search`` and a file within that directory is passed to ``ignore``, the file is not scanned.
 4. When a file is passed to ``search`` and ``ignore``, ``search`` wins and the file is *always scanned*.
 
+.. _cli_init:
+
 init
 -------------------------------
 
@@ -67,7 +69,7 @@ Options
 --dryrun
 	Show the directories and files that would be created, but do not actually create them.
 
-.. _cmd-settings:
+.. _cli_settings:
 
 settings
 -------------------------------
@@ -116,7 +118,7 @@ Arguments
 	* plot
 	* session
 
-.. _cmd-new:
+.. _cli_new:
 
 new
 -------------------------------
@@ -269,7 +271,7 @@ Options
 --location <place>
 	Add the :ref:`tag-location` tag with the given place name.
 
-.. _cmd-lint:
+.. _cli_lint:
 
 lint
 -------------------------------
@@ -296,7 +298,7 @@ Options
 --strict
 	Be more stringent about minor or inconsequential errors and warnings. With this option, more files will be flagged.
 
-.. _cmd-reorg:
+.. _cli_reorg:
 
 reorg
 -------------------------------
@@ -323,7 +325,7 @@ Options
 -v, --verbose
 	Show changes as they are made. Does nothing unless ``--commit`` is also passed.
 
-.. _cmd-list:
+.. _cli_list:
 
 list
 -------------------------------

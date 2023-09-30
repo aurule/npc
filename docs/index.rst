@@ -17,17 +17,21 @@ NPC is a tool to make my life easier when I'm running tabletop RPG games. It aut
 NPC is very much a personal project. It works well enough for me to use for my weekly games, and I think it might be useful for others. That said, if you use it and come up with suggestions or bugs, open an issue! I'll at least take a look!
 
 .. toctree::
-   :maxdepth: 2
    :hidden:
    :glob:
 
    installation
-   settings
-   commands
+   customization/index
    characters
    tags/*
    directives
    templates
+
+.. toctree::
+   :caption: NPC CLI
+   :hidden:
+
+   commands
 
 Indices and tables
 ==================
