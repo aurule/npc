@@ -23,9 +23,6 @@ patternProperties:
                 patternProperties:
                     "^[a-z][a-z|-]+$":
                         $ref: tag.schema.yaml
-            path_substitutions:
-                type: object
-                description: Tag names whose value should be substituted whenever their key is found in a path
         required:
         - name
         - desc
