@@ -1,17 +1,21 @@
 .. Campaign settings
 
+.. _cust_campaign:
+
 Configuring Campaigns
 =====================
 
 Campaigns are configured using the :file:`settings.yaml` file in the campaign's :file:`.npc/` directory. All of the campaign settings are under the ``campaign`` key.
 
-:name: The campaign's name
-:system: The game system the campaign uses
-:desc: A long-form description of the campaign
-:characters: An object that defines where characters are stored and displayed
-:plot: An object that defines how plot files are stored
-:session: Object that defines how session files are stored
-:create_on_init: List of additional folder names to create for every new campaign
+:name: :octicon:`note` The campaign's name
+:system: :octicon:`note` The game system the campaign uses
+:desc: :octicon:`book` A long-form description of the campaign
+:characters: :octicon:`code-square` An object that defines where characters are stored and displayed
+:plot: :octicon:`code-square` An object that defines how plot files are stored
+:session: :octicon:`code-square` Object that defines how session files are stored
+:create_on_init: :octicon:`list-ordered` List of additional folder names to create for every new campaign
+
+.. _cust_campaign_new:
 
 New Campaigns
 -------------
@@ -29,15 +33,17 @@ The new campaign's :file:`.npc/settings.yaml` file is populated with the chosen 
 
 See :ref:`cli_init` for how to set up a new campaign using the CLI.
 
+.. _cust_campaign_plot_sess:
+
 Plot and Session Management
 ---------------------------
 
 Plot and session files are configured in the ``campaign.plot`` and ``campaign.session`` objects, respectively. Both config objects share the same keys:
 
-:path: Directory where the files should be put
-:latest_index: Numerical index of the most recent file
-:filename_pattern: How to name the file
-:filename_contents: What to put in the file
+:path: :octicon:`note` Directory where the files should be put
+:latest_index: :octicon:`number` Numerical index of the most recent file
+:filename_pattern: :octicon:`note` How to name the file
+:filename_contents: :octicon:`book` What to put in the file
 
 Naming and Indexes
 ~~~~~~~~~~~~~~~~~~
@@ -49,16 +55,18 @@ File Contents
 
 New files created through NPC are filled with the value in ``file_contents``. Plot files can use the special ``((COPY))`` placeholder, which is replaced with the *entire* contents of the previous plot file, if it exists. This is a great way to keep running planning notes.
 
+.. _cust_campaign_char_management:
+
 Character Management
 --------------------
 
 Character organization and handling is configured in the ``campaign.characters`` object.
 
-:path: Directory where characters should be put
-:ignore_subpaths: List of directories under ``path`` that should be ignored when loading characters. Good for archiving.
-:subpath_components: List of objects that describe how to build the "ideal path" for a character based on its tags.
-:listing: Object configuring how to generate character listings
-:use_blocks: Which :ref:`setting_tag_blocks` to use for new files, and in what order
+:path: :octicon:`note` Directory where characters should be put
+:ignore_subpaths: :octicon:`list-ordered` List of directories under ``path`` that should be ignored when loading characters. Good for archiving.
+:subpath_components: :octicon:`list-ordered` List of objects that describe how to build the "ideal path" for a character based on its tags.
+:listing: :octicon:`code-square` Object configuring how to generate character listings
+:use_blocks: :octicon:`list-ordered` Which :ref:`setting_tag_blocks` to use for new files, and in what order
 
 Basic Organization
 ~~~~~~~~~~~~~~~~~~~~~~

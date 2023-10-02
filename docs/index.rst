@@ -22,20 +22,10 @@ NPC is very much a personal project. It works well enough for me to use for my w
 
    installation
    customization/index
-   characters
-   tags/*
-   directives
-   templates
+   reference/index
 
 .. toctree::
    :caption: NPC CLI
    :hidden:
 
    commands
-
-Indices and tables
-==================
-
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`

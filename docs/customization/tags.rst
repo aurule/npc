@@ -1,5 +1,7 @@
 .. Custom tags documentation
 
+.. _cust_tags:
+
 Configuring Tags
 ===============================
 
@@ -10,28 +12,37 @@ Tag Format
 
 Each entry within ``npc.tags`` is the name of a tag, followed by these attributes:
 
-:desc: :bdg-warning:`required` A single line of text describing the basic purpose of this tag.
+:desc: :octicon:`note` :bdg-warning:`required` A single line of text describing the basic purpose of this tag.
 
-:doc: A multiline block of text describing the details and nuances of this tag.
+:doc: :octicon:`book` A multiline block of text describing the details and nuances of this tag.
 
-:replaced_by: The name of a different tag which is used instead of this tag. The replacement should be limited to a specific scope, like a system or type. If the tag is replaced globally, deprecated the tag instead.
+:replaced_by: :octicon:`note` The name of a different tag which is used instead of this tag. The replacement should be limited to a specific scope, like a system or type.
 
-:required: Whether this tag must appear in the character file.
+:required: :octicon:`tasklist` Whether this tag must appear in the character file.
 
-:min:
-	The minimum number of times this tag must appear in the character file. A positive number implies ``required=true``.
+:min: :octicon:`number` The minimum number of times this tag must appear in the character file. A positive number implies ``required=true``.
 
-:max: The maximum number of times this tag may appear in the character file.
+:max: :octicon:`number` The maximum number of times this tag may appear in the character file.
 
-:values: Explicit list of allowed values for this tag.
+:values: :octicon:`list-ordered` Explicit list of allowed values for this tag.
 
-:allow_empty: Whether this tag can appear with no value.
+:allow_empty: :octicon:`tasklist` Whether this tag can appear with no value.
 
-:no_value: Whether this tag must not have a value.
+:no_value: :octicon:`tasklist` Whether this tag must not have a value.
 
-:subtags: An object with additional tags which will be stored *within* this tag.
+:subtags: :octicon:`code-square` An object with additional tags which will be stored *within* this tag.
 
 Examples
 --------
 
-:bdg-danger:`TODO`
+One of the most common reasons to add a tag is to support some facet of a new system. The FATE system, for example, requires every character to have a Concept. This new ``concept`` tag can be defined as follows:
+
+.. code:: yaml
+
+	tags:
+	    concept:
+	      desc: The character's high concept
+	      required: true
+	      max: 1
+
+The ``@concept`` tag will now be recognized in character files in a campaign that uses the FATE system.

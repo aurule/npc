@@ -10,9 +10,11 @@ The CLI command :ref:`cmd-settings` can be used to open the user settings file o
 .. toctree::
 	:hidden:
 
-	tags
 	campaigns
-	reference
+	systems
+	tags
+
+.. _cust_file_locations:
 
 File Locations
 --------------
@@ -29,16 +31,13 @@ The Settings File
 
 All settings files are written in `yaml`_ syntax. The main settings file, :file:`settings.yaml`, has two main sections. The ``npc`` section holds core info like the tags available to character files. The ``campaign`` section holds campaign-specific info, like where to find different files.
 
-Version
--------
-
-The ``npc.version`` key is **always** required and **must not** be changed manually. It defines the version of NPC which last touched the file.
-
-.. _`yaml`: https://www.tutorialspoint.com/yaml/yaml_basics.htm
-
-.. [#app_dir] This location is determined using `Click <https://click.palletsprojects.com/en/8.1.x/api/#click.get_app_dir>`_
+See :ref:`ref_settings` for an explanation of all of the available settings keys.
 
 Global Campaign Settings
 ------------------------
 
 While any key can appear in your user settings, there is one campaign key that is most useful to configure there: ``campaign.create_on_init``. This key is a list of folder names that will be created for every new campaign.
+
+.. _`yaml`: https://www.tutorialspoint.com/yaml/yaml_basics.htm
+
+.. [#app_dir] This location is determined using `Click <https://click.palletsprojects.com/en/8.1.x/api/#click.get_app_dir>`_
