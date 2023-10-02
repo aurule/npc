@@ -17,7 +17,7 @@ NPC Settings
 Settings that affect all parts of NPC.
 
 npc.version :octicon:`note`
------------------
+---------------------------
 
 :bdg-info:`type: string`
 :bdg-warning:`required: yes`
@@ -32,7 +32,7 @@ Example:
         version: 2.0.0
 
 npc.tags :octicon:`code-square`
--------------------
+-------------------------------
 
 :bdg-info:`type: object`
 :bdg-info:`required: no`
@@ -50,7 +50,7 @@ Example:
             max: 1
 
 npc.deprecated_tags :octicon:`code-square`
--------------------
+------------------------------------------
 
 :bdg-info:`type: object`
 :bdg-info:`required: no`
@@ -79,7 +79,7 @@ For example:
           version: 1.4.1
 
 npc.reserved_tags :octicon:`code-square`
---------------------
+----------------------------------------
 
 :bdg-info:`type: object`
 :bdg-info:`required: no`
@@ -108,7 +108,7 @@ Example:
 .. _setting_tag_blocks:
 
 npc.tag_blocks :octicon:`code-square`
---------------------
+-------------------------------------
 
 :bdg-info:`type: object`
 :bdg-info:`required: no`
@@ -133,7 +133,7 @@ Campaign Settings
 Settings which affect campaigns. See :ref:`cust_campaign` for more detail on how to set up a campaign.
 
 campaign.name :octicon:`note`
---------------------
+-----------------------------
 
 :bdg-info:`type: string`
 :bdg-info:`required: no`
@@ -148,7 +148,7 @@ Example:
         name: The Depths of Moria
 
 campaign.desc :octicon:`book`
---------------------
+-----------------------------
 
 :bdg-info:`type: text`
 :bdg-info:`required: no`
@@ -163,7 +163,7 @@ Example:
         desc: A harrowing journey into the depths of the forgotten Dwarven city of Moria.
 
 campaign.system :octicon:`note`
---------------------
+-------------------------------
 
 :bdg-info:`type: string`
 :bdg-info:`required: no`
@@ -178,7 +178,7 @@ Example:
         system: dnd35
 
 campaign.create_on_init :octicon:`list-ordered`
---------------------
+-----------------------------------------------
 
 :bdg-info:`type: list`
 :bdg-info:`required: no`
@@ -194,7 +194,7 @@ Example:
         - House Rules
 
 campaign.characters :octicon:`code-square`
---------------------
+------------------------------------------
 
 :bdg-info:`type: object`
 :bdg-info:`required: no`
@@ -231,7 +231,7 @@ Example:
           - rest
 
 campaign.plot :octicon:`code-square`
---------------------
+------------------------------------
 
 :bdg-info:`type: object`
 :bdg-info:`required: no`
@@ -249,7 +249,7 @@ Example:
         file_contents: ((COPY))
 
 campaign.session :octicon:`code-square`
---------------------
+---------------------------------------
 
 :bdg-info:`type: object`
 :bdg-info:`required: no`
