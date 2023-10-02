@@ -9,5 +9,5 @@ These pages give a comprehensive guide to the settings of NPC, its default tags,
     :hidden:
 
     settings
-    tags
-    systems
+    tags/index
+    systems/index

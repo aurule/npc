@@ -10,3 +10,8 @@ These tags are available by default to all characters in all campaigns. Availabi
 See :ref:`ref_systems` for the game systems built into NPC.
 
 :bdg-danger:`TODO`
+
+.. toctree::
+    :glob:
+
+    *
