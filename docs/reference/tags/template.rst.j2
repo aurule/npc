@@ -1,0 +1,15 @@
+@{{ tag.name }}
+{{ header_char[header_level] * (len(tag.name) + 1) }}
+
+## if tag.replaced_by, warning badge
+## if tag.required, warning badge
+## if min/max, info badges
+## if values, show list
+## badge for allow_empty
+## badge for no_value
+
+{{ tag.desc }}
+
+{{ tag.doc }}
+
+## enumerate subtags using this template
