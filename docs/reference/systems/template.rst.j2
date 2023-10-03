@@ -1,15 +1,26 @@
+.. _sys_{{ system.key }}:
+
 {{ system.name }}
 {{ "=" * len(system.name) }}
 
-{{ system.key }}
+:bdg-info:`{{ system.key }}`
 
-## if extends, based on extends.name
+{% if system.extends -%}
+    Based on :ref:`sys_{{ system.extends }}`.
+{% endif %}
 
 {{ system.desc }}
 
 {{ system.doc }}
 
-## if system.links, enumerate system.links in a small subsection
+{% if system.links %}
+Related Links
+-------------
+
+{% for link in system.links %}
+- `{{ link.label }} <{{ link.url }}>`
+{% endfor %}
+{% endif %}
 
 ## if metatags, enumerate available metatags in subsection
 
