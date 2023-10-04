@@ -34,4 +34,13 @@ Allowed Values
 {% endfor %}
 {% endif %}
 
-## enumerate subtags using this template
+{% if tag.subtags %}
+Subtags
+{{ header_char[header_level + 1] * 7 }}
+
+    {% for subtag in tag.subtags %}
+        {% with tag = subtag, header_level = header_level + 1 %}
+            {% include "tag.rst.j2" %}
+        {% endwith %}
+    {% endfor %}
+{% endif %}
