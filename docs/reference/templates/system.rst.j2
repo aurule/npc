@@ -18,7 +18,10 @@ Related Links
 -------------
 
 {% for link in system.links %}
-- `{{ link.label }} <{{ link.url }}>`
+.. button-link:: {{ link.url }}
+
+    {{ link.label }}
+
 {% endfor %}
 {% endif %}
 
