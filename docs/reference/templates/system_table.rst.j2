@@ -1,0 +1,11 @@
+.. list-table::
+    :header-rows: 1
+
+    * - System
+      - Key
+      - Description
+    {%- for system in systems %}
+    * - :ref:`sys_{{ system.key }}`
+      - ``{{ system.key }}``
+      - {{ system.desc }}
+    {%- endfor -%}
