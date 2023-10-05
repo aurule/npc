@@ -160,7 +160,7 @@ class System():
     def get_tag(self, tag_name: str) -> TagSpec:
         """Get a single tag as configured for this system
 
-        Uses the combied core and system definitions
+        Uses the combined core and system definitions
 
         Args:
             tag_name (str): Name of the tag to get
