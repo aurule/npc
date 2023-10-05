@@ -1,32 +1,35 @@
 .. _sys_{{ system.key }}:
 
 {{ system.name }}
-{{ "=" * len(system.name) }}
+{{ header_characters[header_level] * len(system.name) }}
 
-:bdg-info:`{{ system.key }}`
+:bdg-info:`key: {{ system.key }}`
 
-{% if system.extends -%}
-    Based on :ref:`sys_{{ system.extends }}`.
-{% endif %}
+{%- if system.extends %}
+
+Based on :ref:`sys_{{ system.extends }}`.
+{%- endif %}
 
 {{ system.desc }}
 
 {{ system.doc }}
 
-{% if system.links %}
+{%- if system.links %}
 Related Links
--------------
+{{ header_characters[header_level + 1] * 13 }}
 
-{% for link in system.links %}
+{% for link in system.links -%}
 .. button-link:: {{ link.url }}
+    :color: primary
+    :shadow:
 
     {{ link.label }}
 
 {% endfor %}
 {% endif %}
 
-## if metatags, enumerate available metatags in subsection
+{# if metatags, enumerate available metatags in subsection #}
 
-## if tags, enumerate system tags in subsection
+{# if tags, enumerate system tags in subsection #}
 
-## summarize character types
+{# summarize character types #}
