@@ -18,11 +18,17 @@ NPC is very much a personal project. It works well enough for me to use for my w
 
 .. toctree::
    :hidden:
-   :glob:
 
    installation
    customization/index
-   reference/index
+
+.. toctree::
+   :caption: Reference
+   :hidden:
+
+   reference/settings
+   reference/tags/index
+   reference/systems/index
 
 .. toctree::
    :caption: NPC CLI
