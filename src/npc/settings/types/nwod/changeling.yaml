@@ -111,7 +111,6 @@ changeling:
       values: *seemings
     kith:
       desc: The more specific grouping of the changeling's fae kin. A subset of their seeming.
-      values: *kiths
     mask:
       desc: How the changeling appears to humans and other non-fae.
     mien:
