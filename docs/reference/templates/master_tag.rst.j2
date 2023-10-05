@@ -41,7 +41,7 @@ These tags can appear immediately after @{{ tag.name }} and will be associated w
 
 {% for subtag in tag.subtags -%}
     {%- with parents=parents + [tag], tag = all_tags[subtag].in_context(tag.name), header_level = header_level + 1 -%}
-        {%- include "subtag.rst.j2" -%}
+        {%- include subtag_template | default("subtag.rst.j2") -%}
     {%- endwith %}
 {% endfor -%}
 {% endif -%}
