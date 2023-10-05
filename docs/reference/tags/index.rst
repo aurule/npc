@@ -2,7 +2,7 @@
 
 .. _ref_tags:
 
-Tags Reference
+Default Tags
 ==========================
 
 These tags are available by default to all characters in all campaigns. Availability can be changed by individual game systems, character types, and campaigns.

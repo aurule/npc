@@ -2,7 +2,7 @@
 
 .. _ref_settings:
 
-Settings Reference Guide
+Settings Keys
 ========================
 
 NPCs settings are spread throughout multiple top-level keys. The settings here are all found within :file:`settings.yaml`. Configuration for systems is discussed in :ref:`cust_systems`.
