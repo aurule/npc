@@ -7,6 +7,10 @@ Configuring Tags
 
 The ``npc.tags`` key defines every tag available to character files. The command :ref:`cli_info` can show details about the configured tags for a given system or campaign. Adding a new tag is as easy as adding a new entry under ``npc.tags`` in either your user settings or the campaign's settings. You can also override and change an existing tag by adding an entry with that tag's name.
 
+.. tip::
+
+	When overwriting an existing tag, change the ``desc`` and ``doc`` strings so that they match the new changes to the tag. For example, if you add ``replaced_by``, use ``desc`` and ``doc`` to describe why the replacement was made.
+
 Tag Format
 ----------
 
