@@ -81,7 +81,7 @@ This works fine and is very clear. However, using a metatag can give us a nice s
 
     @changeling beast hunterheart
 
-On this line, ``@changeling`` is the name of the metatag. It sets the character's ``@type`` to ``changeling``, then splits the next two words into the character's ``@seeming`` and ``@kith``.
+On this line, ``@changeling`` is the name of the metatag. It sets the character's :ref:`tag_type` to ``changeling``, then splits the next two words into the character's ``@seeming`` and ``@kith``.
 
 The metatag definition for ``@changeling`` is as follows:
 
