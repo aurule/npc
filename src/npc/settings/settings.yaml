@@ -32,7 +32,7 @@ npc:
         filename (like "quotes" around a common nickname).
       max: 1
     title:
-      desc: Honorific title for the character, like The Kingslayer.
+      desc: Honorific title for the character, like The Kingslayer
     pronouns:
       desc: Pronouns the character uses
       doc: >
