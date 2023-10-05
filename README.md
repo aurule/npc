@@ -62,6 +62,14 @@ Go to the root project directory and run `python -m pytest` or `make test`.
 
 To generate a coverage report, run `make coverage`.
 
+## Building Documentation
+
+The docs are built using Sphinx. From the root dir, you can run `make docs` to quickly generate them.
+
+When actively working on the docs, use `scripts/live-docs.sh` to automatically rebuild the docs on change, using sphinx-autobuild.
+
+To generate reference documentation for tags and systems, run `python scripts/build_reference_docs.py`.
+
 ## Release Process
 
 Releases are handled through [GitHub Releases](https://github.com/aurule/npc/releases).
