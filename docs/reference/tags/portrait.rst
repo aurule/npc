@@ -3,9 +3,8 @@
 @portrait
 #########
 
-:bdg-info:`Optional`
+:bdg-secondary:`Optional`
 :bdg-info:`Value required`
-
 
 Path to an image file to use for the character
 

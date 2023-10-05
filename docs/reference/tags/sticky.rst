@@ -3,10 +3,9 @@
 @sticky
 #######
 
-:bdg-info:`Optional`
+:bdg-secondary:`Optional`
 :bdg-warning:`No value allowed`
 :bdg-info:`Max 1`
-
 
 Prevent this file from being moved by the reorg command
 

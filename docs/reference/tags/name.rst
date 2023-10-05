@@ -3,9 +3,8 @@
 @name
 #####
 
-:bdg-info:`Optional`
+:bdg-secondary:`Optional`
 :bdg-info:`Value required`
-
 
 An additional name the character uses
 
@@ -21,10 +20,10 @@ These tags can appear immediately after @name and will be associated with that t
 @with
 =====
 
-:bdg-info:`Optional`
+:bdg-secondary:`Optional`
 :bdg-info:`Value required`
-
 
 Where or with whom this name is used
 
 Certain names are only known to certain groups of people. This is especially common with false identities, but is true for nicknames as well.
+

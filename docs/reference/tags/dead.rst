@@ -3,9 +3,8 @@
 @dead
 #####
 
-:bdg-info:`Optional`
-:bdg-info:`Value optional`
-
+:bdg-secondary:`Optional`
+:bdg-secondary:`Value optional`
 
 Indicates that the character is deceased
 

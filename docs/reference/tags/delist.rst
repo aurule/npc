@@ -3,10 +3,9 @@
 @delist
 #######
 
-:bdg-info:`Optional`
+:bdg-secondary:`Optional`
 :bdg-warning:`No value allowed`
 :bdg-info:`Max 1`
-
 
 Do not show this character in listings
 

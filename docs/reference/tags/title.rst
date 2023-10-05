@@ -3,9 +3,8 @@
 @title
 ######
 
-:bdg-info:`Optional`
+:bdg-secondary:`Optional`
 :bdg-info:`Value required`
 
-
-Honorific title for the character, like The Kingslayer.
+Honorific title for the character, like The Kingslayer
 

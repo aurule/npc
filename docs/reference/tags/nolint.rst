@@ -3,10 +3,9 @@
 @nolint
 #######
 
-:bdg-info:`Optional`
+:bdg-secondary:`Optional`
 :bdg-warning:`No value allowed`
 :bdg-info:`Max 1`
-
 
 Do not show linting errors for this character
 

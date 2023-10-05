@@ -3,10 +3,9 @@
 @faketype
 #########
 
-:bdg-info:`Optional`
+:bdg-secondary:`Optional`
 :bdg-info:`Value required`
 :bdg-info:`Max 1`
-
 
 A false character type that will be shown in listings
 

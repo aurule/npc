@@ -3,9 +3,8 @@
 @hide
 #####
 
-:bdg-info:`Optional`
+:bdg-secondary:`Optional`
 :bdg-info:`Value required`
-
 
 Conceal the named tag from listings
 

@@ -3,9 +3,8 @@
 @lineage
 ########
 
-:bdg-info:`Optional`
+:bdg-secondary:`Optional`
 :bdg-info:`Value required`
-
 
 Brief listing of the character's ancestors
 

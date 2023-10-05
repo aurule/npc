@@ -3,9 +3,8 @@
 @employer
 #########
 
-:bdg-info:`Optional`
+:bdg-secondary:`Optional`
 :bdg-info:`Value required`
-
 
 Name of a person or organization that pays the character for work
 
@@ -22,10 +21,10 @@ These tags can appear immediately after @employer and will be associated with th
 @job
 ====
 
-:bdg-info:`Optional`
+:bdg-secondary:`Optional`
 :bdg-info:`Value required`
-
 
 Name of the character's job at their employer
 
 This is usually how the character describes their work expertise, regardless of whether their job has an official title or not.
+

@@ -3,10 +3,9 @@
 @realname
 #########
 
-:bdg-info:`Optional`
+:bdg-secondary:`Optional`
 :bdg-info:`Value required`
 :bdg-info:`Max 1`
-
 
 The true primary name for the character
 

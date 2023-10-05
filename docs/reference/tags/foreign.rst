@@ -3,9 +3,8 @@
 @foreign
 ########
 
-:bdg-info:`Optional`
+:bdg-secondary:`Optional`
 :bdg-warning:`No value allowed`
-
 
 The character lives somewhere outside the main play area
 

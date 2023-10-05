@@ -3,9 +3,8 @@
 @appearance
 ###########
 
-:bdg-info:`Optional`
+:bdg-secondary:`Optional`
 :bdg-info:`Value required`
-
 
 What the character looks like to other people
 

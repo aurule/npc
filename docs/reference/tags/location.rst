@@ -3,9 +3,8 @@
 @location
 #########
 
-:bdg-info:`Optional`
+:bdg-secondary:`Optional`
 :bdg-info:`Value required`
-
 
 Broad description of where the character lives
 
@@ -21,21 +20,20 @@ These tags can appear immediately after @location and will be associated with th
 @wanderer
 =========
 
-:bdg-info:`Optional`
+:bdg-secondary:`Optional`
 :bdg-warning:`No value allowed`
-
 
 The character wanders within this location and has no single home.
 
 Itinerant characters usually stick to a known territory. For those who don't, use a suitably broad location like a country or massive geographic region.
+
 .. _tag_location_region:
 
 @region
 =======
 
-:bdg-info:`Optional`
+:bdg-secondary:`Optional`
 :bdg-info:`Value required`
-
 
 Specific area in which the character lives.
 
@@ -52,11 +50,12 @@ These tags can appear immediately after @region and will be associated with that
 @locale
 -------
 
-:bdg-info:`Optional`
+:bdg-secondary:`Optional`
 :bdg-info:`Value required`
-
 
 Very specific area in which the character lives.
 
 This tag zooms all the way in on where the character is. If their location is a city, and their region is a district, then their locale might be a neighborhood. If their location is a borough and their region is a neighborhood, their locale could be a single block.
 Most characters do not need this level of specificity. It can be useful if the game deals with extremely local drama, where a five minute walk can put you in another world, or if you want to put your characters on an actual map.
+
+

@@ -3,9 +3,8 @@
 @age
 ####
 
-:bdg-info:`Optional`
+:bdg-secondary:`Optional`
 :bdg-info:`Value required`
-
 
 How old the character is
 

@@ -3,9 +3,8 @@
 @race
 #####
 
-:bdg-info:`Optional`
+:bdg-secondary:`Optional`
 :bdg-info:`Value required`
-
 
 Observable ancestry of the character
 
