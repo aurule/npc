@@ -26,9 +26,20 @@ Related Links
     {{ link.label }}
 
 {% endfor %}
-{% endif %}
+{% endif -%}
 
-{# if metatags, enumerate available metatags in subsection #}
+{% if system.metatags %}
+Metatags
+{{ header_characters[header_level + 1] * 8 }}
+
+These metatags will be expanded into their ``static`` and ``match`` tags when a character file is loaded. Groups of those tags will be condensed into a metatag when a character is saved. For an explanation of how metatags work, see :ref:`cust_system_metatags`.
+
+{% for metatag in system.metatags.values() -%}
+    {%- with header_level = header_level + 1 -%}
+        {%- include "metatag.rst.j2" -%}
+    {%- endwith %}
+{% endfor -%}
+{% endif -%}
 
 {# if tags, enumerate system tags in subsection #}
 

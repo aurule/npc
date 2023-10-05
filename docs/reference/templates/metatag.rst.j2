@@ -1,0 +1,25 @@
+@{{ metatag.name }}
+{{ header_characters[header_level] * (len(metatag.name) + 1) }}
+
+{{ metatag.desc }}
+
+{{ metatag.doc }}
+
+{%- if metatag.static %}
+Static Tags:
+
+{% for static_key, static_value in metatag.static | items -%}
+- @{{ static_key }}: ``{{ static_value }}``
+{% endfor -%}
+{%- endif -%}
+
+{%- if metatag.match %}
+Matches Tags:
+
+{% for match in metatag.match -%}
+- @{{ match }}
+{% endfor %}
+separator: "{{ metatag.separator }}"
+
+greedy: {% if metatag.greedy %}yes{% else %}no{% endif %}
+{%- endif -%}
