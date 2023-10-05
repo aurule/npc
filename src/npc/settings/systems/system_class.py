@@ -21,6 +21,7 @@ class System():
         self.links: str = system_def.get("links", [])
         self.extends: str = system_def.get("extends")
         self.settings = settings
+        self.definition = system_def
 
     def __hash__(self) -> int:
         """Get a hash for this system
