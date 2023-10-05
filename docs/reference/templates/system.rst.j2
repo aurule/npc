@@ -41,7 +41,16 @@ These metatags will be expanded into their ``static`` and ``match`` tags when a 
 {% endfor -%}
 {% endif -%}
 
-{# if tags, enumerate system tags in subsection #}
+{% if system.definition.tags %}
+New and Changed Tags
+{{ header_characters[header_level + 1] * 20 }}
+
+{% for tag_name in system.definition.tags.keys() -%}
+    {%- with tag=all_tags[tag_name], parents=[], subtag_template="sys_subtag.rst.j2", header_level = header_level + 2 -%}
+        {%- include "sys_tag.rst.j2" -%}
+    {%- endwith %}
+{% endfor -%}
+{% endif %}
 
 Character Types
 {{ header_characters[header_level + 1] * 15 }}

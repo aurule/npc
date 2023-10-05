@@ -26,6 +26,50 @@ Related Links
 
 
 
+New and Changed Tags
+====================
+
+.. _tag_dnd3_class:
+
+@class
+------
+
+:bdg-secondary:`Optional`
+:bdg-info:`Value required`
+
+Name of a class in which the character has levels
+
+
+Subtags
+~~~~~~~
+
+These tags can appear immediately after @class and will be associated with that tag instance's value.
+
+.. _tag_dnd3_class_level:
+
+@level
+~~~~~~
+
+:bdg-secondary:`Optional`
+:bdg-info:`Value required`
+
+Number of levels the character has in this class
+
+
+
+.. _tag_dnd3_faith:
+
+@faith
+------
+
+:bdg-secondary:`Optional`
+:bdg-info:`Value required`
+
+Name of the deity the character worships
+
+With whole classes built around worship, it can be very important to keep track of which god(s) a character prays to.
+
+
 
 Character Types
 ===============

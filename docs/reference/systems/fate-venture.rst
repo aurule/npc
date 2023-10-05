@@ -22,6 +22,81 @@ Related Links
 
 
 
+New and Changed Tags
+====================
+
+.. _tag_fate-venture_concept:
+
+@concept
+--------
+
+:bdg-warning:`Required`
+:bdg-info:`Value required`
+:bdg-info:`Min 1`
+:bdg-info:`Max 1`
+
+The character's high concept
+
+
+.. _tag_fate-venture_trouble:
+
+@trouble
+--------
+
+:bdg-warning:`Required`
+:bdg-info:`Value required`
+:bdg-info:`Min 1`
+:bdg-info:`Max 1`
+
+The character's main trouble in life
+
+
+.. _tag_fate-venture_aspect:
+
+@aspect
+-------
+
+:bdg-secondary:`Optional`
+:bdg-info:`Value required`
+
+One of the character's aspects
+
+
+.. _tag_fate-venture_refresh:
+
+@refresh
+--------
+
+:bdg-secondary:`Optional`
+:bdg-info:`Value required`
+
+Number of fate points the character starts with
+
+Usually only relevant for PCs, since NPCs use a shared pool of GM fate points in every scene.
+
+.. _tag_fate-venture_stunt:
+
+@stunt
+------
+
+:bdg-secondary:`Optional`
+:bdg-info:`Value required`
+
+Name of a special power the character possesses
+
+
+.. _tag_fate-venture_power:
+
+@power
+------
+
+:bdg-secondary:`Optional`
+:bdg-info:`Value required`
+
+Special, souped-up stunt that describes a superpower
+
+
+
 
 Character Types
 ===============

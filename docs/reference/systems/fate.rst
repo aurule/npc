@@ -21,6 +21,70 @@ Related Links
 
 
 
+New and Changed Tags
+====================
+
+.. _tag_fate_concept:
+
+@concept
+--------
+
+:bdg-warning:`Required`
+:bdg-info:`Value required`
+:bdg-info:`Min 1`
+:bdg-info:`Max 1`
+
+The character's high concept
+
+
+.. _tag_fate_trouble:
+
+@trouble
+--------
+
+:bdg-warning:`Required`
+:bdg-info:`Value required`
+:bdg-info:`Min 1`
+:bdg-info:`Max 1`
+
+The character's main trouble in life
+
+
+.. _tag_fate_aspect:
+
+@aspect
+-------
+
+:bdg-secondary:`Optional`
+:bdg-info:`Value required`
+
+One of the character's aspects
+
+
+.. _tag_fate_refresh:
+
+@refresh
+--------
+
+:bdg-secondary:`Optional`
+:bdg-info:`Value required`
+
+Number of fate points the character starts with
+
+Usually only relevant for PCs, since NPCs use a shared pool of GM fate points in every scene.
+
+.. _tag_fate_stunt:
+
+@stunt
+------
+
+:bdg-secondary:`Optional`
+:bdg-info:`Value required`
+
+Name of a special power the character possesses
+
+
+
 
 Character Types
 ===============

@@ -27,6 +27,115 @@ Related Links
 
 
 
+New and Changed Tags
+====================
+
+.. _tag_fate-ep_concept:
+
+@concept
+--------
+
+:bdg-warning:`Required`
+:bdg-info:`Value required`
+:bdg-info:`Min 1`
+:bdg-info:`Max 1`
+
+The character's high concept
+
+
+Subtags
+~~~~~~~
+
+These tags can appear immediately after @concept and will be associated with that tag instance's value.
+
+.. _tag_fate-ep_concept_trouble:
+
+@trouble
+~~~~~~~~
+
+:bdg-warning:`Required`
+:bdg-info:`Value required`
+:bdg-info:`Min 1`
+:bdg-info:`Max 1`
+
+The character's main trouble in life
+
+
+.. _tag_fate-ep_concept_aspect:
+
+@aspect
+~~~~~~~
+
+:bdg-secondary:`Optional`
+:bdg-info:`Value required`
+
+An aspect of the character's ego
+
+
+
+.. _tag_fate-ep_morph:
+
+@morph
+------
+
+:bdg-secondary:`Optional`
+:bdg-info:`Value required`
+
+Special aspect for the body the character is wearing
+
+
+Subtags
+~~~~~~~
+
+These tags can appear immediately after @morph and will be associated with that tag instance's value.
+
+.. _tag_fate-ep_morph_aspect:
+
+@aspect
+~~~~~~~
+
+:bdg-secondary:`Optional`
+:bdg-info:`Value required`
+
+An aspect of the character's morph
+
+
+
+.. _tag_fate-ep_muse:
+
+@muse
+-----
+
+:bdg-secondary:`Optional`
+:bdg-info:`Value required`
+
+Name of the character's muse
+
+
+.. _tag_fate-ep_refresh:
+
+@refresh
+--------
+
+:bdg-secondary:`Optional`
+:bdg-info:`Value required`
+
+Number of fate points the character starts with
+
+Usually only relevant for PCs, since NPCs use a shared pool of GM fate points in every scene.
+
+.. _tag_fate-ep_stunt:
+
+@stunt
+------
+
+:bdg-secondary:`Optional`
+:bdg-info:`Value required`
+
+Name of a special power the character possesses
+
+
+
 
 Character Types
 ===============
