@@ -117,6 +117,9 @@ changeling:
       desc: How the changeling appears to other changelings, as well as goblins and other fae creatures.
     appearance:
       replaced_by: mask
+      desc: Not specific enough for changeling appearances
+      doc: >
+        Changeling appearance is broken into the mask ane mien. Use those tags instead.
     motley:
       desc: Tight-knit group the changeling belongs to, like a family
       doc: >
