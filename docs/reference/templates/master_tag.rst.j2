@@ -1,0 +1,48 @@
+{% block ref_anchor %}{% endblock %}
+
+@{{ tag.name }}
+{{ header_characters[header_level] * (len(tag.name) + 1) }}
+
+{% if tag.replaced_by %}:bdg-danger:`Replaced by @{{ tag.replaced_by }}`
+{% endif -%}
+{% if tag.required or tag.min -%}
+    :bdg-warning:`Required`
+{%- else -%}
+    :bdg-info:`Optional`
+{%- endif %}
+{% if tag.no_value -%}:bdg-warning:`No value allowed`
+{% else %}
+{%- if tag.allow_empty -%}:bdg-info:`Value optional`
+{% else -%}:bdg-info:`Value required`
+{% endif %}
+{%- endif %}
+{%- if tag.min %}:bdg-info:`Min {{ tag.min }}`
+{% endif %}
+{%- if tag.max and tag.max != 999 %}:bdg-info:`Max {{ tag.max }}`
+{% endif %}
+
+{{ tag.desc }}
+
+{{ tag.doc }}
+
+{%- if tag.values %}
+Allowed Values
+{{ header_characters[header_level + 1] * 14 -}}
+
+{% for val in tag.values %}
+- {{ val }}
+{% endfor %}
+{% endif -%}
+
+{%- if tag.subtags %}
+Subtags
+{{ header_characters[header_level + 1] * 7 }}
+
+These tags can appear immediately after @{{ tag.name }} and will be associated with that tag instance's value.
+
+{% for subtag in tag.subtags -%}
+    {%- with parent=tag, tag = all_tags[subtag].in_context(tag.name), header_level = header_level + 1 -%}
+        {%- include "subtag.rst.j2" -%}
+    {%- endwith -%}
+{%- endfor -%}
+{% endif -%}
