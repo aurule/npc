@@ -127,6 +127,18 @@ These tag groups are used in :ref:`cust_campaign_char_management`.
             - nolint
             - delist
 
+npc.metatags :octicon:`code-square`
+-----------------------------------
+
+:bdg-info:`type: object`
+:bdg-info:`required: no`
+
+Like in campaigns, it's possible to define special metatags at the global level. Metatags here will be available within every game system. For a full description of how metatags works, see :ref:`cust_system_metatags`.
+
+.. warning::
+
+    Top-level metatags are generally discouraged. Since they are available to *every* game system, they need to work correctly regardless of changes that any system or character type might make to the available tags. Thus, it's almost always a better idea to define metatags at the game system level than at the global level.
+
 Campaign Settings
 #################
 

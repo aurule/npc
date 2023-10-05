@@ -60,6 +60,8 @@ Here's an example of Kids on Bikes with a link added:
             - label: Homepage
               url: https://www.huntersentertainment.com/kidsonbikesrpg
 
+.. _cust_system_metatags:
+
 Working with Metatags
 ~~~~~~~~~~~~~~~~~~~~~
 
