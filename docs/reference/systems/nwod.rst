@@ -16,7 +16,7 @@ Metatags
 These metatags will be expanded into their ``static`` and ``match`` tags when a character file is loaded. Groups of those tags will be condensed into a metatag when a character is saved. For an explanation of how metatags work, see :ref:`cust_system_metatags`.
 
 @changeling
-===========
+-----------
 
 Shorthand for setting type, seeming, and kith for changelings
 
@@ -35,3 +35,13 @@ separator: " "
 greedy: no
 
 
+Character Types
+===============
+
+.. toctree::
+    :hidden:
+    :glob:
+
+    nwod/*
+
+.. include:: components/types/nwod_table.rst

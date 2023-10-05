@@ -22,7 +22,13 @@ Related Links
 
 
 
+Character Types
+===============
 
+.. toctree::
+    :hidden:
+    :glob:
 
+    wod/*
 
-
+.. include:: components/types/wod_table.rst

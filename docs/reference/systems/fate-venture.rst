@@ -23,7 +23,13 @@ Related Links
 
 
 
+Character Types
+===============
 
+.. toctree::
+    :hidden:
+    :glob:
 
+    fate-venture/*
 
-
+.. include:: components/types/fate-venture_table.rst

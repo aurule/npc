@@ -28,7 +28,13 @@ Related Links
 
 
 
+Character Types
+===============
 
+.. toctree::
+    :hidden:
+    :glob:
 
+    fate-ep/*
 
-
+.. include:: components/types/fate-ep_table.rst

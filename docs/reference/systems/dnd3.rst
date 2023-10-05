@@ -27,7 +27,13 @@ Related Links
 
 
 
+Character Types
+===============
 
+.. toctree::
+    :hidden:
+    :glob:
 
+    dnd3/*
 
-
+.. include:: components/types/dnd3_table.rst

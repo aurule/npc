@@ -1,0 +1,9 @@
+.. list-table::
+    :header-rows: 1
+
+    * - Type
+      - Description
+    {%- for type in types %}
+    * - :ref:`sys_{{ system.key }}_{{ type.key }}`
+      - {{ type.desc }}
+    {%- endfor -%}

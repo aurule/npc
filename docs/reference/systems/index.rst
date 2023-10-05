@@ -9,7 +9,7 @@ These are the game systems that are already supported by NPC. Adding new ones is
 
 .. toctree::
     :glob:
-    :maxdepth: 1
+    :maxdepth: 2
     :hidden:
 
     *

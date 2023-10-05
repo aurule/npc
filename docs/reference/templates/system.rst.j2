@@ -1,7 +1,7 @@
 .. _sys_{{ system.key }}:
 
 {{ system.name }}
-{{ header_characters[header_level] * len(system.name) }}
+{{ header_characters[header_level] * system.name | length }}
 
 :bdg-info:`key: {{ system.key }}`
 
@@ -35,7 +35,7 @@ Metatags
 These metatags will be expanded into their ``static`` and ``match`` tags when a character file is loaded. Groups of those tags will be condensed into a metatag when a character is saved. For an explanation of how metatags work, see :ref:`cust_system_metatags`.
 
 {% for metatag in system.metatags.values() -%}
-    {%- with header_level = header_level + 1 -%}
+    {%- with header_level = header_level + 2 -%}
         {%- include "metatag.rst.j2" -%}
     {%- endwith %}
 {% endfor -%}
@@ -43,4 +43,13 @@ These metatags will be expanded into their ``static`` and ``match`` tags when a 
 
 {# if tags, enumerate system tags in subsection #}
 
-{# summarize character types #}
+Character Types
+{{ header_characters[header_level + 1] * 15 }}
+
+.. toctree::
+    :hidden:
+    :glob:
+
+    {{ system.key }}/*
+
+.. include:: components/types/{{ system.key }}_table.rst

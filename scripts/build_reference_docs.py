@@ -28,7 +28,6 @@ for tag in ref_system.tags.values():
         "header_level": 0,
         "tag": tag,
         "parents": [],
-        "len": len,
         "all_tags": ref_system.tags
         })
 
@@ -36,6 +35,7 @@ for tag in ref_system.tags.values():
     with outfile.open("w", newline="\n") as f:
         f.write(data)
 
+# tags table
 tag_table_template = jenv.get_template("tag_table.rst.j2")
 tag_table_data = tag_table_template.render({
     "tags": sorted(ref_system.tags.values(), key=lambda s: s.name)
@@ -47,21 +47,47 @@ with tag_table_file.open("w", newline="\n") as f:
 # Build Game System References
 
 system_template = jenv.get_template("system.rst.j2")
+type_template = jenv.get_template("chartype.rst.j2")
+type_table_template = jenv.get_template("type_table.rst.j2")
 systems_summary = []
 for system_key in sorted(settings.get_system_keys()):
+    # main system page
     system = settings.get_system(system_key)
     systems_summary.append(system)
     data = system_template.render({
         "header_characters": header_characters,
         "header_level": 0,
         "system": system,
-        "len": len,
     })
 
     outfile = Path(f"docs/reference/systems/{system_key}.rst")
     with outfile.open("w", newline="\n") as f:
         f.write(data)
 
+    # type pages
+    types_dir = Path(f"docs/reference/systems/{system_key}")
+    types_dir.mkdir(exist_ok=True)
+    for type_key, character_type in system.types.items():
+        type_data = type_template.render({
+            "header_characters": header_characters,
+            "header_level": 0,
+            "system": system,
+            "type": character_type
+        })
+        outfile = types_dir / f"{type_key}.rst"
+        with outfile.open("w", newline="\n") as f:
+            f.write(type_data)
+
+    # types table
+    type_table_data = type_table_template.render({
+        "system": system,
+        "types": sorted(system.types.values(), key=lambda s: s.name)
+        })
+    outfile = Path(f"docs/reference/systems/components/types/{system.key}_table.rst")
+    with outfile.open("w", newline="\n") as f:
+        f.write(type_table_data)
+
+# systems table
 system_table_template = jenv.get_template("system_table.rst.j2")
 system_table_data = system_table_template.render({
     "systems": systems_summary

@@ -1,0 +1,29 @@
+.. list-table::
+    :header-rows: 1
+
+    * - Type
+      - Description
+    * - :ref:`sys_nwod_changeling`
+      - A human who was captured by the fae and returned to the mundane world
+    * - :ref:`sys_nwod_fetch`
+      - The replacement a gentry leaves behind when it abducts a changeling
+    * - :ref:`sys_nwod_geist`
+      - A dead soul merged with a potent ghost
+    * - :ref:`sys_nwod_ghost`
+      - A dead soul clinging to the mortal world
+    * - :ref:`sys_nwod_ghoul`
+      - A mortal enhanced by, and dependent on, vampire blood
+    * - :ref:`sys_nwod_goblin`
+      - A twisted denizen of the hedge
+    * - :ref:`sys_nwod_mage`
+      - An awakened human with access to world-shaping magic.
+    * - :ref:`sys_nwod_mortal`
+      - A mundane human
+    * - :ref:`sys_nwod_promethean`
+      - Dead corpses given life through ancient ritual
+    * - :ref:`sys_nwod_spirit`
+      - A disembodied representation of a thing, place, or concept
+    * - :ref:`sys_nwod_vampire`
+      - A cursed denizen of the night who feeds on blood.
+    * - :ref:`sys_nwod_werewolf`
+      - Shapechanging warriors who guard the spirit world

@@ -1,5 +1,5 @@
 @{{ metatag.name }}
-{{ header_characters[header_level] * (len(metatag.name) + 1) }}
+{{ header_characters[header_level] * (metatag.name | length + 1) }}
 
 {{ metatag.desc }}
 

@@ -1,7 +1,7 @@
 {% block ref_anchor %}{% endblock %}
 
 @{{ tag.name }}
-{{ header_characters[header_level] * (len(tag.name) + 1) }}
+{{ header_characters[header_level] * (tag.name | length + 1) }}
 
 {% if tag.replaced_by %}:bdg-danger:`Replaced by @{{ tag.replaced_by }}`
 {% endif -%}

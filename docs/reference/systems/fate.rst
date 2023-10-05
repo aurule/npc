@@ -22,7 +22,13 @@ Related Links
 
 
 
+Character Types
+===============
 
+.. toctree::
+    :hidden:
+    :glob:
 
+    fate/*
 
-
+.. include:: components/types/fate_table.rst
