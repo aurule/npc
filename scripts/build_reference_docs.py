@@ -5,8 +5,6 @@ from jinja2 import Environment, FileSystemLoader
 
 header_characters = ["#", "=", "-", "~", "^"]
 
-# build global tags references
-
 settings = Settings()
 ref_system = settings.get_system("generic")
 
@@ -58,6 +56,7 @@ for system_key in sorted(settings.get_system_keys()):
         "header_characters": header_characters,
         "header_level": 0,
         "system": system,
+        "all_tags": system.tags,
     })
 
     outfile = Path(f"docs/reference/systems/{system_key}.rst")
@@ -72,7 +71,8 @@ for system_key in sorted(settings.get_system_keys()):
             "header_characters": header_characters,
             "header_level": 0,
             "system": system,
-            "type": character_type
+            "type": character_type,
+            "all_tags": system.type_tags(type_key)
         })
         outfile = types_dir / f"{type_key}.rst"
         with outfile.open("w", newline="\n") as f:

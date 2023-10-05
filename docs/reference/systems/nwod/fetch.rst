@@ -10,3 +10,18 @@ The replacement a gentry leaves behind when it abducts a changeling
 Fetches are the other half a changeling, usually designed by the gentry or by fate to take over the life of the abducted human.
 
 
+
+New and Changed Tags
+====================
+
+.. _tag_nwod_fetch_other:
+
+@other
+------
+
+:bdg-secondary:`Optional`
+:bdg-info:`Value required`
+
+The fetch's changeling
+
+
