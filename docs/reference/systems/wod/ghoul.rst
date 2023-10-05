@@ -7,3 +7,5 @@ Ghoul
 
 A mortal enhanced by, and dependent on, vampire blood
 
+
+

@@ -10,6 +10,7 @@ class TypeSpec():
         self.definition: dict   = type_def
         self.name: str          = type_def.get("name", "")
         self.desc: str          = type_def.get("desc", "")
+        self.doc: str          = type_def.get("doc", "")
         self.sheet_loc          = type_def.get("sheet_path", None)
 
     def __repr__(self):

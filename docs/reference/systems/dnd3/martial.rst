@@ -7,3 +7,5 @@ Martial
 
 A character who does not cast magic spells
 
+
+
