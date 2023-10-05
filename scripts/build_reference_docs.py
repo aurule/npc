@@ -25,6 +25,7 @@ for tag in ref_system.tags.values():
         "header_characters": header_characters,
         "header_level": 0,
         "tag": tag,
+        "parents": [],
         "len": len,
         "all_tags": ref_system.tags
         })

@@ -1,2 +1,2 @@
 {% extends "master_tag.rst.j2" %}
-{% block ref_anchor %}.. _tag_{{ parent.name }}_{{ tag.name }}:{% endblock %}
+{% block ref_anchor %}.. _tag_{{ parents|map(attribute="name")|join(("_")) }}_{{ tag.name }}:{% endblock %}

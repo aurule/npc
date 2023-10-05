@@ -47,7 +47,7 @@ Subtags
 
 These tags can appear immediately after @region and will be associated with that tag instance's value.
 
-.. _tag_region_locale:
+.. _tag_location_region_locale:
 
 @locale
 -------

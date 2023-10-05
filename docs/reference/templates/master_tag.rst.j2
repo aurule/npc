@@ -41,7 +41,7 @@ Subtags
 These tags can appear immediately after @{{ tag.name }} and will be associated with that tag instance's value.
 
 {% for subtag in tag.subtags -%}
-    {%- with parent=tag, tag = all_tags[subtag].in_context(tag.name), header_level = header_level + 1 -%}
+    {%- with parents=parents + [tag], tag = all_tags[subtag].in_context(tag.name), header_level = header_level + 1 -%}
         {%- include "subtag.rst.j2" -%}
     {%- endwith -%}
 {%- endfor -%}
