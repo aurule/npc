@@ -15,14 +15,16 @@
       - A mortal enhanced by, and dependent on, vampire blood
     * - :ref:`sys_nwod_goblin`
       - A twisted denizen of the hedge
+    * - :ref:`sys_nwod_hunter`
+      - A person specializing in hunting monsters
     * - :ref:`sys_nwod_mage`
       - An awakened human with access to world-shaping magic.
     * - :ref:`sys_nwod_mortal`
       - A mundane human
     * - :ref:`sys_nwod_promethean`
-      - Dead corpses given life through ancient ritual
+      - Soulless creatures given life through powerful alchemy
     * - :ref:`sys_nwod_spirit`
-      - A disembodied representation of a thing, place, or concept
+      - An ephemeral representation of a thing, place, or concept
     * - :ref:`sys_nwod_vampire`
       - A cursed denizen of the night who feeds on blood.
     * - :ref:`sys_nwod_werewolf`

@@ -1,3 +1,18 @@
 promethean:
   name: Promethean
-  desc: Dead corpses given life through ancient ritual
+  desc: Soulless creatures given life through powerful alchemy
+  tags:
+    lineage:
+      desc: The ancestors of the promethean, which defines its element and humor
+      doc: >
+        A promethean lineage is named for the first of the line. Each is defined
+        by the element of its creation rite and the humor which overflows in the
+        prometheans of that line.
+      required: true
+    disfigurement:
+      desc: The terrible, true visage of a promethean
+      doc: >
+        A promethean's disfigurement is normally hidden, but can be glimpsed
+        when they use magic or heal supernaturally with electricity.
+    throng:
+      desc: Group of prometheans who travel and work together

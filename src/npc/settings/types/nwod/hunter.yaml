@@ -1,0 +1,24 @@
+hunter:
+  name: Hunter
+  desc: A person specializing in hunting monsters
+  doc: >
+    Hunters fight back against the supernatural creatures preying on mankind.
+    Whether defending their homes or pursuing arcane knowledge to seal away some
+    great evil, hunters are a fearsome threat to any supernatural being.
+  tags:
+    cell:
+      desc: Small group of hunters who work closely together
+      doc: >
+        A cell is the basic unit of hunter society. Each is typically a small
+        group of people who defend their neighborhood or community.
+    compact:
+      desc: Larger group of multiple cells
+      doc: >
+        A compact is a group of multiple cells that work together, sharing
+        resources and knowledge toward a common goal. Their range spans from a
+        single troubled neighborhood to a city or entire region.
+    conspiracy:
+      desc: Self-sufficient, well-organized, massive group of hunters
+      doc: >
+        A conspiracy is the highest tier of hunter society. They have formidable
+        resources and experience, and often operate throughout the globe.
