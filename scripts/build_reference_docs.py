@@ -16,6 +16,8 @@ jenv = Environment(
 
 # Build Tag References
 
+dest_dir = Path("docs/reference/tags/")
+current_files = [dest_dir / "index.rst"]
 tag_template = jenv.get_template("tag.rst.j2")
 for tag in ref_system.tags.values():
     if tag.needs_context:
@@ -29,9 +31,13 @@ for tag in ref_system.tags.values():
         "all_tags": ref_system.tags
         })
 
-    outfile = Path(f"docs/reference/tags/{tag.name}.rst")
-    with outfile.open("w", newline="\n") as f:
+    tagfile = dest_dir / f"{tag.name}.rst"
+    current_files.append(tagfile)
+    with tagfile.open("w", newline="\n") as f:
         f.write(data)
+for rst_file in dest_dir.glob("*.rst"):
+    if rst_file not in current_files:
+        rst_file.unlink()
 
 # tags table
 tag_table_template = jenv.get_template("tag_table.rst.j2")
