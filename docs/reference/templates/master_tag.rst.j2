@@ -20,9 +20,11 @@
 {% endif %}
 {%- if tag.max and tag.max != 999 %}:bdg-info:`Max {{ tag.max }}`
 {% endif %}
+{%- if tag.locked %}:octicon:`lock`
+{% endif %}
 {{ tag.desc }}
 
-{{ tag.doc }}
+{{ tag.doc | replace("\n", "\n\n") }}
 
 {%- if tag.values %}
 Allowed Values

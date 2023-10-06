@@ -9,6 +9,7 @@ D&D 3.5! Just the right amount of crunch
 
 Released in 2003, Dungeons & Dragons v3.5 is a refined version of the D&D 3rd Edition rules available under the Open Game License. Classic sword and sorcery fantasy.
 
+
 Related Links
 =============
 
@@ -68,6 +69,7 @@ Number of levels the character has in this class
 Name of the deity the character worships
 
 With whole classes built around worship, it can be very important to keep track of which god(s) a character prays to.
+
 
 
 

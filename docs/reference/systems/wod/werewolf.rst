@@ -25,6 +25,7 @@ The werewolf's breed
 
 A werewolf's breed is the shape they were born in.
 
+
 Allowed Values
 ~~~~~~~~~~~~~~
 - Lupus
@@ -45,6 +46,7 @@ Allowed Values
 The werewolf's auspice
 
 Determined by the phase of the moon in the sky where and when the werewolf was born.
+
 
 Allowed Values
 ~~~~~~~~~~~~~~

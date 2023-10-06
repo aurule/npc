@@ -12,7 +12,7 @@ Based on :ref:`sys_{{ system.extends }}`.
 
 {{ system.desc }}
 
-{{ system.doc }}
+{{ system.doc | replace("\n", "\n\n") }}
 
 {%- if system.links %}
 Related Links

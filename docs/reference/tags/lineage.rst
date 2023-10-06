@@ -9,3 +9,4 @@
 Brief listing of the character's ancestors
 
 Useful mainly for monarchs, snooty vampires, and seventh sons of seventh sons.
+

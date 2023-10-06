@@ -36,6 +36,7 @@ Name of the vampire who turned this character into another vampire
 
 Sometimes vampiric lineage is a really big deal. Other times, it's just nice to know who's been fangin' around.
 
+
 .. _tag_wod_vampire_clan:
 
 @clan
@@ -98,6 +99,7 @@ A high-level role the vampire fulfills within the sect
 Some roles are not limited to a single city, but are important to the functioning of an entire sect. Archons, Cardinals, and Prisci would be noted here.
 
 
+
 .. _tag_wod_vampire_crew:
 
 @crew
@@ -109,6 +111,7 @@ Some roles are not limited to a single city, but are important to the functionin
 Name of the pack, gang, or coterie to which this vampire belongs
 
 Vampires often form small social groups so they can work together toward a shared purpose. They have different names in different sects, but the outcome is the same.
+
 
 Subtags
 ~~~~~~~
@@ -126,6 +129,7 @@ These tags can appear immediately after @crew and will be associated with that t
 The role the vampire has in their crew
 
 Not all crews have distinct roles. This tag is primarily useful in Sabbat packs to note the ductus, abbot, and priest. It can also be used to note the less rigid roles certain vamipres play within their crew.
+
 
 
 .. _tag_wod_vampire_city:
@@ -155,5 +159,6 @@ These tags can appear immediately after @city and will be associated with that t
 The role the vampire has in their city
 
 This tag is best used for positions like prince, bishop, harpy, etc. that are only important within that city. If a position is recognized more universally, it's probably best represented using the title tag as well.
+
 
 

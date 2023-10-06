@@ -7,7 +7,7 @@
 
 {{ type.desc }}
 
-{{ type.doc }}
+{{ type.doc | replace("\n", "\n\n") }}
 
 {% if type.definition.tags %}
 New and Changed Tags

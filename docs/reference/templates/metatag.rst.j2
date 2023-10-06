@@ -3,7 +3,7 @@
 
 {{ metatag.desc }}
 
-{{ metatag.doc }}
+{{ metatag.doc | replace("\n", "\n\n") }}
 
 {%- if metatag.static %}
 Static Tags:

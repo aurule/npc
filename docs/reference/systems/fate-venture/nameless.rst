@@ -10,3 +10,4 @@ A background character or mook
 Nameless NPCs usually serve to make the PCs look more awesome while maybe draining some resources.
 
 
+

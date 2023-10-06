@@ -85,6 +85,7 @@ Not specific enough for changeling appearances
 
 Changeling appearance is broken into the mask ane mien. Use those tags instead.
 
+
 .. _tag_nwod_changeling_motley:
 
 @motley
@@ -98,6 +99,7 @@ Tight-knit group the changeling belongs to, like a family
 
 This is a magically-bound group of changelings which often lives together. Changelings socialize all the time outside of their motley, but it's these people the changeling comes home to.
 
+
 .. _tag_nwod_changeling_freehold:
 
 @freehold
@@ -109,6 +111,7 @@ This is a magically-bound group of changelings which often lives together. Chang
 Name of the main political group to which the changeling belongs
 
 Usually tied to a human city. Freeholds almost always have multiple courts within them.
+
 
 Subtags
 ~~~~~~~
@@ -128,6 +131,7 @@ Official position the changeling has in their freehold
 This is a position outside of their court. Freehold-wide roles are not common, but some freeholds use them to help unify the disparate courts.
 
 
+
 .. _tag_nwod_changeling_court:
 
 @court
@@ -140,6 +144,7 @@ This is a position outside of their court. Freehold-wide roles are not common, b
 Court the changeling belongs to
 
 Usually one of the seasonal courts: Winter, Spring, Summer, or Autumn.
+
 
 Subtags
 ~~~~~~~
@@ -159,6 +164,7 @@ Name of an official position the changeling holds within their court
 Most courts have a seasonal king or queen, and many courts have optional positions. Changelings in these roles help run the court or forward its goals within their freehold.
 
 
+
 .. _tag_nwod_changeling_entitlement:
 
 @entitlement
@@ -171,6 +177,7 @@ Most courts have a seasonal king or queen, and many courts have optional positio
 Magical, prestigious group the changeling belongs to.
 
 These elite groups have specific criteria for changelings who wish to join. Some require a certain seeming, membership in a court, or displays of skill.
+
 
 Subtags
 ~~~~~~~
@@ -188,6 +195,7 @@ These tags can appear immediately after @entitlement and will be associated with
 Official position the changeling holds within their entitlement.
 
 Not all entitlements have specific roles. For those that do, achieving a certain role can be a major motivation for members.
+
 
 
 .. _tag_nwod_changeling_other:
