@@ -39,6 +39,10 @@ properties:
         type: boolean
         description: Whether this tag must not have a value
         default: false
+    locked:
+        type: boolean
+        description: Whether this tag is prevented from being changed
+        default: false
     subtags:
         patternProperties:
             "^[a-z][a-z|-]+$":

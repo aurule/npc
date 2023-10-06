@@ -12,6 +12,7 @@ npc:
         leaving the real character type in place. Useful for hiding that the
         town priest is secretly a vampire.
       max: 1
+      locked: true
     name:
       desc: An additional name the character uses
       doc: >
@@ -200,6 +201,7 @@ npc:
         lets you tell it to leave a particular file alone.
       no_value: true
       max: 1
+      locked: true
     nolint:
       desc: Do not show linting errors for this character
       doc: >
@@ -207,12 +209,14 @@ npc:
         intentionally deviate from the game system's norms.
       no_value: true
       max: 1
+      locked: true
     delist:
       desc: Do not show this character in listings
       doc: >
         Ideal for hiding secret minions, unnamed mooks, etc.
       no_value: true
       max: 1
+      locked: true
     hide:
       desc: Conceal the named tag from listings
       doc: >
@@ -222,6 +226,7 @@ npc:
         Individual tag values can be hidden using [tagname] >> [value]. Hide all
         subtags using [parent] >> [value] >> subtags, or hide single subtag with
         [parent] >> [value] >> [subtag value]
+      locked: true
   deprecated_tags:
     skip:
       desc: Do not show this character in listings

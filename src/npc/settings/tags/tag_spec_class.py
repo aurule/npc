@@ -20,6 +20,7 @@ class TagSpec():
         self.values: list[str]  = tag_def.get("values", [])
         self.allow_empty: bool  = tag_def.get("allow_empty", False)
         self.no_value: bool     = tag_def.get("no_value", False)
+        self.locked: bool       = tag_def.get("locked", False)
         self.subtags: list[str] = tag_def.get("subtags", {}).keys()
 
         if self.required and self.min < 1:
