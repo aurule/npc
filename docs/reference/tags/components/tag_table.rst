@@ -2,7 +2,7 @@
     :header-rows: 1
 
     * - Tag
-      - Subtags?
+      - Subtags
       - Description
     * - :ref:`tag_age`
       - 
