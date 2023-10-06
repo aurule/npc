@@ -34,6 +34,8 @@ Each entry within ``npc.tags`` is the name of a tag, followed by these attribute
 
 :no_value: :octicon:`tasklist` Whether this tag must not have a value.
 
+:locked: :octicon:`tasklist` Whether this tag is prevented from being changed.
+
 :subtags: :octicon:`code-square` An object with additional tags which will be stored *within* this tag.
 
 Examples
