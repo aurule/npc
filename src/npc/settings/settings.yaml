@@ -230,19 +230,31 @@ npc:
   deprecated_tags:
     skip:
       desc: Do not show this character in listings
+      doc: >
+        This tag is deprecated because its meaning is unclear. The replacement,
+        @delist, is much clearer about what it does.
       replaced_by: delist
       version: 2.0.0
     keep:
       desc: Prevent this file from being moved by the reorg command
+      doc: >
+        The @keep tag is superceded by @sticky to allow the word to be used for
+        custom tags.
       replaced_by: sticky
       version: 2.0.0
     hidegroup:
       desc: Hide a single named group
+      doc: >
+        The @hidegroup tag is no longer necessary after the @hide syntax upgrade.
+        Use ``@hide group >> groupname`` instead.
       replaced_by: hide
       replacement_pattern: "group >> $value"
       version: 1.4.1
     hideranks:
       desc: Hide all ranks for a named group
+      doc: >
+        The @hideranks tag is no longer necessary after the @hide syntax upgrade.
+        Use ``@hide group >> groupname >> rank`` instead.
       replaced_by: hide
       replacement_pattern: "group >> $value >> rank"
       version: 1.4.1
