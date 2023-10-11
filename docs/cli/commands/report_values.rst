@@ -6,6 +6,7 @@ report values
 Show a how many times each unique value appears for the given tag.
 
 .. important::
+
     This command only works within an existing campaign.
 
 -t, --tag
