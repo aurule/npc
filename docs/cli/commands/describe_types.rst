@@ -18,7 +18,7 @@ Example:
 
     npc describe types -s fate-ep
 
-.. code:: txt
+.. code:: text
 
      [Character Types for Eclipse Phase: Transhumanity's Fate]
     | Name       | Key        | Description                    |

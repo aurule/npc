@@ -22,7 +22,7 @@ Example:
 
     npc describe tags -s fate-ep -t main
 
-.. code:: txt
+.. code:: text
 
                     [Tags for Main in Eclipse Phase: Transhumanity's Fate]
     | Name       | Description                                                           |

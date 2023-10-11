@@ -20,7 +20,7 @@ Example:
 
     npc describe tag -s fate-ep -t main -a refresh
 
-.. code:: txt
+.. code:: text
 
     Tag: @refresh
     Number of fate points the character starts with

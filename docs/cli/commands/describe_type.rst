@@ -16,7 +16,7 @@ Example:
 
     npc describe type -s fate-ep -t main
 
-.. code:: txt
+.. code:: text
 
     Character Type: Main
     ID: main

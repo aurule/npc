@@ -19,7 +19,7 @@ Example:
 
     npc report values -t type
 
-.. code:: txt
+.. code:: text
 
     [@type tag values report]
     | Value      | Count |

@@ -14,7 +14,7 @@ Example:
 
     npc describe system -s fate-ep
 
-.. code:: txt
+.. code:: text
 
     === Eclipse Phase: Transhumanity's Fate ===
     Transhuman adventure in FATE

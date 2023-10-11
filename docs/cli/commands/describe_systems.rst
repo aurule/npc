@@ -11,7 +11,7 @@ Example:
 
     npc describe systems
 
-.. code:: txt
+.. code:: text
 
                                                   [Configured Systems]
     | Name                                | Key          | Description                                              |
@@ -26,6 +26,6 @@ Example:
 
 When run within a campaign, it will also show which system the campaign is using:
 
-.. code:: txt
+.. code:: text
 
     Currently using Eclipse Phase: Transhumanity's Fate
