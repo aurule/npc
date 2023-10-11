@@ -75,6 +75,8 @@ All character files are stored within the directory in ``campaign.characters.pat
 
 Any character files within a directory found in ``ignore_subpaths`` is skipped entirely and will not be available within NPC. This is most useful for archiving old files or cordoning off generic sheets.
 
+.. _cust_campaign_char_subpaths:
+
 Guide to Subpaths
 ~~~~~~~~~~~~~~~~~
 

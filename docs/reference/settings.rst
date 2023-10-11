@@ -205,6 +205,8 @@ Example:
         - Setting
         - House Rules
 
+.. _settings_characters:
+
 campaign.characters :octicon:`code-square`
 ------------------------------------------
 
