@@ -34,4 +34,6 @@ NPC is very much a personal project. It works well enough for me to use for my w
    :caption: NPC CLI
    :hidden:
 
-   commands
+   cli/index
+   cli/quickstart
+   cli/commands

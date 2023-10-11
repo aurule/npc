@@ -1,5 +1,7 @@
 .. Settings documentation
 
+.. _conf_home:
+
 Configuration
 ===============================
 

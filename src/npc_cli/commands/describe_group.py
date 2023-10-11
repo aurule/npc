@@ -141,9 +141,10 @@ def type(settings, system, type_):
 @click.option("-t", "--type", "type_", help="Only show valid tags for this character type")
 @pass_settings
 def tags(settings, system_key, type_):
-    """Show all configured tags for this campaign
+    """Show all configured tags for a game system
 
     Can show the tags available to all character types, or just the ones for a specific type.
+    When run within a campaign, this will include campaign-specific tags as well.
     """
     campaign = cwd_campaign(settings)
     try:
