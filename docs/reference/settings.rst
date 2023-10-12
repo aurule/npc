@@ -31,6 +31,16 @@ Example:
     npc:
         version: 2.0.0
 
+.. _setting_editor:
+
+npc.editor :octicon:`note`
+---------------------------
+
+:bdg-info:`type: string`
+:bdg-info:`required: no`
+
+The text editor to invoke for editing various campaign files. If not provided, the system default will be used.
+
 npc.tags :octicon:`code-square`
 -------------------------------
 
