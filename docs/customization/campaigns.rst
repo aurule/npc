@@ -27,7 +27,7 @@ Newly created campaigns are given a few directories by default:
 - :file:`Plot` (from ``campaign.plot.path``)
 - :file:`Session History` (from ``campaign.session.path``)
 
-An empty directy is also created for string in ``campaign.create_on_init``.
+An empty directy is also created for each entry in ``campaign.create_on_init``.
 
 The new campaign's :file:`.npc/settings.yaml` file is populated with the chosen ``name`` and ``system``, as well as the current ``npc.version``.
 

@@ -1,5 +1,7 @@
 .. CLI Commands documentation
 
+.. _cli_commands:
+
 Commands
 ===============================
 

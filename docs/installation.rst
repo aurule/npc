@@ -1,5 +1,7 @@
 .. Core invocation documentation
 
+.. _install:
+
 Installing NPC
 ===============================
 

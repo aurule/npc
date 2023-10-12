@@ -189,6 +189,8 @@ Example:
     campaign:
         system: dnd35
 
+.. _setting_create_on_init:
+
 campaign.create_on_init :octicon:`list-ordered`
 -----------------------------------------------
 
