@@ -14,11 +14,11 @@ from .main_group import cli, arg_settings, pass_settings
 ###################
 
 @cli.command()
-@click.option("-n", "--name", help="Campaign name", default="My Campaign")
-@click.option("-d", "--desc", help="Description of the campaign", default="Campaign description")
+@click.option("-n", "--name", help="Campaign name", prompt="Campaign name")
+@click.option("-d", "--desc", help="Description of the campaign", prompt="Campaign description")
 @click.option("-s", "--system",
     type=click.Choice(arg_settings.get_system_keys(), case_sensitive=False),
-    prompt=True,
+    prompt="Game system",
     help="ID of the game system to use")
 @click.argument(
     "campaign_path",
