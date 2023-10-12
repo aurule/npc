@@ -1,3 +1,5 @@
+.. _guide_cli_quickstart:
+
 CLI Quickstart
 ==============
 
