@@ -4,8 +4,6 @@
 # list see the documentation:
 # https://www.sphinx-doc.org/en/master/usage/configuration.html
 
-from npc import __version__
-
 # -- Path setup --------------------------------------------------------------
 
 # If extensions (or modules to document with autodoc) are in another directory,
@@ -24,7 +22,7 @@ copyright = '2015-2023, Paige Andrews'
 author = 'Paige Andrews'
 
 # The full version, including alpha/beta/rc tags
-release = __version__
+release = "2.0.0a1"
 
 
 # -- General configuration ---------------------------------------------------
