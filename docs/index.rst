@@ -21,6 +21,17 @@ NPC is very much a personal project. It works well enough for me to use for my w
 
    installation
    customization/index
+   cli/quickstart
+
+.. toctree::
+   :caption: Customization
+   :hidden:
+
+   customization/index
+   customization/campaigns
+   customization/systems
+   customization/tags
+   customization/listings
 
 .. toctree::
    :caption: Reference

@@ -7,7 +7,7 @@ Generate a public listing of characters.
 
 .. note::
 
-    Almost all of the options for ``npc list`` get default values from your settings. See :ref:`conf_home` for how to configure NPC. :bdg-danger:`GUIDE TODO`
+    Almost all of the options for ``npc list`` get default values from your settings. See :ref:`conf_home` for how to configure NPC and :ref:`conf_listings` for how to customize the way characters are presented.
 
 -f, --format
     The format to use. One of ``md`` or ``html``.

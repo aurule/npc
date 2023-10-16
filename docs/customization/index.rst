@@ -2,19 +2,12 @@
 
 .. _conf_home:
 
-Configuration
+Basic Configuration
 ===============================
 
 You can change NPC's settings for your user and for each individual campaign. User settings override the built-in defaults, and campaign settings override user settings and defaults.
 
 The CLI command :ref:`cli_settings` can be used to open the user settings file or current campaign settings file, but it's useful to check out the entire settings directory too.
-
-.. toctree::
-	:hidden:
-
-	campaigns
-	systems
-	tags
 
 .. _cust_file_locations:
 
