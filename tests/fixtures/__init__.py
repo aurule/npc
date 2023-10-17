@@ -1,2 +1,2 @@
 from .helpers import *
-from .fake_migration import FakeMigration
+from .migrations import FakeMigration, MockMigration
