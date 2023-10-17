@@ -1,21 +1,5 @@
-from tests.fixtures import tmp_campaign
+from tests.fixtures import tmp_campaign, FakeMigration
 from npc.util import DataStore
-
-from npc.settings.migrations.settings_migration import SettingsMigration
-
-class FakeMigration(SettingsMigration):
-    def __init__(self, settings):
-        self.settings = settings
-
-    def should_apply(self, file_key: str) -> bool:
-        return False
-
-    def migrate(self, file_key: str):
-        pass
-
-    @property
-    def sequence(self) -> int:
-        return 10
 
 def test_creates_file(tmp_campaign):
     tmp_campaign.settings_file.unlink()

@@ -1,25 +1,5 @@
 import pytest
-from tests.fixtures import tmp_campaign
-
-from npc.settings import Settings
-
-from npc.settings.migrations.settings_migration import SettingsMigration
-
-class FakeMigration(SettingsMigration):
-    def __init__(self, settings: Settings = None):
-        if not settings:
-            settings = Settings()
-        self.settings = settings
-
-    def should_apply(self, file_key: str) -> bool:
-        return False
-
-    def migrate(self, file_key: str):
-        pass
-
-    @property
-    def sequence(self) -> int:
-        return 10
+from tests.fixtures import tmp_campaign, FakeMigration
 
 def test_gets_user_dir():
     migration = FakeMigration()

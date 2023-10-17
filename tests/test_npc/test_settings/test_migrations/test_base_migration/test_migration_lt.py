@@ -1,20 +1,9 @@
 import pytest
 
-from npc.settings.migrations.settings_migration import SettingsMigration
+from npc.settings import Settings
+from npc.settings.migrations.migration_1to2 import Migration1to2
 
-class FakeMigration(SettingsMigration):
-    def __init__(self, sequence):
-        self.seq: int = sequence
-
-    def should_apply(self, file_key: str) -> bool:
-        return False
-
-    def migrate(self, file_key: str):
-        pass
-
-    @property
-    def sequence(self) -> int:
-        return self.seq
+from tests.fixtures import FakeMigration
 
 def test_compares_sequence():
     settings = Settings()
@@ -25,7 +14,8 @@ def test_compares_sequence():
     assert migration1 < migration2
 
 def test_not_defined_for_other_objects():
-    migration = FakeMigration(10)
+    migration = FakeMigration()
+    migration.sequence = 10
     other = dict()
 
     with pytest.raises(NotImplementedError):
