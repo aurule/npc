@@ -23,10 +23,12 @@ class SettingsMigrator:
         return messages
         # apply all migrations for the given key
 
-    def migrate_all(self):
+    def migrate_all(self) -> list[MigrationMessage]:
+        messages = []
         for file_key, file_migrations in self.migrations_by_file_key().items():
             for migration in file_migrations:
-                migration.migrate(file_key)
+                messages.extend(migration.migrate(file_key))
+        return messages
         # apply all migrations to the possible keys
 
     def migrations_by_file_key(self) -> dict:
