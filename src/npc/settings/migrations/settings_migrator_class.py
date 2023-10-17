@@ -3,23 +3,34 @@ from functools import cached_property
 from pathlib import Path
 
 from npc.settings import Settings
+from .migration_message import MigrationMessage
 from .settings_migration import SettingsMigration
+from .migration_1to2 import Migration1to2
 
 class SettingsMigrator:
     def __init__(self, settings: Settings):
-        self.settings = Settings
+        self.settings = settings
 
     def migrations_by_file_key(self) -> dict:
-        return {key: [
+        return {key: sorted([
             m for m in self.migrations if m.should_apply(key)
-        ].sorted() for key in self.file_keys}
+        ]) for key in self.file_keys}
         # get migration objects that need to be applied to each file
 
     def can_migrate(self, file_key: str) -> bool:
         return any([m.should_apply(file_key) for m in self.migrations])
         # get if a key needs a migration
 
-    def migrate(self):
+    def migrate(self, file_key: str) -> list[MigrationMessage]:
+        messages = []
+
+        for migration in self.migrations_by_file_key().get(file_key, []):
+            messages.extend(migration.migrate(file_key))
+
+        return messages
+        # apply all migrations for the given key
+
+    def migrate_all(self):
         for file_key, file_migrations in self.migrations_by_file_key().items():
             for migration in file_migrations:
                 migration.migrate(file_key)
@@ -34,10 +45,10 @@ class SettingsMigrator:
         Returns:
             list[Migration]: List of Migration subclass objects
         """
-        return [klass(self.settings) for klass in Migration.__subclasses__()].sort()
+        return sorted([klass(self.settings) for klass in SettingsMigration.__subclasses__()])
         # get objects for all migrations
 
     @property
     def file_keys(self) -> list[str]:
-        return self.settings.loaded_paths.keys()
+        return [k for k in self.settings.loaded_paths.keys() if (k not in ("package", "internal"))]
         # get available settings file keys
