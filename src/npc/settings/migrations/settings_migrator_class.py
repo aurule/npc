@@ -10,12 +10,6 @@ class SettingsMigrator:
     def __init__(self, settings: Settings):
         self.settings = settings
 
-    def migrations_by_file_key(self) -> dict:
-        return {key: sorted([
-            m for m in self.migrations if m.should_apply(key)
-        ]) for key in self.file_keys}
-        # get migration objects that need to be applied to each file
-
     def can_migrate(self, file_key: str) -> bool:
         return any([m.should_apply(file_key) for m in self.migrations])
         # get if a key needs a migration
@@ -34,6 +28,12 @@ class SettingsMigrator:
             for migration in file_migrations:
                 migration.migrate(file_key)
         # apply all migrations to the possible keys
+
+    def migrations_by_file_key(self) -> dict:
+        return {key: sorted([
+            m for m in self.migrations if m.should_apply(key)
+        ]) for key in self.file_keys}
+        # get migration objects that need to be applied to each file
 
     @cached_property
     def migrations(self) -> list[SettingsMigration]:
