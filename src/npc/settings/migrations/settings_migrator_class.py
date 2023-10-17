@@ -11,17 +11,34 @@ class SettingsMigrator:
         self.settings = settings
 
     def can_migrate(self, file_key: str) -> bool:
+        """Get whether a named settings file can be migrated
+
+        If any migration class can run on the settings file from file_key, this
+        will return true.
+
+        Args:
+            file_key (str): Key of the settings file to check
+
+        Returns:
+            bool: True if one or more migrations can run on the named settings file. False if not.
+        """
         return any([m.should_apply(file_key) for m in self.migrations])
-        # get if a key needs a migration
 
     def migrate(self, file_key: str) -> list[MigrationMessage]:
-        messages = []
+        """Apply the migrations for a given settings file
 
+        All migrations that want to apply to file_key will be run in order of their sequence.
+
+        Args:
+            file_key (str): Key of the settings file to migrate
+
+        Returns:
+            list[MigrationMessage]: List of message objects that can be displayed to the user.
+        """
+        messages = []
         for migration in self.migrations_by_file_key().get(file_key, []):
             messages.extend(migration.migrate(file_key))
-
         return messages
-        # apply all migrations for the given key
 
     def migrate_all(self) -> list[MigrationMessage]:
         messages = []
