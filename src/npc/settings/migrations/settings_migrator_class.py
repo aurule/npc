@@ -5,7 +5,6 @@ from pathlib import Path
 from npc.settings import Settings
 from .migration_message import MigrationMessage
 from .settings_migration import SettingsMigration
-from .migration_1to2 import Migration1to2
 
 class SettingsMigrator:
     def __init__(self, settings: Settings):
