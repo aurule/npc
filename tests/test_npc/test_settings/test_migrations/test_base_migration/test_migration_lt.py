@@ -17,8 +17,10 @@ class FakeMigration(SettingsMigration):
         return self.seq
 
 def test_compares_sequence():
-    migration1 = FakeMigration(10)
-    migration2 = FakeMigration(20)
+    settings = Settings()
+    migration1 = Migration1to2(settings)
+    migration2 = FakeMigration(settings)
+    migration2.sequence = 20
 
     assert migration1 < migration2
 

@@ -80,7 +80,7 @@ class SettingsMigration(ABC):
         Raises:
             NotImplementedError: Migrations cannot be compared against any other type
         """
-        if not issubclass(other.__class__, self.__class__):
+        if not issubclass(other.__class__, SettingsMigration):
             raise NotImplementedError
 
         return self.sequence < other.sequence
