@@ -6,6 +6,7 @@ from npc.db import DB
 from npc.settings import Settings
 from npc.campaign import Campaign, Pathfinder
 from npc.characters import Character, RawTag, CharacterWriter
+from npc_cli.errors import CampaignNotFoundException
 
 import logging
 logger = logging.getLogger(__name__)
@@ -29,6 +30,28 @@ def get_campaign(settings: Settings) -> Campaign:
     logger.info(f"Found campaign root at {campaign_root}")
 
     return Campaign(campaign_root, settings = settings)
+
+def campaign_or_fail(settings: Settings) -> Campaign:
+    """Get the nearest campaign or raise an exception
+
+    If the current dir or any of its parents is a campaign, return a new Campaign object. Otherwise, raise
+    a CampaignNotFoundException error to abort the script.
+
+    Args:
+        settings (Settings): Settings file to use when constructing the campaign
+
+    Returns:
+        Campaign: New campaign object for the found dir
+
+    Raises:
+        CampaignNotFoundException: Raised when a campaign dir cannot be found
+    """
+    campaign = get_campaign(settings)
+
+    if campaign is None:
+        raise CampaignNotFoundException
+
+    return campaign
 
 def find_or_make_settings_file(settings: Settings, location: str) -> str:
     """Find or create the desired settings file, if possible
