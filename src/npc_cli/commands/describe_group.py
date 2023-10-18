@@ -3,7 +3,7 @@ from click import echo
 
 from npc.util import ParseError
 from npc_cli.presenters import tabularize, type_list, wrapped_paragraphs, tag_table_data
-from npc_cli.helpers import cwd_campaign
+from npc_cli.helpers import get_campaign
 from npc_cli.errors import BadCharacterTypeException, CampaignRequiredException
 
 from .main_group import cli, arg_settings, pass_settings
@@ -29,7 +29,7 @@ def systems(settings):
     system_data = [[system.name, system.key, system.desc] for system in systems]
     echo(tabularize(system_data, headers = system_headers, title = "Configured Systems"))
 
-    campaign = cwd_campaign(settings)
+    campaign = get_campaign(settings)
     if campaign:
         echo(f"\nCurrently using {campaign.system.name}")
 
@@ -44,7 +44,7 @@ def systems(settings):
 @pass_settings
 def system(settings, system):
     """Show details about a single system"""
-    campaign = cwd_campaign(settings)
+    campaign = get_campaign(settings)
     try:
         if system:
             game_system = settings.get_system(system)
@@ -76,7 +76,7 @@ def system(settings, system):
 @pass_settings
 def types(settings, system):
     """Show all configured character types"""
-    campaign = cwd_campaign(settings)
+    campaign = get_campaign(settings)
     try:
         if system:
             game_system = settings.get_system(system)
@@ -108,7 +108,7 @@ def types(settings, system):
 @pass_settings
 def type(settings, system, type_):
     """Show details about a single character type"""
-    campaign = cwd_campaign(settings)
+    campaign = get_campaign(settings)
     try:
         if system:
             target = settings.get_system(system)
@@ -146,7 +146,7 @@ def tags(settings, system_key, type_):
     Can show the tags available to all character types, or just the ones for a specific type.
     When run within a campaign, this will include campaign-specific tags as well.
     """
-    campaign = cwd_campaign(settings)
+    campaign = get_campaign(settings)
     try:
         if system_key:
             target = settings.get_system(system_key)
@@ -191,7 +191,7 @@ def tags(settings, system_key, type_):
 @pass_settings
 def tag(settings, system_key, type_, tag_name, context):
     """Show details for the named tag"""
-    campaign = cwd_campaign(settings)
+    campaign = get_campaign(settings)
     try:
         if system_key:
             target = settings.get_system(system_key)

@@ -10,7 +10,7 @@ from npc.characters import Character, RawTag, CharacterWriter
 import logging
 logger = logging.getLogger(__name__)
 
-def cwd_campaign(settings: Settings) -> Campaign:
+def get_campaign(settings: Settings) -> Campaign:
     """Make a campaign object for the nearest campaign to the current dir
 
     If the current dir or any of its parents is a campaign, return a new Campaign object. Otherwise, warn and
@@ -56,7 +56,7 @@ def find_or_make_settings_file(settings: Settings, location: str) -> str:
     if location == "user":
         target_file = settings.personal_dir / "settings.yaml"
     else:
-        campaign = cwd_campaign(settings)
+        campaign = get_campaign(settings)
         if campaign is None:
             return
         target_file = campaign.settings_file

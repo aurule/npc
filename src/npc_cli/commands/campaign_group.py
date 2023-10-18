@@ -4,7 +4,7 @@ from pathlib import Path
 
 import npc
 from npc_cli.presenters import directory_list, campaign_info
-from npc_cli.helpers import cwd_campaign, find_or_make_settings_file
+from npc_cli.helpers import get_campaign, find_or_make_settings_file
 from npc_cli.errors import CampaignNotFoundException
 
 from .main_group import cli, arg_settings, pass_settings
@@ -51,10 +51,8 @@ def init(settings, campaign_path: Path, name: str, desc: str, system: str):
 @pass_settings
 def info(settings):
     """Get information about a campaign
-
-    Args: CAMPAIGN_PATH (defaults to current dir)
     """
-    campaign = cwd_campaign(settings)
+    campaign = get_campaign(settings)
     if campaign is None:
         raise CampaignNotFoundException
 
@@ -87,7 +85,7 @@ def settings(settings, location):
 @pass_settings
 def session(settings):
     """Create and open the next session and plot file"""
-    campaign = cwd_campaign(settings)
+    campaign = get_campaign(settings)
     if campaign is None:
         raise CampaignNotFoundException
 
@@ -109,7 +107,7 @@ def latest(settings, planning_type):
 
     Args: PLANNING_TYPE one of "plot", "session", or "both". (defaults to "both")
     """
-    campaign = cwd_campaign(settings)
+    campaign = get_campaign(settings)
     if campaign is None:
         raise CampaignNotFoundException
 

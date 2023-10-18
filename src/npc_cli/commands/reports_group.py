@@ -4,7 +4,7 @@ from click import echo, BadParameter
 from npc import characters
 from npc.reporters import tag_reporter
 from npc_cli.presenters import tabularize
-from npc_cli.helpers import cwd_campaign
+from npc_cli.helpers import get_campaign
 from npc_cli.errors import CampaignNotFoundException
 
 from .main_group import cli, pass_settings
@@ -34,7 +34,7 @@ def values(settings, tag_name, context):
 
     The '--context' option is only needed if '--tag' is a subtag like role.
     """
-    campaign = cwd_campaign(settings)
+    campaign = get_campaign(settings)
     if campaign is None:
         raise CampaignNotFoundException
 
