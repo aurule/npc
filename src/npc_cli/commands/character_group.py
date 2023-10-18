@@ -6,8 +6,8 @@ from npc import characters, linters, listers
 from npc.util import edit_files, prune_empty_dirs
 from npc.campaign.reorganizers import CharacterReorganizer
 from npc_cli.presenters import type_list, tabularize
-from npc_cli.helpers import get_campaign, write_new_character
-from npc_cli.errors import CampaignNotFoundException, BadCharacterTypeException
+from npc_cli.helpers import campaign_or_fail, write_new_character
+from npc_cli.errors import BadCharacterTypeException
 
 from .main_group import cli, pass_settings
 
@@ -51,9 +51,7 @@ def new(settings, type_key, name, mnemonic, desc, tags):
     Args:
         TYPE_KEY TEXT   Type of the character
     """
-    campaign = get_campaign(settings)
-    if campaign is None:
-        raise CampaignNotFoundException
+    campaign = campaign_or_fail(settings)
 
     if type_key not in campaign.types:
         raise BadCharacterTypeException(type_key, type_list(campaign.types), "'TYPE_KEY'")
@@ -88,9 +86,7 @@ def lint(settings, edit):
 
     This command only works within an existing campaign.
     """
-    campaign = get_campaign(settings)
-    if campaign is None:
-        raise CampaignNotFoundException
+    campaign = campaign_or_fail(settings)
 
     campaign.characters.refresh()
 
@@ -140,9 +136,7 @@ def list(settings, lang, group, sort, output, header_level):
     All options default to getting their values from your settings. Use the keys under
     campaign.characters.listing to see and change these default values.
     """
-    campaign = get_campaign(settings)
-    if campaign is None:
-        raise CampaignNotFoundException
+    campaign = campaign_or_fail(settings)
 
     campaign.characters.refresh()
 
@@ -190,9 +184,7 @@ def reorg(settings, keep_empty, interactive, use_existing):
     If two or more characters would try to claim the same file, errors are
     shown.
     """
-    campaign = get_campaign(settings)
-    if campaign is None:
-        raise CampaignNotFoundException
+    campaign = campaign_or_fail(settings)
 
     campaign.characters.refresh()
 
