@@ -41,18 +41,31 @@ class SettingsMigrator:
         return messages
 
     def migrate_all(self) -> list[MigrationMessage]:
+        """Apply migrations for all possible settings files
+
+        Each file_key with migrations that want to run wil have those migrations
+        run in order of their sequence.
+
+        Returns:
+            list[MigrationMessage]: List of message objects that can be displayed to the user.
+        """
         messages = []
         for file_key, file_migrations in self.migrations_by_file_key().items():
             for migration in file_migrations:
                 messages.extend(migration.migrate(file_key))
         return messages
-        # apply all migrations to the possible keys
 
     def migrations_by_file_key(self) -> dict:
+        """Get migration objects which want to apply to each known file_key
+
+        Each file_key will appear as a key in the dict. Each value is a list of objects.
+
+        Returns:
+            dict: Dict of lists of migration objects keyed by the file_key they apply to.
+        """
         return {key: sorted([
             m for m in self.migrations if m.should_apply(key)
         ]) for key in self.file_keys}
-        # get migration objects that need to be applied to each file
 
     @cached_property
     def migrations(self) -> list[SettingsMigration]:
@@ -64,9 +77,15 @@ class SettingsMigrator:
             list[Migration]: List of Migration subclass objects
         """
         return sorted([klass(self.settings) for klass in SettingsMigration.__subclasses__()])
-        # get objects for all migrations
 
     @property
     def file_keys(self) -> list[str]:
+        """Get the available settings file_keys
+
+        Only settings keys with a loaded path are considered. The "package" and "internal" keys always exist
+        and refer to files that cannot be altered by migrations, so they are skipped.
+
+        Returns:
+            list[str]: List of settings file keys with an associated file.
+        """
         return [k for k in self.settings.loaded_paths.keys() if (k not in ("package", "internal"))]
-        # get available settings file keys
