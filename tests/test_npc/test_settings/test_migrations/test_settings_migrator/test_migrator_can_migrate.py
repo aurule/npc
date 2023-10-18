@@ -1,10 +1,9 @@
-from npc.settings import Settings
-from tests.fixtures import MockMigration
+from tests.fixtures import MockMigration, MockSettings
 
 from npc.settings.migrations import SettingsMigrator
 
 def test_true_with_migrations():
-    settings = Settings()
+    settings = MockSettings()
     settings.versions["test"] = "1.2.3"
     migrator = SettingsMigrator(settings)
 
@@ -13,7 +12,7 @@ def test_true_with_migrations():
     assert result
 
 def test_false_without_migrations():
-    settings = Settings()
+    settings = MockSettings()
     migrator = SettingsMigrator(settings)
 
     result = migrator.can_migrate("internal")

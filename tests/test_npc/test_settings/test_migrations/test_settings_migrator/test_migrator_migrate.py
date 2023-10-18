@@ -1,5 +1,4 @@
-from npc.settings import Settings
-from tests.fixtures import MockMigration
+from tests.fixtures import MockMigration, MockSettings
 
 from npc.settings.migrations import SettingsMigrator
 
@@ -8,7 +7,7 @@ def test_executes_migrations(tmp_path):
     with settings_file.open("w") as f:
         f.write("npc: {tested: false, version: 2.0.0}")
 
-    settings = Settings()
+    settings = MockSettings()
     settings.load_settings_file(settings_file, file_key="test")
     migrator = SettingsMigrator(settings)
 
@@ -22,7 +21,7 @@ def test_returns_messages(tmp_path):
     with settings_file.open("w") as f:
         f.write("npc: {tested: false, version: 2.0.0}")
 
-    settings = Settings()
+    settings = MockSettings()
     settings.load_settings_file(settings_file, file_key="test")
     migrator = SettingsMigrator(settings)
 
