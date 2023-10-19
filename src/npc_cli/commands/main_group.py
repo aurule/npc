@@ -4,7 +4,7 @@ from packaging.version import Version
 
 from npc import __version__ as npc_version
 from npc.settings import Settings, app_settings
-from npc.settings.migrations import SettingsMigrator
+from npc_cli.helpers import try_migrating
 
 arg_settings: Settings = app_settings()
 
@@ -33,22 +33,4 @@ def cli(ctx):
         click.echo(f"WARNING: Installed version of NPC ({our_version}) is older than the one which last updated your user settings ({settings_version}). NPC may behave incorrectly. Please upgrade to the latest release as soon as possible.")
 
     # migrate user settings
-    migrator = SettingsMigrator(arg_settings)
-    if migrator.can_migrate("user"):
-        action = click.prompt(
-            f"Your user settings are out of date and need to be migrated. Do you want to migrate now, open the files for manual inspection, or quit NPC",
-            default="migrate",
-            type=click.Choice(["migrate", "open", "quit"])
-        )
-        match action:
-            case "migrate":
-                click.echo("Migrating...")
-                messages = migrator.migrate("user")
-                for m in messages:
-                    click.echo(m.message)
-                click.echo("Done migrating!\n")
-            case "open":
-                click.launch(str(arg_settings.personal_dir / "settings.yaml"), locate=True)
-                ctx.exit(1)
-            case _:
-                ctx.exit(1)
+    try_migrating(arg_settings, "user")

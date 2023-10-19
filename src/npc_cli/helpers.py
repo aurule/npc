@@ -1,11 +1,13 @@
 import os
 from pathlib import Path
+import click
 
 import npc
 from npc.db import DB
 from npc.settings import Settings
 from npc.campaign import Campaign, Pathfinder
 from npc.characters import Character, RawTag, CharacterWriter
+from npc.settings.migrations import SettingsMigrator
 from npc_cli.errors import CampaignNotFoundException
 
 import logging
@@ -29,7 +31,10 @@ def get_campaign(settings: Settings) -> Campaign:
         return None
     logger.info(f"Found campaign root at {campaign_root}")
 
-    return Campaign(campaign_root, settings = settings)
+    campaign = Campaign(campaign_root, settings = settings)
+    try_migrating(settings, "campaign")
+
+    return campaign
 
 def campaign_or_fail(settings: Settings) -> Campaign:
     """Get the nearest campaign or raise an exception
@@ -89,6 +94,43 @@ def find_or_make_settings_file(settings: Settings, location: str) -> str:
         target_file.write_text("npc: {}", newline="\n")
 
     return str(target_file)
+
+def try_migrating(settings: Settings, location: str):
+    """Test settings for migration and prompt to migrate
+
+    This method ensures the user is aware if their personal or campaign settings are out of date, and gives
+    the opportunity to apply pending migrations. Running commands is blocked unless migrations are run, to
+    prevent unexpected behavior.
+
+    Args:
+        settings (Settings): Settings object to check
+        location (str): Settings location to check. One of "user" or "campaign".
+    """
+
+    # Skip migration prompt during testing. The cli tests often run with
+    # intentionally incomplete or incorrect settings.
+    if "PYTEST_CURRENT_TEST" in os.environ:
+        return
+
+    migrator = SettingsMigrator(settings)
+    if migrator.can_migrate(location):
+        action = click.prompt(
+            f"Your {location} settings are out of date and need to be migrated. Do you want to migrate now, open the files for manual inspection, or quit NPC",
+            default="migrate",
+            type=click.Choice(["migrate", "open", "quit"])
+        )
+        match action:
+            case "migrate":
+                click.echo("Migrating...")
+                messages = migrator.migrate(location)
+                for m in messages:
+                    click.echo(m.message)
+                click.echo("Done migrating!\n")
+            case "open":
+                click.launch(str(arg_settings.loaded_paths.get(location)), locate=True)
+                raise click.ClickException()
+            case _:
+                raise click.ClickException()
 
 def write_new_character(character: Character, campaign: Campaign, db=None):
     """Create a new character file
