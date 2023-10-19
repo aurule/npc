@@ -34,6 +34,7 @@ def get_campaign(settings: Settings) -> Campaign:
     logger.info(f"Found campaign root at {campaign_root}")
 
     campaign = Campaign(campaign_root, settings = settings)
+    check_outdated(settings, "campaign")
     try_migrating(settings, "campaign")
 
     return campaign
