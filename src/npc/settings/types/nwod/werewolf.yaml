@@ -21,5 +21,7 @@ werewolf:
       desc: Social caste based on the moon that the werewolf was born under
       values: *auspices
     tribe:
-      desc: Large group that the werewolf belongs to
+      desc: Large social group that the werewolf belongs to
       values: *tribes
+    pack:
+      desc: Small group of werewolves who work together in a territory

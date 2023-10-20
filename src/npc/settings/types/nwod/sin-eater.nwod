@@ -3,20 +3,26 @@ Blah
 
 --Stats--
 attributes
-    power       •
-    finesse     •
-    resistance  •
+    int         •
+    wits        •
+    resolve     •
+    str         •
+    dex         •
+    stam        •
+    presence    •
+    manip       •
+    composure   •
 
 advantages
-    morality 7
-    corpus   6 (resistance+size)
-    will     2 (resistance)
-    essence  1
-    size     5 (adult human)
-    speed    7 (power+finesse+5)
-    defense  1 (finesse)
+    psyche   1
+    synergy  7
+    health   6 (stam+size)
+    will     2 (resolve+composure)
+    size     5 (adult)
+    speed    7 (str+dex+5)
+    defense  1 (lowest of dex or wits)
     armor    0
-    init     2 (finesse+resistance)
+    init     2 (dex+composure)
 
     Virtue   [Charity, Faith, Fortitude, Hope, Justice, Prudence, Temperance]
     Vice     [Envy, Gluttony, Greed, Lust, Pride, Sloth, Wrath]
@@ -49,8 +55,12 @@ skills
     streetwise      0
     subterfuge      0
 
-numina
-    numina •
+keys
+    key •
+     description
+
+manifestations
+    manifestation •
         description
 
 merits

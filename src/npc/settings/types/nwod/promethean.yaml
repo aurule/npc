@@ -9,6 +9,16 @@ promethean:
         by the element of its creation rite and the humor which overflows in the
         prometheans of that line.
       required: true
+      tags:
+        athanor:
+          desc: A promethean's alchemical forge
+          doc: >
+            By putting vitriol in their athanor, prometheans can gain new boons.
+    refinement:
+      desc: How the promethean tries to gain their soul
+      doc: >
+        Each refinement is a specific practice followed by the promethean as a
+        way to refine their inner fire and complete the Great Work.
     disfigurement:
       desc: The terrible, true visage of a promethean
       doc: >
@@ -16,3 +26,7 @@ promethean:
         when they use magic or heal supernaturally with electricity.
     throng:
       desc: Group of prometheans who travel and work together
+      doc: >
+        Groups of prometheans can form a throng to accomplish some goal, or
+        simply to travel together for company. Many are informal groups, but
+        some choose to formalize the bond through an alchemical pact.
