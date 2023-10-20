@@ -164,8 +164,12 @@ changeling:
           doc: >
             Not all entitlements have specific roles. For those that do,
             achieving a certain role can be a major motivation for members.
-    other:
+    fetch:
       desc: The changeling's fetch
+      doc: >
+        When a changeling is created, a corresponding fetch almost always takes
+        their place in the mortal world. These cursed "others" have an intrinsic
+        link to the changeling, even if they don't know their own true nature.
   # Descriptions for the seeming and kith blessings. Every seeming and
   # kith must have a blessing.
   blessings:
