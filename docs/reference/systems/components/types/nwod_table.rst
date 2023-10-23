@@ -6,9 +6,9 @@
     * - :ref:`sys_nwod_changeling`
       - A human who was captured by the fae and returned to the mundane world
     * - :ref:`sys_nwod_fetch`
-      - The replacement a gentry leaves behind when it abducts a changeling
+      - The creature who takes the place of a changeling in the mortal world
     * - :ref:`sys_nwod_geist`
-      - A dead soul merged with a potent ghost
+      - A ghost reshaped by the underworld into a representation of death
     * - :ref:`sys_nwod_ghost`
       - A dead soul clinging to the mortal world
     * - :ref:`sys_nwod_ghoul`
@@ -23,6 +23,8 @@
       - A mundane human
     * - :ref:`sys_nwod_promethean`
       - Soulless creatures given life through powerful alchemy
+    * - :ref:`sys_nwod_sin-eater`
+      - A mortal who bound themselves to a geist through a bargain while on the brink of death
     * - :ref:`sys_nwod_spirit`
       - An ephemeral representation of a thing, place, or concept
     * - :ref:`sys_nwod_vampire`

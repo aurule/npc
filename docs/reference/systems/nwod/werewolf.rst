@@ -45,7 +45,7 @@ Allowed Values
 :bdg-secondary:`Optional`
 :bdg-info:`Value required`
 
-Large group that the werewolf belongs to
+Large social group that the werewolf belongs to
 
 
 Allowed Values
@@ -65,5 +65,16 @@ Allowed Values
 - ivory claws
 
 - predator kings
+
+
+.. _tag_nwod_werewolf_pack:
+
+@pack
+-----
+
+:bdg-secondary:`Optional`
+:bdg-info:`Value required`
+
+Small group of werewolves who work together in a territory
 
 

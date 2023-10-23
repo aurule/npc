@@ -5,9 +5,9 @@ Fetch
 
 :bdg-info:`New World of Darkness`
 
-The replacement a gentry leaves behind when it abducts a changeling
+The creature who takes the place of a changeling in the mortal world
 
-Fetches are the other half a changeling, usually designed by the gentry or by fate to take over the life of the abducted human.
+When a human becomes a changeling, a fetch almost always takes their place in the mortal world. Fetches are a strange reflection of the human and of the changeling; they need to blend in, but they are not at all mundane. Some know what they are and some do not, but all feel a unique terror if their changeling returns to the world.
 
 
 

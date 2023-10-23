@@ -5,9 +5,9 @@ Geist
 
 :bdg-info:`New World of Darkness`
 
-A dead soul merged with a potent ghost
+A ghost reshaped by the underworld into a representation of death
 
-The Sin Eaters are strange creatures formed when a dying soul is offered a second chance to live, by merging itself with a hungry spirit from the underworld.
+Geists are ghost-spirit hybrid creatures created when a ghost spends far too long in the underworld. Some crave to feel life again, and make bargains with dying humans to share their bodies in exchange for a reprieve from death, creating Sin-Eaters or Bound.
 
 
 

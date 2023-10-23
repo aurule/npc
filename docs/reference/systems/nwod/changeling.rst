@@ -198,14 +198,16 @@ Not all entitlements have specific roles. For those that do, achieving a certain
 
 
 
-.. _tag_nwod_changeling_other:
+.. _tag_nwod_changeling_fetch:
 
-@other
+@fetch
 ------
 
 :bdg-secondary:`Optional`
 :bdg-info:`Value required`
 
 The changeling's fetch
+
+When a changeling is created, a corresponding fetch almost always takes their place in the mortal world. These cursed "others" have an intrinsic link to the changeling, even if they don't know their own true nature.
 
 
