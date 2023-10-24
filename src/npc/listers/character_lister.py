@@ -109,8 +109,8 @@ class CharacterLister:
                     write("\n\n")
 
             character = row[0]
-            character_template = gt(self.character_template_name(character.type_key))
             character_view = CharacterView(character)
+            character_template = gt(self.character_template_name(character_view.type))
             write(
                 character_template.render(
                     {
