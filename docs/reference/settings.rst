@@ -246,9 +246,6 @@ Example:
           sort_by:
             - full_name
           base_header_level: 1
-          metadata:
-            title: NPC Listing
-            timestamp: '%a, %b %d %I:%M%p'
         use_blocks:
           - flags
           - bio
