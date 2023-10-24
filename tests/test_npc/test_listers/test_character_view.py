@@ -11,6 +11,14 @@ def test_uses_character_type(tmp_campaign):
 
     assert view.type == character.type_key
 
+def test_uses_character_faketype(tmp_campaign):
+    factory = CharacterFactory(tmp_campaign)
+    character = factory.make("Test Mann", type_key="person", tags=[RawTag("faketype", "pet")])
+
+    view = CharacterView(character)
+
+    assert view.type == "pet"
+
 def test_uses_character_desc(tmp_campaign):
     factory = CharacterFactory(tmp_campaign)
     character = factory.make("Test Mann", type_key="person", desc="A very testy boi")

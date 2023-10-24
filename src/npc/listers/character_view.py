@@ -21,6 +21,9 @@ class CharacterView:
         self.mnemonic: str = character.mnemonic or ""
 
         for tag in character.tags:
+            if tag.name == "faketype":
+                self.type = tag.value
+                continue
             if not hasattr(self, tag.name):
                 setattr(self, tag.name, TagViewCollection())
             getattr(self, tag.name).append_tag(tag)
