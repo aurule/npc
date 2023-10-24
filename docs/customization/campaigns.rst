@@ -65,7 +65,7 @@ Character organization and handling is configured in the ``campaign.characters``
 :path: :octicon:`note` Directory where characters should be put
 :ignore_subpaths: :octicon:`list-ordered` List of directories under ``path`` that should be ignored when loading characters. Good for archiving.
 :subpath_components: :octicon:`list-ordered` List of objects that describe how to build the "ideal path" for a character based on its tags.
-:listing: :octicon:`code-square` Object configuring how to generate character listings
+:listing: :octicon:`code-square` Object configuring how to generate :ref:`listing_home`
 :use_blocks: :octicon:`list-ordered` Which :ref:`setting_tag_blocks` to use for new files, and in what order
 
 Basic Organization
