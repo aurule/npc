@@ -6,7 +6,7 @@
 #
 alabaster==0.7.13
     # via sphinx
-babel==2.12.1
+babel==2.13.1
     # via sphinx
 beautifulsoup4==4.12.2
     # via furo
@@ -14,7 +14,7 @@ build==1.0.3
     # via pip-tools
 certifi==2023.7.22
     # via requests
-charset-normalizer==3.2.0
+charset-normalizer==3.3.1
     # via requests
 click==8.1.7
     # via
@@ -22,7 +22,7 @@ click==8.1.7
     #   pip-tools
 colorama==0.4.6
     # via sphinx-autobuild
-coverage==7.3.1
+coverage==7.3.2
     # via pytest-cov
 docutils==0.20.1
     # via sphinx
@@ -48,7 +48,7 @@ mdurl==0.1.2
     # via markdown-it-py
 mistletoe==1.2.1
     # via -r requirements.in
-packaging==23.1
+packaging==23.2
     # via
     #   -r requirements.in
     #   build
@@ -65,7 +65,7 @@ pygments==2.16.1
     #   sphinx
 pyproject-hooks==1.0.0
     # via build
-pytest==7.4.2
+pytest==7.4.3
     # via
     #   -r requirements-ci.in
     #   pytest-cov
@@ -74,9 +74,9 @@ pytest==7.4.2
     #   pytest-pretty
 pytest-cov==4.1.0
     # via -r requirements-ci.in
-pytest-env==1.0.1
+pytest-env==1.1.0
     # via -r requirements-ci.in
-pytest-mock==3.11.1
+pytest-mock==3.12.0
     # via -r requirements-ci.in
 pytest-pretty==1.2.0
     # via -r requirements-ci.in
@@ -86,7 +86,7 @@ readthedocs-sphinx-search==0.3.1
     # via -r requirements-dev.in
 requests==2.31.0
     # via sphinx
-rich==13.5.3
+rich==13.6.0
     # via
     #   -r requirements-dev.in
     #   pytest-pretty
@@ -129,7 +129,7 @@ sphinxcontrib-qthelp==1.0.6
     # via sphinx
 sphinxcontrib-serializinghtml==1.1.9
     # via sphinx
-sqlalchemy==2.0.21
+sqlalchemy==2.0.22
     # via -r requirements.in
 toml==0.10.2
     # via vulture
@@ -137,9 +137,9 @@ tornado==6.3.3
     # via livereload
 typing-extensions==4.8.0
     # via sqlalchemy
-urllib3==2.0.5
+urllib3==2.0.7
     # via requests
-vulture==2.9.1
+vulture==2.10
     # via -r requirements-dev.in
 wheel==0.41.2
     # via pip-tools
