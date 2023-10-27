@@ -20,3 +20,10 @@ def test_includes_value():
     result = repr(tag)
 
     assert tag.value in result
+
+def test_includes_hidden():
+    tag = Tag(id=5, name="test", value="test", hidden=True)
+
+    result = repr(tag)
+
+    assert "hidden=True" in result
