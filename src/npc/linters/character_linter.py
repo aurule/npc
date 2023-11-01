@@ -1,5 +1,5 @@
 from npc.campaign import Campaign
-from npc.characters import Character, CharacterReader, CharacterFactory
+from npc.characters import Character, CharacterReader, CharacterTagger
 from npc.validation import CharacterValidator, TagValidator
 from npc.validation.errors.tag_errors import TagDeprecatedError, TagUndefinedError
 from .tag_bucket import TagBucket
@@ -35,11 +35,10 @@ class CharacterLinter:
             return self.errors
 
         reader = CharacterReader(self.character.file_path)
-        factory = CharacterFactory(self.campaign)
         tag_bucket = TagBucket(self.character)
-        tag_context_stack: list = [tag_bucket]
+        tagger = CharacterTagger(self.campaign, tag_bucket)
         for rawtag in reader.tags():
-            factory.apply_raw_tag(rawtag, tag_bucket, tag_context_stack, mapped=False)
+            tagger.apply_raw_tag(rawtag, mapped=False)
 
         specs = [
             spec

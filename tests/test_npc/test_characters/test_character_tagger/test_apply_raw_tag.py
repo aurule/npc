@@ -1,30 +1,26 @@
 from tests.fixtures import tmp_campaign
 from npc.characters import Character, RawTag
 
-from npc.characters import CharacterFactory
+from npc.characters import CharacterTagger
 
 def test_handles_mapped_tags(tmp_campaign):
-    factory = CharacterFactory(tmp_campaign)
     character = Character()
+    tagger = CharacterTagger(tmp_campaign, character)
     rawtag = RawTag("realname", "Test Mann")
-    stack = [character]
 
-    new_stack = factory.apply_raw_tag(rawtag, character, stack)
+    tagger.apply_raw_tag(rawtag)
 
     assert character.realname == "Test Mann"
-    assert new_stack == stack
 
 def test_makes_tag_for_mapped_when_instructed(tmp_campaign):
-    factory = CharacterFactory(tmp_campaign)
     character = Character()
+    tagger = CharacterTagger(tmp_campaign, character)
     rawtag = RawTag("realname", "Test Mann")
-    stack = [character]
 
-    new_stack = factory.apply_raw_tag(rawtag, character, stack, mapped=False)
+    tagger.apply_raw_tag(rawtag, mapped=False)
 
     assert character.realname != "Test Mann"
     assert character.tags[0].name == "realname"
-    assert new_stack == stack
 
 def test_handles_metatags(tmp_campaign):
     new_defs = {
@@ -38,23 +34,19 @@ def test_handles_metatags(tmp_campaign):
         }
     }
     tmp_campaign.patch_campaign_settings(new_defs)
-    factory = CharacterFactory(tmp_campaign)
     character = Character()
+    tagger = CharacterTagger(tmp_campaign, character)
     rawtag = RawTag("test", "nope")
-    stack = [character]
 
-    new_stack = factory.apply_raw_tag(rawtag, character, stack)
+    tagger.apply_raw_tag(rawtag)
 
     assert character.tags[0].name == "foo"
-    assert new_stack == stack
 
 def test_handles_regular_tags(tmp_campaign):
-    factory = CharacterFactory(tmp_campaign)
     character = Character()
+    tagger = CharacterTagger(tmp_campaign, character)
     rawtag = RawTag("age", "55")
-    stack = [character]
 
-    new_stack = factory.apply_raw_tag(rawtag, character, stack)
+    tagger.apply_raw_tag(rawtag)
 
     assert character.tags[0].name == "age"
-    assert new_stack == stack
