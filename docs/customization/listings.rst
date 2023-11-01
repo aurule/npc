@@ -269,7 +269,7 @@ Hiding the Character's Type
 
 Next is hiding a character's type. Putting :ref:`tag_faketype` ``type key`` in a character file causes all listings to show *that* type instead of the character's real type. It's useful for situations like when a powerful wizard is pretending to be a traveling fireworks salesman, or when a changeling's :ref:`sys_nwod_fetch` is under cover as a mundane human.
 
-.. caution::
+.. tip::
 
     Setting :ref:`tag_faketype` for a character changes the character's apparent type throughout the entire listing process. This means that a different template may be used to render the character's entry. However, it does *not* automatically hide any other tag values. Tags which are shared by the character's real type and fake type will be available to the template. If those tags reveal secret info, use :ref:`tag_hide` to conceal them separately.
 
@@ -302,6 +302,10 @@ Hiding Every Tag Instance
     @hide dead
 
 This will cause the listing for Mr. Fritz to behave as though the :ref:`tag_dead` tag did not exist on his sheet. His entry will not mark him as deceased and the notes about his death will not appear.
+
+.. note::
+
+    Behind the scenes, NPC uses the special value ``all`` to represent hiding all instances of a given tag. Thus, ``@hide dead`` is identical to ``@hide dead >> all``. Be sure not to use ``all`` as the value for any tag, or you may end up with surprising results if you try to hide it.
 
 Hiding One Tag Instance
 ~~~~~~~~~~~~~~~~~~~~~~~
