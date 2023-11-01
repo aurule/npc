@@ -83,3 +83,11 @@ def test_has_false_without_tag(tmp_campaign):
     view = CharacterView(character)
 
     assert not view.has("title")
+
+def test_does_not_have_hidden_tags(tmp_campaign):
+    factory = CharacterFactory(tmp_campaign)
+    character = factory.make("Test Mann", type_key="person", tags=[RawTag("title", "bro"), RawTag("hide", "title")])
+
+    view = CharacterView(character)
+
+    assert not view.has("title")
