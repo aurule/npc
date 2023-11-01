@@ -6,6 +6,7 @@
 :bdg-secondary:`Optional`
 :bdg-info:`Value required`
 :bdg-info:`Max 1`
+:octicon:`lock`
 
 The true primary name for the character
 

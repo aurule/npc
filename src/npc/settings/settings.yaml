@@ -5,6 +5,7 @@ npc:
       desc: The character type of an npc
       required: true
       max: 1
+      locked: true
     faketype:
       desc: A false character type that will be shown in listings
       doc: >
@@ -32,6 +33,7 @@ npc:
         Useful when the real name uses characters that are not allowed in a
         filename (like "quotes" around a common nickname).
       max: 1
+      locked: true
     title:
       desc: Honorific title for the character, like The Kingslayer
     pronouns:
