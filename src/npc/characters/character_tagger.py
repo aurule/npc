@@ -16,7 +16,7 @@ class CharacterTagger():
         self.campaign = campaign
         self.character = character
         self.context_stack: list[Taggable] = [character]
-        self.hidden = dict()
+        self.hidden: list[str] = list()
 
     def apply_tags(self, rawtags: list[RawTag]):
         """Apply a list of raw tags to our character
@@ -27,10 +27,81 @@ class CharacterTagger():
         Args:
             rawtags (list[RawTag]): List of raw tag objects to apply to our character
         """
-        # TODO construct hidden dict
+
+        data_tags = self.encode_hide_tags(rawtags)
+
+        for rawtag in data_tags:
+            self.apply_raw_tag(rawtag)
+
+    def encode_hide_tags(self, rawtags: list[RawTag]) -> list[RawTag]:
+        """Store and remove any hide tags for later handling
+
+        Hide tags are not stored as literal tags. Instead, they cause the "hidden" attr of other tags to be
+        set. This method returns a list of raw tags with the hide tags filtered out and added to an internal
+        list of hidden tag data.
+
+        Args:
+            rawtags (list[RawTag]): List of raw tags to process
+
+        Returns:
+            list[RawTag]: List of raw tags with hide tags removed
+        """
+        data_tags = list()
 
         for rawtag in rawtags:
-            self.apply_raw_tag(rawtag)
+            if rawtag.name == "hide":
+                self.hidden.append(self.build_hide_value(rawtag.value))
+            else:
+                data_tags.append(rawtag)
+
+        return data_tags
+
+    def build_hide_value(self, value: str) -> str:
+        """Create the canonical hide value from a hide tag
+
+        The canonical value for a hide tag removes all whitespace around the >> delimeters and appends "all"
+        if an explicit value is not given.
+
+        Args:
+            value (str): Value of the hide tag to be modified
+
+        Returns:
+            str: Modified hide tag value
+        """
+        parts = [v.strip() for v in value.split(">>")]
+        if len(parts) % 2 != 0:
+            parts.append("all")
+        return ">>".join(parts)
+
+    def tag_is_hidden(self, tag: Tag) -> str:
+        """Get whether a tag is hidden
+
+        Compares the tag against a constructed key based on the tags in the context stack. If a hidden value
+        ending with the tag's name and "all" or its name and value is found, the tag is considered hidden.
+
+        Args:
+            tag (Tag): Tag to test
+
+        Returns:
+            str: "all" if the tag is entirely hidden, "one" if just this instance is hidden, or None if it is not hidden
+        """
+        if not self.hidden:
+            return None
+
+        parts = []
+        for parent in self.context_stack[1:]:
+            parts.append(parent.name)
+            parts.append(parent.value)
+
+        all_key = ">>".join(parts + [tag.name, "all"])
+        if all_key in self.hidden:
+            return "all"
+
+        one_key = ">>".join(parts + [tag.name, tag.value])
+        if one_key in self.hidden:
+            return "one"
+
+        return None
 
     def apply_raw_tag(self, rawtag: RawTag, *, mapped: bool = True):
         """Apply a RawTag to our character
@@ -56,8 +127,9 @@ class CharacterTagger():
 
         tag_spec = self.get_tag_spec(rawtag.name)
 
-        # TODO set hidden status based on self.hidden dict
         tag = Tag(name = rawtag.name, value = rawtag.value)
+        if hidden_value := self.tag_is_hidden(tag):
+            tag.hidden = hidden_value
         tag.spec = tag_spec.in_context(self.context_stack[-1].name)
         self.insert_tag_record(tag)
 

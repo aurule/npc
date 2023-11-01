@@ -50,3 +50,13 @@ def test_handles_regular_tags(tmp_campaign):
     tagger.apply_raw_tag(rawtag)
 
     assert character.tags[0].name == "age"
+
+def test_sets_hidden_attr(tmp_campaign):
+    character = Character()
+    tagger = CharacterTagger(tmp_campaign, character)
+    tagger.hidden = ["age>>all"]
+    rawtag = RawTag("age", "55")
+
+    tagger.apply_raw_tag(rawtag)
+
+    assert character.tags[0].hidden == "all"
