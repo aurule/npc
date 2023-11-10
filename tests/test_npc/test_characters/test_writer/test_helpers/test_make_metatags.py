@@ -1,7 +1,6 @@
-import pytest
 from tests.fixtures import db
 from npc.settings import MetatagSpec
-from npc.characters import Character, Tag, CharacterFactory
+from npc.characters import Character, Tag
 
 from npc.characters.writer.helpers import make_metatags
 

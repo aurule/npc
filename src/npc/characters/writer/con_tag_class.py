@@ -31,3 +31,27 @@ class ConTag:
             out += (f" {self.value}")
 
         return out
+
+    def __hash__(self) -> int:
+        """Get a hash for this contag
+
+        Generates a hash based on the contag name and value attributes
+
+        Returns:
+            int: Hash of this contag's name and value
+        """
+        return hash((self.name, self.value))
+
+    def __eq__(self, other) -> bool:
+        """Test whether this contag is the same as another contag
+
+        Args:
+            other (ConTag): ConTag to test against
+
+        Returns:
+            bool: True if both contags' hashes match, False if not
+        """
+        if not isinstance(other, ConTag):
+            return NotImplemented
+
+        return hash(self) == hash(other)
