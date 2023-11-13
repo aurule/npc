@@ -1,6 +1,6 @@
 from dataclasses import dataclass, field
 
-@dataclass
+@dataclass(frozen=True)
 class ConTag:
     """Object representing emittable tag-like data
 
