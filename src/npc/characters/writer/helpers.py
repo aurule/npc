@@ -1,6 +1,6 @@
 from npc.settings import MetatagSpec
 from npc.db import DB
-from npc.db.character_repository import tags_by_name
+from npc.db.character_repository import tags_by_name, hidden_tags
 from npc.characters.character_class import Character
 from npc.characters.tag_class import Tag
 from .con_tag_class import ConTag
@@ -47,6 +47,25 @@ def make_contags(character: Character) -> dict:
         tags["nolint"] = [ConTag("nolint")]
     if character.delist:
         tags["delist"] = [ConTag("delist")]
+
+    return tags
+
+def make_hide_tags(character: Character, *, db: DB = None) -> list[ConTag]:
+    if not db:
+        db = DB()
+
+    tags: list[ConTag] = []
+
+    stmt = tags(character)
+    with db.session() as session:
+        result = session.scalars(stmt)
+        for tag in result:
+            if tag.hidden is None:
+                pass
+                # get and iterate subtags
+            else:
+                pass
+                # generate @hide
 
     return tags
 

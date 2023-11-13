@@ -54,10 +54,14 @@ class CharacterWriter:
 
         handled_tag_ids: list[int] = []
         constructed_tags: dict[str, list] = make_contags(character)
+        if hide_tags := make_hide_tags(character):
+            constructed_tags["hide"] = hide_tags
 
+        # always begin with the character description
         if character.desc:
             chunks.append(character.desc)
 
+        # metatags always preceed standard tags
         for metatag_def in self.campaign.metatags.values():
             metatags = make_metatags(metatag_def, character, handled_tag_ids)
             for metatag in metatags:
@@ -69,6 +73,7 @@ class CharacterWriter:
                     if tag_name in constructed_tags:
                         del constructed_tags[tag_name]
 
+        # emit requested tag blocks
         for blockname in self.blocks:
             block_def = self.block_defs.get(blockname, [])
             if "*" in block_def:
