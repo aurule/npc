@@ -1,6 +1,6 @@
 from npc.settings import MetatagSpec
 from npc.db import DB
-from npc.db.character_repository import tags_by_name, hidden_tags
+from npc.db.character_repository import tags_by_name, tags
 from npc.characters.character_class import Character
 from npc.characters.tag_class import Tag
 from .con_tag_class import ConTag
@@ -54,7 +54,7 @@ def make_hide_tags(character: Character, *, db: DB = None) -> list[ConTag]:
     if not db:
         db = DB()
 
-    tags: list[ConTag] = []
+    hide_tags: list[ConTag] = []
 
     stmt = tags(character)
     with db.session() as session:
@@ -67,7 +67,7 @@ def make_hide_tags(character: Character, *, db: DB = None) -> list[ConTag]:
                 pass
                 # generate @hide
 
-    return tags
+    return hide_tags
 
 def make_metatags(spec: MetatagSpec, character: Character, handled_ids: list[int], *, db: DB = None) -> list:
     """Construct one or more Metatag objects using the given spec and character
