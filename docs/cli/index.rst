@@ -1,7 +1,7 @@
 .. _cli_home:
 
-Basics
-=======
+CLI Basics
+==========
 
 NPC comes with a command line utility, ``npc``. This is a fully featured program for interacting with campaigns. It's the original way to use NPC, in fact.
 
