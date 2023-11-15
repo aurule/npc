@@ -9,8 +9,8 @@ One of the things NPC was created to do is to generate a public listing of chara
 
 .. _conf_listings:
 
-Configuration
--------------
+Listing Configuration
+---------------------
 
 Listing settings are stored within the :ref:`settings_characters` namespace in the ``listing`` key. They define defaults, but most can be overridden by arguments to the :ref:`cli_list` command.
 
