@@ -20,6 +20,7 @@ NPC is very much a personal project. It works well enough for me to use for my w
    :hidden:
 
    installation
+   basics
    customization/index
    cli/quickstart
 
