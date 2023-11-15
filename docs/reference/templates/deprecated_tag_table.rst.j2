@@ -1,0 +1,13 @@
+.. list-table::
+    :header-rows: 1
+
+    * - Deprecated Tag
+      - Replacement
+      - Version
+      - Description
+    {%- for tag in tags%}
+    * - :ref:`tag_{{ tag.name }}`
+      - :ref:`tag_{{ tag.replaced_by }}`
+      - {{ tag.version }}
+      - {{ tag.desc }}
+    {%- endfor -%}

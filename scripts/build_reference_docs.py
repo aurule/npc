@@ -48,6 +48,37 @@ tag_table_file = Path(f"docs/reference/tags/components/tag_table.rst")
 with tag_table_file.open("w", newline="\n") as f:
     f.write(tag_table_data)
 
+# Build deprecated tag references
+
+dest_dir = Path("docs/reference/deprecated_tags")
+current_files = [dest_dir / "index.rst"]
+deprecated_tag_template = jenv.get_template("deprecated_tag.rst.j2")
+for deprecated_tag in settings.deprecated_tags.values():
+    data = deprecated_tag_template.render({
+        "header_characters": header_characters,
+        "header_level": 0,
+        "tag": deprecated_tag,
+        "parents": [],
+        "all_tags": settings.deprecated_tags
+        })
+
+    tagfile = dest_dir / f"{deprecated_tag.name}.rst"
+    current_files.append(tagfile)
+    with tagfile.open("w", newline="\n") as f:
+        f.write(data)
+for rst_file in dest_dir.glob("*.rst"):
+    if rst_file not in current_files:
+        rst_file.unlink()
+
+# deprecated tags table
+deprecated_tag_table_template = jenv.get_template("deprecated_tag_table.rst.j2")
+deprecated_tag_table_data = deprecated_tag_table_template.render({
+    "tags": sorted(settings.deprecated_tags.values(), key=lambda s: s.name)
+    })
+deprecated_tag_table_file = Path(f"docs/reference/deprecated_tags/components/deprecated_tag_table.rst")
+with deprecated_tag_table_file.open("w", newline="\n") as f:
+    f.write(deprecated_tag_table_data)
+
 # Build Game System References
 
 system_template = jenv.get_template("system.rst.j2")

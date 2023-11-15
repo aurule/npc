@@ -39,6 +39,8 @@ NPC is very much a personal project. It works well enough for me to use for my w
 
    reference/settings
    reference/tags/index
+   reference/deprecated_tags/index
+   reference/reserved_tags
    reference/systems/index
 
 .. toctree::
