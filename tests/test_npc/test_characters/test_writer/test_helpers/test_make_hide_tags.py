@@ -19,11 +19,12 @@ def test_makes_hide_all_top_level(db):
 
 def test_makes_hide_all_nested(db):
     character = Character(realname="bumblor", type_key="person", file_loc="/dev/null")
-    tag1 = Tag(id=1, name="test", value="yes")
-    tag2 = Tag(id=2, name="brains", value="abby normal")
-    tag3 = Tag(id=3, name="nerd", value="nah", hidden="all", parent_tag_id=2)
-    tag3 = Tag(id=4, name="brawn", value="chonk")
-    character.tags = [tag1, tag2, tag3]
+    tag1 = Tag(name="test", value="yes")
+    tag2 = Tag(name="brains", value="abby normal")
+    tag3 = Tag(name="nerd", value="nah", hidden="all")
+    tag4 = Tag(name="brawn", value="chonk")
+    character.tags = [tag1, tag2, tag4]
+    tag2.subtags = [tag3]
     with db.session() as session:
         session.add(character)
         session.commit()
@@ -47,13 +48,13 @@ def test_makes_hide_one_top_level(db):
     assert result_tags[0].value == "brains >> abby normal"
 
 def test_makes_hide_one_nested(db):
-    # TODO make nerd a subtag of brains
     character = Character(realname="bumblor", type_key="person", file_loc="/dev/null")
-    tag1 = Tag(id=1, name="test", value="yes")
-    tag2 = Tag(id=2, name="brains", value="abby normal")
-    tag3 = Tag(id=3, name="nerd", value="nah", hidden="one", parent_tag_id=2)
-    tag3 = Tag(id=4, name="brawn", value="chonk")
-    character.tags = [tag1, tag2, tag3]
+    tag1 = Tag(name="test", value="yes")
+    tag2 = Tag(name="brains", value="abby normal")
+    tag3 = Tag(name="nerd", value="nah", hidden="one")
+    tag4 = Tag(name="brawn", value="chonk")
+    character.tags = [tag1, tag2, tag4]
+    tag2.subtags = [tag3]
     with db.session() as session:
         session.add(character)
         session.commit()

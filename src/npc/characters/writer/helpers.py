@@ -51,23 +51,43 @@ def make_contags(character: Character) -> dict:
     return tags
 
 def make_hide_tags(character: Character, *, db: DB = None) -> list[ConTag]:
+    """Construct special @hide tags from tag hidden attributes
+
+    Generates ConTag objects used to emit hide tags which affect the hidden attribute of tag records.
+
+    Args:
+        character (Character): Character whose tags will be inspected
+        db (DB): Database to use for fetching the character's tag records (default: `None`)
+
+    Returns:
+        set[ConTag]: [description]
+    """
+    def build_hides(examined_tags: list[Tag], preamble: str = "") -> set[ConTag]:
+        hide_tags = set()
+
+        if examined_tags is None:
+            return hide_tags
+
+        for tag in examined_tags:
+            match tag.hidden:
+                case "all":
+                    hide_tags.add(ConTag("hide", preamble + tag.name))
+                case "one":
+                    hide_tags.add(ConTag("hide", f"{preamble}{tag.name} >> {tag.value}"))
+                case _:
+                    hide_tags = hide_tags.union(build_hides(tag.subtags, preamble + f"{tag.name} >> {tag.value} >> "))
+
+        return hide_tags
+
     if not db:
         db = DB()
-
-    hide_tags: list[ConTag] = []
 
     stmt = tags(character)
     with db.session() as session:
         result = session.scalars(stmt)
-        for tag in result:
-            if tag.hidden is None:
-                pass
-                # get and iterate subtags
-            else:
-                pass
-                # generate @hide
+        hide_tags = build_hides(result)
 
-    return hide_tags
+    return list(hide_tags)
 
 def make_metatags(spec: MetatagSpec, character: Character, handled_ids: list[int], *, db: DB = None) -> list:
     """Construct one or more Metatag objects using the given spec and character
