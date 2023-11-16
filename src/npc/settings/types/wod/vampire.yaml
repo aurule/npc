@@ -35,6 +35,13 @@ vampire:
             While the role may not matter outside of the clan, a vampire's role
             within it may give them access to unique resources in exchange for
             extra responsibility.
+    path:
+      desc: The path the vampire follows, usually Humanity
+      doc: >
+        Vampires must find some way to deal with the constant hunger of their
+        inner beast. Most cling to the remnants of their human morality,
+        especially within the Camarilla and Anarchs. Others find a different
+        path with frighteningly alien morals.
     sect:
       desc: Major political body to which the vampire belongs
       doc: >
@@ -44,6 +51,11 @@ vampire:
       subtags:
         status:
           desc: A status held by the vampire which is recognized in this sect
+          doc: >
+            Recognition of deeds often comes in the form of status, since money
+            is largely meaningless to immortal vampires. Status is rarely
+            respected by those outside the vampire's own sect, but the deeds are
+            nonetheless made known.
         role:
           desc: A high-level role the vampire fulfills within the sect
           doc: >
