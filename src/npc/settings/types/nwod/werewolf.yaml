@@ -18,10 +18,34 @@ werewolf:
     - predator kings
   tags:
     auspice:
-      desc: Social caste based on the moon that the werewolf was born under
+      desc: Social caste based on the moon phase during the werewolf's first change
+      doc: >
+        A werewolf's auspice is more of a suggestion of role than a binding
+        caste. Pure Tribes eschew auspice and do not have one.
       values: *auspices
     tribe:
       desc: Large social group that the werewolf belongs to
+      doc: >
+        Tribes are the high-level social structure among werewolves. Each
+        follows a powerful spirit totem and shares certain ideals. Werewolves
+        who claim no tribe are termed Ghost Wolves.
+
+        Though Bale Hounds explicitly are not a tribe, it's still most helpful
+        to note their affiliation under this tag.
       values: *tribes
+    lodge:
+      desc: Smaller social group with a narrow agenda
+      doc: >
+        Where tribes unite many werewolves under a large umbrella, lodges bring
+        together only those who want to pursue the group's specific agenda. Most
+        lodges exist within a tribe, but some bridge the tribes instead.
     pack:
       desc: Small group of werewolves who work together in a territory
+      doc: >
+        Packs are the core social unit of werewolves. They're based around a
+        specific territory, both mortal and spiritual, which the pack members
+        defend.
+    protectorate:
+      desc: Larger area made of the combined territories of multiple packs
+      doc: >
+        Essentially a shared territory.

@@ -1,3 +1,7 @@
 mortal:
   name: Mortal
   desc: A mundane, human character
+  doc: >
+    Most everyone mundane in the World of Darkness is a mortal human. Called
+    Kine by vampires, they are often the prey of cruel spirits and thirsty blood
+    suckers.
