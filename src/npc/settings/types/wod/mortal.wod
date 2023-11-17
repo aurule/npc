@@ -1,0 +1,86 @@
+--Notes--
+Blah
+
+--Stats--
+attributes
+    str         •
+    dex         •
+    stam        •
+    cha         •
+    manip       •
+    app         •
+    per         •
+    int         •
+    wits        •
+
+abilities
+    alertness       0
+    athletics       0
+    awareness       0
+    brawl           0
+    dodge           0
+    empathy         0
+    expression      0
+    intimidation    0
+    intuition       0
+    leadership      0
+    streetwise      0
+    subterfuge      0
+
+    animal ken      0
+    crafts          0
+    demolitions     0
+    drive           0
+    etiquette       0
+    firearms        0
+    melee           0
+    performance     0
+    security        0
+    stealth         0
+    survival        0
+    technology      0
+
+    academics       0
+    bureaucracy     0
+    computer        0
+    finance         0
+    investigation   0
+    law             0
+    linguistics     0
+    medicine        0
+    occult          0
+    politics        0
+    research        0
+    science         0
+
+advantages
+    mercy       1
+    vision      1
+    zeal        1
+    conviction  1
+    willpower   1
+    health      7
+    nature
+    demeanor
+
+edges
+    edge •
+        description
+
+backgrounds
+    background •
+        description
+
+attacks
+    fists - 0B - atk 0
+    melee name - damage, size - atk 0
+    ranged name - damage, range s/m/l, mag, size - atk 0 (s/m/l, aim +1)
+        notes
+        + attachment/mod - effects
+
+gear
+    type - effects
+        notes
+
+--History--
+if important
