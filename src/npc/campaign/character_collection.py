@@ -37,7 +37,6 @@ class CharacterCollection():
 
             return True
 
-        valid_exts = self.allowed_suffixes
         for character_path in self.root.glob("**/*"):
             if not allowed(character_path):
                 continue

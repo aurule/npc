@@ -55,20 +55,6 @@ def tags(character: Character) -> Select:
         .filter(Tag.character_id == character.id) \
         .order_by(Tag.id)
 
-def hidden_tags(character: Character) -> Select:
-    """Create a db query to get Tag records for a character that are hidden
-
-    Builds a query for all tags, scoped to the character, that have the hidden attribute set. Best used with
-    the scalars() method to get a list of tag objects instead of a single-element tuples.
-
-    Args:
-        character (Character): Character containing the tags to query
-
-    Returns:
-        Select: Select object for the tag query
-    """
-    return tags(character).filter(Tag.hidden != None)
-
 def has_tags(character: Character, *names: str) -> Select:
     """Create a db query to get whether the named Tag records exist for a character
 

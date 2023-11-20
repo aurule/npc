@@ -1,5 +1,4 @@
 import click
-import io
 from click import echo, ClickException
 
 from npc import characters, linters, listers
