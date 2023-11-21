@@ -1,3 +1,37 @@
 mage:
   name: Mage
   desc: An awakened human with access to world-shaping magic.
+  doc: >
+    Mages are humans who have seen through the illusion of reality and gained
+    access to supernal magic.
+  tags:
+    path:
+      desc: The mage's personal connection to magic
+      doc: >
+        Each mage has a path which reflects their primary relationship to and
+        affinity for magic. The path is the connection through which they
+        channel their magic, gain mana, and learn arcana.
+    order:
+      desc: A large group of mages who share a broad purpose
+      doc: >
+        Orders are the highest level of mage organization. Membership is common,
+        but not required, and grants access to mentors, rotes, and resources.
+    legacy:
+      desc: Smaller, focused group of mages who pursue a shared mystical calling
+      doc: >
+        Joining a legacy transforms the mage's soul, making them a truly magical
+        being instead of a mortal who channels magic. Membership grants unique
+        powers and is sometimes seen as a rite of passage.
+    shadowname:
+      desc: Name for tha mage used among their peers
+      doc: >
+        Since names, especially true names, have power, mages make up a false
+        name to use with others of their kind. The name can come from anywhere,
+        but often has some personal meaning to the mage.
+    nimbus:
+      desc: Aura of power that surrounds a mage's soul
+      doc: >
+        A mage's nimbus reflects their personal practice of magic. Spells they
+        cast incorporate their nimbus, letting it act as a sort of fingerprint
+        on a spell. Though not visible, a nimbus can be detected by mage's and
+        most supernatural creatures in some way.

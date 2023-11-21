@@ -73,6 +73,19 @@ Some clans, like the Assamites, have an internal hierarchy of power. While the r
 
 
 
+.. _tag_wod_vampire_path:
+
+@path
+-----
+
+:bdg-secondary:`Optional`
+:bdg-info:`Value required`
+
+The path the vampire follows, usually Humanity
+
+Vampires must find some way to deal with the constant hunger of their inner beast. Most cling to the remnants of their human morality, especially within the Camarilla and Anarchs. Others find a different path with frighteningly alien morals.
+
+
 .. _tag_wod_vampire_sect:
 
 @sect
@@ -100,6 +113,8 @@ These tags can appear immediately after @sect and will be associated with that t
 :bdg-info:`Value required`
 
 A status held by the vampire which is recognized in this sect
+
+Recognition of deeds often comes in the form of status, since money is largely meaningless to immortal vampires. Status is rarely respected by those outside the vampire's own sect, but the deeds are nonetheless made known.
 
 
 .. _tag_wod_vampire_sect_role:

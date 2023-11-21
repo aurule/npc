@@ -1,3 +1,31 @@
 vampire:
   name: Vampire
   desc: A cursed denizen of the night who feeds on blood.
+  doc: >
+    Vampires are immortal denizens of the night. Once human, they were cursed
+    with an unquenchable thirst for blood and forever bound to their inner
+    beast.
+  tags:
+    clan:
+      desc: The vampire's supernatural lineage
+      doc: >
+        Each clan is a coherent lineage of vampires. Similar to a family,
+        members of a clan share similar powers and weaknesses.
+      subtags:
+        bloodline:
+          desc: A smaller group of vampires within a clan
+          doc: >
+            A bloodline confers new powers and weaknesses on its members. Joining
+            one is optional.
+    covenant:
+      desc: A political or religious organization of vampires
+      doc: >
+        Covenants work toward a shared purpose or idealogy. Their members are
+        usually vampires, but can sometimes include ghouls and even mortals.
+        Certain covenants also allow access to unique disciplines.
+    sire:
+      desc: Name of the vampire who turned this character into another vampire
+      doc: >
+        Creating another vampire is called the Embrace. Sometimes vampiric
+        lineage is a really big deal. Other times, it's just nice to know who's
+        been fangin' around.

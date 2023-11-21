@@ -9,7 +9,7 @@ The original dark urban fantasy system for modern nights
 
 Created by White Wolf in the 1990s and updated with various releases, World of Darkness is *the* classic edgy low fantasy setting.
 
-This system tries to capture the unique quirks of each character type by using lots of type-specific tags.
+This system tries to capture the unique quirks of each character type by using lots of type-specific tags. It is designed to be compatable with the 1st edition Revised printing.
 
 
 Related Links
