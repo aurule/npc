@@ -5,7 +5,7 @@ from packaging.version import Version
 
 import npc
 from npc.db import DB
-from npc.settings import Settings
+from npc.settings import Settings, app_settings
 from npc.campaign import Campaign, Pathfinder
 from npc.characters import Character, RawTag, CharacterWriter
 from npc.settings.migrations import SettingsMigrator
@@ -14,6 +14,8 @@ from npc_cli.errors import CampaignNotFoundException
 
 import logging
 logger = logging.getLogger(__name__)
+
+arg_settings: Settings = app_settings()
 
 def get_campaign(settings: Settings) -> Campaign:
     """Make a campaign object for the nearest campaign to the current dir
