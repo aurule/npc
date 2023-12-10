@@ -19,4 +19,4 @@ def test_returns_none_on_unknown_context_key():
 def test_returns_default_if_given_on_unknown_context_key():
     subtag = SubTagSpec("thing")
 
-    assert subtag.in_context("nope", "ohno") is "ohno"
+    assert subtag.in_context("nope", "ohno") == "ohno"

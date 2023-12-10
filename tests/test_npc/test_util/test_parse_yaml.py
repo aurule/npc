@@ -1,5 +1,7 @@
 import pytest
 
+from pathlib import Path
+
 from npc.util import parse_yaml
 from npc.util.errors import ParseError
 from tests.fixtures import fixture_file
