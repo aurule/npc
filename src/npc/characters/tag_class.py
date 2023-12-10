@@ -27,7 +27,7 @@ class Tag(BaseModel):
     __tablename__ = "tags"
 
     id: Mapped[int] = mapped_column(primary_key=True)
-    character: Mapped[Optional["Character"]] = relationship(back_populates="tags")
+    character: Mapped[Optional["Character"]] = relationship(back_populates="tags") # noqa: F821
     character_id: Mapped[Optional[int]] = mapped_column(ForeignKey("characters.id"))
     name: Mapped[str] = mapped_column(String(100))
     value: Mapped[Optional[str]] = mapped_column(Text)
