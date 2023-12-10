@@ -52,7 +52,7 @@ exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
 #
 html_theme = 'furo'
 
-html_theme_options: Dict[str, Any] = {
+html_theme_options = {
     "footer_icons": [
         {
             "name": "GitHub",
