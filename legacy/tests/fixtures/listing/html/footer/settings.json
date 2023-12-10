@@ -1,9 +1,0 @@
-{
-    "listing": {
-        "templates": {
-            "html": {
-                "footer": "New Footer.html.mako"
-            }
-        }
-    }
-}
