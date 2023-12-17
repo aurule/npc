@@ -1,6 +1,7 @@
 import click
 from os import get_terminal_size
 
+from npc import __version__ as npc_version
 from npc.settings import Settings, app_settings
 from npc_cli.helpers import check_outdated, try_migrating
 
@@ -13,6 +14,7 @@ pass_settings = click.make_pass_decorator(Settings)
 ###################
 
 @click.group()
+@click.version_option(npc_version)
 @click.pass_context
 def cli(ctx):
     ctx.obj = app_settings()
