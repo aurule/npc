@@ -5,7 +5,8 @@ name: Python lint and test
 
 on:
   push:
-    branches: [ "develop" ]
+    branches-ignore:
+      - master
   pull_request:
     branches: [ "develop" ]
 
@@ -14,9 +15,7 @@ permissions:
 
 jobs:
   test:
-
     runs-on: ubuntu-latest
-
     steps:
     - uses: actions/checkout@v4
     - name: Set up Python 3.11
