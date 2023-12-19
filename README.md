@@ -12,49 +12,21 @@ This readme and the [project's ReadTheDocs](https://npc.readthedocs.io/) are the
 
 All code is [hosted on github](https://github.com/aurule/npc).
 
-## Requirements
-
-NPC requires at least:
-
-* Python 3.5.0
-* [Mako](http://www.makotemplates.org/) 1.0.0
-* [Python Markdown](https://github.com/Python-Markdown/markdown) 3.0.0
-* [PyYAML](https://github.com/yaml/pyyaml) 5.0.0
-
-All packages can be installed with `pip -r requirements.txt`.
-
 ## Installation
 
-NPC can be installed in a few ways.
+Each release of NPC has pre-built binaries for Linux and Windows. These can be used directly by putting them in a directory in the system's PATH. I have plans to improve this experience in the future.
 
-The recommended way is to download the debian package for the latest release and install it as normal.
-
-If you're using a different system, download the latest release tarball and unpack it (or clone the repo). Install the required packages above in the most appropriate way for your system, then run `make install` to symlink the launcher scripts. To uninstall the binaries, run `make uninstall`. If you'd rather handle the symlinks yourself, link the script `npc.py` to somewhere in your path, like `~/bin`.
-
-Finally, you can download or clone, then run `pip install .`. This installs npc like any other python package, including launcher scripts.
+Alternately, you can run npc from its source. To do so, clone or download the source and install the system libraries corresponding to the packages in `requirements.txt`. Symlink the `npc_cli` file to somewhere in your PATH and it *should* work.
 
 # Usage
 
-NPC is used through the command line. It has several commands which do different operations on the current folder, called a campaign. See ReadTheDocs for [the basics](https://npc.readthedocs.io/en/latest/invocation.html) and a rundown of [available commands](https://npc.readthedocs.io/en/latest/commands.html), along with configuration and other docs.
+Right now, NPC is used primarily through its command line. See ReadTheDocs for details of the available comands and what they do.
+
+NPC uses plain text files for all of its configuration and data. You can use whatever text editor you like to update characters, etc.
 
 # Testing and Development
 
-To set up the development environment, create and activate a venv and run `bin/setup`. It'll ensure everything is installed and ready to go.
-
-## Requirements
-
-* [pytest](http://doc.pytest.org/en/latest/) 3.3.0
-* [pytest-cov](https://pypi.python.org/pypi/pytest-cov) 2.5.1
-* [coverage](https://coverage.readthedocs.io/en/coverage-4.4.1/) 4.4.1
-* [stdeb](https://pypi.python.org/pypi/stdeb) 0.8.5 - optional: only for building debian packages
-
-These can all be installed with `pip install -r requirements-dev.txt`.
-
-After cloning, I like using [virtualenvwrapper](https://virtualenvwrapper.readthedocs.io/en/latest/) to manage the venv:
-
-`mkvirtualenv -p /usr/bin/python3 -a ~/Workspace/npc -r requirements-dev.txt npc`
-
-Then call `workon npc` to launch into the venv.
+Development is pretty straightforward. Clone the repo and create a standard venv using Python 3.11 or later. Install packages from `requirements-dev.txt` and you should be all set.Development is pretty straightforward. Clone the repo and create a standard venv using Python 3.11 or later. Install packages from `requirements-dev.txt` and you should be all set.
 
 ## Running Tests
 
@@ -68,18 +40,4 @@ The docs are built using Sphinx. From the root dir, you can run `make docs` to q
 
 When actively working on the docs, use `scripts/live-docs.sh` to automatically rebuild the docs on change, using sphinx-autobuild.
 
-To generate reference documentation for tags and systems, run `python scripts/build_reference_docs.py`.
-
-## Release Process
-
-Releases are handled through [GitHub Releases](https://github.com/aurule/npc/releases).
-
-1. Update the version number in [npc/__version__.py](https://github.com/aurule/npc/blob/develop/npc/__version__.py)
-2. Update the [Changelog](https://github.com/aurule/npc/blob/develop/CHANGELOG.md) and remove the `[unreleased]` text from the to-be-released version number
-3. Checkout `master` and merge in `develop`.
-4. *(optional)* Create a tag on `master` containing the version number, like `1.4.2`.
-5. Go to the [GitHub Releases](https://github.com/aurule/npc/releases) page and draft a new release
-6. Use the version number as the tag name, and use the master branch
-7. Add a title and description
-8. *(optional)* If releasing premade packages for this release, add them now
-9. Publish the release
+To update the reference documentation for tags and systems, run `python scripts/build_reference_docs.py`.
