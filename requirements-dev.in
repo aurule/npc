@@ -7,4 +7,5 @@ sphinx-autobuild
 sphinx-design
 sphinx-copybutton
 pip-tools >= 6.0
+poethepoet
 vulture >= 2.7
