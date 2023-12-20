@@ -6,11 +6,7 @@
 #
 click==8.1.7
     # via -r requirements.in
-colorama==0.4.6
-    # via
-    #   click
-    #   pytest
-coverage==7.3.2
+coverage==7.3.4
     # via pytest-cov
 flake8==6.1.0
     # via -r requirements-ci.in
