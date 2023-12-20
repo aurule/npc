@@ -51,7 +51,7 @@ def build_changelog(version, live):
     current_contents = changelog_file.read_text()
     with latest_changelog.open("w", newline="\n") as f:
         f.write(current_contents)
-        f.write("For changes in previous versions, see the files in `changelog/`.")
+        f.write("\nFor changes in previous versions, see the files in `changelog/`.\n")
 
 if __name__ == '__main__':
     build_changelog()
