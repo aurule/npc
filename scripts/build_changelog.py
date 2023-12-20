@@ -16,7 +16,12 @@ headers = {
     type=str,
     prompt="What version is this changelog for?"
     )
-def build_changelog(version):
+@click.option(
+    "--live/--dry-run",
+    type=bool,
+    default=True,
+    )
+def build_changelog(version, live):
     changes_root = Path("changes/")
     buckets = {
         "added": [],
@@ -28,18 +33,19 @@ def build_changelog(version):
         summary = change_file.read_text()
         bucket_name = change_file.suffix[1:]
         buckets[bucket_name].append(summary)
-        change_file.unlink()
+        if live:
+            change_file.unlink()
 
     changelog_file = Path("changelog") / f"{version}.md"
     with changelog_file.open("w", newline="\n") as f:
-        f.write(f"# Changelog for NPC {version}\n\n")
+        f.write(f"# Changelog for NPC {version}\n")
 
         for bucket_name, change_lines in buckets.items():
             if not change_lines:
                 continue
-            f.write(f"## {headers[bucket_name]}\n\n")
-            f.write("* ")
-            f.write("\n* ".join(change_lines))
+            f.write(f"\n## {headers[bucket_name]}\n")
+            f.write("\n* ")
+            f.write("* ".join(change_lines))
 
     latest_changelog = Path("CHANGELOG.md")
     current_contents = changelog_file.read_text()
