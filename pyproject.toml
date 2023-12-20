@@ -53,3 +53,11 @@ env = [
 [tool.setuptools.dynamic]
 dependencies = {file = "requirements.txt"}
 version = {attr = "npc.__version__"}
+
+[tool.poe.tasks]
+test = "pytest --tb=no"
+coverage = "pytest --cov=npc --cov=npc_cli --cov-report=html --cov-report=term -q -p no:pretty"
+unused = "vulture src/npc tests"
+requirements = "pip-compile --resolver=backtracking --strip-extras --quiet"
+bin = "pyinstaller pyi/npc.spec"
+docs = "sphinx-autobuild docs docs/_build/html"
