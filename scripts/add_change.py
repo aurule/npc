@@ -33,6 +33,7 @@ def add_change(change_type, message, label):
     target = Path("changes") / f"{label}.{suffix}"
     with target.open('w', newline="\n") as f:
         f.write(message)
+        f.write("\n")
 
 if __name__ == '__main__':
     add_change()
