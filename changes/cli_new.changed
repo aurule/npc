@@ -1,0 +1,1 @@
+[cli] Changed command for new characters. From `npc c Changeling Mann` to `npc new changeling -n "Changeling Mann"`.
