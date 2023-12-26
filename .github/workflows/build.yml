@@ -32,7 +32,7 @@ jobs:
       if: runner.os != 'Windows'
       run: |
         echo "NPC_VERSION=$(python -c 'import npc; print(npc.__version__)')" >> $GITHUB_ENV
-    - name: Save NPC version (linux)
+    - name: Save NPC version (windows)
       if: runner.os == 'Windows'
       run: |
         echo "NPC_VERSION=$(python -c 'import npc; print(npc.__version__)')" >> $env:GITHUB_ENV
