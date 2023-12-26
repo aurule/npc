@@ -70,3 +70,13 @@ sequence = [
     {cmd = "python scripts/update_version.py --version ${version}"}
 ]
 args = ["version"]
+help = "Start a full release"
+
+[tool.poe.tasks.prerelease]
+sequence = [
+    {cmd = "git checkout -b release/v${version}"},
+    {cmd = "python scripts/build_changelog.py --version v${version} --dry-run"},
+    {cmd = "python scripts/update_version.py --version ${version}"}
+]
+args = ["version"]
+help = "Start a dev release. Changelog snippets will not be removed."
