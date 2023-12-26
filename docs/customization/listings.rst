@@ -100,7 +100,9 @@ Example:
 Templates
 ---------
 
-NPC 2.0 uses the `Jinja <https://jinja.palletsprojects.com/en/3.1.x/templates/>`_ template engine to render character listings. Each character is rendered using a template, which is looked up based on the character's type and the campaign's game system.
+NPC 2.0 uses the `Jinja <https://jinja.palletsprojects.com/en/3.1.x/>`_ template engine to render character listings. Each character is rendered using a template, which is looked up based on the character's type and the campaign's game system.
+
+The inner workings of NPC's templates are written entirely using Jinja's `template language <https://jinja.palletsprojects.com/en/3.1.x/templates/>`_, so it's a good idea to familiarize yourself with it if you want to customize your templates.
 
 Default Templates
 ^^^^^^^^^^^^^^^^^
