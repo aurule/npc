@@ -1,0 +1,4 @@
+useconf:
+  name: Use Config
+  desc: Use the config string instead of the found file
+  sheet_path: ./animal.npc

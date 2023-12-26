@@ -1,0 +1,4 @@
+dog:
+  name: A dog
+  desc: Doggo
+  sheet_path: /dev/etc/../null

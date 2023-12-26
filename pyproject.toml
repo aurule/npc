@@ -1,0 +1,82 @@
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "npc"
+authors = [
+	{name = "Paige Andrews", email = "pmandrews@gmail.com"}
+]
+description = "Game master's tool to manage characters and game files"
+readme = "README.md"
+requires-python = ">=3.11"
+keywords = ["npc", "tabletop", "gaming", "gm", "campaign"]
+license = {text = "MIT License"}
+classifiers = [
+    'Development Status :: 5 - Production/Stable',
+    'License :: OSI Approved :: MIT License',
+    'Programming Language :: Python :: 3',
+]
+dynamic = ["version", "dependencies"]
+
+[project.urls]
+documentation = "https://npc.readthedocs.io/en/latest/"
+repository = "https://github.com/aurule/npc"
+
+[project.optional-dependencies]
+test = ["pytest >= 6.0.0"]
+
+[project.scripts]
+npc = "npc_cli:cli"
+
+[project.gui-scripts]
+
+# 
+# Tool Configs
+# 
+
+[tool.coverage.run]
+branch = true
+
+[tool.coverage.report]
+omit = []
+
+[tool.pytest.ini_options]
+minversion = "6.0.0"
+pythonpath = "src"
+testpaths = "tests"
+norecursedirs = "fixtures"
+env = [
+	"TESTING=true",
+]
+
+[tool.setuptools.dynamic]
+dependencies = {file = "requirements.txt"}
+version = {attr = "npc.__version__"}
+
+[tool.poe.tasks]
+test = {cmd="pytest --tb=no", help="Run test suite"}
+coverage = {cmd="pytest --cov=npc --cov=npc_cli --cov-report=html --cov-report=term -q -p no:pretty", help="Generate test coverage report"}
+unused = {cmd="vulture src/npc tests", help="Find unused code"}
+requirements = {cmd="pip-compile --resolver=backtracking --strip-extras --quiet ${file}", help="Compile a requirements file", args=["file"]}
+bin = {cmd="pyinstaller pyi/npc.spec", help="Build npc binaries"}
+docs = {cmd = "sphinx-autobuild docs docs/_build/html", help = "Start live documentation server"}
+change = {cmd = "python scripts/add_change.py", help = "Add a changelog snippet"}
+
+[tool.poe.tasks.release]
+sequence = [
+    {cmd = "git checkout -b release/v${version}"},
+    {cmd = "python scripts/build_changelog.py --version v${version}"},
+    {cmd = "python scripts/update_version.py --version ${version}"}
+]
+args = ["version"]
+help = "Start a full release"
+
+[tool.poe.tasks.prerelease]
+sequence = [
+    {cmd = "git checkout -b release/v${version}"},
+    {cmd = "python scripts/build_changelog.py --version v${version} --dry-run"},
+    {cmd = "python scripts/update_version.py --version ${version}"}
+]
+args = ["version"]
+help = "Start a dev release. Changelog snippets will not be removed."

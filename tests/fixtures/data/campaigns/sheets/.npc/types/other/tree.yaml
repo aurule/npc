@@ -1,0 +1,4 @@
+tree:
+  name: Tree
+  desc: A tree
+  sheet_path: ./sessile.npc

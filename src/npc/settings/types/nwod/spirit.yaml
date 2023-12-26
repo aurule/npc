@@ -1,0 +1,13 @@
+spirit:
+  name: Spirit
+  desc: An ephemeral representation of a thing, place, or concept
+  tags:
+    ban:
+      desc: A behavior that the spirit either must or must not perform
+    bane:
+      desc: Something the spirit is afraid of, and which hurts them on contact
+    choir:
+      desc: A group of spirits related by a shared general concept
+      subtags:
+        descant:
+          desc: A group of spirits tied together by a specific concept

@@ -1,0 +1,32 @@
+$schema: https://json-schema.org/draft/2020-12/schema
+$id: type.schema.yaml
+title: Type
+description: An NPC character type
+type: object
+patternProperties:
+    "^[a-z][a-z|-]+$":
+        type: object
+        description: The key of the character type. This key must match the type's configuration file name.
+        properties:
+            name:
+                type: string
+                description: The full name of this character type
+            desc:
+                type: string
+                description: A single line of text describing the gist of the character type's purpose
+            doc:
+                type: string
+                description: A multiline block of text describing the details and nuances of the character type
+            tags:
+                type: object
+                description: Tag objects unique to this character type
+                patternProperties:
+                    "^[a-z][a-z|-]+$":
+                        $ref: tag.schema.yaml
+        required:
+        - name
+        - desc
+        additionalProperties: true
+additionalProperties: false
+maxProperties: 1
+minProperties: 1

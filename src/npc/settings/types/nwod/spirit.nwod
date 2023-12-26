@@ -1,0 +1,35 @@
+--Notes--
+Blah
+
+--Stats--
+attributes
+    power       •
+    finesse     •
+    resistance  •
+
+advantages
+    corpus   6 (resistance+size)
+    will     2 (resistance)
+    essence  1
+    size     5 (adult human)
+    speed    7 (power+finesse+5)
+    defense  1 (finesse)
+    init     2 (finesse+resistance)
+
+numina
+    numina •
+        description
+
+attacks
+    fists - 0B - atk 0
+    melee name - damage, size - atk 0
+    ranged name - damage, range s/m/l, mag, size - atk 0 (s/m/l, aim +1)
+        notes
+        + attachment/mod - effects
+
+gear
+    type - effects
+        notes
+
+--History--
+if important

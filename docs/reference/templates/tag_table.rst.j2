@@ -1,0 +1,14 @@
+.. list-table::
+    :header-rows: 1
+
+    * - Tag
+      - Subtags
+      - Description
+    {%- for tag in tags if not tag.needs_context%}
+    * - :ref:`tag_{{ tag.name }}`
+      - {% for subtag in tag.subtags -%}
+        :ref:`tag_{{ tag.name }}_{{ subtag }}`
+        {%- if not loop.last %}, {% endif -%}
+        {%- endfor %}
+      - {{ tag.desc }}
+    {%- endfor -%}

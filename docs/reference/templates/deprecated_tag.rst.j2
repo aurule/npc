@@ -1,0 +1,14 @@
+.. _tag_{{ tag.name }}:
+
+@{{ tag.name }}
+{{ header_characters[header_level] * (tag.name | length + 1) }}
+
+:bdg-danger:`Deprecated`
+
+*Deprecated in NPC {{ tag.version }}*
+
+Replaced by: :ref:`tag_{{ tag.replaced_by }}`
+
+{{ tag.desc }}
+
+{{ tag.doc | replace("\n", "\n\n") }}

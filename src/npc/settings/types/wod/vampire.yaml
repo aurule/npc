@@ -1,0 +1,113 @@
+vampire:
+  name: Vampire
+  desc: A blood-sucking creature cursed to the night
+  doc: >
+    Vampires are immortal denizens of the night. Once human, they were cursed
+    with an unquenchable thirst for blood and forever bound to their inner
+    beast.
+  tags:
+    gen:
+      desc: The vampire's generation
+      doc: >
+        A vampire's power is measured in part by how many steps removed they are
+        from the mythical first vampire. Who that might be doesn't really
+        matter. A vampire with a high generation of 12 or 11 is pretty typical,
+        while a vampire with a low generation of 8 or 9 is able to wield
+        significantly more blood powers.
+    sire:
+      desc: Name of the vampire who turned this character into another vampire
+      doc: >
+        Creating another vampire is called the Embrace. Sometimes vampiric
+        lineage is a really big deal. Other times, it's just nice to know who's
+        been fangin' around.
+    clan:
+      desc: The vampire's clan
+      doc: >
+        Almost every vampire is associated with a clan, a group of vampires who
+        share a common heritage and set of powers. The clan also tends to come
+        with certain social expectations and responsibilities, but those vary
+        dramatically from the laissez faire Gangrel to the hierarchical Ventrue.
+      subtags:
+        role:
+          desc: The role the vampire has within their clan
+          doc: >
+            Some clans, like the Assamites, have an internal hierarchy of power.
+            While the role may not matter outside of the clan, a vampire's role
+            within it may give them access to unique resources in exchange for
+            extra responsibility.
+    path:
+      desc: The path the vampire follows, usually Humanity
+      doc: >
+        Vampires must find some way to deal with the constant hunger of their
+        inner beast. Most cling to the remnants of their human morality,
+        especially within the Camarilla and Anarchs. Others find a different
+        path with frighteningly alien morals.
+    sect:
+      desc: Major political body to which the vampire belongs
+      doc: >
+        Vampires are social creatures and whether they like it or not, have a
+        habit of organizing themselves. In modern games, this tends to mean
+        Anarchs, Camarilla, or Sabbat.
+      subtags:
+        status:
+          desc: A status held by the vampire which is recognized in this sect
+          doc: >
+            Recognition of deeds often comes in the form of status, since money
+            is largely meaningless to immortal vampires. Status is rarely
+            respected by those outside the vampire's own sect, but the deeds are
+            nonetheless made known.
+        role:
+          desc: A high-level role the vampire fulfills within the sect
+          doc: >
+            Some roles are not limited to a single city, but are important to
+            the functioning of an entire sect. Archons, Cardinals, and Prisci
+            would be noted here.
+    pack:
+      desc: Name of the pack to which this vampire belongs (Sabbat only)
+      doc: >
+        Vampires often form small social groups so they can work together toward
+        a shared purpose. In the Sabbat, these are called packs, and they are
+        truly the cornerstone of the sect. Each pack is made official through
+        repeated use of the Vaulderie ritus.
+      subtags:
+        role:
+          desc: The role the vampire has in their pack
+          doc: >
+            Every pack needs three key roles filled: Ductus, Priest, and Abbot.
+            The ductus guides the pack's actions, the priest sees to the
+            members' spiritual needs, and the abbot provides shelter and worldly
+            goods.
+    gang:
+      desc: Name of the gang to which this vampire belongs (Anarch only)
+      doc: >
+        Vampires often form small social groups so they can work together toward
+        a shared purpose. Among the Anarchs, these are called gangs.
+      subtags:
+        role:
+          desc: The role the vampire has in their gang
+          doc: >
+            Gangs have no formal roles or positions. Still, it can be useful to
+            note the ad-hoc roles that emerge based on the gang's needs and
+            actions.
+    coterie:
+      desc: Name of the coterie to which this vampire belongs (Camarilla, primarily)
+      doc: >
+        Vampires often form small social groups so they can work together toward
+        a shared purpose. In the Camarilla, these are called coteries.
+      subtags:
+        role:
+          desc: The role the vampire has in their coterie
+          doc: >
+            Coteries have no formal roles or positions. Still, it can be useful
+            to note the ad-hoc roles that emerge based on the coterie's needs
+            and actions.
+    city:
+      desc: Name of the domain, diocese, etc. that the vampire calls home
+      subtags:
+        role:
+          desc: The role the vampire has in their city
+          doc: >
+            This tag is best used for positions like prince, bishop, harpy, etc.
+            that are only important within that city. If a position is
+            recognized more universally, it's probably best represented using
+            the title tag as well.

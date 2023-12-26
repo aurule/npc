@@ -1,0 +1,11 @@
+-r requirements-ci.in
+Sphinx >= 6.0
+furo
+readthedocs-sphinx-search
+rich
+sphinx-autobuild
+sphinx-design
+sphinx-copybutton
+pip-tools >= 6.0
+poethepoet
+vulture >= 2.7

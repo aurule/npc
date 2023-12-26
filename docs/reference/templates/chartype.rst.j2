@@ -1,0 +1,21 @@
+.. _sys_{{ system.key }}_{{ type.key }}:
+
+{{ type.name }}
+{{ header_characters[header_level] * type.name | length }}
+
+:bdg-info:`{{ system.name }}`
+
+{{ type.desc }}
+
+{{ type.doc | replace("\n", "\n\n") }}
+
+{% if type.definition.tags %}
+New and Changed Tags
+{{ header_characters[header_level + 1] * 20 }}
+
+{% for tag_name in type.definition.tags.keys() -%}
+    {%- with tag=all_tags[tag_name], parents=[], subtag_template="char_subtag.rst.j2", header_level = header_level + 2 -%}
+        {%- include "char_tag.rst.j2" -%}
+    {%- endwith %}
+{% endfor -%}
+{% endif %}

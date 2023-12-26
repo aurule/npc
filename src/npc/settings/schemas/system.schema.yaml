@@ -1,0 +1,72 @@
+$schema: https://json-schema.org/draft/2020-12/schema
+$id: system.schema.yaml
+title: System
+description: A game system
+type: object
+patternProperties:
+    "^[a-z][a-z|-]+$":
+        type: object
+        description: The key of the system. This key must match the system's configuration file name.
+        properties:
+            name:
+                type: string
+                description: The full name of this game system
+            desc:
+                type: string
+                description: A single line of text that gives an overview of the game system
+            doc:
+                type: string
+                description: A multiline block of text describing the details of the game system
+            extends:
+                type: string
+                pattern: "^[a-z][a-z|-]+$"
+                description: The key of a different system. When present, the configuration for that system will be imported into the current system before being altered by the current configuration.
+            links:
+                type: array
+                description: Labelled URLs that are relevant to this system, like its SRD and homepage
+                items:
+                    type: object
+                    description: A single link with its displayable label
+                    properties:
+                        label:
+                            type: string
+                            description: Text to display that identify the purpose of this URL
+                        url:
+                            type: string
+                            format: uri
+                            description: The URL itself
+            tags:
+                type: object
+                description: Tag objects unique to this game system
+                patternProperties:
+                    "^[a-z][a-z|-]+$":
+                        $ref: tag.schema.yaml
+            metatags:
+                type: object
+                description: Tags which set one or more other tags when found. They do not appear as separate tags in the parsed character data, but may be used as shorthand to set multiple tags at once.
+                example: |
+                    metatags:
+                        changeling:
+                            set:
+                                type: changeling
+                            match:
+                            - seeming
+                            - kith
+
+                    @changeling beast hunterheart
+
+                    Is equivalent to:
+
+                    @type changeling
+                    @seeming beast
+                    @kith hunterheart
+                patternProperties:
+                    "^[a-z][a-z|-]+$":
+                        $ref: metatag.schema.yaml
+        required:
+        - name
+        - desc
+        additionalProperties: true
+additionalProperties: false
+maxProperties: 1
+minProperties: 1

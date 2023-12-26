@@ -1,0 +1,26 @@
+$schema: https://json-schema.org/draft/2020-12/schema
+$id: deprecated_tag.schema.json
+title: Deprecated Tag
+description: A tag that should no longer be used, with explanation and supporting info
+type: object
+properties:
+    desc:
+        type: string
+        description: A single line of text describing why this tag is deprecated
+    doc:
+        type: string
+        description: A multiline block of text describing the details of why this tag is deprecated
+    replaced_by:
+        type: string
+        pattern: "^[a-z][a-z|-]+$"
+        description: A tag to use instead of the deprecated tag. If present, this tag name can automatically replace the name of the deprecated tag.
+    replacement_pattern:
+        type: string
+        description: A simple pattern that can be used to generate the correct value to use for the replacement tag. The special string $value is replaced with the deprecated tag's value.
+        default: "$value"
+    version:
+        type: string
+        description: The version of NPC which deprecated this tag.
+required:
+- desc
+- version

@@ -1,0 +1,4 @@
+second:
+  name: Aces and Eights
+  desc: Aces and now eights, too!
+  extends: third

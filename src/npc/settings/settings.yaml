@@ -1,0 +1,328 @@
+npc:
+  version: 2.0.0
+  tags:
+    type:
+      desc: The character type of an npc
+      required: true
+      max: 1
+      locked: true
+    faketype:
+      desc: A false character type that will be shown in listings
+      doc: >
+        The type referenced by the type key given is used in listings, while
+        leaving the real character type in place. Useful for hiding that the
+        town priest is secretly a vampire.
+      max: 1
+      locked: true
+    name:
+      desc: An additional name the character uses
+      doc: >
+        Mainly useful for characters with a nickname or multiple false
+        identities. The character's main name comes from the filename (or the
+        realname tag).
+      subtags:
+        with:
+          desc: Where or with whom this name is used
+          doc: >
+            Certain names are only known to certain groups of people. This is
+            especially common with false identities, but is true for nicknames
+            as well.
+    realname:
+      desc: The true primary name for the character
+      doc: >
+        Useful when the real name uses characters that are not allowed in a
+        filename (like "quotes" around a common nickname).
+      max: 1
+      locked: true
+    title:
+      desc: Honorific title for the character, like The Kingslayer
+    pronouns:
+      desc: Pronouns the character uses
+      doc: >
+        Particularly useful for androgynous fantasy races or for disambiguation
+        between languages.
+    gender:
+      desc: Gender role this character has
+    appearance:
+      desc: What the character looks like to other people
+      doc: >
+        This is expected to be as long and descriptive as needed. Multiple
+        appearance tags will be joined together with a newline in generated
+        listings to allow multiple paragraphs.
+    race:
+      desc: Observable ancestry of the character
+      doc: >
+        Extremely setting-dependent: anything from Greek and Egyptian, to Human
+        and Elvish.
+    age:
+      desc: How old the character is
+      doc: >
+        This can be a plain number like 52, or a full descriptor like 'Five
+        life-ages of the Earth'.
+    portrait:
+      desc: Path to an image file to use for the character
+      doc: >
+        If you're hosting character listings somewhere, then the filename or
+        path given here must also exist exactly as given on your server.
+        Relative paths are usually easiest to work with.
+    location:
+      desc: Broad description of where the character lives
+      doc: >
+        A character's location depends greatly on the game's setting, and is
+        usually one step smaller than the game area. For example, a game set in
+        New England is likely to have a character's location be an individual
+        town or city. One set in New York City is likely to have it be a borough.
+      subtags:
+        wanderer:
+          desc: The character wanders within this location and has no single home.
+          doc: >
+            Itinerant characters usually stick to a known territory. For those
+            who don't, use a suitably broad location like a country or massive
+            geographic region.
+          no_value: true
+        region:
+          desc: Specific area in which the character lives.
+          doc: >
+            This tag starts to zoom in on where the character is. If their
+            location is a city, their region might be a district or zone. If
+            their location is a borough of NYC, their region might be a
+            neighborhood.
+
+            Not all characters need this much specificity. It's most helpful
+            when dealing with very large play areas, where the location only
+            tells you in which massive city a character is found.
+          subtags:
+            locale:
+              desc: Very specific area in which the character lives.
+              doc: >
+                This tag zooms all the way in on where the character is. If
+                their location is a city, and their region is a district, then
+                their locale might be a neighborhood. If their location is a
+                borough and their region is a neighborhood, their locale could
+                be a single block.
+
+                Most characters do not need this level of specificity. It can be
+                useful if the game deals with extremely local drama, where a
+                five minute walk can put you in another world, or if you want
+                to put your characters on an actual map.
+    foreign:
+      desc: The character lives somewhere outside the main play area
+      doc: >
+        This tag is for GM organization more than anything else. It can help
+        automate sorting and listing so that NPCs visiting from outside the main
+        setting aren't lumped in with the locals that players interact with more
+        regularly.
+      no_value: true
+    group:
+      replaced_by: org
+      desc: Name of a group that the character belongs to
+      doc: >
+        This is a highly multipurpose tag and can represent membership in
+        anything from a university's faculty to a street gang.
+      subtags:
+        rank:
+          replaced_by: role
+          desc: The character's rank or role within this group
+          doc: >
+            The rank tag does not have to mean a literal rank, because not all
+            groups have that. It really just represents how people within the
+            group see this character. A character with @group MIT Faculty might
+            have the rank of Professor, Student, or Janitor. In the group Fifth
+            Street Muggers, they might have the rank Lookout, or Pickpocket.
+
+            This tag is replaced by @role, since in practice, most rank values
+            actually described the role the character performed for their group.
+            The @org tag does support @rank, though, so explicit hierarchy ranks
+            can be expressed.
+    org:
+      desc: Official organization to which the character belongs
+      doc: >
+        This is a multipurpose tag designed to represent membership in any
+        official grouping of people: from university faculty to a street gang.
+      subtags:
+        role:
+          desc: The role or position the character holds within this organization
+          doc: >
+            A character's role can be as vague or specific as makes sense for
+            the org in question. A character with @org MIT Faculty might have
+            the role of Professor, Student, or Janitor. In the org Fifth Street
+            Muggers, they might have the role Lookout, or Pickpocket.
+        rank:
+          desc: A formal rank the character holds within this organization
+          doc: >
+            Some orgs have formal ranks that may or may not be related to a
+            member's duties. Someone in an army might have the role Soldier
+            and a rank of Private or Sergeant.
+    employer:
+      desc: Name of a person or organization that pays the character for work
+      doc: >
+        This can have a lot of overlap with the character's orgs. Generally, if
+        the character belongs to the group socially, then use the @org tag. If
+        they belong to the group primarily for pay, use @employer. If they're
+        dedicated to both the social aspect and the pay, then use both together.
+
+        Some characters are fully self-employed. For them, use "himself" or
+        similar for the employer.
+      subtags:
+        job:
+          desc: Name of the character's job at their employer
+          doc: >
+            This is usually how the character describes their work expertise,
+            regardless of whether their job has an official title or not.
+    lineage:
+      desc: Brief listing of the character's ancestors
+      doc: >
+        Useful mainly for monarchs, snooty vampires, and seventh sons of seventh
+        sons.
+    dead:
+      desc: Indicates that the character is deceased
+      doc: >
+        Can optionally contains a description of how they perished. This tag is
+        meant to be used for characters who are really, truly dead (at this
+        point in the story). For immortals or characters who have been
+        resurrected multiple times in the past, just put the details of past
+        deaths in their description.
+      allow_empty: true
+    sticky:
+      desc: Prevent this file from being moved by the reorg command
+      doc: >
+        The automatic file sorting is not ever going to be perfect, so this tag
+        lets you tell it to leave a particular file alone.
+      no_value: true
+      max: 1
+      locked: true
+    nolint:
+      desc: Do not show linting errors for this character
+      doc: >
+        This flag is great for character file templates, or characters who
+        intentionally deviate from the game system's norms.
+      no_value: true
+      max: 1
+      locked: true
+    delist:
+      desc: Do not show this character in listings
+      doc: >
+        Ideal for hiding secret minions, unnamed mooks, etc.
+      no_value: true
+      max: 1
+      locked: true
+    hide:
+      desc: Conceal the named tag from listings
+      doc: >
+        For when you want a character to appear in the listing, but have some
+        important details remain a mystery.
+
+        Individual tag values can be hidden using [tagname] >> [value]. Hide all
+        subtags using [parent] >> [value] >> subtags, or hide single subtag with
+        [parent] >> [value] >> [subtag value]
+      locked: true
+  deprecated_tags:
+    skip:
+      desc: Do not show this character in listings
+      doc: >
+        This tag is deprecated because its meaning is unclear. The replacement,
+        @delist, is much clearer about what it does.
+      replaced_by: delist
+      version: 2.0.0
+    keep:
+      desc: Prevent this file from being moved by the reorg command
+      doc: >
+        The @keep tag is superceded by @sticky to allow the word to be used for
+        custom tags.
+      replaced_by: sticky
+      version: 2.0.0
+    hidegroup:
+      desc: Hide a single named group
+      doc: >
+        The @hidegroup tag is no longer necessary after the @hide syntax upgrade.
+        Use ``@hide group >> groupname`` instead.
+      replaced_by: hide
+      replacement_pattern: "group >> $value"
+      version: 1.4.1
+    hideranks:
+      desc: Hide all ranks for a named group
+      doc: >
+        The @hideranks tag is no longer necessary after the @hide syntax upgrade.
+        Use ``@hide group >> groupname >> rank`` instead.
+      replaced_by: hide
+      replacement_pattern: "group >> $value >> rank"
+      version: 1.4.1
+  reserved_tags:
+    description:
+      desc: Generated automatically for bare text in the tag area
+      doc: >
+        Public text about this character, like who they are, their history, what
+        they want, etc. This is an internal tag used to store bare text that
+        appears in the tags area of npc sheets. It should not be used
+        explicitly.
+    mnemonic:
+      desc: Intended to exist only in the filename
+      doc: >
+        One or two words that will jog your memory about this character. The
+        mnemonic is supposed to help you easily browse character files, so it is
+        part of the filename.
+  tag_blocks:
+    flags:
+      - sticky
+      - nolint
+      - delist
+    bio:
+      - type
+      - faketype
+      - realname
+      - name
+      - title
+      - pronouns
+      - gender
+      - race
+      - age
+      - portrait
+      - appearance
+      - dead
+    geo:
+      - location
+      - region
+      - locale
+      - wanderer
+      - foreign
+    assoc:
+      - group
+      - employer
+    rest:
+      - "*"
+campaign:
+  create_on_init: []
+  characters:
+    path: Characters
+    ignore_subpaths: []
+    subpath_components:
+      - selector: first_value
+        tags: [location]
+      - selector: first_value
+        tags: [org, employer]
+    listing:
+      format: markdown
+      group_by:
+        - last_initial
+      sort_by:
+        - full_name
+      base_header_level: 1
+    use_blocks:
+      - flags
+      - bio
+      - geo
+      - assoc
+      - rest
+  plot:
+    path: Plot
+    latest_index: 0
+    filename_pattern: Plot ((NN)).md
+    file_contents: ((COPY))
+  session:
+    path: Session History
+    latest_index: 0
+    filename_pattern: Session ((NN)).md
+    file_contents: |
+      Played:
+
+      # (in-game date and time)

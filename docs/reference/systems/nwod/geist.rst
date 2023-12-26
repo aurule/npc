@@ -1,0 +1,13 @@
+.. _sys_nwod_geist:
+
+Geist
+#####
+
+:bdg-info:`New World of Darkness`
+
+A ghost reshaped by the underworld into a representation of death
+
+Geists are ghost-spirit hybrid creatures created when a ghost spends far too long in the underworld. Some crave to feel life again, and make bargains with dying humans to share their bodies in exchange for a reprieve from death, creating Sin-Eaters or Bound.
+
+
+

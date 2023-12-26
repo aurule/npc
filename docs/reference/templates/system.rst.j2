@@ -1,0 +1,64 @@
+.. _sys_{{ system.key }}:
+
+{{ system.name }}
+{{ header_characters[header_level] * system.name | length }}
+
+:bdg-info:`key: {{ system.key }}`
+
+{%- if system.extends %}
+
+Based on :ref:`sys_{{ system.extends }}`.
+{%- endif %}
+
+{{ system.desc }}
+
+{{ system.doc | replace("\n", "\n\n") }}
+
+{%- if system.links %}
+Related Links
+{{ header_characters[header_level + 1] * 13 }}
+
+{% for link in system.links -%}
+.. button-link:: {{ link.url }}
+    :color: primary
+    :shadow:
+
+    {{ link.label }}
+
+{% endfor %}
+{% endif -%}
+
+{% if system.metatags %}
+Metatags
+{{ header_characters[header_level + 1] * 8 }}
+
+These metatags will be expanded into their ``static`` and ``match`` tags when a character file is loaded. Groups of those tags will be condensed into a metatag when a character is saved. For an explanation of how metatags work, see :ref:`cust_system_metatags`.
+
+{% for metatag in system.metatags.values() -%}
+    {%- with header_level = header_level + 2 -%}
+        {%- include "metatag.rst.j2" -%}
+    {%- endwith %}
+{% endfor -%}
+{% endif -%}
+
+{% if system.definition.tags %}
+New and Changed Tags
+{{ header_characters[header_level + 1] * 20 }}
+
+{% for tag_name in system.definition.tags.keys() -%}
+    {%- with tag=all_tags[tag_name], parents=[], subtag_template="sys_subtag.rst.j2", header_level = header_level + 2 -%}
+        {%- include "sys_tag.rst.j2" -%}
+    {%- endwith %}
+{% endfor -%}
+{% endif %}
+
+Character Types
+{{ header_characters[header_level + 1] * 15 }}
+
+.. toctree::
+    :hidden:
+    :glob:
+
+    {{ system.key }}/*
+
+.. include:: components/types/{{ system.key }}_table.rst

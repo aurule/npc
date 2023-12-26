@@ -1,0 +1,5 @@
+Sphinx >= 6.0
+furo
+readthedocs-sphinx-search
+sphinx-design
+sphinx-copybutton

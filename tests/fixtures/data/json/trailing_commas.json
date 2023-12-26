@@ -1,0 +1,9 @@
+{
+    // trailing commas
+    "testing": "yes",
+    "loot": [
+        "jewels",
+        "one candelabra",
+    ],
+    "gold": "probably not",
+}

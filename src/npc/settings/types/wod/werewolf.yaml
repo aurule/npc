@@ -1,0 +1,51 @@
+werewolf:
+  name: Werewolf
+  desc: A shape-changing wolf warrior
+  doc: >
+    The werewolves, or Garou, were created by the world spirit Gaia to be a
+    weapon against the corruption of the potent Wyrm. Their teeth, claws, and
+    inginuity give them the tools to fight against its machinations.
+  tags:
+    breed:
+      desc: The werewolf's breed
+      doc: >
+        A werewolf's breed is the shape they were born in. Lupus for wolf-born,
+        Homid for human-born, and Metis for those unfortunates born from the
+        union of two Garou.
+      values:
+        - Lupus
+        - Metis
+        - Homid
+    auspice:
+      desc: The werewolf's auspice
+      doc: >
+        Determined by the phase of the moon in the sky where and when the
+        werewolf was born.
+      values:
+        - Ragabash
+        - Theurge
+        - Philodox
+        - Galliard
+        - Ahroun
+    tribe:
+      desc: The werewolf's tribe
+      doc: >
+        Werewolves are primarily organized into tribes, each of which follows a
+        major spirit and claims a certain mystical lineage. Tribe mates
+        typically have certain powers and outlooks in common.
+    sept:
+      desc: Name of the sept the werewolf lives near and protects
+      doc: >
+        The sept is the territory claimed by a group of werewolves. Usually this
+        means multiple packs, but it can be as small as a single pack's
+        territory. Septs can cover many miles of area and are always centered on
+        a caern, a pure spiritual place.
+    pack:
+      desc: Name of the werewolf's pack
+      subtags:
+        role:
+          desc: The role of the werewolf within their pack
+          doc: >
+            Almost all packs have at least one role: the alpha. They direct
+            their pack's actions and keep everyone focused. Outside of that,
+            ad-hoc roles can easily spring up based on the needs of the pack.

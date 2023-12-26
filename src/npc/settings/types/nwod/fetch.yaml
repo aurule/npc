@@ -1,0 +1,12 @@
+fetch:
+  name: Fetch
+  desc: The creature who takes the place of a changeling in the mortal world
+  doc: >
+    When a human becomes a changeling, a fetch almost always takes their place
+    in the mortal world. Fetches are a strange reflection of the human and of
+    the changeling; they need to blend in, but they are not at all mundane. Some
+    know what they are and some do not, but all feel a unique terror if their
+    changeling returns to the world.
+  tags:
+    other:
+      desc: The fetch's changeling

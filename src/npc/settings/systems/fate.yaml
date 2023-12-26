@@ -1,0 +1,32 @@
+fate:
+  name: Fate Core
+  desc: A rules-light storytelling system
+  doc: >
+    Fate Core is a dynamic and flexible roleplaying game built around proactive
+    characters. Its mechanics allow play in any number of settings, from the mad
+    science robotics of Atomic Robo to the superheroes of Venture City.
+
+    Each setting for Fate usually includes some of its own rules, which might
+    make it helpful to include new tags. Thus, Fate Core only has the most
+    basic, universal tags and is designed to be extended by child systems.
+  links:
+    - label: SRD
+      url: https://fate-srd.com/
+  tags:
+    concept:
+      desc: The character's high concept
+      required: true
+      max: 1
+    trouble:
+      desc: The character's main trouble in life
+      required: true
+      max: 1
+    aspect:
+      desc: One of the character's aspects
+    refresh:
+      desc: Number of fate points the character starts with
+      doc: >
+        Usually only relevant for PCs, since NPCs use a shared pool of GM fate
+        points in every scene.
+    stunt:
+      desc: Name of a special power the character possesses

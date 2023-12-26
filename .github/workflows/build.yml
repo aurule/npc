@@ -1,0 +1,71 @@
+name: Binaries build and release
+
+on:
+  push:
+    tags:
+      - "v*.*.*"
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+
+    steps:
+    - uses: actions/checkout@v4
+    - name: Set up Python 3.11
+      uses: actions/setup-python@v4
+      with:
+        python-version: "3.11"
+        cache: pip
+        cache-dependency-path: requirements.txt
+    - name: Install dependencies
+      run: |
+        pip install -r requirements.txt
+        pip install pyinstaller
+        pip install -e .
+    - name: Save NPC version (posix)
+      if: runner.os != 'Windows'
+      run: |
+        echo "NPC_VERSION=$(python -c 'import npc; print(npc.__version__)')" >> $GITHUB_ENV
+    - name: Save NPC version (linux)
+      if: runner.os == 'Windows'
+      run: |
+        echo "NPC_VERSION=$(python -c 'import npc; print(npc.__version__)')" >> $env:GITHUB_ENV
+    - name: Build binary
+      run: pyinstaller pyi/npc.spec
+    - name: Make linux tgz
+      if: runner.os == 'Linux'
+      run: |
+        mkdir dist-package
+        tar -C dist -czf dist-package/npc-${{ env.NPC_VERSION }}.tgz npc
+    - name: Make windows zip # This is a temporary stopgap until we have an installer
+      if: runner.os == 'Windows'
+      run: |
+        mkdir dist-package
+        7z a dist-package/npc-${{ env.NPC_VERSION }}.zip ./dist/*
+    - name: Upload package
+      uses: actions/upload-artifact@v3
+      with:
+        name: npc-${{ matrix.os }}
+        path: dist-package/*
+        retention-days: 1
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/download-artifact@v3
+      - name: Create release
+        uses: softprops/action-gh-release@v1
+        with:
+          body_path: "npc/CHANGELOG.md"
+          draft: true
+          files: |
+            npc-ubuntu-latest/*
+            npc-windows-latest/*
+          fail_on_unmatched_files: false

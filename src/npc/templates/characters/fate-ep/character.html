@@ -1,0 +1,27 @@
+{% extends "character-base.html" %}
+
+{% block system %}
+    <ul class="grid-list" style="display: inline">
+    {% if has("concept") -%}
+        {% set concept = character.concept.first() -%}
+        <li>High Concept: {{ concept }}</li>
+        {% if concept.has("trouble") -%}
+            <li>Trouble: {{ concept.trouble.first() }}</li>
+        {% endif -%}
+        {% if concept.has("aspect") -%}
+            {% for aspect in concept.aspect.all() -%}
+                <li>{{ aspect }}</li>
+            {% endfor -%}
+        {% endif -%}
+    {% endif -%}
+    {% if has("morph") -%}
+        {% set morph = character.morph.first() -%}
+        <li>Morph: {{ morph }}</li>
+        {% if morph.has("aspect") -%}
+            {% for aspect in morph.aspect.all() -%}
+                <li>{{ aspect }}</li>
+            {% endfor -%}
+        {% endif -%}
+    {% endif -%}
+    </ul>
+{% endblock %}

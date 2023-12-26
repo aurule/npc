@@ -1,3 +1,0 @@
-# Session NNN
-
-stuff happens

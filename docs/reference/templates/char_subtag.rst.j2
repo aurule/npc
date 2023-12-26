@@ -1,0 +1,2 @@
+{% extends "subtag.rst.j2" %}
+{% block ref_anchor %}.. _tag_{{ system.key }}_{{ type.key }}_{{ parents|map(attribute="name")|join(("_")) }}_{{ tag.name }}:{% endblock %}

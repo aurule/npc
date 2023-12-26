@@ -1,0 +1,16 @@
+ghost:
+  name: Ghost
+  desc: A dead soul clinging to the mortal world
+  doc: >
+    Ghosts are the remnants of souls who have died, but still have some
+    unfinished business to conclude. They exist in Twilight and range from
+    barely self-aware to frighteningly lifelike.
+
+    Ghosts are the most common supernatural creature encountered by mortals.
+  tags:
+    anchor:
+      desc: Something that keeps a ghost bound to the world
+      doc: >
+        Every anchor is a person, place, or thing to which the ghost as a strong
+        emotional connection. Ghosts can't move far from their anchors, and will
+        go to great lengths to protect them.
