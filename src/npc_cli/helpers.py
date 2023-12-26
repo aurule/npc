@@ -112,15 +112,24 @@ def check_outdated(settings: Settings, location: str):
         location (str): Settings location to check. One of "user" or "campaign".
     """
 
-    # Skip outdated warning during testing. The cli tests often run with
-    # intentionally incomplete or incorrect settings.
-    if "PYTEST_CURRENT_TEST" in os.environ:
-        return
+    # Skip outdated warning during unrelated testing. The cli tests often run
+    # with intentionally incomplete or incorrect settings.
+    current_test = os.getenv("PYTEST_CURRENT_TEST", None)
+    if current_test and not "test_check_outdated" in current_test:
+        return False
 
     our_version = Version(npc_version)
-    settings_version = Version(settings.versions.get(location, npc_version))
+    raw_settings_version = settings.versions.get(location, npc_version)
+    if raw_settings_version:
+        settings_version = Version(raw_settings_version)
+    else:
+        settings_version = our_version
+
     if our_version < settings_version:
         click.echo(f"WARNING: Installed version of NPC ({our_version}) is older than the one which last updated your {location} settings ({settings_version}). NPC may behave incorrectly. Please upgrade to the latest release as soon as possible.")
+        return True
+
+    return False
 
 def try_migrating(settings: Settings, location: str):
     """Test settings for migration and prompt to migrate
