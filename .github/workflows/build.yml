@@ -42,7 +42,7 @@ jobs:
       if: runner.os == 'Linux'
       run: |
         mkdir dist-package
-        tar -C dist -czf dist-package/npc-${{ env.NPC_VERSION }}.tgz npc
+        tar -C dist -czf dist-package/npc-${{ env.NPC_VERSION }}.tgz npc_bin
     - name: Make windows zip # This is a temporary stopgap until we have an installer
       if: runner.os == 'Windows'
       run: |
