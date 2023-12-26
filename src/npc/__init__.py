@@ -14,4 +14,4 @@ __all__ = [
     "validation",
 ]
 __author__ = "Paige Andrews"
-__version__ = "2.0.0b4"
+__version__ = "2.0.0b5"
