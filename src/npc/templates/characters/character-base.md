@@ -95,20 +95,6 @@
     {%- endif -%}
 {%- endblock -%}
 
-{%- block links -%}
-    {# details about the charcters relationships #}
-    {%- if has("link") -%}
-        {{- "\n\n**Character ties:**\n" -}}
-        {%- for link in character.link.all() -%}
-            {{- "\n* " -}}
-            {{- link.value -}}
-            {%- if link.has("rel") -%}
-                {{- ", " + link.rel.all() | join(", ") -}}
-            {%- endif -%}
-        {%- endfor -%}
-    {%- endif -%}
-{%- endblock -%}
-
 {%- block system -%}
 {# extra info specific to a game system. Like FATE aspects and such. Blank by default. #}
 {%- endblock -%}

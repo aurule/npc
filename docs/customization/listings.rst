@@ -177,7 +177,6 @@ These are the available blocks:
 :orgs: Organization membership.
 :location: Where the character is found.
 :employment: Details about where the character works and what they do.
-:links: Details about the character's relationships.
 :system: Empty block for system-specific tags.
 :appearance: :octicon:`markdown` The character's :ref:`tag_appearance`.
 :description: :octicon:`markdown` The character's description.
