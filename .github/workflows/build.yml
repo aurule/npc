@@ -59,13 +59,16 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/download-artifact@v3
-      - name: Create release
-        uses: softprops/action-gh-release@v1
-        with:
-          body_path: "npc/CHANGELOG.md"
-          draft: true
-          files: |
-            npc-ubuntu-latest/*
-            npc-windows-latest/*
-          fail_on_unmatched_files: false
+    - uses: actions/checkout@v4
+      with:
+        path: "npc"
+    - uses: actions/download-artifact@v3
+    - name: Create release
+      uses: softprops/action-gh-release@v1
+      with:
+        body_path: "npc/CHANGELOG.md"
+        draft: true
+        files: |
+          npc-ubuntu-latest/*
+          npc-windows-latest/*
+        fail_on_unmatched_files: false
