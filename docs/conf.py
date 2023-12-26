@@ -22,7 +22,7 @@ copyright = '2015-2023, Paige Andrews'
 author = 'Paige Andrews'
 
 # The full version, including alpha/beta/rc tags
-release = "2.0.0a1"
+release = "2.0.0"
 
 
 # -- General configuration ---------------------------------------------------
