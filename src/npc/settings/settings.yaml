@@ -169,19 +169,6 @@ npc:
           doc: >
             This is usually how the character describes their work expertise,
             regardless of whether their job has an official title or not.
-    link:
-      desc: Name of a person to whom the character has a social connection
-      doc: >
-        Useful for noting families and informal relationships that form outside
-        of regimented groups.
-      subtags:
-        rel:
-          desc: The nature of the relationship the character has to the linked person
-          doc: >
-            This subtag should almost always be used, as the nature of a
-            relationship is at least as important as the fact that it exists.
-            Good for denoting parents, children, siblings, school rivals,
-            nemeses, or pretty much any other kind of relationship.
     lineage:
       desc: Brief listing of the character's ancestors
       doc: >

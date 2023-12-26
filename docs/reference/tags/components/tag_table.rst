@@ -37,9 +37,6 @@
     * - :ref:`tag_lineage`
       - 
       - Brief listing of the character's ancestors
-    * - :ref:`tag_link`
-      - :ref:`tag_link_rel`
-      - Name of a person to whom the character has a social connection
     * - :ref:`tag_location`
       - :ref:`tag_location_wanderer`, :ref:`tag_location_region`
       - Broad description of where the character lives

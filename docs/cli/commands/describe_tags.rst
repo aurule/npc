@@ -50,8 +50,6 @@ Example:
     | └ rank     | A formal rank the character holds within this organization            |
     | employer   | Name of a person or organization that pays the character for work     |
     | └ job      | Name of the character's job at their employer                         |
-    | link       | Name of a person to whom the character has a social connection        |
-    | └ rel      | The nature of the relationship the character has to the linked person |
     | lineage    | Brief listing of the character's ancestors                            |
     | dead       | Indicates that the character is deceased                              |
     | sticky     | Prevent this file from being moved by the reorg command               |
