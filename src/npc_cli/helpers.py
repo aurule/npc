@@ -164,9 +164,9 @@ def try_migrating(settings: Settings, location: str):
                 click.echo("Done migrating!\n")
             case "open":
                 click.launch(str(arg_settings.loaded_paths.get(location)), locate=True)
-                raise click.ClickException()
+                raise click.ClickException("Quitting")
             case _:
-                raise click.ClickException()
+                raise click.ClickException("Quitting")
 
 def write_new_character(character: Character, campaign: Campaign, db=None):
     """Create a new character file
