@@ -55,13 +55,13 @@ dependencies = {file = "requirements.txt"}
 version = {attr = "npc.__version__"}
 
 [tool.poe.tasks]
-test = "pytest --tb=no"
-coverage = "pytest --cov=npc --cov=npc_cli --cov-report=html --cov-report=term -q -p no:pretty"
-unused = "vulture src/npc tests"
-requirements = "pip-compile --resolver=backtracking --strip-extras --quiet"
-bin = "pyinstaller pyi/npc.spec"
-docs = "sphinx-autobuild docs docs/_build/html"
-change = "python scripts/add_change.py"
+test = {cmd="pytest --tb=no", help="Run test suite"}
+coverage = {cmd="pytest --cov=npc --cov=npc_cli --cov-report=html --cov-report=term -q -p no:pretty", help="Generate test coverage report"}
+unused = {cmd="vulture src/npc tests", help="Find unused code"}
+requirements = {cmd="pip-compile --resolver=backtracking --strip-extras --quiet ${file}", help="Compile a requirements file", args=["file"]}
+bin = {cmd="pyinstaller pyi/npc.spec", help="Build npc binaries"}
+docs = {cmd = "sphinx-autobuild docs docs/_build/html", help = "Start live documentation server"}
+change = {cmd = "python scripts/add_change.py", help = "Add a changelog snippet"}
 
 [tool.poe.tasks.release]
 sequence = [
