@@ -281,20 +281,33 @@ class Campaign:
                 new_path.write_text(contents)
             return new_path
 
-        latest_plot = self.latest_plot_index
-        latest_session = self.latest_session_index
+        latest = {
+            "plot": self.latest_plot_index,
+            "session": self.latest_session_index
+        }
 
-        max_existing_index = max(latest_plot, latest_session)
-        incremented_index = min(latest_plot, latest_session) + 1
+        max_existing_index = max(latest["plot"], latest["session"])
+        incremented_index = min(latest["plot"], latest["session"]) + 1
         new_index = max(max_existing_index, incremented_index)
-
 
         return_paths = {}
         for key in ["plot", "session"]:
             parent_path = self.settings.get(f"campaign.{key}.path")
+
+            pattern_string = self.settings.get(f"campaign.{key}.filename_pattern")
+            contents = self.settings.get(f"campaign.{key}.file_contents")
+            if key == "plot" and "((COPY))" in contents:
+                previous_filename = PlanningFilename(pattern_string).for_index(latest[key])
+                previous_path = self.root / parent_path / previous_filename
+                if previous_path.exists():
+                    old_contents = previous_path.read_text()
+                else:
+                    old_contents = ""
+                contents = contents.replace("((COPY))", old_contents)
+
             file_path = create_file(
-                self.settings.get(f"campaign.{key}.filename_pattern"),
-                self.settings.get(f"campaign.{key}.file_contents"),
+                pattern_string,
+                contents,
                 new_index,
                 parent_path
             )

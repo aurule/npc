@@ -54,7 +54,7 @@ When a new plot or session file is created through NPC, it's named using its ``f
 File Contents
 ~~~~~~~~~~~~~
 
-New files created through NPC are filled with the value in ``file_contents``. Plot files typically use the special ``((COPY))`` placeholder, which is replaced with the *entire* contents of the previous plot file, if it exists. This is a great way to keep running planning notes.
+New files created through NPC are filled with the value in ``file_contents``. Plot files may use the special ``((COPY))`` placeholder string, which is replaced with the *entire* contents of the previous plot file, if it exists. This is a great way to keep running planning notes.
 
 Additional Files
 ~~~~~~~~~~~~~~~~

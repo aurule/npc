@@ -5,10 +5,17 @@ from npc.campaign import Campaign
 
 def populate(campaign: Campaign, plots: int = 0, sessions: int = 0) -> None:
     for index in range(1, plots+1):
-        campaign.plot_dir.joinpath(f"Plot {index}.md").touch()
+        campaign.plot_dir.joinpath(f"Plot {index:0>2}.md").touch()
     for index in range(1, sessions+1):
-        campaign.session_dir.joinpath(f"Session {index}.md").touch()
+        campaign.session_dir.joinpath(f"Session {index:0>2}.md").touch()
 
+def test_copies_plot_contents(tmp_campaign):
+    populate(tmp_campaign, plots = 1, sessions = 1)
+    tmp_campaign.plot_dir.joinpath("Plot 01.md").write_text("test plot")
+
+    result = tmp_campaign.bump_planning_files()
+
+    assert result["plot"].read_text() == "test plot"
 
 class TestWithLesserSession:
     def test_creates_new_session_file(self, tmp_campaign):
