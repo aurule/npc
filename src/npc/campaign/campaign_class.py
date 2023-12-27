@@ -274,6 +274,13 @@ class Campaign:
             dict: Dict containing the resulting file paths, whether new or old. They are indexed by type, so
                   "path" and "session" both will have an entry.
         """
+        def create_file(pattern_string: str, contents: str, file_index: int, parent_path: Path):
+            new_filename = PlanningFilename(pattern_string).for_index(file_index)
+            new_path = self.root / parent_path / new_filename
+            if not new_path.exists():
+                new_path.write_text(contents)
+            return new_path
+
         latest_plot = self.latest_plot_index
         latest_session = self.latest_session_index
 
@@ -281,15 +288,28 @@ class Campaign:
         incremented_index = min(latest_plot, latest_session) + 1
         new_index = max(max_existing_index, incremented_index)
 
+
         return_paths = {}
         for key in ["plot", "session"]:
-            name_pattern = PlanningFilename(self.settings.get(f"campaign.{key}.filename_pattern"))
-            new_filename = name_pattern.for_index(new_index)
-            new_path = self.root / self.settings.get(f"campaign.{key}.path") / new_filename
-            return_paths[key] = new_path
-            if not new_path.exists():
+            parent_path = self.settings.get(f"campaign.{key}.path")
+            file_path = create_file(
+                self.settings.get(f"campaign.{key}.filename_pattern"),
+                self.settings.get(f"campaign.{key}.file_contents"),
+                new_index,
+                parent_path
+            )
+            return_paths[key] = file_path
+            if not file_path.exists():
                 self.patch_campaign_settings({key: {"latest_index": new_index}})
-                new_path.write_text(self.settings.get(f"campaign.{key}.file_contents"), newline = "\n")
+
+            additional_files = self.settings.get(f"campaign.{key}.additional_files")
+            for entry_index, additional_file in enumerate(additional_files):
+                return_paths[f"{key}_additional_{entry_index}"] = create_file(
+                    additional_file.get("filename_pattern"),
+                    additional_file.get("file_contents"),
+                    new_index,
+                    parent_path
+                )
 
         return return_paths
 

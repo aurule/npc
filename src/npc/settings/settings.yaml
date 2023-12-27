@@ -318,6 +318,7 @@ campaign:
     latest_index: 0
     filename_pattern: Plot ((NN)).md
     file_contents: ((COPY))
+    additional_files: []
   session:
     path: Session History
     latest_index: 0
@@ -326,3 +327,4 @@ campaign:
       Played:
 
       # (in-game date and time)
+    additional_files: []

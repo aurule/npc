@@ -271,6 +271,23 @@ Example:
         filename_pattern: Plot ((NN)).md
         file_contents: ((COPY))
 
+campaign.plot.additional_files :octicon:`list-ordered`
+------------------------------------------------------
+
+:bdg-info:`type: list`
+:bdg-info:`required: no`
+
+Defines additional files to create alongside each new plot file. See :ref:`cust_campaign_plot_sess` for more.
+
+Example:
+
+.. code:: yaml
+
+    plot:
+        additional_files:
+            - filename_pattern: Plot ((NN)) Story Progress.md
+              file_contents: "# Threads"
+
 campaign.session :octicon:`code-square`
 ---------------------------------------
 
@@ -291,3 +308,20 @@ Example:
             Played:
 
             # (in-game date and time)
+
+campaign.session.additional_files :octicon:`list-ordered`
+------------------------------------------------------
+
+:bdg-info:`type: list`
+:bdg-info:`required: no`
+
+Defines additional files to create alongside each new session file. See :ref:`cust_campaign_plot_sess` for more.
+
+Example:
+
+.. code:: yaml
+
+    session:
+        additional_files:
+            - filename_pattern: Session ((NN)) XP Log.md
+              file_contents: "# XP Log"

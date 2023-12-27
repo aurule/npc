@@ -40,10 +40,11 @@ Plot and Session Management
 
 Plot and session files are configured in the ``campaign.plot`` and ``campaign.session`` objects, respectively. Both config objects share the same keys:
 
-:path: :octicon:`note` Directory where the files should be put
+:path: :octicon:`note` Directory where the files should be placed
 :latest_index: :octicon:`number` Numerical index of the most recent file
 :filename_pattern: :octicon:`note` How to name the file
 :filename_contents: :octicon:`book` What to put in the file
+:additional_files: :octicon:`list-ordered` Other files to create alongside the plot or session file
 
 Naming and Indexes
 ~~~~~~~~~~~~~~~~~~
@@ -53,7 +54,12 @@ When a new plot or session file is created through NPC, it's named using its ``f
 File Contents
 ~~~~~~~~~~~~~
 
-New files created through NPC are filled with the value in ``file_contents``. Plot files can use the special ``((COPY))`` placeholder, which is replaced with the *entire* contents of the previous plot file, if it exists. This is a great way to keep running planning notes.
+New files created through NPC are filled with the value in ``file_contents``. Plot files typically use the special ``((COPY))`` placeholder, which is replaced with the *entire* contents of the previous plot file, if it exists. This is a great way to keep running planning notes.
+
+Additional Files
+~~~~~~~~~~~~~~~~
+
+Each entry in the ``additional_files`` list is an object with a ``filename_pattern`` and ``file_contents`` property. These properties act just like the ones for the main plot and session files.
 
 .. _cust_campaign_char_management:
 
