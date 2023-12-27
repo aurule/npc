@@ -310,7 +310,7 @@ Example:
             # (in-game date and time)
 
 campaign.session.additional_files :octicon:`list-ordered`
-------------------------------------------------------
+---------------------------------------------------------
 
 :bdg-info:`type: list`
 :bdg-info:`required: no`
