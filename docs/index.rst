@@ -51,3 +51,10 @@ NPC is very much a personal project. It works well enough for me to use for my w
    cli/index
    cli/quickstart
    cli/commands
+
+.. toctree::
+   :caption: NPC API
+   :hidden:
+
+   source/npc
+   source/npc_cli
