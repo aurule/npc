@@ -36,6 +36,14 @@ pyflakes==3.1.0
     # via flake8
 pygments==2.17.2
     # via rich
+pyside6==6.6.1
+    # via -r requirements.in
+pyside6-addons==6.6.1
+    # via pyside6
+pyside6-essentials==6.6.1
+    # via
+    #   pyside6
+    #   pyside6-addons
 pytest==7.4.3
     # via
     #   -r requirements-ci.in
@@ -55,7 +63,14 @@ pyyaml==6.0.1
     # via -r requirements.in
 rich==13.7.0
     # via pytest-pretty
+shiboken6==6.6.1
+    # via
+    #   pyside6
+    #   pyside6-addons
+    #   pyside6-essentials
 sqlalchemy==2.0.23
     # via -r requirements.in
 typing-extensions==4.9.0
     # via sqlalchemy
+watchdog==3.0.0
+    # via -r requirements.in

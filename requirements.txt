@@ -14,9 +14,24 @@ mistletoe==1.2.1
     # via -r requirements.in
 packaging==23.2
     # via -r requirements.in
+pyside6==6.6.1
+    # via -r requirements.in
+pyside6-addons==6.6.1
+    # via pyside6
+pyside6-essentials==6.6.1
+    # via
+    #   pyside6
+    #   pyside6-addons
 pyyaml==6.0.1
     # via -r requirements.in
+shiboken6==6.6.1
+    # via
+    #   pyside6
+    #   pyside6-addons
+    #   pyside6-essentials
 sqlalchemy==2.0.23
     # via -r requirements.in
 typing-extensions==4.9.0
     # via sqlalchemy
+watchdog==3.0.0
+    # via -r requirements.in

@@ -77,6 +77,14 @@ pygments==2.17.2
     #   sphinx
 pyproject-hooks==1.0.0
     # via build
+pyside6==6.6.1
+    # via -r requirements.in
+pyside6-addons==6.6.1
+    # via pyside6
+pyside6-essentials==6.6.1
+    # via
+    #   pyside6
+    #   pyside6-addons
 pytest==7.4.3
     # via
     #   -r requirements-ci.in
@@ -102,6 +110,11 @@ rich==13.7.0
     # via
     #   -r requirements-dev.in
     #   pytest-pretty
+shiboken6==6.6.1
+    # via
+    #   pyside6
+    #   pyside6-addons
+    #   pyside6-essentials
 six==1.16.0
     # via livereload
 snowballstemmer==2.2.0
@@ -155,6 +168,8 @@ urllib3==2.1.0
     # via requests
 vulture==2.10
     # via -r requirements-dev.in
+watchdog==3.0.0
+    # via -r requirements.in
 wheel==0.42.0
     # via pip-tools
 
