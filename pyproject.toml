@@ -64,6 +64,7 @@ docs = {cmd = "sphinx-autobuild docs docs/_build/html", help = "Start live docum
 docs-build-api = {cmd = "sphinx-apidoc -f -e -M -o docs/source src", help="Update the API documentation. Only needed for new or changed source file paths."}
 docs-build-ref = {cmd = "python scripts/build_reference_docs.py", help="Update the system and tag reference documentation"}
 change = {cmd = "python scripts/add_change.py", help = "Add a changelog snippet"}
+clean = {cmd = "python scripts/cleanup.py", help = "Remove temporary files"}
 
 [tool.poe.tasks.release]
 sequence = [

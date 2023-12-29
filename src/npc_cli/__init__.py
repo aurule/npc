@@ -3,8 +3,8 @@ Package for the npc command-line program
 """
 
 try:
-    import click, sqlalchemy
     from rich.traceback import install
+    import click, sqlalchemy
     install(suppress=[click, sqlalchemy])
 except ImportError:
     pass
