@@ -28,6 +28,7 @@ test = ["pytest >= 6.0.0"]
 
 [project.scripts]
 npc = "npc_cli:cli"
+npc_gui = "npc_gui:run"
 
 [project.gui-scripts]
 
@@ -65,6 +66,7 @@ docs-build-api = {cmd = "sphinx-apidoc -f -e -M -o docs/source src", help="Updat
 docs-build-ref = {cmd = "python scripts/build_reference_docs.py", help="Update the system and tag reference documentation"}
 change = {cmd = "python scripts/add_change.py", help = "Add a changelog snippet"}
 clean = {cmd = "python scripts/cleanup.py", help = "Remove temporary files"}
+resources = {cmd = "pyside6-rcc ./src/npc_gui/resources.qrc -o ./src/npc_gui/resources.py", help="Update compiled gui resources"}
 
 [tool.poe.tasks.release]
 sequence = [
