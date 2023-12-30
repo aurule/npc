@@ -1,0 +1,1 @@
+from .characters_table_model import CharactersTableModel
