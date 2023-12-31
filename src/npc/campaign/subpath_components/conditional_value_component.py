@@ -37,6 +37,9 @@ class ConditionalValueComponent(BaseSubpathComponent):
         Returns:
             str: The configured value, if character has at least one of our tags. Otherwise, None.
         """
+        if self.only_existing and not (current_path / self._value).exists():
+            return None
+
         stmt: Select = character_repository.has_tags(character, *self.tag_names)
 
         with self.db.session() as session:

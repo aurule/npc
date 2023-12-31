@@ -34,4 +34,7 @@ class StaticValueComponent(BaseSubpathComponent):
         Returns:
             str: Configured static string
         """
+        if self.only_existing and not (current_path / self._value).exists():
+            return None
+
         return self._value

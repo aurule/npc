@@ -30,7 +30,7 @@ class MatchValueComponent(BaseSubpathComponent):
 
         self.target = spec.get("equals")
         if not self.target:
-            raise KeyError("Missing value equals for match value subpath component")
+            raise KeyError("Missing equals key for match value subpath component")
 
     def value(self, character: Character, current_path: Path) -> str:
         """Get the value of this component
@@ -45,6 +45,9 @@ class MatchValueComponent(BaseSubpathComponent):
         Returns:
             str: A new directory name, or None if nothing matches
         """
+        if self.only_existing and not (current_path / self._value).exists():
+            return None
+
         stmt: Select = character_repository \
             .tag_values_by_name(character, *self.tag_names) \
             .where(Tag.value == self.target)

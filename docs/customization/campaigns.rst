@@ -88,11 +88,13 @@ Any character files within a directory found in ``ignore_subpaths`` is skipped e
 Guide to Subpaths
 ~~~~~~~~~~~~~~~~~
 
-When creating a new character, or reorganizing existing characters, the objects within ``subpath_components`` are used to build out the character's path. Each of these objects is applied in order and can add a directory to the character's path. By default, if a directory would be added that doesn't already exist, it will be skipped entirely and the next subpath component will be evaluated. This can be very useful for creating branching paths.
+When creating a new character, or reorganizing existing characters, the objects within ``subpath_components`` are used to build out the character's path. Each of these objects is applied in order and can add a directory to the character's path.
+
+If a directory would be added that doesn't already exist, it will be skipped entirely and the next subpath component will be evaluated. This can be very useful for creating branching paths. Some cli commands (like :ref:`cmd_reorg`) have an option to create missing directories instead.
 
 .. important::
 
-    Subpaths can only examine top-level tags. Nested tags, like the character's ``rank`` within an ``org``, cannot be accessed.
+    Subpaths can only examine top-level tags. Nested tags, like the character's ``role`` within an ``org``, cannot be accessed.
 
 These are the available subpath components:
 
