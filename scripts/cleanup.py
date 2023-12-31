@@ -10,6 +10,8 @@ from pathlib import Path
     )
 def clean(live):
     def rmdir_or_print(p: Path):
+        if not p.exists():
+            return
         if live:
             # rmdir
             for root, dirs, files in os.walk(p, topdown=False):
