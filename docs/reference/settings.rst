@@ -288,6 +288,8 @@ Example:
             - filename_pattern: Plot ((NN)) Story Progress.md
               file_contents: "# Threads"
 
+*Added in 2.0.1*
+
 campaign.session :octicon:`code-square`
 ---------------------------------------
 
@@ -325,3 +327,5 @@ Example:
         additional_files:
             - filename_pattern: Session ((NN)) XP Log.md
               file_contents: "# XP Log"
+
+*Added in 2.0.1*

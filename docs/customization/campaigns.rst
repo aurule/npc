@@ -61,6 +61,8 @@ Additional Files
 
 Each entry in the ``additional_files`` list is an object with a ``filename_pattern`` and ``file_contents`` property. These properties act just like the ones for the main plot and session files.
 
+*Added in 2.0.1*
+
 .. _cust_campaign_char_management:
 
 Character Management
