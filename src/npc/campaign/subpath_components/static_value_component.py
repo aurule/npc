@@ -18,9 +18,7 @@ class StaticValueComponent(BaseSubpathComponent):
     def __init__(self, db: DB, spec: dict, only_existing: bool = False):
         super().__init__(db, spec, only_existing)
 
-        self._value = spec.get("value")
-        if not self._value:
-            raise KeyError("Missing value key for static subpath component")
+        self._value = self.from_spec(spec, "value")
 
     def value(self, character: Character, current_path: Path) -> str:
         """Get our static value

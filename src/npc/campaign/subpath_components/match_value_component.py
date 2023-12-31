@@ -20,17 +20,9 @@ class MatchValueComponent(BaseSubpathComponent):
     def __init__(self, db: DB, spec: dict, only_existing: bool = False):
         super().__init__(db, spec, only_existing)
 
-        self.tag_names: list[str] = spec.get("tags")
-        if not self.tag_names:
-            raise KeyError("Missing tags key for match value subpath component")
-
-        self._value = spec.get("value")
-        if not self._value:
-            raise KeyError("Missing value key for match value subpath component")
-
-        self.target = spec.get("equals")
-        if not self.target:
-            raise KeyError("Missing equals key for match value subpath component")
+        self.tag_names = self.from_spec(spec, "tags")
+        self._value = self.from_spec(spec, "value")
+        self.target = self.from_spec(spec, "equals")
 
     def value(self, character: Character, current_path: Path) -> str:
         """Get the value of this component

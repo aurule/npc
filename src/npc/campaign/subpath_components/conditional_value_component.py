@@ -19,13 +19,8 @@ class ConditionalValueComponent(BaseSubpathComponent):
     def __init__(self, db: DB, spec: dict, only_existing: bool = False):
         super().__init__(db, spec, only_existing)
 
-        self.tag_names: list[str] = spec.get("tags")
-        if not self.tag_names:
-            raise KeyError("Missing tags key for conditional value subpath component")
-
-        self._value = spec.get("value")
-        if not self._value:
-            raise KeyError("Missing value key for conditional value subpath component")
+        self.tag_names = self.from_spec(spec, "tags")
+        self._value = self.from_spec(spec, "value")
 
     def value(self, character: Character, current_path: Path) -> str:
         """Return the configured static value if character has at least one of our tags
