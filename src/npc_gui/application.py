@@ -4,6 +4,8 @@ class NPCApplication(QApplication):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
+        self.campaign = None
+
         # self.fs_update_dispatcher = Dispatcher()
 
     def fs_update_handler(event):
