@@ -10,6 +10,12 @@ class BaseSubpathComponent(ABC):
     Defines the interface for subpath components. The only_existing flag is *optional* and only included
     because it can modify the database query in some components. Callers should enforce path existance
     themselves.
+
+    Besides the explicit abstract elements, this base class' interface requires that the SELECTOR class
+    attribute be defined. This is a unique name used to identify the subclass.
+
+    Attributes:
+        SELECTOR: The selector string
     """
 
     def __init__(self, db: DB, spec: dict, only_existing: bool):

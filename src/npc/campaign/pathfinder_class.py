@@ -5,7 +5,7 @@ from pathlib import Path
 from npc.util import win_sanitize
 from npc.characters import CharacterReader, Character, Tag
 from npc.db import DB, character_repository
-from .subpath_components import FirstValueComponent, StaticValueComponent, ConditionalValueComponent
+from .subpath_components import get_component
 
 class Pathfinder:
     """Class for finding and manipulating character-specific paths"""
@@ -75,14 +75,10 @@ class Pathfinder:
         comps = []
 
         for spec in self.campaign.settings.get("campaign.characters.subpath_components"):
-            match spec.get("selector"):
-                case "first_value":
-                    comps.append(FirstValueComponent(self.db, spec, exists))
-                case "static_value":
-                    comps.append(StaticValueComponent(self.db, spec, exists))
-                case "conditional_value":
-                    comps.append(ConditionalValueComponent(self.db, spec, exists))
-                case _:
-                    raise ValueError("Invalid subpath component selector")
+            klass = get_component(spec.get("selector"))
+            if klass:
+                comps.append(klass(self.db, spec, exists))
+            else:
+                raise ValueError("Invalid subpath component selector")
 
         return comps
