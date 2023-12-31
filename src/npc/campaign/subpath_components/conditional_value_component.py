@@ -21,11 +21,11 @@ class ConditionalValueComponent(BaseSubpathComponent):
 
         self.tag_names: list[str] = spec.get("tags")
         if not self.tag_names:
-            raise KeyError("Missing tags key for first value subpath component")
+            raise KeyError("Missing tags key for conditional value subpath component")
 
         self._value = spec.get("value")
         if not self._value:
-            raise KeyError("Missing value key for static subpath component")
+            raise KeyError("Missing value key for conditional value subpath component")
 
     def value(self, character: Character, current_path: Path) -> str:
         """Return the configured static value if character has at least one of our tags

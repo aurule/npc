@@ -130,6 +130,21 @@ Add the directory from ``value``.
         - selector: static_value
           value: Unaligned
 
+Match Value
+^^^^^^^^^^^
+
+Add the directory from ``value`` if at least one of the ``tags`` contains the value in ``equals``.
+
+.. code:: yaml
+
+    subpath_components:
+        - selector: match_value
+          tags: [class]
+          equals: Cleric
+          value: Blessed
+
+*Added in 2.0.2*
+
 File Names
 ~~~~~~~~~~
 

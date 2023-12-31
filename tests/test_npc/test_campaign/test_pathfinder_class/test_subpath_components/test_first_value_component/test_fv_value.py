@@ -1,8 +1,4 @@
-import pytest
-
 from tests.fixtures import tmp_campaign, create_character, db
-from npc.campaign import Campaign
-from npc.characters import Character, Tag, CharacterFactory, RawTag
 
 from npc.campaign.subpath_components import FirstValueComponent
 

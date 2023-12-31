@@ -1,17 +1,13 @@
 from .first_value_component import FirstValueComponent
 from .static_value_component import StaticValueComponent
 from .conditional_value_component import ConditionalValueComponent
-
-__all__ = [
-    "FirstValueComponent",
-    "StaticValueComponent",
-    "ConditionalValueComponent",
-]
+from .match_value_component import MatchValueComponent
 
 all_components = [
     FirstValueComponent,
     StaticValueComponent,
     ConditionalValueComponent,
+    MatchValueComponent,
 ]
 
 def get_component(component_key: str):
