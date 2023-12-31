@@ -18,3 +18,8 @@ def test_shows_description(tmp_campaign):
     result = campaign_info(tmp_campaign)
 
     assert tmp_campaign.desc in result
+
+def test_shows_system_name(tmp_campaign):
+    result = campaign_info(tmp_campaign)
+
+    assert "Generic" in result

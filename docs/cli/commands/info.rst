@@ -20,6 +20,6 @@ Example:
        ---Campaign Info---
            Name: Test Campaign
     Description: A campaign to test with
-         System: fate
+         System: Fate Core
      Plot Files: 0
        Sessions: 0

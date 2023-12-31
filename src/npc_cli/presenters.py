@@ -40,7 +40,7 @@ def campaign_info(campaign: Campaign) -> str:
         f"{'---Campaign Info---':>22}",
         f"{'Name:':>12} {campaign.name}",
         f"{'Description:':>12} {campaign.desc}",
-        f"{'System:':>12} {campaign.system_key}",
+        f"{'System:':>12} {campaign.system.name}",
         f"{'Plot Files:':>12} {campaign.latest_plot_index}",
         f"{'Sessions:':>12} {campaign.latest_session_index}",
     ]
