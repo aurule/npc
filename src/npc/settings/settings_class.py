@@ -72,9 +72,17 @@ class Settings(DataStore):
             namespace (str): Optional namespace to use for new_data
             file_key (str): Key to use when storing the file's stated npc version and path
         """
-
         loaded: dict = quiet_parse(settings_file)
         if loaded is None:
+            fallbacks = [
+                settings_file.parent / "settings.json",
+                settings_file.parent / "settings.yml",
+            ]
+            if file_key and any([f.exists() for f in fallbacks]):
+                file_version = "1.0.0"
+                self.versions[file_key] = "1.0.0"
+                print(self.versions)
+                self.loaded_paths[file_key] = settings_file.parent
             return
 
         if file_key:
