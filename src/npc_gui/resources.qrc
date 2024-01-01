@@ -1,6 +1,6 @@
 <!DOCTYPE RCC>
 <RCC version="1.0">
     <qresource prefix="icons">
-        <!-- <file alias="thing.svg">assets/icons/thing.svg</file> -->
+        <file alias="folder-open">assets/icons/folder-open.svg</file>
     </qresource>
 </RCC>
