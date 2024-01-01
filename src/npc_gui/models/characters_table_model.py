@@ -1,21 +1,26 @@
 from PySide6.QtCore import QAbstractTableModel, Qt
+from functools import cache
+
+from npc.campaign import CharacterCollection
+from npc.characters import Character
+from npc.listers import CharacterView
 
 class CharactersTableModel(QAbstractTableModel):
-    def __init__(self):
+    def __init__(self, collection: CharacterCollection, tag_names: list[str]):
         super().__init__()
-        # accept a collection of CharacterView objects
-        # accept a list of tag names
-        # header strings are tag names with basic capitalization and pluralization
-        #   cache header strings on init and bust if tags are changed
-        # use characterview.get(), a new method, to pick correct data for each cell
-        self._headers = ["Name", "Mnemonic", "Type"]
-        self._data = [
-            ["Bro Mann", "cool guy", "mundane"],
-        ]
 
+        self.set_tag_names(tag_names)
+
+        self.collection = collection
+
+    @cache
     def data(self, index: int, role: int):
         if role == Qt.DisplayRole:
-            return self._data[index.row()][index.column()]
+            character = self.collection.get(index.row()+1)
+            view = CharacterView(character)
+            tag = self.tag_names[index.column()]
+            if view.has(tag):
+                return view.first(tag)
 
     def headerData(self, section: int, orientation, role: int):
         if role == Qt.DisplayRole:
@@ -26,7 +31,15 @@ class CharactersTableModel(QAbstractTableModel):
                 return section
 
     def rowCount(self, index: int):
-        return len(self._data)
+        return self.collection.count
 
     def columnCount(self, index: int):
-        return len(self._data[0])
+        return len(self._headers)
+
+    def set_tag_names(self, tag_names: list[str]):
+        self.tag_names = tag_names
+        self._headers = self.header_names()
+
+
+    def header_names(self) -> list[str]:
+        return [n.capitalize() for n in self.tag_names]

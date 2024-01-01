@@ -1,13 +1,14 @@
 from PySide6.QtWidgets import (
     QMainWindow, QTabWidget, QToolBar, QStatusBar,
-    QMenuBar, QMenu, QApplication, QTableView, QVBoxLayout,
-    QLabel, QWidget, QFileDialog, QMessageBox
+    QMenuBar, QMenu, QApplication, QTableView, QVBoxLayout, QHBoxLayout,
+    QLabel, QWidget, QFileDialog, QMessageBox, QPushButton, QSizePolicy
 )
-from PySide6.QtCore import QSize
-from PySide6.QtGui import QAction, QIcon
+from PySide6.QtCore import QSize, Qt, QUrl
+from PySide6.QtGui import QAction, QIcon, QDesktopServices
 
 from ..models import CharactersTableModel
 from ..helpers import theme_or_resource_icon
+from ..widgets import ActionButton
 from npc import campaign
 
 class MainWindow(QMainWindow):
@@ -21,18 +22,7 @@ class MainWindow(QMainWindow):
         self.init_menus()
         self.init_toolbar()
 
-        characters_model = CharactersTableModel()
-        characters_table = QTableView()
-        characters_table.setModel(characters_model)
-        characters_table.verticalHeader().hide()
-        characters_layout = QVBoxLayout()
-        # characters_layout.addWidget(QLabel("Search bar goes here lol"))
-        characters_layout.addWidget(characters_table)
-        characters_tab = QWidget()
-        characters_tab.setLayout(characters_layout)
-        table_tabs = QTabWidget()
-        table_tabs.addTab(characters_tab, "Characters")
-        self.setCentralWidget(table_tabs)
+        self.init_hello()
 
         self.setStatusBar(QStatusBar(self))
 
@@ -52,14 +42,31 @@ class MainWindow(QMainWindow):
         open_action.setShortcut("ctrl+o")
         self.actions["open"] = open_action
 
+        new_action = QAction("New Campaign...", self)
+        new_action.triggered.connect(self.new_campaign)
+        new_action.setIcon(theme_or_resource_icon("folder-new"))
+        new_action.setStatusTip("Set up a new campaign")
+        self.actions["new"] = new_action
+
+        docs_action = QAction("Browse Web &Documentation", self)
+        docs_action.triggered.connect(self.browse_docs)
+        docs_action.setIcon(theme_or_resource_icon("emblem-symbolic-link"))
+        docs_action.setStatusTip("Open the web documentation in your browser")
+        self.actions["docs"] = docs_action
+
     def init_menus(self):
         menubar = QMenuBar()
 
         file_menu = QMenu("&File")
+        file_menu.addAction(self.actions.get("new"))
         file_menu.addAction(self.actions.get("open"))
         file_menu.addSeparator()
         file_menu.addAction(self.actions.get("exit"))
         menubar.addMenu(file_menu)
+
+        help_menu = QMenu("&Help")
+        help_menu.addAction(self.actions.get("docs"))
+        menubar.addMenu(help_menu)
 
         self.setMenuBar(menubar)
 
@@ -67,8 +74,34 @@ class MainWindow(QMainWindow):
         toolbar = QToolBar("Main")
         self.addToolBar(toolbar)
 
+    def init_hello(self):
+        hello_container = QWidget()
+        welcome_layout = QVBoxLayout(hello_container)
+
+        title_label = QLabel("NPC Campaign Manager")
+        title_label.setAlignment(Qt.AlignCenter)
+        title_sizing = QSizePolicy()
+        title_sizing.setVerticalPolicy(QSizePolicy.Fixed)
+        title_sizing.setHorizontalPolicy(QSizePolicy.Expanding)
+        title_label.setSizePolicy(title_sizing)
+        welcome_layout.addWidget(title_label)
+
+        button_layout = QHBoxLayout()
+        open_button = ActionButton(self.actions.get("open"))
+        button_layout.addWidget(open_button)
+        new_button = ActionButton(self.actions.get("new"))
+        button_layout.addWidget(new_button)
+        welcome_layout.addLayout(button_layout)
+
+        # recent campaigns with a clickable list, each preceded by a folder icon
+
+        self.setCentralWidget(hello_container)
+
     def exit_app(self, _parent):
         QApplication.quit()
+
+    def browse_docs(self, _parent):
+        QDesktopServices.openUrl(QUrl("https://npc.readthedocs.io/en/stable/"))
 
     def open_campaign(self, _parent):
         target = QFileDialog.getExistingDirectory(self, "Open Campaign")
@@ -83,3 +116,33 @@ class MainWindow(QMainWindow):
         app = QApplication.instance()
         app.campaign = campaign.Campaign(campaign_root)
         # outdated and migrations?
+
+        app.campaign.characters.refresh()
+        self.init_tables()
+
+    def init_tables(self):
+        table_tabs = QTabWidget()
+
+        characters_tab = QWidget()
+        characters_layout = QVBoxLayout(characters_tab)
+
+        characters_model = CharactersTableModel(
+            self.campaign.characters,
+            ["realname", "mnemonic", "type", "location"]
+        )
+        characters_table = QTableView()
+        characters_table.setModel(characters_model)
+        characters_table.verticalHeader().hide()
+        characters_layout.addWidget(characters_table)
+        table_tabs.addTab(characters_tab, "Characters")
+
+        self.setCentralWidget(table_tabs)
+
+    def new_campaign(self, _parent):
+        pass
+        # new or existing directory
+        # dialog to give campaign name, desc, system
+
+    @property
+    def campaign(self):
+        return QApplication.instance().campaign

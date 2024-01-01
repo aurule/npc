@@ -1,6 +1,9 @@
 <!DOCTYPE RCC>
 <RCC version="1.0">
     <qresource prefix="icons">
+        <file alias="folder">assets/icons/folder.svg</file>
         <file alias="folder-open">assets/icons/folder-open.svg</file>
+        <file alias="emblem-symbolic-link">assets/icons/external-link.svg</file>
+        <file alias="folder-new">assets/icons/folder-plus.svg</file>
     </qresource>
 </RCC>
