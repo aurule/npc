@@ -91,3 +91,28 @@ def test_does_not_have_hidden_tags(tmp_campaign):
     view = CharacterView(character)
 
     assert not view.has("title")
+
+def test_first_gets_static_value(tmp_campaign):
+    factory = CharacterFactory(tmp_campaign)
+    character = factory.make("Test Mann", type_key="person", tags=[RawTag("title", "bro")])
+
+    view = CharacterView(character)
+
+    assert view.first("type") == "person"
+
+def test_first_gets_tag_value(tmp_campaign):
+    factory = CharacterFactory(tmp_campaign)
+    character = factory.make("Test Mann", type_key="person", tags=[RawTag("title", "bro")])
+
+    view = CharacterView(character)
+
+    assert view.first("title") == "bro"
+
+def test_first_ignores_hidden_tag_value(tmp_campaign):
+    factory = CharacterFactory(tmp_campaign)
+    character = factory.make("Test Mann", type_key="person", tags=[RawTag("title", "bro"), RawTag("hide", "title")])
+
+    view = CharacterView(character)
+
+    assert view.first("title") == ""
+

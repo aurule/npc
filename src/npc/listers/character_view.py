@@ -55,3 +55,25 @@ class CharacterView:
             bool: True if this character has at least one tag with the given name, false otherwise
         """
         return hasattr(self, tag_name)
+
+    def first(self, tag_name: str) -> str:
+        """Get the first possible value for the given tag
+
+        This simplifies the logic behind getting the first value of either a tag or a static attribute. An
+        attribute will be returned as-is, while a tag name will return the value of the first tag view in the
+        associated tag collection.
+
+        Args:
+            tag_name (str): Name of the tag to get
+
+        Returns:
+            str: Attribute value or first tag value, or an empty string if the tag is not present.
+        """
+        if not self.has(tag_name):
+            return ""
+
+        non_tags = ["type", "description", "realname", "mnemonic"]
+        if tag_name in non_tags:
+            return getattr(self, tag_name)
+
+        return getattr(self, tag_name).first().value
