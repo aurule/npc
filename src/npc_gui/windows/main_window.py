@@ -80,6 +80,9 @@ class MainWindow(QMainWindow):
 
         title_label = QLabel("NPC Campaign Manager")
         title_label.setAlignment(Qt.AlignCenter)
+        font = title_label.font()
+        font.setPointSize(18)
+        title_label.setFont(font)
         title_sizing = QSizePolicy()
         title_sizing.setVerticalPolicy(QSizePolicy.Fixed)
         title_sizing.setHorizontalPolicy(QSizePolicy.Expanding)
@@ -140,8 +143,18 @@ class MainWindow(QMainWindow):
 
     def new_campaign(self, _parent):
         pass
-        # new or existing directory
-        # dialog to give campaign name, desc, system
+        # open a new dialog
+            # it prompts immediately for new campaign dir
+            #   displays with a button to change it
+            #   if it's a campaign, describe what will be done
+            # fields for name, desc, system
+            # npc.campaign.init(
+            #     campaign_path,
+            #     name=name,
+            #     desc=desc,
+            #     system=system,
+            #     settings=settings)
+        # on success, open the destination dir
 
     @property
     def campaign(self):
