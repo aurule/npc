@@ -130,7 +130,9 @@ class CharacterTagger():
         tag = Tag(name = rawtag.name, value = rawtag.value)
         if hidden_value := self.tag_is_hidden(tag):
             tag.hidden = hidden_value
-        tag.spec = tag_spec.in_context(self.context_stack[-1].name)
+        tag.spec = tag_spec.in_context(self.context_stack[-1].name, UndefinedTagSpec(rawtag.name))
+        if tag.spec.no_value:
+            tag.value = None
         self.insert_tag_record(tag)
 
     def get_tag_spec(self, tag_name: str) -> TagSpec:

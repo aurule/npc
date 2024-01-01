@@ -21,17 +21,25 @@ type_key:
 
     This command only works within an existing campaign.
 
-``npc new`` uses the configured subpaths to pick a directory for new characters. See :ref:`cust_campaign_char_subpaths` for how to configure these.
+``npc new`` creates a new character file using the type, name, mnemonic, description, and tags provided. It uses the configured subpaths to pick a directory for new characters. See :ref:`cust_campaign_char_subpaths` for how to configure these.
+
+.. tip::
+
+    To add a tag which does not allow any values (like :ref:`tag_foreign`), supply whatever value you want. It will be removed before the character is created.
 
 Example:
 
 .. code:: sh
 
-    npc new supporting -n "Jack Goosington" -m "submariner thief" --tag org "Rumblers" -d "A very wet thief."
+    npc new supporting -n "Jack Goosington" -m "submariner thief" --tag org Rumblers -d "A very wet thief."
+
+Creates the file:
 
 .. code:: text
 
     Jack Goosington - submariner thief.fate
+
+With these contents:
 
 .. code::
 

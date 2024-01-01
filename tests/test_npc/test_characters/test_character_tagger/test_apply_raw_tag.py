@@ -60,3 +60,23 @@ def test_sets_hidden_attr(tmp_campaign):
     tagger.apply_raw_tag(rawtag)
 
     assert character.tags[0].hidden == "all"
+
+def test_handles_no_value(tmp_campaign):
+    character = Character()
+    tagger = CharacterTagger(tmp_campaign, character)
+    rawtag = RawTag("foreign", "mars")
+
+    tagger.apply_raw_tag(rawtag)
+
+    assert character.tags[0].value is None
+
+def test_handles_incorrect_subtag(tmp_campaign):
+    character = Character()
+    tagger = CharacterTagger(tmp_campaign, character)
+    rawtag1 = RawTag("group", "band")
+    rawtag2 = RawTag("role", "front man")
+
+    tagger.apply_raw_tag(rawtag1)
+    tagger.apply_raw_tag(rawtag2)
+
+    assert character.tags[1].name == "role"

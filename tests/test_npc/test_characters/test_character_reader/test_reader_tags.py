@@ -15,3 +15,9 @@ def test_allows_manual_parsing_on_call():
     reader.parse_file()
 
     assert reader.tags()[2].value == "person"
+
+def test_reads_no_value():
+    file = fixture_file("sheets", "reader", "Test Mann - testing bro.npc")
+    reader = CharacterReader(file)
+
+    assert reader.tags()[5].value is None
