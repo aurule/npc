@@ -11,6 +11,7 @@ from ..helpers import theme_or_resource_icon
 from ..widgets import ActionButton
 from . import NewCampaignDialog
 from npc import campaign
+from npc import __version__ as npc_version
 from npc.settings import app_settings
 
 class MainWindow(QMainWindow):
@@ -56,6 +57,16 @@ class MainWindow(QMainWindow):
         docs_action.setStatusTip("Open the web documentation in your browser")
         self.actions["docs"] = docs_action
 
+        about_action = QAction("&About NPC", self)
+        about_action.triggered.connect(self.about)
+        about_action.setStatusTip("Show information about NPC")
+        self.actions["about"] = about_action
+
+        about_qt_action = QAction("&Qt Info", self)
+        about_qt_action.triggered.connect(self.about_qt)
+        about_qt_action.setStatusTip("Show information about the Qt framework")
+        self.actions["qt_info"] = about_qt_action
+
     def init_menus(self):
         menubar = QMenuBar()
 
@@ -68,6 +79,8 @@ class MainWindow(QMainWindow):
 
         help_menu = QMenu("&Help")
         help_menu.addAction(self.actions.get("docs"))
+        help_menu.addAction(self.actions.get("about"))
+        help_menu.addAction(self.actions.get("qt_info"))
         menubar.addMenu(help_menu)
 
         self.setMenuBar(menubar)
@@ -167,3 +180,14 @@ class MainWindow(QMainWindow):
                 settings=app_settings()
             )
             self.load_campaign_dir(picker.campaign_path)
+
+    def about(self, _parent):
+        QMessageBox.about(
+            self,
+            "About NPC",
+            f"<h1>NPC {npc_version}</h1>\
+            <p>NPC Campaign Manager is copyright 2023 Paige Andrews. It is made available under the MIT license.</p>"
+        )
+
+    def about_qt(self, _parent):
+        QMessageBox.aboutQt(self)
