@@ -48,3 +48,5 @@ For working on NPC, follow these steps:
     pip install -e .
 
 To make sure that everything works, run ``poe test``.
+
+5. If dependencies may have updated, you can run ``pip-sync requirements-dev.txt`` to synchronize your installed packages with NPC's requirements. Just remember to run ``pip install -e .`` afterward, as pip-sync will remove the local package.
