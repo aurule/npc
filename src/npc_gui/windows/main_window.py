@@ -134,10 +134,10 @@ class MainWindow(QMainWindow):
         if target:
             self.load_campaign_dir(target)
 
-    def load_campaign_dir(campaign_path):
-        campaign_root = campaign.find_campaign_root(target)
+    def load_campaign_dir(self, campaign_path):
+        campaign_root = campaign.find_campaign_root(campaign_path)
         if not campaign_root:
-            QMessageBox.critical(self, "No Campaign", f"The folder {target} is not an NPC campaign, nor are any of its parent directories.")
+            QMessageBox.critical(self, "No Campaign", f"The folder {campaign_path} is not an NPC campaign, nor are any of its parent directories.")
             return
 
         app = QApplication.instance()
