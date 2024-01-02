@@ -14,7 +14,7 @@ class CharactersTableModel(QAbstractTableModel):
         self.collection = collection
 
     @cache
-    def data(self, index: int, role: int):
+    def data(self, index, role: int):
         if role == Qt.DisplayRole:
             character = self.collection.get(index.row()+1)
             view = CharacterView(character)
@@ -30,10 +30,10 @@ class CharactersTableModel(QAbstractTableModel):
             if orientation == Qt.Vertical:
                 return section
 
-    def rowCount(self, index: int):
+    def rowCount(self, index):
         return self.collection.count
 
-    def columnCount(self, index: int):
+    def columnCount(self, index):
         return len(self._headers)
 
     def set_tag_names(self, tag_names: list[str]):

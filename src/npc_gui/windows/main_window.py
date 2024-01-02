@@ -9,6 +9,7 @@ from PySide6.QtGui import QAction, QIcon, QDesktopServices
 from ..models import CharactersTableModel
 from ..helpers import theme_or_resource_icon
 from ..widgets import ActionButton
+from . import NewCampaignDialog
 from npc import campaign
 
 class MainWindow(QMainWindow):
@@ -106,11 +107,16 @@ class MainWindow(QMainWindow):
     def browse_docs(self, _parent):
         QDesktopServices.openUrl(QUrl("https://npc.readthedocs.io/en/stable/"))
 
+    @property
+    def campaign(self):
+        return QApplication.instance().campaign
+
     def open_campaign(self, _parent):
         target = QFileDialog.getExistingDirectory(self, "Open Campaign")
-        if not target:
-            return
+        if target:
+            self.load_campaign_dir(target)
 
+    def load_campaign_dir(campaign_path):
         campaign_root = campaign.find_campaign_root(target)
         if not campaign_root:
             QMessageBox.critical(self, "No Campaign", f"The folder {target} is not an NPC campaign, nor are any of its parent directories.")
@@ -142,20 +148,22 @@ class MainWindow(QMainWindow):
         self.setCentralWidget(table_tabs)
 
     def new_campaign(self, _parent):
-        pass
-        # open a new dialog
-            # it prompts immediately for new campaign dir
-            #   displays with a button to change it
-            #   if it's a campaign, describe what will be done
-            # fields for name, desc, system
+        campaign_path = QFileDialog.getExistingDirectory(self, "Open Campaign")
+        if not campaign_path:
+            return
+
+        picker = NewCampaignDialog(campaign_path, parent=self)
+        if picker.exec():
+            print(picker.campaign_path)
+            print(picker.campaign_name)
+            print(picker.campaign_system)
+            print(picker.campaign_desc)
+            # get dir, name, sys, desc from modal
+            # set up!
             # npc.campaign.init(
             #     campaign_path,
             #     name=name,
             #     desc=desc,
             #     system=system,
             #     settings=settings)
-        # on success, open the destination dir
-
-    @property
-    def campaign(self):
-        return QApplication.instance().campaign
+            # self.load_campaign_dir(selected_dir)
