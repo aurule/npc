@@ -11,6 +11,7 @@ from ..helpers import theme_or_resource_icon
 from ..widgets import ActionButton
 from . import NewCampaignDialog
 from npc import campaign
+from npc.settings import app_settings
 
 class MainWindow(QMainWindow):
     def __init__(self):
@@ -111,6 +112,10 @@ class MainWindow(QMainWindow):
     def campaign(self):
         return QApplication.instance().campaign
 
+    @property
+    def settings(self):
+        return QApplication.instance().settings
+
     def open_campaign(self, _parent):
         target = QFileDialog.getExistingDirectory(self, "Open Campaign")
         if target:
@@ -148,22 +153,17 @@ class MainWindow(QMainWindow):
         self.setCentralWidget(table_tabs)
 
     def new_campaign(self, _parent):
-        campaign_path = QFileDialog.getExistingDirectory(self, "Open Campaign")
+        campaign_path = QFileDialog.getExistingDirectory(self, "Choose campaign directory")
         if not campaign_path:
             return
 
         picker = NewCampaignDialog(campaign_path, parent=self)
         if picker.exec():
-            print(picker.campaign_path)
-            print(picker.campaign_name)
-            print(picker.campaign_system)
-            print(picker.campaign_desc)
-            # get dir, name, sys, desc from modal
-            # set up!
-            # npc.campaign.init(
-            #     campaign_path,
-            #     name=name,
-            #     desc=desc,
-            #     system=system,
-            #     settings=settings)
-            # self.load_campaign_dir(selected_dir)
+            npc.campaign.init(
+                picker.campaign_path,
+                name=picker.campaign_name,
+                desc=picker.campaign_desc.strip(),
+                system=picker.campaign_system,
+                settings=app_settings()
+            )
+            self.load_campaign_dir(picker.campaign_path)

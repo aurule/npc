@@ -1,7 +1,7 @@
 from PySide6.QtWidgets import (
     QDialog, QDialogButtonBox, QFormLayout, QWidget, QLabel, QPushButton,
     QSizePolicy, QHBoxLayout, QLineEdit, QComboBox, QTextEdit, QVBoxLayout,
-    QApplication
+    QApplication, QFileDialog
 )
 from PySide6.QtCore import Qt
 
@@ -28,19 +28,22 @@ class NewCampaignDialog(QDialog):
         form_lines = QFormLayout()
 
         # directory display and picker button
-        dir_picker = QWidget()
-        dir_picker_layout = QHBoxLayout(dir_picker)
+        dir_picker_layout = QHBoxLayout()
 
-        dir_label = QLabel(self.campaign_path)
+        dir_label = QLabel("Directory:")
         dir_picker_layout.addWidget(dir_label)
+
+        self.dir_path_label = QLabel(self.campaign_path)
+        dir_picker_layout.addWidget(self.dir_path_label)
 
         dir_choose = QPushButton("&Change...")
         chooser_policy = QSizePolicy()
         chooser_policy.setHorizontalPolicy(QSizePolicy.Fixed)
         dir_choose.setSizePolicy(chooser_policy)
+        dir_choose.clicked.connect(self.change_path)
         dir_picker_layout.addWidget(dir_choose)
 
-        form_lines.addRow("Directory:", dir_picker)
+        form_lines.addRow(dir_picker_layout)
 
         # name input
         name_input = QLineEdit()
@@ -73,6 +76,12 @@ class NewCampaignDialog(QDialog):
         master_layout.addWidget(buttonBox)
 
         name_input.setFocus()
+
+    def change_path(self, _checked):
+        new_path = QFileDialog.getExistingDirectory(self, "Choose campaign directory")
+        if new_path:
+            self.campaign_path = new_path
+            self.dir_path_label.setText(self.campaign_path)
 
     def save_name(self, new_name: str):
         self.campaign_name = new_name
