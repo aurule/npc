@@ -43,3 +43,8 @@ class CharactersTableModel(QAbstractTableModel):
 
     def header_names(self) -> list[str]:
         return [n.capitalize() for n in self.tag_names]
+
+    def sort(self, column, order):
+        pass
+        # Qt.AscendingOrder or Qt.DescendingOrder
+        # responsible for reordering our own data

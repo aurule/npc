@@ -158,8 +158,10 @@ class MainWindow(QMainWindow):
             ["realname", "mnemonic", "type", "location"]
         )
         characters_table = QTableView()
-        characters_table.setModel(characters_model)
         characters_table.verticalHeader().hide()
+        characters_table.setCornerButtonEnabled(False)
+        characters_table.setSortingEnabled(True)
+        characters_table.setModel(characters_model)
         characters_layout.addWidget(characters_table)
         table_tabs.addTab(characters_tab, "Characters")
 
