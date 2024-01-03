@@ -56,6 +56,8 @@ class MainWindow(QMainWindow):
 
         # Session actions
 
+        # all disabled without self.campaign
+
         session_new = QAction("Next session", self)
         session_new.triggered.connect(self.make_session)
         session_new.setStatusTip("Create and open the next set of session and plot files")
@@ -110,6 +112,11 @@ class MainWindow(QMainWindow):
         session_menu.addAction(self.actions.get("session_latest_session"))
         session_menu.addAction(self.actions.get("session_latest_plot"))
         menubar.addMenu(session_menu)
+
+        settings_menu = QMenu("S&ettings")
+        # view campaign settings, disabled without self.campaign
+        # view user settings
+        menubar.addMenu(settings_menu)
 
         help_menu = QMenu("&Help")
         help_menu.addAction(self.actions.get("docs"))
