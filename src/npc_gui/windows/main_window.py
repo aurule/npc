@@ -162,6 +162,7 @@ class MainWindow(QMainWindow):
         characters_table.setCornerButtonEnabled(False)
         characters_table.setSortingEnabled(True)
         characters_table.setModel(characters_model)
+        characters_table.sortByColumn(0, Qt.AscendingOrder)
         characters_layout.addWidget(characters_table)
         table_tabs.addTab(characters_tab, "Characters")
 
