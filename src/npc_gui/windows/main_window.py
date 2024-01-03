@@ -196,7 +196,7 @@ class MainWindow(QMainWindow):
 
         picker = NewCampaignDialog(campaign_path, parent=self)
         if picker.exec():
-            npc.campaign.init(
+            campaign.init(
                 picker.campaign_path,
                 name=picker.campaign_name,
                 desc=picker.campaign_desc.strip(),
