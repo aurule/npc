@@ -32,6 +32,8 @@ class MainWindow(QMainWindow):
     def init_actions(self):
         self.actions = {}
 
+        # File actions
+
         exit_action = QAction("E&xit", self)
         exit_action.triggered.connect(self.exit_app)
         exit_action.setIcon(theme_or_resource_icon("application-exit"))
@@ -51,6 +53,13 @@ class MainWindow(QMainWindow):
         new_action.setStatusTip("Set up a new campaign")
         self.actions["new"] = new_action
 
+        # Session actions
+
+        session_new = QAction("Next session", self)
+        self.actions["session"] = session_new
+
+        # Help actions
+
         docs_action = QAction("Browse Web &Documentation", self)
         docs_action.triggered.connect(self.browse_docs)
         docs_action.setIcon(theme_or_resource_icon("emblem-symbolic-link"))
@@ -62,7 +71,7 @@ class MainWindow(QMainWindow):
         about_action.setStatusTip("Show information about NPC")
         self.actions["about"] = about_action
 
-        about_qt_action = QAction("&Qt Info", self)
+        about_qt_action = QAction("About &Qt", self)
         about_qt_action.triggered.connect(self.about_qt)
         about_qt_action.setStatusTip("Show information about the Qt framework")
         self.actions["qt_info"] = about_qt_action
@@ -77,16 +86,28 @@ class MainWindow(QMainWindow):
         file_menu.addAction(self.actions.get("exit"))
         menubar.addMenu(file_menu)
 
+        session_menu = QMenu("&Sessions")
+        session_menu.addAction(self.actions.get("session"))
+        session_menu.addSeparator()
+        latest_sessions = QMenu("Recent Sessions")
+        session_menu.addMenu(latest_sessions)
+        session_menu.addSeparator()
+        latest_plots = QMenu("Recent Plot Files")
+        session_menu.addMenu(latest_plots)
+        menubar.addMenu(session_menu)
+
         help_menu = QMenu("&Help")
         help_menu.addAction(self.actions.get("docs"))
-        help_menu.addAction(self.actions.get("about"))
+        help_menu.addSeparator()
         help_menu.addAction(self.actions.get("qt_info"))
+        help_menu.addAction(self.actions.get("about"))
         menubar.addMenu(help_menu)
 
         self.setMenuBar(menubar)
 
     def init_toolbar(self):
         toolbar = QToolBar("Main")
+        toolbar.addAction(self.actions.get("session"))
         self.addToolBar(toolbar)
 
     def init_hello(self):
