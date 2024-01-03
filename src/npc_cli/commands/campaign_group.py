@@ -98,7 +98,7 @@ def session(settings):
     type=click.Choice(["plot", "session", "both"], case_sensitive=False),
     default="both")
 @pass_settings
-def latest(settings, planning_type):
+def latest(settings, planning_type: str):
     """Find and open the latest plot or session file, or both
 
     Args: PLANNING_TYPE one of "plot", "session", or "both". (defaults to "both")

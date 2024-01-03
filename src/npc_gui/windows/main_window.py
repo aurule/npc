@@ -10,6 +10,7 @@ from ..models import CharactersTableModel
 from ..helpers import theme_or_resource_icon
 from ..widgets import ActionButton
 from . import NewCampaignDialog
+import npc
 from npc import campaign
 from npc import __version__ as npc_version
 from npc.settings import app_settings
@@ -56,7 +57,24 @@ class MainWindow(QMainWindow):
         # Session actions
 
         session_new = QAction("Next session", self)
+        session_new.triggered.connect(self.make_session)
+        session_new.setStatusTip("Create and open the next set of session and plot files")
         self.actions["session"] = session_new
+
+        session_latest = QAction("Open latest files", self)
+        session_latest.triggered.connect(self.latest_all)
+        session_latest.setStatusTip("Open the most recent plot and session files")
+        self.actions["session_latest"] = session_latest
+
+        session_latest_session = QAction("Open latest session file", self)
+        session_latest_session.triggered.connect(self.latest_session)
+        session_latest_session.setStatusTip("Open the most recent session file")
+        self.actions["session_latest_session"] = session_latest_session
+
+        session_latest_plot = QAction("Open latest plot file", self)
+        session_latest_plot.triggered.connect(self.latest_plot)
+        session_latest_plot.setStatusTip("Open the most recent plot file")
+        self.actions["session_latest_plot"] = session_latest_plot
 
         # Help actions
 
@@ -88,12 +106,9 @@ class MainWindow(QMainWindow):
 
         session_menu = QMenu("&Sessions")
         session_menu.addAction(self.actions.get("session"))
-        session_menu.addSeparator()
-        latest_sessions = QMenu("Recent Sessions")
-        session_menu.addMenu(latest_sessions)
-        session_menu.addSeparator()
-        latest_plots = QMenu("Recent Plot Files")
-        session_menu.addMenu(latest_plots)
+        session_menu.addAction(self.actions.get("session_latest"))
+        session_menu.addAction(self.actions.get("session_latest_session"))
+        session_menu.addAction(self.actions.get("session_latest_plot"))
         menubar.addMenu(session_menu)
 
         help_menu = QMenu("&Help")
@@ -155,7 +170,7 @@ class MainWindow(QMainWindow):
         if target:
             self.load_campaign_dir(target)
 
-    def load_campaign_dir(self, campaign_path):
+    def load_campaign_dir(self, campaign_path: str):
         campaign_root = campaign.find_campaign_root(campaign_path)
         if not campaign_root:
             QMessageBox.critical(self, "No Campaign", f"The folder {campaign_path} is not an NPC campaign, nor are any of its parent directories.")
@@ -215,3 +230,26 @@ class MainWindow(QMainWindow):
 
     def about_qt(self, _parent):
         QMessageBox.aboutQt(self)
+
+    def make_session(self, _parent):
+        new_files = self.campaign.bump_planning_files()
+
+        npc.util.edit_files(new_files.values(), settings = self.settings)
+
+    def latest_session(self, _parent):
+        self.open_latest("session")
+
+    def latest_plot(self, _parent):
+        self.open_latest("plot")
+
+    def latest_all(self, _parent):
+        self.open_latest("both")
+
+    def open_latest(self, planning_type: str):
+        if planning_type == "both":
+            keys = ["plot", "session"]
+        else:
+            keys = [planning_type]
+
+        files = [self.campaign.get_latest_planning_file(key) for key in keys]
+        npc.util.edit_files(files, settings = settings)
