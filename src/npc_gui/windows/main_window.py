@@ -318,7 +318,7 @@ class MainWindow(QMainWindow):
             keys = [planning_type]
 
         files = [self.campaign.get_latest_planning_file(key) for key in keys]
-        npc.util.edit_files(files, settings = settings)
+        npc.util.edit_files(files, settings = self.settings)
 
     def settings_user(self, _parent):
         self.browse_settings("user")
