@@ -54,6 +54,10 @@ class MainWindow(QMainWindow):
         new_action.setStatusTip("Set up a new campaign")
         self.actions["new"] = new_action
 
+        close_action = QAction("&Close Campaign", self)
+        close_action.triggered.connect(self.close_campaign)
+        close_action.setStatusTip("Close the current campaign")
+        self.actions["close"] = close_action
         # Session actions
 
         # all disabled without self.campaign
@@ -102,6 +106,7 @@ class MainWindow(QMainWindow):
         file_menu = QMenu("&File")
         file_menu.addAction(self.actions.get("new"))
         file_menu.addAction(self.actions.get("open"))
+        file_menu.addAction(self.actions.get("close"))
         file_menu.addSeparator()
         file_menu.addAction(self.actions.get("exit"))
         menubar.addMenu(file_menu)
@@ -227,6 +232,10 @@ class MainWindow(QMainWindow):
             )
             self.load_campaign_dir(picker.campaign_path)
 
+    def close_campaign(self, _parent):
+        QApplication.instance().campaign = None
+        self.init_hello()
+        self.update_campaign_availability()
     def about(self, _parent):
         QMessageBox.about(
             self,
