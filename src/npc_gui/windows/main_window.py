@@ -173,6 +173,7 @@ class MainWindow(QMainWindow):
     def init_toolbar(self):
         toolbar = QToolBar("Main")
         toolbar.addAction(self.actions.get("session"))
+        toolbar.addAction(self.actions.get("refresh"))
         self.addToolBar(toolbar)
 
     def init_hello(self):
