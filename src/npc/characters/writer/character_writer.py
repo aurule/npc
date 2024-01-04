@@ -24,7 +24,7 @@ class CharacterWriter:
 
         dest.touch(exist_ok=True)
 
-        with dest.open('w', newline="\n") as char_file:
+        with dest.open('w', newline="\n", encoding="utf-8") as char_file:
             char_file.write(contents)
             char_file.write("\n\n")
             char_file.write(character.file_body)

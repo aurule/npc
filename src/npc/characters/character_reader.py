@@ -81,7 +81,7 @@ class CharacterReader:
     @cache
     def parse_file(self):
         """Parse the file into tags and body"""
-        with self.character_path.open('r', newline="\n") as file:
+        with self.character_path.open('r', newline="\n", encoding="utf-8") as file:
             for line in file:
                 line = line.strip()
 
