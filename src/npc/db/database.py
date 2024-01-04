@@ -34,6 +34,15 @@ class DB(metaclass=Singleton):
         """
         yield Session(self.engine)
 
+    def reset(self):
+        """Remove everything from the database and recreate all tables from scratch
+
+        This helper is primarily for the GUI, or for other long-lived users of NPC who may need to load
+        different campaigns within the same instance of the program.
+        """
+        BaseModel.metadata.drop_all(self.engine)
+        BaseModel.metadata.create_all(self.engine)
+
 class BaseModel(DeclarativeBase):
     """Base model for creating sqlalchemy classes
 
