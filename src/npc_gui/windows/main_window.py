@@ -11,7 +11,7 @@ import click
 from ..models import CharactersTableModel
 from ..helpers import theme_or_resource_icon, find_settings_file
 from ..widgets import ActionButton
-from . import NewCampaignDialog
+from . import NewCampaignDialog, NewCharacterDialog
 import npc
 from npc import campaign
 from npc import __version__ as npc_version
@@ -70,11 +70,20 @@ class MainWindow(QMainWindow):
         refresh_action = QAction("&Refresh", self)
         refresh_action.triggered.connect(self.refresh_campaign)
         refresh_action.setStatusTip("Reload campaign info and characters")
-        refresh_action.setShortcut("F5")
         refresh_action.setShortcut("ctrl+r")
         refresh_action.setIcon(theme_or_resource_icon("view-refresh"))
         self.actions["refresh"] = refresh_action
         self.campaign_actions.append("refresh")
+
+        # Character actions
+
+        new_character = QAction("New Character...")
+        new_character.triggered.connect(self.new_character)
+        new_character.setIcon(theme_or_resource_icon("document-new"))
+        new_character.setStatusTip("Create a new character")
+        new_character.setShortcut("ctrl+n")
+        self.actions["new_character"] = new_character
+        self.campaign_actions.append("new_character")
 
         # Session actions
 
@@ -139,6 +148,7 @@ class MainWindow(QMainWindow):
         menubar = QMenuBar()
 
         file_menu = QMenu("&File")
+        file_menu.addAction(self.actions.get("new_character"))
         file_menu.addAction(self.actions.get("settings_user"))
         file_menu.addSeparator()
         file_menu.addAction(self.actions.get("exit"))
@@ -259,6 +269,22 @@ class MainWindow(QMainWindow):
         characters_table.setModel(characters_model)
         characters_table.sortByColumn(0, Qt.AscendingOrder)
         characters_layout.addWidget(characters_table)
+
+        character_actions_bar = QWidget()
+        character_actions_layout = QHBoxLayout(character_actions_bar)
+
+        characters_count = QLabel(f"{characters_model.rowCount()} characters")
+        character_actions_layout.addWidget(characters_count)
+
+        new_character_button = ActionButton(self.actions.get("new_character"))
+        new_btn_sizing = QSizePolicy()
+        new_btn_sizing.setVerticalPolicy(QSizePolicy.Fixed)
+        new_btn_sizing.setHorizontalPolicy(QSizePolicy.Fixed)
+        new_character_button.setSizePolicy(new_btn_sizing)
+        character_actions_layout.addWidget(new_character_button)
+
+        characters_layout.addWidget(character_actions_bar)
+
         table_tabs.addTab(characters_tab, "Characters")
 
         self.setCentralWidget(table_tabs)
@@ -330,3 +356,9 @@ class MainWindow(QMainWindow):
     def browse_settings(self, location):
         target_file = find_settings_file(self.settings, location)
         click.launch(str(target_file), locate=True)
+
+    def new_character(self, _parent):
+        dialog = NewCharacterDialog(parent=self)
+        if dialog.exec():
+            pass
+            # make a new character file
