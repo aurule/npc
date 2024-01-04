@@ -10,7 +10,8 @@ class Singleton(type):
         obj2 = ClassName()  # returns the same object
         obj is obj2         # True
 
-    For testing, the clearSingleton argument can be set to True to force the constructor to create a new object
+    When the clearSingleton arg is True, the current singleton instance will be replaced with a new one. This
+    is most useful in testing.
     """
     _instances = {}
     def __call__(cls, *args, clearSingleton: bool = False, **kwargs):
