@@ -38,13 +38,15 @@ class MainWindow(QMainWindow):
         self.update_campaign_availability()
 
     def init_actions(self):
-        # File actions
+        # General actions
 
         exit_action = QAction("E&xit", self)
         exit_action.triggered.connect(self.exit_app)
         exit_action.setIcon(theme_or_resource_icon("application-exit"))
         exit_action.setStatusTip("Quit NPC")
         self.actions["exit"] = exit_action
+
+        # Campaign actions
 
         open_action = QAction("&Open Campaign...", self)
         open_action.triggered.connect(self.open_campaign)
@@ -53,7 +55,7 @@ class MainWindow(QMainWindow):
         open_action.setShortcut("ctrl+o")
         self.actions["open"] = open_action
 
-        new_action = QAction("New Campaign...", self)
+        new_action = QAction("&New Campaign...", self)
         new_action.triggered.connect(self.new_campaign)
         new_action.setIcon(theme_or_resource_icon("folder-new"))
         new_action.setStatusTip("Set up a new campaign")
@@ -64,6 +66,14 @@ class MainWindow(QMainWindow):
         close_action.setStatusTip("Close the current campaign")
         self.actions["close"] = close_action
         self.campaign_actions.append("close")
+
+        refresh_action = QAction("&Refresh", self)
+        refresh_action.triggered.connect(self.refresh_campaign)
+        refresh_action.setStatusTip("Reload campaign info and characters")
+        refresh_action.setShortcut("F5")
+        refresh_action.setShortcut("ctrl+r")
+        self.actions["refresh"] = refresh_action
+        self.campaign_actions.append("refresh")
 
         # Session actions
 
@@ -132,7 +142,7 @@ class MainWindow(QMainWindow):
         menubar.addMenu(file_menu)
 
         campaign_menu = QMenu("&Campaign")
-        # info
+        campaign_menu.addAction(self.actions.get("refresh"))
         campaign_menu.addAction(self.actions.get("settings_campaign"))
         campaign_menu.addSeparator()
         campaign_menu.addAction(self.actions.get("new"))
@@ -208,6 +218,8 @@ class MainWindow(QMainWindow):
             self.load_campaign_dir(target)
 
     def load_campaign_dir(self, campaign_path: str):
+        db = npc.db.DB()
+        db.reset()
         campaign_root = campaign.find_campaign_root(campaign_path)
         if not campaign_root:
             QMessageBox.critical(self, "No Campaign", f"The folder {campaign_path} is not an NPC campaign, nor are any of its parent directories.")
@@ -246,6 +258,9 @@ class MainWindow(QMainWindow):
         table_tabs.addTab(characters_tab, "Characters")
 
         self.setCentralWidget(table_tabs)
+
+    def refresh_campaign(self, _parent):
+        self.campaign.characters.refresh()
 
     def new_campaign(self, _parent):
         campaign_path = QFileDialog.getExistingDirectory(self, "Choose campaign directory")
