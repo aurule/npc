@@ -6,8 +6,10 @@ from PySide6.QtWidgets import (
 from PySide6.QtCore import QSize, Qt, QUrl
 from PySide6.QtGui import QAction, QIcon, QDesktopServices
 
+import click
+
 from ..models import CharactersTableModel
-from ..helpers import theme_or_resource_icon
+from ..helpers import theme_or_resource_icon, find_settings_file
 from ..widgets import ActionButton
 from . import NewCampaignDialog
 import npc
@@ -65,8 +67,6 @@ class MainWindow(QMainWindow):
 
         # Session actions
 
-        # all disabled without self.campaign
-
         session_new = QAction("Next session", self)
         session_new.triggered.connect(self.make_session)
         session_new.setStatusTip("Create and open the next set of session and plot files")
@@ -109,16 +109,37 @@ class MainWindow(QMainWindow):
         about_qt_action.setStatusTip("Show information about the Qt framework")
         self.actions["qt_info"] = about_qt_action
 
+        # Settings commands
+
+        settings_user = QAction("Browse User &Settings", self)
+        settings_user.triggered.connect(self.settings_user)
+        settings_user.setStatusTip("Open your user settings directory")
+        self.actions["settings_user"] = settings_user
+
+        settings_campaign = QAction("Browse &Settings", self)
+        settings_campaign.triggered.connect(self.settings_campaign)
+        settings_campaign.setStatusTip("Open this campaign's settings directory")
+        self.actions["settings_campaign"] = settings_campaign
+        self.campaign_actions.append("settings_campaign")
+
     def init_menus(self):
         menubar = QMenuBar()
 
         file_menu = QMenu("&File")
-        file_menu.addAction(self.actions.get("new"))
-        file_menu.addAction(self.actions.get("open"))
-        file_menu.addAction(self.actions.get("close"))
+        file_menu.addAction(self.actions.get("settings_user"))
         file_menu.addSeparator()
         file_menu.addAction(self.actions.get("exit"))
         menubar.addMenu(file_menu)
+
+        campaign_menu = QMenu("&Campaign")
+        # info
+        campaign_menu.addAction(self.actions.get("settings_campaign"))
+        campaign_menu.addSeparator()
+        campaign_menu.addAction(self.actions.get("new"))
+        campaign_menu.addAction(self.actions.get("open"))
+        campaign_menu.addSeparator()
+        campaign_menu.addAction(self.actions.get("close"))
+        menubar.addMenu(campaign_menu)
 
         session_menu = QMenu("&Sessions")
         session_menu.addAction(self.actions.get("session"))
@@ -126,11 +147,6 @@ class MainWindow(QMainWindow):
         session_menu.addAction(self.actions.get("session_latest_session"))
         session_menu.addAction(self.actions.get("session_latest_plot"))
         menubar.addMenu(session_menu)
-
-        settings_menu = QMenu("S&ettings")
-        # view campaign settings, disabled without self.campaign
-        # view user settings
-        menubar.addMenu(settings_menu)
 
         help_menu = QMenu("&Help")
         help_menu.addAction(self.actions.get("docs"))
@@ -285,3 +301,13 @@ class MainWindow(QMainWindow):
 
         files = [self.campaign.get_latest_planning_file(key) for key in keys]
         npc.util.edit_files(files, settings = settings)
+
+    def settings_user(self, _parent):
+        self.browse_settings("user")
+
+    def settings_campaign(self, _parent):
+        self.browse_settings("campaign")
+
+    def browse_settings(self, location):
+        target_file = find_settings_file(self.settings, location)
+        click.launch(str(target_file), locate=True)
