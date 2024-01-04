@@ -72,6 +72,7 @@ class MainWindow(QMainWindow):
         refresh_action.setStatusTip("Reload campaign info and characters")
         refresh_action.setShortcut("F5")
         refresh_action.setShortcut("ctrl+r")
+        refresh_action.setIcon(theme_or_resource_icon("view-refresh"))
         self.actions["refresh"] = refresh_action
         self.campaign_actions.append("refresh")
 
@@ -80,6 +81,7 @@ class MainWindow(QMainWindow):
         session_new = QAction("Next session", self)
         session_new.triggered.connect(self.make_session)
         session_new.setStatusTip("Create and open the next set of session and plot files")
+        session_new.setIcon(theme_or_resource_icon("go-next"))
         self.actions["session"] = session_new
         self.campaign_actions.append("session")
 
@@ -112,6 +114,7 @@ class MainWindow(QMainWindow):
         about_action = QAction("&About NPC", self)
         about_action.triggered.connect(self.about)
         about_action.setStatusTip("Show information about NPC")
+        about_action.setIcon(theme_or_resource_icon("help-about"))
         self.actions["about"] = about_action
 
         about_qt_action = QAction("About &Qt", self)
