@@ -101,3 +101,15 @@ def test_puts_unknowns_at_rest_block(tmp_campaign, db):
     result = writer.tag_strings(character)
 
     assert re.search(r"^\n@asdf literally what", result)
+
+def test_includes_hide_tags(tmp_campaign, db):
+    character = create_character([
+        ("title", "True Bro"),
+        ("hide", "title"),
+    ], tmp_campaign, db)
+    writer = CharacterWriter(tmp_campaign, db=db)
+
+    result = writer.tag_strings(character)
+
+    assert "@title True Bro" in result
+    assert "@hide title" in result

@@ -40,6 +40,18 @@ def test_adds_regular_tags(tmp_campaign):
 
     assert "kingdom" in [tag.name for tag in character.tags]
 
+def test_adds_hidden_tags(tmp_campaign):
+    factory = CharacterFactory(tmp_campaign)
+    tags = [
+        RawTag("kingdom", "animalia"),
+        RawTag("hide", "kingdom"),
+    ]
+
+    character = factory.make("Test Mann", tags=tags)
+
+    assert "kingdom" in [tag.name for tag in character.tags]
+    assert character.tags[0].hidden
+
 def test_sets_default_flags(tmp_campaign):
     factory = CharacterFactory(tmp_campaign)
 
