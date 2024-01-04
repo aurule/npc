@@ -18,13 +18,6 @@ class NewCampaignDialog(QDialog):
 
         self.setWindowTitle("Create a New Campaign")
 
-        QBtn = QDialogButtonBox.Ok | QDialogButtonBox.Cancel
-        buttonBox = QDialogButtonBox(QBtn)
-        self.ok_button = buttonBox.button(QDialogButtonBox.Ok)
-        self.ok_button.setEnabled(False)
-        buttonBox.accepted.connect(self.accept)
-        buttonBox.rejected.connect(self.reject)
-
         form_lines = QFormLayout()
 
         # directory display and picker button
@@ -72,6 +65,13 @@ class NewCampaignDialog(QDialog):
         self.desc_input = QTextEdit()
         self.desc_input.textChanged.connect(self.save_desc)
         master_layout.addWidget(self.desc_input)
+
+        QBtn = QDialogButtonBox.Ok | QDialogButtonBox.Cancel
+        buttonBox = QDialogButtonBox(QBtn)
+        self.ok_button = buttonBox.button(QDialogButtonBox.Ok)
+        self.ok_button.setEnabled(False)
+        buttonBox.accepted.connect(self.accept)
+        buttonBox.rejected.connect(self.reject)
 
         master_layout.addWidget(buttonBox)
 
