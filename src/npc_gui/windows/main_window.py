@@ -19,6 +19,9 @@ class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
 
+        self.campaign_actions = []
+        self.actions = {}
+
         self.setWindowTitle("NPC Campaign Manager")
         self.setMinimumSize(QSize(400, 300))
 
@@ -30,9 +33,9 @@ class MainWindow(QMainWindow):
 
         self.setStatusBar(QStatusBar(self))
 
-    def init_actions(self):
-        self.actions = {}
+        self.update_campaign_availability()
 
+    def init_actions(self):
         # File actions
 
         exit_action = QAction("E&xit", self)
@@ -58,6 +61,8 @@ class MainWindow(QMainWindow):
         close_action.triggered.connect(self.close_campaign)
         close_action.setStatusTip("Close the current campaign")
         self.actions["close"] = close_action
+        self.campaign_actions.append("close")
+
         # Session actions
 
         # all disabled without self.campaign
@@ -66,21 +71,25 @@ class MainWindow(QMainWindow):
         session_new.triggered.connect(self.make_session)
         session_new.setStatusTip("Create and open the next set of session and plot files")
         self.actions["session"] = session_new
+        self.campaign_actions.append("session")
 
         session_latest = QAction("Open latest files", self)
         session_latest.triggered.connect(self.latest_all)
         session_latest.setStatusTip("Open the most recent plot and session files")
         self.actions["session_latest"] = session_latest
+        self.campaign_actions.append("session_latest")
 
         session_latest_session = QAction("Open latest session file", self)
         session_latest_session.triggered.connect(self.latest_session)
         session_latest_session.setStatusTip("Open the most recent session file")
         self.actions["session_latest_session"] = session_latest_session
+        self.campaign_actions.append("session_latest_session")
 
         session_latest_plot = QAction("Open latest plot file", self)
         session_latest_plot.triggered.connect(self.latest_plot)
         session_latest_plot.setStatusTip("Open the most recent plot file")
         self.actions["session_latest_plot"] = session_latest_plot
+        self.campaign_actions.append("session_latest_plot")
 
         # Help actions
 
@@ -194,6 +203,12 @@ class MainWindow(QMainWindow):
 
         app.campaign.characters.refresh()
         self.init_tables()
+        self.update_campaign_availability()
+
+    def update_campaign_availability(self):
+        campaign_available = self.campaign != None
+        for action_key in self.campaign_actions:
+            self.actions.get(action_key).setEnabled(campaign_available)
 
     def init_tables(self):
         table_tabs = QTabWidget()
@@ -236,6 +251,7 @@ class MainWindow(QMainWindow):
         QApplication.instance().campaign = None
         self.init_hello()
         self.update_campaign_availability()
+
     def about(self, _parent):
         QMessageBox.about(
             self,
