@@ -4,7 +4,6 @@ from sqlalchemy import MetaData, text
 
 from npc.db.database import DB
 
-@pytest.mark.xfail(reason="Fails in full suite, not individually or small suite")
 def test_removes_records():
     db = DB(clearSingleton=True)
     metadata = MetaData()
@@ -15,6 +14,7 @@ def test_removes_records():
     with db.session() as session:
         query = text("SELECT id FROM characters LIMIT 1")
         result = session.scalar(query)
+        print(result)
 
         assert result
 
@@ -23,5 +23,6 @@ def test_removes_records():
     with db.session() as session:
         query = text("SELECT id FROM characters LIMIT 1")
         result = session.scalar(query)
+        print(result)
 
         assert not result
