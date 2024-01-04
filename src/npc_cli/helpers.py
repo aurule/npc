@@ -75,11 +75,11 @@ def find_or_make_settings_file(settings: Settings, location: str) -> str:
     with all parents and populated with a minimal dict.
 
     Args:
-        settings (Settings): [description]
-        location (str): [description]
+        settings (Settings): Settings file to use to find the settings files
+        location (str): File location key. One of "user" or "campaign"
 
     Returns:
-        str: [description]
+        str: String describing the settings file location, or None if it does not exist
     """
     valid_locations: list[str] = ["user", "campaign"]
     if location not in valid_locations:
