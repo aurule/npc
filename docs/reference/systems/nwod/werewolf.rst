@@ -38,7 +38,6 @@ Allowed Values
 
 - rahu
 
-
 .. _tag_nwod_werewolf_tribe:
 
 @tribe
@@ -71,7 +70,6 @@ Allowed Values
 - ivory claws
 
 - predator kings
-
 
 .. _tag_nwod_werewolf_lodge:
 

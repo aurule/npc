@@ -42,7 +42,6 @@ Allowed Values
 
 - forgotten
 
-
 .. _tag_nwod_sin-eater_archetype:
 
 @archetype
@@ -73,7 +72,6 @@ Allowed Values
 - necromancer
 
 - pilgrim
-
 
 .. _tag_nwod_sin-eater_krewe:
 

@@ -38,7 +38,6 @@ Allowed Values
 
 - wizened
 
-
 .. _tag_nwod_changeling_kith:
 
 @kith

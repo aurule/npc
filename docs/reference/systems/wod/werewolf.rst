@@ -36,7 +36,6 @@ Allowed Values
 
 - Homid
 
-
 .. _tag_wod_werewolf_auspice:
 
 @auspice
@@ -61,7 +60,6 @@ Allowed Values
 - Galliard
 
 - Ahroun
-
 
 .. _tag_wod_werewolf_tribe:
 
