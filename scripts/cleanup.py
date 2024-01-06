@@ -31,6 +31,7 @@ def clean(live):
     rmdir_or_print(package_root / ".pytest_cache")
     rmdir_or_print(package_root / "build")
     rmdir_or_print(package_root / "dist")
+    rmdir_or_print(package_root / "docs" / "_build")
 
 if __name__ == '__main__':
     clean()
