@@ -138,6 +138,19 @@ Usually only relevant for PCs, since NPCs use a shared pool of GM fate points in
 Name of a special power the character possesses
 
 
+.. _tag_fate-ep_async:
+
+@async
+------
+
+:bdg-secondary:`Optional`
+:bdg-warning:`No value allowed`
+
+Whether this charcter is an async with psychic powers
+
+Asyncs are rare and can come from any background. This flag makes it easier to keep track of such characters.
+
+
 
 
 Character Types

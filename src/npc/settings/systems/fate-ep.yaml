@@ -45,3 +45,9 @@ fate-ep:
         points in every scene.
     stunt:
       desc: Name of a special power the character possesses
+    async:
+      desc: Whether this charcter is an async with psychic powers
+      doc: >
+        Asyncs are rare and can come from any background. This flag makes it
+        easier to keep track of such characters.
+      no_value: true
