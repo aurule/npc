@@ -71,6 +71,22 @@ Name of the deity the character worships
 With whole classes built around worship, it can be very important to keep track of which god(s) a character prays to.
 
 
+.. _tag_dnd3_monster:
+
+@monster
+--------
+
+:bdg-secondary:`Optional`
+:bdg-info:`Value required`
+:bdg-info:`Max 1`
+
+Designate this as a generic sheet for a given type of monster
+
+It is very handy to have a way to represent the many monsters PCs fight in D&D, but these monsters are not necessarily real characters. More, they are often reused over and over again. This tag makes it clear that the given npc is more of a template than an individual creature with goals and motives.
+
+The value of this tag should be the "creature type" as listed in the monster manual, or other original source.
+
+
 
 
 Character Types
