@@ -38,6 +38,8 @@ Each entry within ``npc.tags`` is the name of a tag, followed by these attribute
 
 :subtags: :octicon:`code-square` An object with additional tags which will be stored *within* this tag.
 
+:history: :octicon:`list-ordered` A list of changes by NPC version. Probably only useful for the built-in tags, but could be used for your own versioned configs.
+
 Examples
 --------
 

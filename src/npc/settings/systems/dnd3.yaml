@@ -33,3 +33,5 @@ dnd3:
         The value of this tag should be the "creature type" as listed in the
         monster manual, or other original source.
       max: 1
+      history:
+        - Added in NEW_VERSION

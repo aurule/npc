@@ -22,6 +22,7 @@ class TagSpec():
         self.no_value: bool     = tag_def.get("no_value", False)
         self.locked: bool       = tag_def.get("locked", False)
         self.subtags: list[str] = tag_def.get("subtags", {}).keys()
+        self.history: list[str] = tag_def.get("history", [])
 
         if self.required and self.min < 1:
             logger.debug(f"Tag {self.name} is required but min is zero. Setting min to 1.")

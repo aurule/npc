@@ -49,5 +49,10 @@ properties:
                 type: object
                 description: A tag which gives supplemental data about its parent tag
                 $ref: "#"
+    history:
+        type: array
+        description: List of changes to this tag with associated release versions.
+        items:
+            type: string
 required:
 - desc

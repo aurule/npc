@@ -35,6 +35,12 @@ Allowed Values
 {% endfor %}
 {% endif -%}
 
+{%- if tag.history -%}
+{% for change in tag.history -%}
+- *{{ change }}*
+{% endfor -%}
+{% endif -%}
+
 {%- if tag.subtags %}
 Subtags
 {{ header_characters[header_level + 1] * 7 }}

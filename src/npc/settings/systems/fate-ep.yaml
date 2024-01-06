@@ -51,3 +51,5 @@ fate-ep:
         Asyncs are rare and can come from any background. This flag makes it
         easier to keep track of such characters.
       no_value: true
+      history:
+        - Added in NEW_VERSION
