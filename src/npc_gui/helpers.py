@@ -2,6 +2,9 @@ from PySide6.QtGui import QIcon
 
 from . import resources
 
+import logging
+logger = logging.getLogger(__name__)
+
 def theme_or_resource_icon(name: str) -> QIcon:
     return QIcon.fromTheme(name, QIcon(f":/icons/{name}"))
 
