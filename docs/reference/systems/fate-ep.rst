@@ -150,7 +150,7 @@ Whether this charcter is an async with psychic powers
 
 Asyncs are rare and can come from any background. This flag makes it easier to keep track of such characters.
 
-- *Added in NEW_VERSION*
+- *Added in 2.0.2*
 
 
 

@@ -52,4 +52,4 @@ fate-ep:
         easier to keep track of such characters.
       no_value: true
       history:
-        - Added in NEW_VERSION
+        - Added in 2.0.2

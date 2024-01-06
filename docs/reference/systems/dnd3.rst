@@ -86,7 +86,7 @@ It is very handy to have a way to represent the many monsters PCs fight in D&D, 
 
 The value of this tag should be the "creature type" as listed in the monster manual, or other original source.
 
-- *Added in NEW_VERSION*
+- *Added in 2.0.2*
 
 
 

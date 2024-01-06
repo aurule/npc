@@ -145,7 +145,7 @@ Add the directory from ``value`` if at least one of the ``tags`` contains the va
           equals: Cleric
           value: Blessed
 
-*Added in NEW_VERSION*
+*Added in 2.0.2*
 
 File Names
 ~~~~~~~~~~
