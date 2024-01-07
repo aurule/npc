@@ -6,6 +6,7 @@ from .windows import MainWindow
 @click.command
 def run():
     app = NPCApplication([])
+    app.setStyle("Fusion")
 
     mw = MainWindow()
     mw.show()
