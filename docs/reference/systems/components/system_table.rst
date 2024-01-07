@@ -25,6 +25,9 @@
     * - :ref:`sys_nwod`
       - ``nwod``
       - Urban fantasy in the modern era
+    * - :ref:`sys_pf1`
+      - ``pf1``
+      - Fantasy adventuring with classic rules
     * - :ref:`sys_wod`
       - ``wod``
       - The original dark urban fantasy system for modern nights

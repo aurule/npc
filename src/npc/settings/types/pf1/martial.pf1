@@ -1,0 +1,59 @@
+--Notes--
+
+
+
+--Stats--
+
+Str  8  -1
+Dex  8  -1
+Con  8  -1
+Int  8  -1
+Wis  8  -1
+Cha  8  -1
+
+Fort    -1 (0)
+Ref     -1 (0)
+Will    -1 (0)
+
+HP          0 (d0+0 / lvl)
+AC          0 (armor + 0 dex)
+Flat-footed 0
+Touch       0
+
+Speed 30
+
+Init 0
+BAB  0
+
+Attacks
+    Unarmed - atk 0, dam 1d3, crit 20/x2
+
+Feats & Abilities
+
+Skills (0/lvl)
+    Acrobatics
+    Appraise
+    Bluff
+    Climb
+    Craft
+    Diplomacy
+    Disable Device
+    Disguise
+    Escape Artist
+    Fly
+    Handle Animal
+    Heal
+    Intimidate
+    Knowledge
+    Linguistics
+    Perception
+    Perform
+    Profession
+    Ride
+    Sense Motive
+    Sleight of Hand
+    Spellcraft
+    Stealth
+    Survival
+    Swim
+    Use Magic Device
