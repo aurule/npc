@@ -7,6 +7,9 @@
     * - :ref:`sys_dnd3`
       - ``dnd3``
       - D&D 3.5! Just the right amount of crunch
+    * - :ref:`sys_dnd5`
+      - ``dnd5``
+      - D&D Fifth Edition. Modern, streamlined, and popular.
     * - :ref:`sys_fate`
       - ``fate``
       - A rules-light storytelling system

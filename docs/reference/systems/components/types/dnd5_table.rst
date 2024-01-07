@@ -3,9 +3,9 @@
 
     * - Type
       - Description
-    * - :ref:`sys_dnd3_caster`
+    * - :ref:`sys_dnd5_caster`
       - A character who casts magic spells
-    * - :ref:`sys_dnd3_martial`
+    * - :ref:`sys_dnd5_martial`
       - A character who does not cast magic spells
-    * - :ref:`sys_dnd3_supporting`
+    * - :ref:`sys_dnd5_supporting`
       - A character without a meaningful stats sheet
