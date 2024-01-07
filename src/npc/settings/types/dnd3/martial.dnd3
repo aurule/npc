@@ -22,9 +22,11 @@ Touch       0
 
 Speed 30
 
+Init 0
 BAB  0
 
 Attacks
+    Unarmed - atk 0, dam 1d3, crit 20/x2
 
 Feats & Abilities
 

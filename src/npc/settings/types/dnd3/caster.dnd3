@@ -2,9 +2,9 @@
 
 
 
---Stats--           --Spells--
+--Stats--
 
-Str  8  -1          0th: DC 10, 2/day
+Str  8  -1
 Dex  8  -1
 Con  8  -1
 Int  8  -1
@@ -22,9 +22,11 @@ Touch       0
 
 Speed 30
 
+Init 0
 BAB  0
 
 Attacks
+    Unarmed - atk 0, dam 1d3, crit 20/x2
 
 Feats & Abilities
 
@@ -64,6 +66,9 @@ Skills (0/lvl)
     Tumble
     Use Magic Device
     Use Rope
+
+Spells per Day
+    0th: DC 10, 2/day
 
 Spells Known
     lvl 0 (N):
