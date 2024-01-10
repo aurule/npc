@@ -11,6 +11,7 @@ import click
 from ..models import CharactersTableModel
 from ..helpers import theme_or_resource_icon, find_settings_file
 from ..widgets import ActionButton
+from ..widgets.size_policies import *
 from . import NewCampaignDialog, NewCharacterDialog
 import npc
 from npc import campaign
@@ -277,10 +278,7 @@ class MainWindow(QMainWindow):
         character_actions_layout.addWidget(characters_count)
 
         new_character_button = ActionButton(self.actions.get("new_character"))
-        new_btn_sizing = QSizePolicy()
-        new_btn_sizing.setVerticalPolicy(QSizePolicy.Fixed)
-        new_btn_sizing.setHorizontalPolicy(QSizePolicy.Fixed)
-        new_character_button.setSizePolicy(new_btn_sizing)
+        new_character_button.setSizePolicy(fixed_both)
         character_actions_layout.addWidget(new_character_button)
 
         characters_layout.addWidget(character_actions_bar)

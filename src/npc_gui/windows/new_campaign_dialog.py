@@ -1,11 +1,12 @@
 from PySide6.QtWidgets import (
     QDialog, QDialogButtonBox, QFormLayout, QWidget, QLabel, QPushButton,
-    QSizePolicy, QHBoxLayout, QLineEdit, QComboBox, QTextEdit, QVBoxLayout,
+    QHBoxLayout, QLineEdit, QComboBox, QTextEdit, QVBoxLayout,
     QApplication, QFileDialog
 )
 from PySide6.QtCore import Qt
 
 from ..models import SystemListModel
+from ..widgets.size_policies import *
 
 class NewCampaignDialog(QDialog):
     def __init__(self, campaign_path: str, parent):
@@ -30,9 +31,7 @@ class NewCampaignDialog(QDialog):
         dir_picker_layout.addWidget(self.dir_path_label)
 
         dir_choose = QPushButton("&Change...")
-        chooser_policy = QSizePolicy()
-        chooser_policy.setHorizontalPolicy(QSizePolicy.Fixed)
-        dir_choose.setSizePolicy(chooser_policy)
+        dir_choose.setSizePolicy(fixed_horizontal)
         dir_choose.clicked.connect(self.change_path)
         dir_picker_layout.addWidget(dir_choose)
 
