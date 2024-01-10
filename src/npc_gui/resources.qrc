@@ -9,5 +9,7 @@
         <file alias="document-validate">assets/icons/file-check.svg</file>
         <file alias="view-refresh">assets/icons/refresh.svg</file>
         <file alias="help-about">assets/icons/info.svg</file>
+        <file alias="list-add">assets/icons/plus.svg</file>
+        <file alias="list-remove">assets/icons/trash-bin.svg</file>
     </qresource>
 </RCC>
