@@ -11,5 +11,6 @@
         <file alias="help-about">assets/icons/info.svg</file>
         <file alias="list-add">assets/icons/plus.svg</file>
         <file alias="list-remove">assets/icons/trash-bin.svg</file>
+        <file alias="menu-more">assets/icons/dots-horiz-thick.svg</file>
     </qresource>
 </RCC>

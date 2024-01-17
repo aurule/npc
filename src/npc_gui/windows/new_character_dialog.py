@@ -1,6 +1,6 @@
 from PySide6.QtWidgets import (
     QDialog, QVBoxLayout, QDialogButtonBox, QFormLayout, QLabel, QPushButton, QLineEdit, QComboBox,
-    QHBoxLayout, QToolButton
+    QHBoxLayout, QToolButton, QGroupBox
 )
 from PySide6.QtCore import Qt
 
@@ -44,12 +44,30 @@ class NewCharacterDialog(QDialog):
         master_layout = QVBoxLayout(self)
         master_layout.addLayout(form_lines)
 
-        tags_label = QLabel("Tags:")
-        tags_label.setSizePolicy(fixed_vertical)
-        master_layout.addWidget(tags_label)
+        tag_box = QGroupBox("Tags")
+        tag_box.setFlat(True)
+        tag_box_layout = QVBoxLayout()
+        tag_box.setLayout(tag_box_layout)
+        master_layout.addWidget(tag_box)
 
         # need a scrolling area
-        # either a standalone scroll area, or a flat group box
+
+        tag_line = QHBoxLayout()
+        picker = QComboBox()
+        picker.setPlaceholderText("Tag name")
+        picker.setCurrentIndex(-1)
+        picker.setEditable(True)
+        picker.setSizePolicy(fixed_horizontal)
+        tag_line.addWidget(picker)
+        value = QLineEdit()
+        tag_line.addWidget(value)
+        menu_btn = QToolButton()
+        menu_btn.setSizePolicy(fixed_horizontal)
+        menu_btn.setIcon(theme_or_resource_icon("menu-more"))
+        menu_btn.setToolButtonStyle(Qt.ToolButtonIconOnly)
+        menu_btn.setToolTip("Tag actions...")
+        tag_line.addWidget(menu_btn)
+        tag_box_layout.addLayout(tag_line)
 
         new_tag_line = QHBoxLayout()
         tag_name_picker = QComboBox() # allow custom input
@@ -66,7 +84,7 @@ class NewCharacterDialog(QDialog):
         new_tag_btn.setToolButtonStyle(Qt.ToolButtonIconOnly)
         new_tag_btn.setToolTip("Add tag")
         new_tag_line.addWidget(new_tag_btn)
-        master_layout.addLayout(new_tag_line)
+        tag_box_layout.addLayout(new_tag_line)
 
         QBtn = QDialogButtonBox.Save | QDialogButtonBox.Cancel
         buttonBox = QDialogButtonBox(QBtn)
