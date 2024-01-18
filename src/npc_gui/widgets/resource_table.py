@@ -1,5 +1,5 @@
 from PySide6.QtWidgets import (
-    QTableView
+    QTableView, QAbstractItemView
 )
 from PySide6.QtCore import Qt
 
@@ -22,3 +22,6 @@ class ResourceTable(QTableView):
         self.setCornerButtonEnabled(False)
         self.setSortingEnabled(True)
         self.sortByColumn(0, Qt.AscendingOrder)
+        self.setShowGrid(False)
+        self.setAlternatingRowColors(True)
+        self.setSelectionBehavior(QAbstractItemView.SelectRows)
