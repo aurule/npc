@@ -3,7 +3,7 @@ from functools import cache
 
 from npc.campaign import CharacterCollection
 from npc.characters import Character
-from npc.listers import CharacterView
+from npc import views
 
 class CharactersTableModel(QAbstractTableModel):
     def __init__(self, collection: CharacterCollection, tag_names: list[str]):
@@ -12,12 +12,13 @@ class CharactersTableModel(QAbstractTableModel):
         self.set_tag_names(tag_names)
 
         self.collection = collection
+        self.view_klass = views.get(collection.item_type)
 
-        self.views = [CharacterView(c) for c in collection.all()]
+        self.resource_views = [self.view_klass(c) for c in collection.all()]
 
     def data(self, index, role: int):
         if role == Qt.DisplayRole:
-            view = self.views[index.row()]
+            view = self.resource_views[index.row()]
             tag = self.tag_names[index.column()]
             if view.has(tag):
                 return view.first(tag)
@@ -49,7 +50,7 @@ class CharactersTableModel(QAbstractTableModel):
             return character.first(tag)
 
         reverse = order == Qt.DescendingOrder
-        self.views = sorted(self.views, key=comparator, reverse=reverse)
+        self.resource_views = sorted(self.resource_views, key=comparator, reverse=reverse)
 
         # trigger a redraw
         topleft = self.index(0,0)

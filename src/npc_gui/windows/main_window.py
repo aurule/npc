@@ -8,9 +8,8 @@ from PySide6.QtGui import QAction, QIcon, QDesktopServices
 
 import click
 
-from ..models import CharactersTableModel
 from ..helpers import theme_or_resource_icon, find_settings_file
-from ..widgets import ActionButton
+from ..widgets import ActionButton, ResourceTable
 from ..widgets.size_policies import *
 from . import NewCampaignDialog, NewCharacterDialog
 import npc
@@ -184,6 +183,7 @@ class MainWindow(QMainWindow):
     def init_toolbar(self):
         toolbar = QToolBar("Main")
         toolbar.addAction(self.actions.get("session"))
+        toolbar.addAction(self.actions.get("new_character"))
         toolbar.addAction(self.actions.get("refresh"))
         self.addToolBar(toolbar)
 
@@ -258,23 +258,16 @@ class MainWindow(QMainWindow):
 
         characters_tab = QWidget()
         characters_layout = QVBoxLayout(characters_tab)
-
-        characters_model = CharactersTableModel(
+        characters_table = ResourceTable(
             self.campaign.characters,
             ["realname", "mnemonic", "type", "location"]
         )
-        characters_table = QTableView()
-        characters_table.verticalHeader().hide()
-        characters_table.setCornerButtonEnabled(False)
-        characters_table.setSortingEnabled(True)
-        characters_table.setModel(characters_model)
-        characters_table.sortByColumn(0, Qt.AscendingOrder)
         characters_layout.addWidget(characters_table)
 
         character_actions_bar = QWidget()
         character_actions_layout = QHBoxLayout(character_actions_bar)
 
-        characters_count = QLabel(f"{characters_model.rowCount()} characters")
+        characters_count = QLabel(f"{characters_table.model.rowCount()} characters")
         character_actions_layout.addWidget(characters_count)
 
         new_character_button = ActionButton(self.actions.get("new_character"))

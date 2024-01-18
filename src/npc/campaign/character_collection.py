@@ -19,6 +19,7 @@ class CharacterCollection():
         self.campaign = campaign
         self.root = campaign.characters_dir
         self.count = 0
+        self.item_type = "Character"
 
     def refresh(self):
         """Load npc files into the db
