@@ -1,6 +1,6 @@
 from npc.characters import Tag
 
-from npc.listers.tag_view_collection import TagViewCollection
+from npc.views.tag_view_collection import TagViewCollection
 
 def test_joins_tag_views():
     tag1 = Tag(name="test", value="yes")

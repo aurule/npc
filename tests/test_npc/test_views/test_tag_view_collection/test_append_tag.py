@@ -1,6 +1,6 @@
 from npc.characters import Tag
 
-from npc.listers.tag_view_collection import TagViewCollection
+from npc.views.tag_view_collection import TagViewCollection
 
 def test_saves_corresponding_tag_view():
     tag = Tag(name="test", value="yes")

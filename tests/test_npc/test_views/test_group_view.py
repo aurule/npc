@@ -1,4 +1,4 @@
-from npc.listers.group_view import GroupView
+from npc.views.group_view import GroupView
 
 def test_uses_title():
     view = GroupView("test view")

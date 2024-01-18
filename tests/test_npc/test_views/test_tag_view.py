@@ -1,6 +1,6 @@
 from npc.characters import Tag
 
-from npc.listers.tag_view import TagView
+from npc.views.tag_view import TagView
 
 def test_uses_tag_name():
     tag = Tag(name="test", value="testing", subtags=[])

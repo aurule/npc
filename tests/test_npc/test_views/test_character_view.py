@@ -1,7 +1,7 @@
 from tests.fixtures import tmp_campaign
 from npc.characters import Tag, Character, CharacterFactory, RawTag
 
-from npc.listers.character_view import CharacterView
+from npc.views.character_view import CharacterView
 
 def test_uses_character_type(tmp_campaign):
     factory = CharacterFactory(tmp_campaign)

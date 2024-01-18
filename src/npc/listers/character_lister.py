@@ -9,8 +9,8 @@ from npc.templates import CharacterFallbackLoader
 from npc.templates.filters import trim_tags
 from npc.db.query_builders import CharacterListerQueryBuilder
 from npc.util import arg_or_default
-from .character_view import CharacterView
-from .group_view import GroupView
+from npc.views import CharacterView
+from npc.views import GroupView
 
 class CharacterLister:
     """Class to create character listings from a character collection

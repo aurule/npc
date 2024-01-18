@@ -12,6 +12,7 @@ __all__ = [
     "templates",
     "util",
     "validation",
+    "views",
 ]
 __author__ = "Paige Andrews"
 __version__ = "2.0.2"
