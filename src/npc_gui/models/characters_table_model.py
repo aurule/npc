@@ -17,11 +17,18 @@ class CharactersTableModel(QAbstractTableModel):
         self.resource_views = [self.view_klass(c) for c in collection.all()]
 
     def data(self, index, role: int):
-        if role == Qt.DisplayRole:
-            view = self.resource_views[index.row()]
-            tag = self.tag_names[index.column()]
-            if view.has(tag):
-                return view.first(tag)
+        view = self.resource_views[index.row()]
+        tag = self.tag_names[index.column()]
+        match role:
+            case Qt.DisplayRole:
+                if view.has(tag):
+                    return view.first(tag)
+            case Qt.ToolTipRole:
+                return f"{view.realname} - {view.mnemonic}, {view.type}"
+            case Qt.WhatsThisRole:
+                return f"Data for the tag @{tag} for the character {view.realname}"
+            case Qt.StatusTipRole:
+                return f"{view.realname} - {view.mnemonic}, {view.type}"
 
     def headerData(self, section: int, orientation, role: int):
         if role == Qt.DisplayRole:
