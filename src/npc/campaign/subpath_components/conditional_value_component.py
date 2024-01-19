@@ -22,7 +22,7 @@ class ConditionalValueComponent(BaseSubpathComponent):
         self.tag_names = self.from_spec("tags")
         self._value = self.from_spec("value")
 
-    def value(self, character: Character, current_path: Path) -> str:
+    def tag_value(self, character: Character, current_path: Path) -> str:
         """Return the configured static value if character has at least one of our tags
 
         Args:

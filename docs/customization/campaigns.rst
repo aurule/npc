@@ -88,13 +88,19 @@ Any character files within a directory found in ``ignore_subpaths`` is skipped e
 Guide to Subpaths
 ~~~~~~~~~~~~~~~~~
 
-When creating a new character, or reorganizing existing characters, the objects within ``subpath_components`` are used to build out the character's path. Each of these objects is applied in order and can add a directory to the character's path.
+When creating a new character, or reorganizing existing characters, the list of objects within ``subpath_components`` are used to build out the character's path. Each of these objects is applied in order and can add a directory to the character's path.
 
-If a directory would be added that doesn't already exist, it will be skipped entirely and the next subpath component will be evaluated. This can be very useful for creating branching paths. Some cli commands (like :ref:`cmd_reorg`) have an option to create missing directories instead.
+If a directory would be added that doesn't already exist, it will be skipped entirely and the next subpath component will be evaluated. This can be very useful for creating branching paths.
+
+.. hint::
+
+    Some cli commands (like :ref:`cmd_reorg`) have an option to create these missing directories instead.
 
 .. important::
 
     Subpaths can only examine top-level tags. Nested tags, like the character's ``role`` within an ``org``, cannot be accessed.
+
+*The* ``fallback`` *properties were added in NEW_VERSION*
 
 These are the available subpath components:
 
@@ -102,6 +108,15 @@ Conditional Value
 ^^^^^^^^^^^^^^^^^
 
 Add the directory from ``value`` if at least one of the ``tags`` is present in the character.
+
+Properties:
+
+:selector: :octicon:`note` :bdg-warning:`required` Must be ``conditional_value``
+:value: :octicon:`note` :bdg-warning:`required` The directory name to return
+:tags: :octicon:`list-ordered` :bdg-warning:`required` The tags whose presence will be checked, in order
+:fallback: :octicon:`note` A directory name to use if none of the tags are present
+
+Example:
 
 .. code:: yaml
 
@@ -115,6 +130,14 @@ First Value
 
 Add a directory from the first value found for any of the specified tags. Tags are checked in order.
 
+Properties:
+
+:selector: :octicon:`note` :bdg-warning:`required` Must be ``first_value``
+:tags: :octicon:`list-ordered` :bdg-warning:`required` The tags to read, in order
+:fallback: :octicon:`note` A directory name to use if none of the tags are present
+
+Example:
+
 .. code:: yaml
 
     subpath_components:
@@ -126,6 +149,13 @@ Static Value
 
 Add the directory from ``value``.
 
+Properties:
+
+:selector: :octicon:`note` :bdg-warning:`required` Must be ``static_value``
+:value: :octicon:`note` :bdg-warning:`required` The directory name to return
+
+Example:
+
 .. code:: yaml
 
     subpath_components:
@@ -136,6 +166,16 @@ Match Value
 ^^^^^^^^^^^
 
 Add the directory from ``value`` if at least one of the ``tags`` contains the value in ``equals``.
+
+Properties:
+
+:selector: :octicon:`note` :bdg-warning:`required` Must be ``match_value``
+:value: :octicon:`note` :bdg-warning:`required` The directory name to return
+:equals: :octicon:`note` :bdg-warning:`required` The tag value to test against
+:tags: :octicon:`list-ordered` :bdg-warning:`required` The tags to examine
+:fallback: :octicon:`note` A directory name to use if none of the tags match the value in ``equals``
+
+Example:
 
 .. code:: yaml
 

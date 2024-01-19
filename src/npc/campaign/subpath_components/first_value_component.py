@@ -22,7 +22,7 @@ class FirstValueComponent(BaseSubpathComponent):
 
         self.tag_names = self.from_spec("tags")
 
-    def value(self, character: Character, current_path: Path) -> str:
+    def tag_value(self, character: Character, current_path: Path) -> str:
         """Get the value of this component
 
         This tries to return the first value of the first tag in our tag_names which the character has. When

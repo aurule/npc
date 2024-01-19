@@ -24,7 +24,7 @@ class MatchValueComponent(BaseSubpathComponent):
         self._value = self.from_spec("value")
         self.target = self.from_spec("equals")
 
-    def value(self, character: Character, current_path: Path) -> str:
+    def tag_value(self, character: Character, current_path: Path) -> str:
         """Get the value of this component
 
         Return the configured static value if the first value of the first existing tag in
