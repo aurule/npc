@@ -20,7 +20,7 @@ class FirstValueComponent(BaseSubpathComponent):
     def __init__(self, db: DB, spec: dict, only_existing: bool = False):
         super().__init__(db, spec, only_existing)
 
-        self.tag_names = self.from_spec(spec, "tags")
+        self.tag_names = self.from_spec("tags")
 
     def value(self, character: Character, current_path: Path) -> str:
         """Get the value of this component

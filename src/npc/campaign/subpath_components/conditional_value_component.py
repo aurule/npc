@@ -19,8 +19,8 @@ class ConditionalValueComponent(BaseSubpathComponent):
     def __init__(self, db: DB, spec: dict, only_existing: bool = False):
         super().__init__(db, spec, only_existing)
 
-        self.tag_names = self.from_spec(spec, "tags")
-        self._value = self.from_spec(spec, "value")
+        self.tag_names = self.from_spec("tags")
+        self._value = self.from_spec("value")
 
     def value(self, character: Character, current_path: Path) -> str:
         """Return the configured static value if character has at least one of our tags

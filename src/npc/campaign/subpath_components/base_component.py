@@ -37,13 +37,12 @@ class BaseSubpathComponent(ABC):
             str: Value of this subpath component
         """
 
-    def from_spec(self, spec: dict, key: str):
+    def from_spec(self, key: str):
         """Get a required value from the passed spec
 
-        This gets the value of key from spec. If key isn't there, an error is raised.
+        This gets the value of key from our spec. If key isn't there, an error is raised.
 
         Args:
-            spec (dict): Configuration data for the component
             key (str): Name of the key to fetch
 
         Returns:
@@ -52,7 +51,7 @@ class BaseSubpathComponent(ABC):
         Raises:
             KeyError: Raised if the named key does not exist in spec
         """
-        value = spec.get(key)
+        value = self.spec.get(key)
         if not value:
             raise KeyError(f"Missing {key} key for {self.__class__.SELECTOR} subpath component")
         return value
