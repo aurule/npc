@@ -14,16 +14,19 @@ class TagViewCollection:
                 self.append_tag(tag)
 
     def __str__(self) -> str:
-        """Return a printable representation of this view
+        """Return the value of this collection's first tag view
 
-        Since this object is meant to be used in templates, this default string implemntation returns the
-        values of its tag views joined with commas
+        This is a shortcut for printing the first contained value. Many tags are only expected a single time,
+        so the convenience is very helpful.
+
+        {{ character.court.first() }} becomes {{ character.court }}
 
         Returns:
-            str: Our tag view strings joined with commas
+            str: The value of our first tag
         """
-        view_strings = (str(view) for view in self.tag_views)
-        return ", ".join(view_strings)
+        if self.tag_views:
+            return str(self.first())
+        return ""
 
     def append_tag(self, tag: Tag):
         """Add a TagView to this collection using data from the passed tag
