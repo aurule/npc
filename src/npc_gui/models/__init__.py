@@ -1,2 +1,3 @@
 from .characters_table_model import CharactersTableModel
 from .system_list_model import SystemListModel
+from .character_types_model import CharacterTypesModel

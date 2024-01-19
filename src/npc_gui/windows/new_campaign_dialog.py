@@ -91,7 +91,7 @@ class NewCampaignDialog(QDialog):
         self.campaign_desc = self.desc_input.toMarkdown()
 
     def ok_check(self, *args, **kwargs):
-        if self.campaign_name and self.campaign_system:
-            self.ok_button.setEnabled(True)
-        else:
-            self.ok_button.setEnabled(False)
+        self.ok_button.setEnabled(bool(
+            self.campaign_name \
+            and self.campaign_system
+        ))
