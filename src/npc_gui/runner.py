@@ -9,6 +9,8 @@ from npc import __version__ as npc_version
 @click.version_option(npc_version)
 @click.option("-c", "--campaign", help="Path to the campaign directory to open on launch")
 def run(campaign):
+    """Run the NPC GUI interface
+    """
     app = NPCApplication([])
     app.setStyle("Fusion")
 
