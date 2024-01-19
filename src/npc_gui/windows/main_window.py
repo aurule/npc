@@ -21,6 +21,9 @@ class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
 
+        self.campaign = None
+        self.default_settings = app_settings()
+
         self.campaign_actions = []
         self.actions = {}
 
@@ -220,12 +223,10 @@ class MainWindow(QMainWindow):
         QDesktopServices.openUrl(QUrl("https://npc.readthedocs.io/en/stable/"))
 
     @property
-    def campaign(self):
-        return QApplication.instance().campaign
-
-    @property
     def settings(self):
-        return QApplication.instance().settings
+        if self.campaign:
+            return self.campaign.settings
+        return self.default_settings
 
     def open_campaign(self, _parent):
         target = QFileDialog.getExistingDirectory(self, "Open Campaign")
@@ -240,11 +241,10 @@ class MainWindow(QMainWindow):
             QMessageBox.critical(self, "No Campaign", f"The folder {campaign_path} is not an NPC campaign, nor are any of its parent directories.")
             return
 
-        app = QApplication.instance()
-        app.campaign = campaign.Campaign(campaign_root)
+        self.campaign = campaign.Campaign(campaign_root)
         # outdated and migrations?
 
-        app.campaign.characters.refresh()
+        self.campaign.characters.refresh()
         self.init_tables()
         self.update_campaign_availability()
 
@@ -300,9 +300,9 @@ class MainWindow(QMainWindow):
             self.load_campaign_dir(picker.campaign_path)
 
     def close_campaign(self, _parent):
-        QApplication.instance().campaign = None
-        self.init_hello()
+        self.campaign = None
         self.update_campaign_availability()
+        self.init_hello()
 
     def about(self, _parent):
         QMessageBox.about(

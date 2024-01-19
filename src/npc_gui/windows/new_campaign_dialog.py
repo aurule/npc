@@ -44,8 +44,7 @@ class NewCampaignDialog(QDialog):
         form_lines.addRow("&Name:", name_input)
 
         # system picker
-        settings = QApplication.instance().settings
-        systems_model = SystemListModel(settings)
+        systems_model = SystemListModel(parent.settings)
         self.system_picker = QComboBox()
         self.system_picker.setModel(systems_model)
         self.system_picker.setPlaceholderText("Pick a game system")

@@ -15,9 +15,9 @@ def run(campaign):
     app.setStyle("Fusion")
 
     mw = MainWindow()
+    mw.show()
     if campaign:
         mw.load_campaign_dir(campaign)
-    mw.show()
 
     # set up watchdog observer
     # fs_event_handler = ...
