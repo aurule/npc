@@ -253,6 +253,24 @@ Example:
           - assoc
           - rest
 
+campaign.subpath_components :octicon:`list_ordered`
+---------------------------------------------------
+
+:bdg-info:`type: list`
+:bdg-info:`required: no`
+
+Defines the list of subpath components that are used to find the ideal path for a character based on its tags. See :ref:`cust_campaign_char_subpaths` for more.
+
+Example:
+
+.. code:: yaml
+
+    subpath_components:
+      - selector: first_value
+        tags: [location]
+      - selector: first_value
+        tags: [org, employer]
+
 campaign.plot :octicon:`code-square`
 ------------------------------------
 
