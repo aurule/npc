@@ -21,3 +21,4 @@ Subpackages
    npc.templates
    npc.util
    npc.validation
+   npc.views

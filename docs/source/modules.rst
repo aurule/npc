@@ -6,3 +6,4 @@ src
 
    npc
    npc_cli
+   npc_gui

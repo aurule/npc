@@ -13,7 +13,4 @@ Submodules
    :maxdepth: 4
 
    npc.listers.character_lister
-   npc.listers.character_view
-   npc.listers.group_view
-   npc.listers.tag_view
-   npc.listers.tag_view_collection
+   npc.listers.undefined_view

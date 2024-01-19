@@ -109,6 +109,23 @@ Default Templates
 
 The default templates display all information for the :ref:`ref_tags` in NPC. Various type-specific templates exist for the character types of the built-in :ref:`ref_systems`. If you're using these systems, you may be able to use the default templates without any changes.
 
+Custom Templates
+^^^^^^^^^^^^^^^^
+
+If you make a new system, or want to change how a certain character type is displayed, you'll need to make a new template file. Name it using the character type key and use either ``.html`` or ``.md`` for the file extension, depending on the output format you're targeting.
+
+Templates for a single campaign can go in the campaign's settings directory at :file:`<campaign>/.npc/templates/characters`. Shared templates should go in your user settings at :file:`<user settings>/templates/characters/<game system key>`.
+
+For example, if you're making a new template for the :ref:`sys_nwod_changeling` type to be shared by multiple campaigns, you'd create the file :file:`<user settings>/templates/characters/nwod/changeling.html`.
+
+If you want to generate everything from scratch, that's it! You can write Jinja code as normal.
+
+.. seealso::
+
+    See the `Jinja Template <https://jinja.palletsprojects.com/en/3.1.x/templates/>`_ docs for information on how to write templates in general.
+
+    NPC supplies view objects to each template, along with some new filters. See :ref:`listing_data` for details on what is available from NPC.
+
 File Locations
 ^^^^^^^^^^^^^^
 
@@ -130,16 +147,8 @@ This ensures the following order of precedence:
 
 If no file is found for the character type, then the same directories are checked again for the generic :file:`character.<ext>` template.
 
-Custom Templates
-^^^^^^^^^^^^^^^^
-
-If you make a new system, or want to change how a type is displayed, you'll need to make a new template file. Name it using the character type key and use either ``.html`` or ``.md`` for the file extension, depending on the output format you're targeting.
-
-Templates for a single campaign can go in the campaign's settings directory at :file:`<campaign>/.npc/templates/characters`. Shared templates should go in your user settings at :file:`<user settings>/templates/characters/<game system key>`.
-
-For example, if you're making a new template for the :ref:`sys_nwod_changeling` type to be shared by multiple campaigns, you'd create the file :file:`<user settings>/templates/characters/nwod/changeling.html`.
-
-If you want to generate everything from scratch, that's it! You can write Jinja code as normal. Check out the :ref:`listing_new_filters` added by NPC, as well.
+Base Templates and Blocks
+^^^^^^^^^^^^^^^^^^^^^^^^^
 
 If you don't want to start from scratch, you can inherit from one of the base character templates:
 
@@ -166,7 +175,7 @@ Putting this at the top of the file will give you access to various blocks which
 
 .. tip::
 
-    If you want your custom content to appear before the default block contents, just put your own code before the call to ``super()``. If you want to effectively hide the block, define it and don't call ``super()`` at all.
+    If you want your custom content to appear before the default block contents, just put your own code before the call to ``super()``. If you want to hide the block, define it and don't call ``super()`` at all.
 
 These are the available blocks:
 
@@ -184,16 +193,118 @@ These are the available blocks:
 
 .. tip::
 
-    Blocks marked with :octicon:`markdown` may be formatted in markdown. Use the :ref:`listing_filter_md` or :ref:`listing_filter_mdi` filters to convert their contents to HTML if desired.
+    Blocks marked with :octicon:`markdown` include tags whose data may be formatted in markdown. Use the :ref:`listing_filter_md` or :ref:`listing_filter_mdi` filters to convert the tag contents to HTML if desired.
+
+.. _listing_data:
 
 Data and Helpers
-^^^^^^^^^^^^^^^^
+----------------
 
 NPC supplies these properties to every character template:
 
 :header_level: The current header level to use for this entry's header text.
-:character: The character object whose data should be displayed.
+:character: The CharacterView object whose data should be displayed.
 :has: A simple helper function to test if the character has a named tag.
+
+The ``character`` is a CharacterView object with a few special conveniences to make writing templates less onerous.
+
+The Character View
+^^^^^^^^^^^^^^^^^^
+
+Each template is passed a single ``character`` object, which is a CharacterView. This provides a read-only look at that character's properties and tags, condensed down for ease of use.
+
+On its own, printing the ``character`` will simply show its name. Convenient for indexes and the like. *Added in NEW_VERSION*
+
+.. code:: jinja
+
+    {{ character }}
+
+.. code:: html
+
+    Grete Mann
+
+Each character will *always* have the following properties:
+
+:type: The type key
+:description: The description
+:realname: Full character name
+:mnemonic: Quick-reference mnemonic
+
+Beyond these properties, a character is likely to have properties named after various tags. Since tags can (almost always) appear more than once, tag attributes are actually a collection of multiple tags. There are a number of convenience methods associated with these collections, as well as the tags they contain.
+
+In addition, there are some helper methods on the character itself.
+
+.. autofunction:: npc.views.CharacterView.has
+
+.. tip::
+
+    The global ``has()`` helper method is a shortcut for this same method, ``character.has()``.
+
+.. autofunction:: npc.views.CharacterView.first
+
+Tag Collections
+~~~~~~~~~~~~~~~
+
+When accessing a tag attribute on a character view, you get a tag collection. This special view contains a list of all tags with the given name. It has some specific behavior available to make views easier to write.
+
+First, when printed, a tag collection displays the value of its *first* tag. For example:
+
+.. code-block::
+    :caption: Character file snippet with tags
+
+    @org Red Riders
+    @org Blue Busters
+
+.. code-block:: jinja
+    :caption: Template snippet
+
+    {{ character.org }}
+
+.. code-block:: html
+    :caption: Rendered output
+
+    Red Riders
+
+Then there are its helper methods. First, to iterate over everything in the collection, you must use the ``all()`` method:
+
+.. automethod:: npc.views.TagViewCollection.all
+
+To get the first tag view alone, use ``first()``:
+
+.. automethod:: npc.views.TagViewCollection.first
+
+And to get all tag values *after* the first, use ``rest()``:
+
+.. automethod:: npc.views.TagViewCollection.rest
+
+Tag Views
+~~~~~~~~~
+
+Once you have a single tag object, things are simple again. Printing the tag view by itself will render its ``value``. You can also access the tag ``name`` if needed.
+
+Finally, tags can have subtags. Accessing them behaves identically to accessing the tags of a character, complete with a ``tag.has()``.
+
+Undefined Tags
+~~~~~~~~~~~~~~
+
+If a tag is not defined for a character, Jinja automatically makes use of a special Undefined object (see `Undefined Types <https://jinja.palletsprojects.com/en/3.1.x/api/#undefined-types>`_ for more). NPC extends this special object so that it's safe to call ``first()``, ``all()``, and ``rest()`` on these undefined results without causing an error.
+
+.. code-block::
+    :caption: A character with no class
+
+    @org Rogues Gallery
+
+.. code-block:: jinja
+    :caption: Template snippet
+
+    Character class: {{ character.class }}
+
+.. code-block:: html
+    :caption: Rendered output
+
+    Character class:
+
+*Added in NEW_VERSION*
 
 .. _listing_new_filters:
 

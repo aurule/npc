@@ -54,9 +54,12 @@ def prepend_namespace(data: any, namespace: str = None) -> dict:
 
     Puts data inside one or more dicts as specified by namespace.
     For example:
-        prepend_namespace("hello", "npc.greeting.first_time")
+
+    prepend_namespace("hello", "npc.greeting.first_time")
+
     returns:
-        {"npc": {"greeting": {"first_time": "hello"}}}
+
+    {"npc": {"greeting": {"first_time": "hello"}}}
 
     Args:
         data (any): Data to insert into a dict
