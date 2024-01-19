@@ -3,12 +3,18 @@ import click
 from .application import NPCApplication
 from .windows import MainWindow
 
+from npc import __version__ as npc_version
+
 @click.command
-def run():
+@click.version_option(npc_version)
+@click.option("-c", "--campaign", help="Path to the campaign directory to open on launch")
+def run(campaign):
     app = NPCApplication([])
     app.setStyle("Fusion")
 
     mw = MainWindow()
+    if campaign:
+        mw.load_campaign_dir(campaign)
     mw.show()
 
     # set up watchdog observer
