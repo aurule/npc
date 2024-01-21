@@ -180,8 +180,10 @@ class NewCharacterDialog(QDialog):
         self.accept()
 
     def delete_character_entry(self):
-        # run a delete query on our character_id
-        # let cascading take care of the tag entries
+        query = character_repository.destroy(self.character_id)
+        with self.db.session() as session:
+            session.execute(query)
+            session.commit()
         self.reject()
 
     def update_attr(self, attr_name, attr_value):

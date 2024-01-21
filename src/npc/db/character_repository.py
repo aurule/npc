@@ -3,7 +3,7 @@
 These queries get data that's related to a character or its tags.
 """
 
-from sqlalchemy import desc, Exists, func, select, Select, update, Update
+from sqlalchemy import desc, Exists, func, select, Select, update, Update, delete, Delete
 from sqlalchemy.orm import selectinload
 from npc.characters import Tag, Character
 
@@ -100,6 +100,10 @@ def get(id: int) -> Select:
         Select: Select object for the character query
     """
     return select(Character) \
+        .where(Character.id == id)
+
+def destroy(id: int) -> Delete:
+    return delete(Character) \
         .where(Character.id == id)
 
 def attr_counts(name: str) -> Select:
