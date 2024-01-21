@@ -13,5 +13,8 @@
         <file alias="list-remove">assets/icons/trash-bin.svg</file>
         <file alias="menu-more">assets/icons/dots-horiz-thick.svg</file>
         <file alias="go-next">assets/icons/go-next.svg</file>
+        <file alias="view-hidden">assets/icons/eye-slash.svg</file>
+        <file alias="window-pin">assets/icons/map-pin.svg</file>
+        <file alias="bug">assets/icons/bug.svg</file>
     </qresource>
 </RCC>

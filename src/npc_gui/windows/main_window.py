@@ -258,16 +258,16 @@ class MainWindow(QMainWindow):
 
         characters_tab = QWidget()
         characters_layout = QVBoxLayout(characters_tab)
-        characters_table = ResourceTable(
+        self.characters_table = ResourceTable(
             self.campaign.characters,
             ["realname", "mnemonic", "type", "location"]
         )
-        characters_layout.addWidget(characters_table)
+        characters_layout.addWidget(self.characters_table)
 
         character_actions_bar = QWidget()
         character_actions_layout = QHBoxLayout(character_actions_bar)
 
-        characters_count = QLabel(f"{characters_table.model.rowCount()} characters")
+        characters_count = QLabel(f"{self.characters_table.model.rowCount()} characters")
         character_actions_layout.addWidget(characters_count)
 
         new_character_button = ActionButton(self.actions.get("new_character"))
@@ -282,6 +282,7 @@ class MainWindow(QMainWindow):
 
     def refresh_campaign(self, _parent):
         self.campaign.characters.refresh()
+        self.characters_table.model.reload()
 
     def new_campaign(self, _parent):
         campaign_path = QFileDialog.getExistingDirectory(self, "Choose campaign directory")
@@ -351,5 +352,5 @@ class MainWindow(QMainWindow):
     def new_character(self, _parent):
         dialog = NewCharacterDialog(parent=self)
         if dialog.exec():
-            pass
-            # make a new character file
+            self.campaign.characters.count += 1
+            self.characters_table.model.reload()

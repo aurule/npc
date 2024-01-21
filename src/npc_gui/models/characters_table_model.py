@@ -14,7 +14,12 @@ class CharactersTableModel(QAbstractTableModel):
         self.collection = collection
         self.view_klass = views.get(collection.item_type)
 
-        self.resource_views = [self.view_klass(c) for c in collection.all()]
+        self.resource_views = [self.view_klass(c) for c in self.collection.all()]
+
+    def reload(self):
+        self.beginResetModel()
+        self.resource_views = [self.view_klass(c) for c in self.collection.all()]
+        self.endResetModel()
 
     def data(self, index, role: int):
         view = self.resource_views[index.row()]
