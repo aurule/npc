@@ -1,6 +1,7 @@
 from PySide6.QtWidgets import (
     QDialog, QVBoxLayout, QDialogButtonBox, QFormLayout, QLabel, QPushButton, QLineEdit, QComboBox,
-    QHBoxLayout, QToolButton, QGroupBox, QCheckBox, QTextEdit
+    QHBoxLayout, QToolButton, QGroupBox, QCheckBox, QTextEdit, QScrollArea,
+    QGridLayout
 )
 from PySide6.QtCore import Qt, QTimer
 
@@ -47,15 +48,6 @@ class NewCharacterDialog(QDialog):
     def init_elements(self):
         form_lines = QFormLayout()
 
-        # type picker
-        types_model = CharacterTypesModel(self.campaign)
-        self.type_picker = QComboBox()
-        self.type_picker.setModel(types_model)
-        self.type_picker.setPlaceholderText("Pick a character type")
-        self.type_picker.setCurrentIndex(-1)
-        self.type_picker.currentIndexChanged.connect(self.save_type)
-        form_lines.addRow("&Type:", self.type_picker)
-
         # name input
         name_input = DebounceLineEdit()
         name_input.debouncedText.connect(self.save_name)
@@ -65,6 +57,15 @@ class NewCharacterDialog(QDialog):
         mnemonic_input = DebounceLineEdit()
         mnemonic_input.debouncedText.connect(self.save_mnemonic)
         form_lines.addRow("&Mnemonic:", mnemonic_input)
+
+        # type picker
+        types_model = CharacterTypesModel(self.campaign)
+        self.type_picker = QComboBox()
+        self.type_picker.setModel(types_model)
+        self.type_picker.setPlaceholderText("Pick a character type")
+        self.type_picker.setCurrentIndex(-1)
+        self.type_picker.currentIndexChanged.connect(self.save_type)
+        form_lines.addRow("&Type:", self.type_picker)
 
         # path label
         self.path_preview = QLabel(" ")
@@ -100,14 +101,25 @@ class NewCharacterDialog(QDialog):
         flags_box.setLayout(flags_box_layout)
         master_layout.addWidget(flags_box)
 
-        # tag management
-        tag_box = QGroupBox("Tags")
-        tag_box.setFlat(True)
-        tag_box_layout = QVBoxLayout()
-        tag_box.setLayout(tag_box_layout)
-        master_layout.addWidget(tag_box)
+        # description input
 
-        # need a scrolling area
+        desc_label = QLabel("Description:")
+        master_layout.addWidget(desc_label)
+        self.desc_debounce = QTimer()
+        self.desc_debounce.setSingleShot(True)
+        self.desc_debounce.setInterval(300)
+        desc_input = QTextEdit()
+        desc_input.textChanged.connect(self.desc_debounce.start)
+        self.desc_debounce.timeout.connect(lambda: self.save_desc(desc_input.toMarkdown()))
+        master_layout.addWidget(desc_input)
+
+        # tag management
+        tags_label = QLabel("Tags:")
+        master_layout.addWidget(tags_label)
+        tag_scroller = QScrollArea()
+        scroller_layout = QGridLayout()
+        tag_scroller.setLayout(scroller_layout)
+        master_layout.addWidget(tag_scroller)
 
         tag_line = QHBoxLayout()
         picker = QComboBox()
@@ -124,7 +136,7 @@ class NewCharacterDialog(QDialog):
         menu_btn.setToolButtonStyle(Qt.ToolButtonIconOnly)
         menu_btn.setToolTip("Tag actions...")
         tag_line.addWidget(menu_btn)
-        tag_box_layout.addLayout(tag_line)
+        scroller_layout.addLayout(tag_line, 0, 0)
 
         new_tag_line = QHBoxLayout()
         tag_name_picker = QComboBox() # allow custom input
@@ -141,19 +153,7 @@ class NewCharacterDialog(QDialog):
         new_tag_btn.setToolButtonStyle(Qt.ToolButtonIconOnly)
         new_tag_btn.setToolTip("Add tag")
         new_tag_line.addWidget(new_tag_btn)
-        tag_box_layout.addLayout(new_tag_line)
-
-        # description input
-
-        desc_label = QLabel("Description:")
-        master_layout.addWidget(desc_label)
-        self.desc_debounce = QTimer()
-        self.desc_debounce.setSingleShot(True)
-        self.desc_debounce.setInterval(300)
-        desc_input = QTextEdit()
-        desc_input.textChanged.connect(self.desc_debounce.start)
-        self.desc_debounce.timeout.connect(lambda: self.save_desc(desc_input.toMarkdown()))
-        master_layout.addWidget(desc_input)
+        scroller_layout.addLayout(new_tag_line, 1, 0)
 
         # buttons
 
