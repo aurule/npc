@@ -1,10 +1,10 @@
 from PySide6.QtCore import QAbstractListModel, Qt
 
-class CharacterTypesModel(QAbstractListModel):
+class TagItemsModel(QAbstractListModel):
     def __init__(self, campaign):
         super().__init__()
 
-        self._data = list(campaign.types.values())
+        self._data = list(campaign.tags.values())
 
     def data(self, index, role: int):
         match role:

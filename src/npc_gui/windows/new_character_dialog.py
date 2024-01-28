@@ -1,7 +1,7 @@
 from PySide6.QtWidgets import (
     QDialog, QVBoxLayout, QDialogButtonBox, QFormLayout, QLabel, QPushButton, QLineEdit, QComboBox,
     QHBoxLayout, QToolButton, QGroupBox, QCheckBox, QTextEdit, QScrollArea,
-    QGridLayout
+    QGridLayout, QCompleter
 )
 from PySide6.QtCore import Qt, QTimer
 
@@ -9,7 +9,7 @@ from npc.campaign import Pathfinder
 from npc.characters import CharacterFactory, CharacterWriter
 from npc.db import DB, character_repository
 
-from ..models import CharacterTypesModel
+from ..models import CharacterTypesModel, TagItemsModel
 from ..helpers import theme_or_resource_icon
 from ..widgets import DebounceLineEdit
 from ..widgets.size_policies import *
@@ -126,7 +126,10 @@ class NewCharacterDialog(QDialog):
         picker.setPlaceholderText("Tag name")
         picker.setCurrentIndex(-1)
         picker.setEditable(True)
+        picker.setInsertPolicy(QComboBox.NoInsert)
         picker.setSizePolicy(fixed_horizontal)
+        tags_model = TagItemsModel(self.campaign)
+        picker.setModel(tags_model)
         tag_line.addWidget(picker)
         value = QLineEdit()
         tag_line.addWidget(value)
