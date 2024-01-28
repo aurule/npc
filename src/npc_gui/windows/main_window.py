@@ -28,7 +28,7 @@ class MainWindow(QMainWindow):
         self.actions = {}
 
         self.setWindowTitle("NPC Campaign Manager")
-        self.setMinimumSize(QSize(400, 300))
+        self.setMinimumSize(QSize(700, 600))
 
         self.init_actions()
         self.init_menus()

@@ -12,7 +12,6 @@ def run(campaign):
     """Run the NPC GUI interface
     """
     app = NPCApplication([])
-    app.setStyle("Fusion")
 
     mw = MainWindow()
     mw.show()
