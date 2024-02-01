@@ -55,7 +55,16 @@ class Pathfinder:
         type_spec = self.campaign.get_type(character.type_key)
         suffix = type_spec.default_sheet_suffix
 
-        return "".join([sanitized_name, CharacterReader.NAME_SEPARATOR, sanitized_mnemonic, suffix])
+        if not sanitized_name:
+            return ""
+
+        parts = [sanitized_name]
+        if sanitized_mnemonic:
+            parts.append(CharacterReader.NAME_SEPARATOR)
+            parts.append(sanitized_mnemonic)
+        parts.append(suffix)
+
+        return "".join(parts)
 
     @cache
     def make_component_stack(self, exists: bool) -> list:
