@@ -116,12 +116,14 @@ class NewCharacterDialog(QDialog):
         tags_label = QLabel("Tags:")
         master_layout.addWidget(tags_label)
         tag_scroller = QScrollArea()
-        scroller_layout = QGridLayout()
+        tag_scroller.setWidgetResizable(True)
+        scroller_layout = QFormLayout()
+        scroller_layout.setContentsMargins(0, 0, 0, 0)
         tag_scroller.setLayout(scroller_layout)
         master_layout.addWidget(tag_scroller)
 
         tag_editor = TagEdit(self)
-        scroller_layout.addWidget(tag_editor, 0, 0)
+        scroller_layout.addWidget(tag_editor)
 
         # buttons
 
