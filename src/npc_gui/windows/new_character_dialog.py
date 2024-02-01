@@ -1,7 +1,6 @@
 from PySide6.QtWidgets import (
     QDialog, QVBoxLayout, QDialogButtonBox, QFormLayout, QLabel, QPushButton, QLineEdit, QComboBox,
-    QHBoxLayout, QToolButton, QGroupBox, QCheckBox, QTextEdit, QScrollArea,
-    QGridLayout, QCompleter
+    QHBoxLayout, QGroupBox, QCheckBox, QTextEdit, QScrollArea, QGridLayout
 )
 from PySide6.QtCore import Qt, QTimer
 
@@ -9,9 +8,9 @@ from npc.campaign import Pathfinder
 from npc.characters import CharacterFactory, CharacterWriter
 from npc.db import DB, character_repository
 
-from ..models import CharacterTypesModel, TagItemsModel
+from ..models import CharacterTypesModel
 from ..helpers import theme_or_resource_icon
-from ..widgets import DebounceLineEdit
+from ..widgets import DebounceLineEdit, TagEdit
 from ..widgets.size_policies import *
 
 class NewCharacterDialog(QDialog):
@@ -121,29 +120,8 @@ class NewCharacterDialog(QDialog):
         tag_scroller.setLayout(scroller_layout)
         master_layout.addWidget(tag_scroller)
 
-        tag_line = QHBoxLayout()
-        tags_model = TagItemsModel(self.campaign)
-        picker = QComboBox()
-        picker.setModel(tags_model)
-        picker.setCurrentIndex(-1)
-        picker.setEditable(True)
-        picker.lineEdit().setPlaceholderText("Tag name")
-        picker.setSizePolicy(fixed_horizontal)
-        tag_completer = QCompleter(tags_model, picker)
-        tag_completer.setCaseSensitivity(Qt.CaseInsensitive)
-        tag_completer.setCompletionMode(QCompleter.InlineCompletion)
-        picker.setCompleter(tag_completer)
-        tag_line.addWidget(picker)
-        value_input = DebounceLineEdit()
-        # value_input.debouncedText.connect(self.save_value)
-        tag_line.addWidget(value_input)
-        menu_btn = QToolButton()
-        menu_btn.setSizePolicy(fixed_horizontal)
-        menu_btn.setIcon(theme_or_resource_icon("menu-more"))
-        menu_btn.setToolButtonStyle(Qt.ToolButtonIconOnly)
-        menu_btn.setToolTip("Tag actions...")
-        tag_line.addWidget(menu_btn)
-        scroller_layout.addLayout(tag_line, 0, 0)
+        tag_editor = TagEdit(self)
+        scroller_layout.addWidget(tag_editor, 0, 0)
 
         # buttons
 
