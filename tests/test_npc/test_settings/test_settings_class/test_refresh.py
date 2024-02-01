@@ -4,11 +4,12 @@ from npc.settings import Settings
 
 def test_purges_changed_values():
     settings = Settings()
+    orig_value = settings.get("npc.editor")
     settings.data["npc"]["editor"] = "test"
 
     settings.refresh()
 
-    assert settings.get("npc.editor") is None
+    assert settings.get("npc.editor") == orig_value
 
 def test_updates_personal_settings(tmp_path):
     settings = Settings(personal_dir = tmp_path)
