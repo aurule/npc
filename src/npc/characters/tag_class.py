@@ -1,4 +1,4 @@
-from sqlalchemy import String, Text, ForeignKey
+from sqlalchemy import String, Text, ForeignKey, Integer
 from sqlalchemy.orm import Mapped, relationship, mapped_column
 from typing import List, Optional, Union
 from dataclasses import dataclass
@@ -22,6 +22,7 @@ class Tag(BaseModel):
         subtags         rel     Tag
         parent_tag_id   int
         hidden          str     [None, "all", "one"]
+        sequence        int     0
     """
 
     __tablename__ = "tags"
@@ -36,6 +37,7 @@ class Tag(BaseModel):
     )
     parent_tag_id: Mapped[Optional[int]] = mapped_column(ForeignKey("tags.id"))
     hidden: Mapped[Optional[str]] = mapped_column(String(3))
+    sequence: Mapped[int] = mapped_column(Integer, default=0)
 
     def __repr__(self) -> str:
         return f"Tag(id={self.id!r}, name={self.name!r}, value={self.value!r}, hidden={self.hidden is not None})"
