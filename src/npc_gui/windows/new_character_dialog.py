@@ -1,8 +1,8 @@
 from PySide6.QtWidgets import (
     QDialog, QVBoxLayout, QDialogButtonBox, QFormLayout, QLabel, QPushButton, QLineEdit, QComboBox,
-    QHBoxLayout, QGroupBox, QCheckBox, QTextEdit, QScrollArea, QGridLayout
+    QHBoxLayout, QGroupBox, QCheckBox, QTextEdit, QScrollArea, QGridLayout, QToolButton
 )
-from PySide6.QtCore import Qt, QTimer
+from PySide6.QtCore import Qt, QTimer, QSize
 
 from npc.campaign import Pathfinder
 from npc.characters import CharacterFactory, CharacterWriter
@@ -113,8 +113,17 @@ class NewCharacterDialog(QDialog):
         master_layout.addWidget(desc_input)
 
         # tag management
+        tags_label_line = QHBoxLayout()
         tags_label = QLabel("Tags:")
-        master_layout.addWidget(tags_label)
+        tags_label_line.addWidget(tags_label)
+        tag_add = QToolButton()
+        tag_add.setIconSize(QSize(8, 8))
+        tag_add.setSizePolicy(fixed_horizontal)
+        tag_add.setIcon(theme_or_resource_icon("list-add"))
+        tag_add.setToolButtonStyle(Qt.ToolButtonIconOnly)
+        tags_label_line.addWidget(tag_add)
+        master_layout.addLayout(tags_label_line)
+
         tag_scroller = QScrollArea()
         tag_scroller.setWidgetResizable(True)
         scroller_layout = QFormLayout()
@@ -122,8 +131,9 @@ class NewCharacterDialog(QDialog):
         tag_scroller.setLayout(scroller_layout)
         master_layout.addWidget(tag_scroller)
 
-        tag_editor = TagEdit(self)
-        scroller_layout.addWidget(tag_editor)
+        # make new tag record
+        # tag_editor = TagEdit(x, self, self.db)
+        # scroller_layout.addWidget(tag_editor)
 
         # buttons
 

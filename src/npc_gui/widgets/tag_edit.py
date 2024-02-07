@@ -3,15 +3,22 @@ from PySide6.QtWidgets import (
 )
 from PySide6.QtCore import Qt
 
+from npc.db import DB
 from ..models import TagItemsModel
 from ..helpers import theme_or_resource_icon
 from .size_policies import *
 from .debounce_line_edit import DebounceLineEdit
 
 class TagEdit(QWidget):
-    def __init__(self, parent=None):
-        super().__init__(parent)
+    def __init__(self, tag_id: int, parent_widget=None, db: DB = None):
+        super().__init__(parent_widget)
 
+        self.db = db or DB()
+        self.tag_id = tag_id
+
+        self.init_widgets()
+
+    def init_widgets(self):
         self.container = QHBoxLayout(self)
 
         tags_model = TagItemsModel(parent.campaign)
@@ -35,4 +42,3 @@ class TagEdit(QWidget):
         menu_btn.setToolButtonStyle(Qt.ToolButtonIconOnly)
         menu_btn.setToolTip("Tag actions...")
         self.container.addWidget(menu_btn)
-
