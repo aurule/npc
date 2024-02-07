@@ -1,4 +1,4 @@
-from tests.fixtures import MockMigration, MockSettings
+from tests.fixtures import MockSettings
 
 from npc.settings.migrations import SettingsMigrator
 
