@@ -105,6 +105,14 @@ def get(id: int) -> Select:
         .where(Character.id == id)
 
 def destroy(id: int) -> Delete:
+    """Create a db query to delete a single Character record
+
+    Args:
+        id (int): ID of the character record to delete
+
+    Returns:
+        Delete: Delete object for the character deletion query
+    """
     return delete(Character) \
         .where(Character.id == id)
 
