@@ -39,6 +39,7 @@ class NewCharacterDialog(QDialog):
             session.commit()
 
         self.character_id = character.id
+        self.next_tag_sequence = 1
 
         self.setWindowTitle("Add a New Character")
 
@@ -112,6 +113,10 @@ class NewCharacterDialog(QDialog):
         self.desc_debounce.timeout.connect(lambda: self.save_desc(desc_input.toMarkdown()))
         master_layout.addWidget(desc_input)
 
+        # long-form tags: spec.long
+
+        # general tags
+
         # tag management
         tags_label_line = QHBoxLayout()
         tags_label = QLabel("Tags:")
@@ -121,6 +126,9 @@ class NewCharacterDialog(QDialog):
         tag_add.setSizePolicy(fixed_horizontal)
         tag_add.setIcon(theme_or_resource_icon("list-add"))
         tag_add.setToolButtonStyle(Qt.ToolButtonIconOnly)
+        # on press, make a new tag record at the end of the list
+        # create new TagEdit(id, self, self.db)
+        # scroller_layout.addWidget(tag_editor)
         tags_label_line.addWidget(tag_add)
         master_layout.addLayout(tags_label_line)
 
@@ -131,11 +139,7 @@ class NewCharacterDialog(QDialog):
         tag_scroller.setLayout(scroller_layout)
         master_layout.addWidget(tag_scroller)
 
-        # make new tag record
-        # tag_editor = TagEdit(x, self, self.db)
-        # scroller_layout.addWidget(tag_editor)
-
-        # buttons
+        # dialog buttons
 
         QBtn = QDialogButtonBox.Save | QDialogButtonBox.Cancel
         buttonBox = QDialogButtonBox(QBtn)
