@@ -113,13 +113,19 @@ changeling:
       desc: The more specific grouping of the changeling's fae kin. A subset of their seeming.
     mask:
       desc: How the changeling appears to humans and other non-fae.
+      long: true
+      history:
+        - Added long attribute in NEW_VERSION
     mien:
-      desc: How the changeling appears to other changelings, as well as goblins and other fae creatures.
+      desc: How the changeling appears to other changelings, goblins, and fae creatures.
+      long: true
+      history:
+        - Added long attribute in NEW_VERSION
     appearance:
       replaced_by: mask
       desc: Not specific enough for changeling appearances
       doc: >
-        Changeling appearance is broken into the mask ane mien. Use those tags instead.
+        Changeling appearance is described using the mask and mien. Use those tags instead.
     motley:
       desc: Tight-knit group the changeling belongs to, like a family
       doc: >

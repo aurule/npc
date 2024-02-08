@@ -56,9 +56,11 @@ The more specific grouping of the changeling's fae kin. A subset of their seemin
 
 :bdg-secondary:`Optional`
 :bdg-info:`Value required`
+:octicon:`book`
 
 How the changeling appears to humans and other non-fae.
 
+- *Added long attribute in NEW_VERSION*
 
 .. _tag_nwod_changeling_mien:
 
@@ -67,9 +69,11 @@ How the changeling appears to humans and other non-fae.
 
 :bdg-secondary:`Optional`
 :bdg-info:`Value required`
+:octicon:`book`
 
-How the changeling appears to other changelings, as well as goblins and other fae creatures.
+How the changeling appears to other changelings, goblins, and fae creatures.
 
+- *Added long attribute in NEW_VERSION*
 
 .. _tag_nwod_changeling_appearance:
 
@@ -79,11 +83,13 @@ How the changeling appears to other changelings, as well as goblins and other fa
 :bdg-danger:`Replaced by @mask`
 :bdg-secondary:`Optional`
 :bdg-info:`Value required`
+:octicon:`book`
 
 Not specific enough for changeling appearances
 
-Changeling appearance is broken into the mask ane mien. Use those tags instead.
+Changeling appearance is described using the mask and mien. Use those tags instead.
 
+- *Added long attribute in NEW_VERSION*
 
 .. _tag_nwod_changeling_motley:
 

@@ -43,6 +43,10 @@ properties:
         type: boolean
         description: Whether this tag is prevented from being changed
         default: false
+    long:
+        type: boolean
+        description: Whether this tag's value is intended to be longer than a few words
+        default: false
     subtags:
         patternProperties:
             "^[a-z][a-z|-]+$":

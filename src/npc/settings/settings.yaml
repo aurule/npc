@@ -49,6 +49,9 @@ npc:
         This is expected to be as long and descriptive as needed. Multiple
         appearance tags will be joined together with a newline in generated
         listings to allow multiple paragraphs.
+      long: true
+      history:
+        - Added long attribute in NEW_VERSION
     race:
       desc: Observable ancestry of the character
       doc: >

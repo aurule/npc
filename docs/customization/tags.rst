@@ -36,9 +36,13 @@ Each entry within ``npc.tags`` is the name of a tag, followed by these attribute
 
 :locked: :octicon:`tasklist` Whether this tag is prevented from being changed.
 
+:long: :octicon:`tasklist` Whether this tag's value is intended to be longer than a few words. This is mostly a hint for how to display certain properties in the GUI.
+
 :subtags: :octicon:`code-square` An object with additional tags which will be stored *within* this tag.
 
 :history: :octicon:`list-ordered` A list of changes by NPC version. Probably only useful for the built-in tags, but could be used for your own versioned configs.
+
+*The* ``long`` *attribute was added in NEW_VERSION*
 
 Examples
 --------

@@ -21,6 +21,7 @@ class TagSpec():
         self.allow_empty: bool  = tag_def.get("allow_empty", False)
         self.no_value: bool     = tag_def.get("no_value", False)
         self.locked: bool       = tag_def.get("locked", False)
+        self.long: bool         = tag_def.get("long", False)
         self.subtags: list[str] = tag_def.get("subtags", {}).keys()
         self.history: list[str] = tag_def.get("history", [])
 
