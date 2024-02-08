@@ -57,8 +57,8 @@ version = {attr = "npc.__version__"}
 
 [tool.poe.tasks]
 test = {cmd="pytest --tb=no", help="Run test suite"}
-coverage = {cmd="pytest --cov=npc --cov=npc_cli --cov-report=html --cov-report=term -q -p no:pretty", help="Generate test coverage report"}
-unused = {cmd="vulture src/npc tests", help="Find unused code"}
+coverage = {cmd="pytest --cov=npc --cov=npc_cli --cov=npc_gui --cov-report=html --cov-report=term -q -p no:pretty", help="Generate test coverage report"}
+unused = {cmd="vulture src/npc src/npc_cli src/npc_gui tests", help="Find unused code"}
 requirements = {cmd="pip-compile --resolver=backtracking --strip-extras --quiet ${file}", help="Compile a requirements file", args=["file"]}
 bin = {cmd="pyinstaller pyi/npc.spec", help="Build npc binaries"}
 docs = {cmd = "sphinx-autobuild docs docs/_build/html", help = "Start live documentation server"}
