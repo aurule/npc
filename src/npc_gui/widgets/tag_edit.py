@@ -28,6 +28,7 @@ class TagEdit(QWidget):
         picker.setEditable(True)
         picker.lineEdit().setPlaceholderText("Tag name")
         picker.setSizePolicy(fixed_horizontal)
+        # picker.changed.connect(self.save_name)
         tag_completer = QCompleter(tags_model, picker)
         tag_completer.setCaseSensitivity(Qt.CaseInsensitive)
         tag_completer.setCompletionMode(QCompleter.InlineCompletion)
