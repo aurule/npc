@@ -2,3 +2,4 @@ from .characters_table_model import CharactersTableModel
 from .system_list_model import SystemListModel
 from .character_types_model import CharacterTypesModel
 from .tag_name_items_model import TagNameItemsModel
+from .tag_tree.tag_tree_model import TagTreeModel

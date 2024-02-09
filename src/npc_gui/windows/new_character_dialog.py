@@ -10,7 +10,7 @@ from npc.db import DB, character_repository
 
 from ..models import CharacterTypesModel
 from ..helpers import theme_or_resource_icon
-from ..widgets import DebounceLineEdit, TagEdit
+from ..widgets import DebounceLineEdit, TagTreeView
 from ..widgets.size_policies import *
 
 class NewCharacterDialog(QDialog):
@@ -132,12 +132,15 @@ class NewCharacterDialog(QDialog):
         tags_label_line.addWidget(tag_add)
         master_layout.addLayout(tags_label_line)
 
-        tag_scroller = QScrollArea()
-        tag_scroller.setWidgetResizable(True)
-        scroller_layout = QFormLayout()
-        scroller_layout.setContentsMargins(0, 0, 0, 0)
-        tag_scroller.setLayout(scroller_layout)
-        master_layout.addWidget(tag_scroller)
+        tag_tree = TagTreeView("character", self.character_id, db=self.db)
+        master_layout.addWidget(tag_tree)
+
+        # tag_scroller = QScrollArea()
+        # tag_scroller.setWidgetResizable(True)
+        # scroller_layout = QFormLayout()
+        # scroller_layout.setContentsMargins(0, 0, 0, 0)
+        # tag_scroller.setLayout(scroller_layout)
+        # master_layout.addWidget(tag_scroller)
 
         # dialog buttons
 

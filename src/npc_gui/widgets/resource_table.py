@@ -6,8 +6,8 @@ from PySide6.QtCore import Qt
 from ..models import CharactersTableModel
 
 class ResourceTable(QTableView):
-    def __init__(self, resources, tags: list[str]):
-        super().__init__()
+    def __init__(self, resources, tags: list[str], parent = None):
+        super().__init__(parent)
 
         self.resources = resources
         self.tags = tags
