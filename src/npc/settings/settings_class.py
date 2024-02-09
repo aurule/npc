@@ -217,6 +217,15 @@ class Settings(DataStore):
             process_types_dir(types_dir / self.get(f"npc.systems.{system_key}.extends"))
         process_types_dir(types_dir / system_key)
 
+    @property
+    def systems(self) -> list[System]:
+        """Get all configured systems
+
+        Returns:
+            list[System]: List of System objects
+        """
+        return [System(s, self) for s in self.get("npc.systems")]
+
     def get_system_keys(self) -> list[str]:
         """Get a list of valid system keys
 
