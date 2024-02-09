@@ -17,21 +17,6 @@ class CharacterTagger():
         self.character = character
         self.context_stack: list[Taggable] = [character]
         self.hidden: list[str] = list()
-        self._tag_seq = 0
-
-    @property
-    def tag_seq(self) -> int:
-        """Get the current tag value
-
-        This is an auto-incrementing number meant to be unique for all the tags related to a particular
-        character. Fetching the current value also increments it.
-
-        Returns:
-            int: Current sequence number
-        """
-        val = self._tag_seq
-        self._tag_seq = val + 1
-        return val
 
     def apply_tags(self, rawtags: list[RawTag]):
         """Apply a list of raw tags to our character
@@ -145,7 +130,6 @@ class CharacterTagger():
         tag = Tag(
             name = rawtag.name,
             value = rawtag.value,
-            sequence = self.tag_seq
         )
         if hidden_value := self.tag_is_hidden(tag):
             tag.hidden = hidden_value

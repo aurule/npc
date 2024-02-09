@@ -22,7 +22,6 @@ def tag_values_by_name(character: Character, *names: str) -> Select:
     return select(Tag.value) \
         .where(Tag.name.in_(names)) \
         .filter(Tag.character_id == character.id) \
-        .order_by(Tag.sequence) \
         .order_by(Tag.id)
 
 def tags_by_name(character: Character, *names: str) -> Select:
@@ -54,7 +53,6 @@ def tags(character: Character) -> Select:
     """
     return select(Tag) \
         .filter(Tag.character_id == character.id) \
-        .order_by(Tag.sequence) \
         .order_by(Tag.id)
 
 def has_tags(character: Character, *names: str) -> Select:
