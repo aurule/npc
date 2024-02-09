@@ -11,10 +11,7 @@ class CharacterCollection():
     """
 
     def __init__(self, campaign, *, db: DB = None):
-        if db:
-            self.db = db
-        else:
-            self.db = DB()
+        self.db = db if db else DB()
 
         self.campaign = campaign
         self.root = campaign.characters_dir
