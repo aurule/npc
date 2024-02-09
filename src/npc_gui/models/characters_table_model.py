@@ -21,7 +21,7 @@ class CharactersTableModel(QAbstractTableModel):
         self.resource_views = [self.view_klass(c) for c in self.collection.all()]
         self.endResetModel()
 
-    def data(self, index, role: int):
+    def data(self, index: QModelIndex, role: int = None):
         view = self.resource_views[index.row()]
         tag = self.tag_names[index.column()]
         match role:
@@ -35,7 +35,7 @@ class CharactersTableModel(QAbstractTableModel):
             case Qt.StatusTipRole:
                 return f"{view.realname} - {view.mnemonic}, {view.type}"
 
-    def headerData(self, section: int, orientation, role: int):
+    def headerData(self, section: int, orientation: Qt.Orientation, role: int = Qt.DisplayRole):
         if role == Qt.DisplayRole:
             if orientation == Qt.Horizontal:
                 return self._headers[section]
@@ -43,10 +43,10 @@ class CharactersTableModel(QAbstractTableModel):
             if orientation == Qt.Vertical:
                 return section
 
-    def rowCount(self, _index=None):
+    def rowCount(self, index: QModelIndex = QModelIndex()):
         return self.collection.count
 
-    def columnCount(self, _index=None):
+    def columnCount(self, index: QModelIndex = QModelIndex()):
         return len(self._headers)
 
     def set_tag_names(self, tag_names: list[str]):
@@ -56,7 +56,7 @@ class CharactersTableModel(QAbstractTableModel):
     def header_names(self) -> list[str]:
         return [n.capitalize() for n in self.tag_names]
 
-    def sort(self, column, order):
+    def sort(self, column: int, order: Qt.SortOrder):
         def comparator(character):
             tag = self.tag_names[column]
             return character.first(tag)
