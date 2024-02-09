@@ -27,7 +27,7 @@ class MainWindow(QMainWindow):
         self.campaign_actions = []
         self.actions = {}
 
-        self.setWindowTitle("NPC Campaign Manager")
+        self.setWindowTitle(self.tr("NPC Campaign Manager"))
         self.setMinimumSize(QSize(700, 600))
 
         self.init_actions()
