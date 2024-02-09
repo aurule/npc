@@ -4,7 +4,7 @@ class CharacterTypesModel(QAbstractListModel):
     def __init__(self, campaign):
         super().__init__()
 
-        self._data = list(campaign.types.values())
+        self._data = sorted(list(campaign.types.values()), key=lambda s: str.lower(s.name))
 
     def data(self, index: QModelIndex, role: int = None):
         match role:
