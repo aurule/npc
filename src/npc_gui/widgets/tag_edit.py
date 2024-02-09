@@ -4,7 +4,7 @@ from PySide6.QtWidgets import (
 from PySide6.QtCore import Qt
 
 from npc.db import DB
-from ..models import TagItemsModel
+from ..models import TagNameItemsModel
 from ..helpers import theme_or_resource_icon
 from .size_policies import *
 from .debounce_line_edit import DebounceLineEdit
@@ -21,7 +21,7 @@ class TagEdit(QWidget):
     def init_widgets(self):
         self.container = QHBoxLayout(self)
 
-        tags_model = TagItemsModel(parent.campaign)
+        tags_model = TagNameItemsModel(parent.campaign)
         picker = QComboBox()
         picker.setModel(tags_model)
         picker.setCurrentIndex(-1)

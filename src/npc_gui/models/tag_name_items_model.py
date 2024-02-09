@@ -2,7 +2,7 @@ from PySide6.QtCore import QAbstractListModel, Qt
 
 from npc.characters import Character
 
-class TagItemsModel(QAbstractListModel):
+class TagNameItemsModel(QAbstractListModel):
     def __init__(self, campaign):
         super().__init__()
 
