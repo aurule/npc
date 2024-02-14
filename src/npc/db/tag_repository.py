@@ -48,3 +48,15 @@ def subtag_value_counts(name: str, parent_name: str) -> Select:
         .where(parent_subq) \
         .group_by(Tag.value) \
         .order_by(desc("value_count"))
+
+def destroy(id: int) -> Delete:
+    """Create a db query to delete a single Tag record
+
+    Args:
+        id (int): ID of the tag record to delete
+
+    Returns:
+        Delete: Delete object for the tag deletion query
+    """
+    return delete(Tag) \
+        .where(Tag.id == id)
