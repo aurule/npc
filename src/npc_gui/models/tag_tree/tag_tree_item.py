@@ -1,8 +1,12 @@
 from ..abstract_tree import TreeItem
 
+from npc.db import DB
+
 class TagTreeItem(TreeItem):
-    def __init__(self, parent: TreeItem = None):
+    def __init__(self, parent: TreeItem = None, db: DB = None):
         super().__init__(parent)
+
+        self.db = db if db else DB()
 
     def data(self, column: int):
         pass

@@ -53,11 +53,9 @@ class TreeItem(ABC):
     def set_data(self, column: int, value) -> bool:
         """Set the data for this item at the specified column
 
-        [description]
-
         Args:
-            column (int): [description]
-            value ([type]): [description]
+            column (int): Column to update
+            value ([type]): New data for the column
 
         Returns:
             bool: True if the data was set, False if not

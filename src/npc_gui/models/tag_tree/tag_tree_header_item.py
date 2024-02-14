@@ -1,11 +1,15 @@
 from ..abstract_tree import TreeItem
 from .tag_tree_item import TagTreeItem
 
+from npc.db import DB
+from npc.characters import Tag
+
 class TagTreeHeaderItem(TreeItem):
-    def __init__(self):
+    def __init__(self, db: DB = None):
         super().__init__(None)
 
         self.item_data = ["Tag", "Value"]
+        self.db = db if db else DB()
 
     def data(self, column: int):
         if column < 0 or column >= len(self.item_data):
@@ -19,7 +23,7 @@ class TagTreeHeaderItem(TreeItem):
 
         for row in range(count):
             # make a new record, assign it to item by id
-            item = TagTreeItem(self)
+            item = TagTreeItem(self, db)
             self.child_items.insert(position, item)
 
         return True

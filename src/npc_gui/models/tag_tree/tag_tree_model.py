@@ -12,8 +12,9 @@ class TagTreeModel(TreeModel):
         super().__init__(parent)
 
         self.db = db if db else DB()
-        self.root_item = TagTreeHeaderItem()
+        self.root_item = TagTreeHeaderItem(db)
 
+        # taggable from type and id
         # create items from taggable.tags
         # parents = [self.root_item]
         # for tag in taggable.tags:
