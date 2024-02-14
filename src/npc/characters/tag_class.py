@@ -51,7 +51,7 @@ class Tag(BaseModel):
         """
         return self.spec.subtags and tag_name in self.spec.subtags
 
-    def add_tag(self, tag):
+    def add_tag(self, tag: "Tag"):
         """Add the given tag to our subtags
 
         Args:
