@@ -35,8 +35,7 @@ class TreeModel(QAbstractItemModel):
             return False
 
         self.beginInsertRows(parent, position, position + rows - 1)
-        column_count = self.root_item.column_count()
-        success: bool = parent_item.insert_children(position, rows, column_count)
+        success: bool = parent_item.insert_children(position, rows)
         self.endInsertRows()
 
         return success

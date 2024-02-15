@@ -1,23 +1,37 @@
 from ..abstract_tree import TreeItem
 
 from npc.db import DB
+from npc.characters import Tag
+import npc.db.tag_repository as repository
 
 class TagTreeItem(TreeItem):
-    def __init__(self, parent: TreeItem = None, db: DB = None):
+    def __init__(self, tag_id: int, parent: TreeItem, db: DB = None):
         super().__init__(parent)
 
         self.db = db if db else DB()
+        self.tag_id = tag_id
+        with self.db.session() as session:
+            tag = session.get(Tag, self.tag_id)
+            session.commit()
+        self.item_data = [tag.name, tag.value]
 
     def data(self, column: int):
-        pass
+        if column < 0 or column >= len(self.item_data):
+            return None
+
+        return self.item_data[column]
 
     def insert_children(self, position: int, count: int) -> bool:
         if position < 0 or position > len(self.child_items):
             return False
 
         for row in range(count):
-            # make a new record, assign it to item by id
-            item = TagTreeItem(self)
+            tag = Tag(parent_tag_id=self.tag_id)
+            with self.db.session() as session:
+                session.add(tag)
+                session.commit()
+            item = TagTreeItem(tag, parent=self, db=self.db)
+
             self.child_items.insert(position, item)
 
         return True
@@ -28,9 +42,25 @@ class TagTreeItem(TreeItem):
 
         for row in range(count):
             item = self.child_items.pop(position)
-            # delete associated record
+            with self.db.session() as session:
+                session.delete(Tag, tag.id)
+                session.commit()
 
         return True
 
     def set_data(self, column: int, value) -> bool:
-        pass
+        match column:
+            case 0:
+                updates = {"name": value}
+            case 1:
+                updates = {"value": value}
+            case _:
+                return False
+
+        query = repository.update_attrs_by_id(self.tag_id, updates)
+        with self.db.session() as session:
+            session.execute(query)
+            tag = session.get(Tag, self.tag_id)
+            session.commit()
+        self.item_data = [tag.name, tag.value]
+        return True

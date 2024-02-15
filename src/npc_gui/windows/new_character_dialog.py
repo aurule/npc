@@ -29,16 +29,16 @@ class NewCharacterDialog(QDialog):
         self.writer = CharacterWriter(self.campaign, db=db)
 
         factory = CharacterFactory(self.campaign)
-        character = factory.make(
+        self.character = factory.make(
             realname = "",
             type_key = "",
             mnemonic = "",
         )
         with self.db.session() as session:
-            session.add(character)
+            session.add(self.character)
             session.commit()
 
-        self.character_id = character.id
+        self.character_id = self.character.id
         self.next_tag_sequence = 1
 
         self.setWindowTitle("Add a New Character")
@@ -126,14 +126,12 @@ class NewCharacterDialog(QDialog):
         tag_add.setSizePolicy(fixed_horizontal)
         tag_add.setIcon(theme_or_resource_icon("list-add"))
         tag_add.setToolButtonStyle(Qt.ToolButtonIconOnly)
-        # on press, make a new tag record at the end of the list
-        # create new TagEdit(id, self, self.db)
-        # scroller_layout.addWidget(tag_editor)
         tags_label_line.addWidget(tag_add)
         master_layout.addLayout(tags_label_line)
 
-        tag_tree = TagTreeView("character", self.character_id, db=self.db)
+        tag_tree = TagTreeView(self.character_id, db=self.db)
         master_layout.addWidget(tag_tree)
+        tag_add.pressed.connect(tag_tree.insert_row)
 
         # tag_scroller = QScrollArea()
         # tag_scroller.setWidgetResizable(True)
