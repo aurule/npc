@@ -4,7 +4,7 @@ These queries are limited to ones that do not rely on anything from the Characte
 belong to a character, most queries end up in the character repository instead.
 """
 
-from sqlalchemy import select, Select, func, desc, exists
+from sqlalchemy import select, Select, func, desc, exists, Delete
 from sqlalchemy.orm import aliased
 from npc.characters import Tag
 
