@@ -9,14 +9,15 @@ class TreeItem(ABC):
         self.item_data = []
 
     @abstractmethod
-    def data(self, column: int):
+    def data(self, column: int, role: int = None):
         """Get the data for this item at the given column
 
         Args:
             column (int): Column number to get data for
+            role (int): The role for this data
 
         Returns:
-            any: The data at the given column, or None if there is no available data
+            any: The data at the given column for the role, or None if there is no available data
         """
 
     @abstractmethod

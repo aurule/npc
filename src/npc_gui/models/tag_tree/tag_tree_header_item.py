@@ -12,7 +12,7 @@ class TagTreeHeaderItem(TreeItem):
         self.db = db if db else DB()
         self.character_id = character_id
 
-    def data(self, column: int):
+    def data(self, column: int, role: int = None):
         if column < 0 or column >= len(self.item_data):
             return None
 

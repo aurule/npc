@@ -1,5 +1,7 @@
 from ..abstract_tree import TreeItem
 
+from PySide6.QtCore import Qt
+
 from npc.db import DB
 from npc.characters import Tag
 import npc.db.tag_repository as repository
@@ -15,11 +17,15 @@ class TagTreeItem(TreeItem):
             session.commit()
         self.item_data = [tag.name, tag.value]
 
-    def data(self, column: int):
+    def data(self, column: int, role: int = None):
         if column < 0 or column >= len(self.item_data):
             return None
 
-        return self.item_data[column]
+        match role:
+            case Qt.DisplayRole:
+                self.item_data[column]
+            case Qt.EditRole:
+                self.item_data[column]
 
     def insert_children(self, position: int, count: int) -> bool:
         if position < 0 or position > len(self.child_items):

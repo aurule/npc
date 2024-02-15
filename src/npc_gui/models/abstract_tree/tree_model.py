@@ -74,11 +74,7 @@ class TreeModel(QAbstractItemModel):
         if not index.isValid():
             return None
 
-        match role:
-            case Qt.DisplayRole:
-                return self.get_item(index).data(index.column())
-            case Qt.EditRole:
-                return self.get_item(index).data(index.column())
+        return self.get_item(index).data(index.column(), role)
 
     def columnCount(self, parent: QModelIndex = None) -> int:
         return self.root_item.column_count()
