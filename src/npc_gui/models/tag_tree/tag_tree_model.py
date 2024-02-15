@@ -1,7 +1,3 @@
-from PySide6.QtCore import (
-    QModelIndex, Qt, QAbstractItemModel
-)
-
 from npc.db import DB
 
 from ..abstract_tree import TreeModel

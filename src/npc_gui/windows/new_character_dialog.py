@@ -133,13 +133,6 @@ class NewCharacterDialog(QDialog):
         master_layout.addWidget(tag_tree)
         tag_add.pressed.connect(tag_tree.insert_row)
 
-        # tag_scroller = QScrollArea()
-        # tag_scroller.setWidgetResizable(True)
-        # scroller_layout = QFormLayout()
-        # scroller_layout.setContentsMargins(0, 0, 0, 0)
-        # tag_scroller.setLayout(scroller_layout)
-        # master_layout.addWidget(tag_scroller)
-
         # dialog buttons
 
         QBtn = QDialogButtonBox.Save | QDialogButtonBox.Cancel
