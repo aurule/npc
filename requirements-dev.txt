@@ -12,7 +12,7 @@ beautifulsoup4==4.12.3
     # via furo
 build==1.0.3
     # via pip-tools
-certifi==2023.11.17
+certifi==2024.2.2
     # via requests
 charset-normalizer==3.3.2
     # via requests
@@ -46,7 +46,7 @@ livereload==2.6.3
     # via sphinx-autobuild
 markdown-it-py==3.0.0
     # via rich
-markupsafe==2.1.4
+markupsafe==2.1.5
     # via jinja2
 mccabe==0.7.0
     # via flake8
@@ -79,11 +79,11 @@ pygments==2.17.2
     #   sphinx
 pyproject-hooks==1.0.0
     # via build
-pyside6==6.6.1
+pyside6==6.6.2
     # via -r requirements.in
-pyside6-addons==6.6.1
+pyside6-addons==6.6.2
     # via pyside6
-pyside6-essentials==6.6.1
+pyside6-essentials==6.6.2
     # via
     #   pyside6
     #   pyside6-addons
@@ -112,7 +112,7 @@ rich==13.7.0
     # via
     #   -r requirements-dev.in
     #   pytest-pretty
-shiboken6==6.6.1
+shiboken6==6.6.2
     # via
     #   pyside6
     #   pyside6-addons
@@ -131,7 +131,7 @@ sphinx==7.2.6
     #   sphinx-basic-ng
     #   sphinx-copybutton
     #   sphinx-design
-sphinx-autobuild==2021.3.14
+sphinx-autobuild==2024.2.4
     # via -r requirements-dev.in
 sphinx-basic-ng==1.0.0b2
     # via furo
@@ -151,7 +151,7 @@ sphinxcontrib-qthelp==1.0.7
     # via sphinx
 sphinxcontrib-serializinghtml==1.1.10
     # via sphinx
-sqlalchemy==2.0.25
+sqlalchemy==2.0.27
     # via -r requirements.in
 tomli==2.0.1
     # via poethepoet
