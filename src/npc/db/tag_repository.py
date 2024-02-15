@@ -4,7 +4,7 @@ These queries are limited to ones that do not rely on anything from the Characte
 belong to a character, most queries end up in the character repository instead.
 """
 
-from sqlalchemy import select, Select, func, desc, exists, Delete
+from sqlalchemy import select, Select, func, desc, exists, Delete, Update, update
 from sqlalchemy.orm import aliased
 from npc.characters import Tag
 
@@ -60,3 +60,19 @@ def destroy(id: int) -> Delete:
     """
     return delete(Tag) \
         .where(Tag.id == id)
+
+def update_attrs_by_id(id: int, values: dict) -> Update:
+    """Create a db query to update one or more tag attributes
+
+    Builds a query that updates the named attributes on the tag with the given ID.
+
+    Args:
+        id (int): ID of the tag to update
+        values (dict): Dict of attribute names and values to set
+
+    Returns:
+        Update: Update object for the query
+    """
+    return update(Tag) \
+        .where(Tag.id == id) \
+        .values(values)
