@@ -74,5 +74,3 @@ sqlalchemy==2.0.25
     # via -r requirements.in
 typing-extensions==4.9.0
     # via sqlalchemy
-watchdog==3.0.0
-    # via -r requirements.in

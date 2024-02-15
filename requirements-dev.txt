@@ -163,8 +163,6 @@ urllib3==2.2.0
     # via requests
 vulture==2.11
     # via -r requirements-dev.in
-watchdog==3.0.0
-    # via -r requirements.in
 wheel==0.42.0
     # via pip-tools
 
