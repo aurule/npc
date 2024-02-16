@@ -7,3 +7,4 @@ from . import errors, env
 from .data_store import DataStore
 from .singleton import Singleton
 from .win_sanitize import *
+from .persistent_cache import PersistentCache
