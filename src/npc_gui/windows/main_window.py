@@ -11,6 +11,7 @@ import click
 from ..helpers import theme_or_resource_icon, find_settings_file
 from ..widgets import ActionButton, ResourceTable
 from ..widgets.size_policies import *
+from ..util import RecentCampaigns
 from . import NewCampaignDialog, NewCharacterDialog
 import npc
 from npc import campaign
@@ -23,6 +24,7 @@ class MainWindow(QMainWindow):
 
         self.campaign = None
         self.default_settings = app_settings()
+        self.recent_campaigns = RecentCampaigns()
 
         self.campaign_actions = []
         self.actions = {}
@@ -39,6 +41,14 @@ class MainWindow(QMainWindow):
         self.setStatusBar(QStatusBar(self))
 
         self.update_campaign_availability()
+
+    def make_recent_campaign_action(self, campaign_info: dict) -> QAction:
+        name = campaign_info.get("name")
+        path = campaign_info.get("path")
+        action = QAction("name and path", self)
+        action.triggered.connect(lambda s, p: self.load_campaign_dir(path))
+        action.setStatusTip("Open name")
+        return action
 
     def init_actions(self):
         # General actions
@@ -57,6 +67,9 @@ class MainWindow(QMainWindow):
         open_action.setStatusTip("Open an existing campaign")
         open_action.setShortcut("ctrl+o")
         self.actions["open"] = open_action
+
+        self.actions["recent_campaigns"] = [self.make_recent_campaign_action(c) for c in self.recent_campaigns.campaigns()]
+        print(self.actions["recent_campaigns"])
 
         new_action = QAction("&New Campaign...", self)
         new_action.triggered.connect(self.new_campaign)
