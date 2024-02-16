@@ -243,6 +243,7 @@ class MainWindow(QMainWindow):
 
         self.campaign = campaign.Campaign(campaign_root)
         # outdated and migrations?
+        self.setWindowTitle(f"{self.campaign.name} | NPC")
 
         self.campaign.characters.refresh()
         self.init_tables()
