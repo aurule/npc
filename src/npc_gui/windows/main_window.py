@@ -1,7 +1,8 @@
 from PySide6.QtWidgets import (
     QMainWindow, QTabWidget, QToolBar, QStatusBar,
     QMenuBar, QMenu, QApplication, QTableView, QVBoxLayout, QHBoxLayout,
-    QLabel, QWidget, QFileDialog, QMessageBox, QPushButton, QSizePolicy
+    QLabel, QWidget, QFileDialog, QMessageBox, QPushButton, QSizePolicy,
+    QFormLayout
 )
 from PySide6.QtCore import QSize, Qt, QUrl
 from PySide6.QtGui import QAction, QIcon, QDesktopServices
@@ -37,18 +38,11 @@ class MainWindow(QMainWindow):
         self.init_toolbar()
 
         self.init_hello()
+        self.init_recent_campaigns()
 
         self.setStatusBar(QStatusBar(self))
 
         self.update_campaign_availability()
-
-    def make_recent_campaign_action(self, campaign_info: dict) -> QAction:
-        name = campaign_info.get("name")
-        path = campaign_info.get("path")
-        action = QAction("name and path", self)
-        action.triggered.connect(lambda s, p: self.load_campaign_dir(path))
-        action.setStatusTip("Open name")
-        return action
 
     def init_actions(self):
         # General actions
@@ -68,8 +62,10 @@ class MainWindow(QMainWindow):
         open_action.setShortcut("ctrl+o")
         self.actions["open"] = open_action
 
-        self.actions["recent_campaigns"] = [self.make_recent_campaign_action(c) for c in self.recent_campaigns.campaigns()]
-        print(self.actions["recent_campaigns"])
+        clear_recent = QAction("Clear Items")
+        clear_recent.triggered.connect(self.clear_recent_campaigns)
+        clear_recent.setStatusTip("Clear recent campaigns")
+        self.actions["clear_recent"] = clear_recent
 
         new_action = QAction("&New Campaign...", self)
         new_action.triggered.connect(self.new_campaign)
@@ -176,6 +172,8 @@ class MainWindow(QMainWindow):
         campaign_menu.addSeparator()
         campaign_menu.addAction(self.actions.get("new"))
         campaign_menu.addAction(self.actions.get("open"))
+        self.recent_campaigns_menu = QMenu("Open &Recent")
+        campaign_menu.addMenu(self.recent_campaigns_menu)
         campaign_menu.addSeparator()
         campaign_menu.addAction(self.actions.get("close"))
         menubar.addMenu(campaign_menu)
@@ -196,6 +194,28 @@ class MainWindow(QMainWindow):
 
         self.setMenuBar(menubar)
 
+    def init_recent_campaigns(self):
+        self.actions["recent_campaigns"] = [self.make_recent_campaign_action(c) for c in self.recent_campaigns.campaigns()]
+        self.recent_campaigns_menu.clear()
+
+        if self.recent_campaigns:
+            for action in self.actions.get("recent_campaigns"):
+                self.recent_campaigns_menu.addAction(action)
+            self.recent_campaigns_menu.addSeparator()
+            self.recent_campaigns_menu.addAction(self.actions.get("clear_recent"))
+        else:
+            none_action = QAction("No recent campaigns", self)
+            none_action.setDisabled(True)
+            self.recent_campaigns_menu.addAction(none_action)
+
+    def make_recent_campaign_action(self, campaign_info: dict) -> QAction:
+        name = campaign_info.get("name")
+        path = campaign_info.get("path")
+        action = QAction(f"{name} ({path})", self)
+        action.triggered.connect(lambda: self.load_campaign_dir(path))
+        action.setStatusTip(f"Open {name}")
+        return action
+
     def init_toolbar(self):
         toolbar = QToolBar("Main")
         toolbar.addAction(self.actions.get("session"))
@@ -206,6 +226,7 @@ class MainWindow(QMainWindow):
     def init_hello(self):
         hello_container = QWidget()
         welcome_layout = QVBoxLayout(hello_container)
+        welcome_layout.addSpacing(20)
 
         title_label = QLabel("NPC Campaign Manager")
         title_label.setAlignment(Qt.AlignCenter)
@@ -213,10 +234,10 @@ class MainWindow(QMainWindow):
         font.setPointSize(18)
         title_label.setFont(font)
         title_sizing = QSizePolicy()
-        title_sizing.setVerticalPolicy(QSizePolicy.Fixed)
         title_sizing.setHorizontalPolicy(QSizePolicy.Expanding)
         title_label.setSizePolicy(title_sizing)
         welcome_layout.addWidget(title_label)
+        welcome_layout.addSpacing(20)
 
         button_layout = QHBoxLayout()
         open_button = ActionButton(self.actions.get("open"))
@@ -225,7 +246,23 @@ class MainWindow(QMainWindow):
         button_layout.addWidget(new_button)
         welcome_layout.addLayout(button_layout)
 
-        # recent campaigns with a clickable list, each preceded by a folder icon
+        welcome_layout.addSpacing(20)
+
+        hello_recent_buttons = QFormLayout()
+        recents_label = QLabel("Recent Campaigns")
+        font = recents_label.font()
+        font.setPointSize(14)
+        recents_label.setFont(font)
+        hello_recent_buttons.addWidget(recents_label)
+        if self.recent_campaigns:
+            for action in self.actions.get("recent_campaigns"):
+                recent_button = ActionButton(action)
+                hello_recent_buttons.addWidget(recent_button)
+        else:
+            no_recents = QLabel("No recent campaigns")
+            no_recents.setDisabled(True)
+            hello_recent_buttons.addWidget(no_recents)
+        welcome_layout.addLayout(hello_recent_buttons)
 
         self.setCentralWidget(hello_container)
 
@@ -259,6 +296,8 @@ class MainWindow(QMainWindow):
         self.setWindowTitle(f"{self.campaign.name} | NPC")
 
         self.campaign.characters.refresh()
+        self.recent_campaigns.add(self.campaign)
+        self.init_recent_campaigns()
         self.init_tables()
         self.update_campaign_availability()
 
@@ -318,6 +357,12 @@ class MainWindow(QMainWindow):
         self.campaign = None
         self.update_campaign_availability()
         self.init_hello()
+
+    def clear_recent_campaigns(self, _parent):
+        self.recent_campaigns.clear()
+        self.init_recent_campaigns()
+        if not self.campaign:
+            self.init_hello()
 
     def about(self, _parent):
         QMessageBox.about(
