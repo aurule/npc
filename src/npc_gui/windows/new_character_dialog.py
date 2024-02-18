@@ -80,7 +80,7 @@ class NewCharacterDialog(QDialog):
         flags_box_layout = QHBoxLayout()
 
         delist_checkbox = QCheckBox("Delist")
-        delist_checkbox.setIcon(theme_or_resource_icon("view-hidden"))
+        delist_checkbox.setIcon(theme_or_resource_icon("hide_table_column"))
         delist_checkbox.setToolTip("Exclude this character from generated listings")
         delist_checkbox.stateChanged.connect(lambda s: self.save_flag("delist", s))
         flags_box_layout.addWidget(delist_checkbox)
