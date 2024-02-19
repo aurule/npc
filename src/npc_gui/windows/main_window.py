@@ -150,7 +150,7 @@ class MainWindow(QMainWindow):
         settings_user.setStatusTip("Open your user settings directory")
         self.actions["settings_user"] = settings_user
 
-        settings_campaign = QAction("Browse &Settings", self)
+        settings_campaign = QAction("Browse Campaign &Settings", self)
         settings_campaign.triggered.connect(self.settings_campaign)
         settings_campaign.setStatusTip("Open this campaign's settings directory")
         self.actions["settings_campaign"] = settings_campaign
@@ -161,29 +161,29 @@ class MainWindow(QMainWindow):
 
         file_menu = QMenu("&File")
         file_menu.addAction(self.actions.get("new_character"))
-        file_menu.addAction(self.actions.get("settings_user"))
+        file_menu.addSeparator()
+        file_menu.addAction(self.actions.get("new"))
+        file_menu.addAction(self.actions.get("open"))
+        self.recent_campaigns_menu = QMenu("Open &Recent")
+        file_menu.addMenu(self.recent_campaigns_menu)
+        file_menu.addSeparator()
+        file_menu.addAction(self.actions.get("close"))
         file_menu.addSeparator()
         file_menu.addAction(self.actions.get("exit"))
         menubar.addMenu(file_menu)
 
-        campaign_menu = QMenu("&Campaign")
-        campaign_menu.addAction(self.actions.get("refresh"))
-        campaign_menu.addAction(self.actions.get("settings_campaign"))
-        campaign_menu.addSeparator()
-        campaign_menu.addAction(self.actions.get("new"))
-        campaign_menu.addAction(self.actions.get("open"))
-        self.recent_campaigns_menu = QMenu("Open &Recent")
-        campaign_menu.addMenu(self.recent_campaigns_menu)
-        campaign_menu.addSeparator()
-        campaign_menu.addAction(self.actions.get("close"))
-        menubar.addMenu(campaign_menu)
-
-        session_menu = QMenu("&Sessions")
+        session_menu = QMenu("&Session")
         session_menu.addAction(self.actions.get("session"))
+        session_menu.addSeparator()
         session_menu.addAction(self.actions.get("session_latest"))
         session_menu.addAction(self.actions.get("session_latest_session"))
         session_menu.addAction(self.actions.get("session_latest_plot"))
         menubar.addMenu(session_menu)
+
+        settings_menu = QMenu("Setti&ngs")
+        settings_menu.addAction(self.actions.get("settings_user"))
+        settings_menu.addAction(self.actions.get("settings_campaign"))
+        menubar.addMenu(settings_menu)
 
         help_menu = QMenu("&Help")
         help_menu.addAction(self.actions.get("docs"))
