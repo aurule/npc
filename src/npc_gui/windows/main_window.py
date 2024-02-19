@@ -195,7 +195,7 @@ class MainWindow(QMainWindow):
         self.setMenuBar(menubar)
 
     def init_recent_campaigns(self):
-        self.actions["recent_campaigns"] = [self.make_recent_campaign_action(c) for c in self.recent_campaigns.campaigns()]
+        self.actions["recent_campaigns"] = [self.make_recent_campaign_action(c) for c in reversed(self.recent_campaigns.campaigns())]
         self.recent_campaigns_menu.clear()
 
         if self.recent_campaigns:
