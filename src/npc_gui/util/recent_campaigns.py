@@ -22,7 +22,7 @@ class RecentCampaigns(PersistentCache):
         if cache_path:
             file_path = Path(cache_path)
         else:
-            file_path = Path(get_app_dir("NPC")) / "recent_campaigns.yml"
+            file_path = Path(get_app_dir("NPC")) / "recent_campaigns.yaml"
         super().__init__(file_path)
         self.load()
 
