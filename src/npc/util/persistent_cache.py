@@ -35,3 +35,11 @@ class PersistentCache(DataStore):
         """
         with self.cache_file_path.open("w", newline="\n") as cache_file:
             yaml.dump(self.data, cache_file, default_flow_style=False)
+
+    def clear(self):
+        """Delete all data from the cache
+
+        The file is not deleted, but replaced with yaml representing an empty dict.
+        """
+        self.data = {}
+        self.save()
