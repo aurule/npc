@@ -37,8 +37,8 @@ class MainWindow(QMainWindow):
         self.init_menus()
         self.init_toolbar()
 
-        self.init_hello()
         self.init_recent_campaigns()
+        self.init_hello()
 
         self.setStatusBar(QStatusBar(self))
 
@@ -311,9 +311,10 @@ class MainWindow(QMainWindow):
 
         characters_tab = QWidget()
         characters_layout = QVBoxLayout(characters_tab)
+        columns = self.settings.get("campaign.gui.columns.characters")
         self.characters_table = ResourceTable(
             self.campaign.characters,
-            ["realname", "mnemonic", "type", "location"]
+            columns
         )
         characters_layout.addWidget(self.characters_table)
 

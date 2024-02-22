@@ -1,5 +1,5 @@
 from PySide6.QtWidgets import (
-    QTableView, QAbstractItemView
+    QTableView, QAbstractItemView, QHeaderView
 )
 from PySide6.QtCore import Qt
 
@@ -25,3 +25,6 @@ class ResourceTable(QTableView):
         self.setShowGrid(False)
         self.setAlternatingRowColors(True)
         self.setSelectionBehavior(QAbstractItemView.SelectRows)
+        header = self.horizontalHeader()
+        header.setSectionResizeMode(QHeaderView.ResizeToContents)
+        header.setStretchLastSection(True)
