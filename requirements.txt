@@ -24,6 +24,10 @@ pyside6-essentials==6.6.2
     #   pyside6-addons
 pyyaml==6.0.1
     # via -r requirements.in
+ruamel-yaml==0.18.6
+    # via -r requirements.in
+ruamel-yaml-clib==0.2.8
+    # via ruamel-yaml
 shiboken6==6.6.2
     # via
     #   pyside6

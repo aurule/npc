@@ -4,4 +4,5 @@ mistletoe >= 1.1
 packaging >= 23.0
 pyside6 >= 6.6.0
 PyYAML >= 6.0
+ruamel.yaml >= 0.18
 SQLAlchemy >= 2.0

@@ -65,6 +65,10 @@ pyyaml==6.0.1
     # via -r requirements.in
 rich==13.7.0
     # via pytest-pretty
+ruamel-yaml==0.18.6
+    # via -r requirements.in
+ruamel-yaml-clib==0.2.8
+    # via ruamel-yaml
 shiboken6==6.6.2
     # via
     #   pyside6
