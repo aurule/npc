@@ -331,9 +331,9 @@ campaign:
 
       # (in-game date and time)
     additional_files: []
-  gui:
-    columns:
-      characters:
-        - realname
-        - mnemonic
-        - type
+gui:
+  columns:
+    characters:
+      - realname
+      - mnemonic
+      - type

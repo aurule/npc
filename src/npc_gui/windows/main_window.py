@@ -311,7 +311,7 @@ class MainWindow(QMainWindow):
 
         characters_tab = QWidget()
         characters_layout = QVBoxLayout(characters_tab)
-        columns = self.settings.get("campaign.gui.columns.characters")
+        columns = self.settings.get("gui.columns.characters")
         self.characters_table = ResourceTable(
             self.campaign.characters,
             columns
