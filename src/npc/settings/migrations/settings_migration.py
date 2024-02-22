@@ -3,7 +3,7 @@ from packaging import version
 from pathlib import Path
 import yaml
 
-from npc.settings import Settings
+from npc.settings import Settings, SettingsWriter
 from npc.util import DataStore
 from npc.util.functions import parse_yaml
 from .migration_message import MigrationMessage
@@ -150,23 +150,25 @@ class SettingsMigration(ABC):
         If something goes wrong (the file_key is not recognized, its directory does not exist, or the file is
         missing) an empty store is returned instead.
 
+        The DataStore returned will actually be a SettingsWriter when the file exists. This object's load()
+        method is called automatically, so its data will be available immediately.
+
         Args:
             file_key (str): Key of the settings file to open
 
         Returns:
             DataStore: New datastore containing the file's contents, or an empty one if there were errors
         """
-        store = DataStore()
-
         try:
             file_path = self.config_dir_path(file_key) / "settings.yaml"
         except TypeError:
-            return store
+            return DataStore()
 
         if not file_path.exists():
-            return store
+            return DataStore()
 
-        store.merge_data(parse_yaml(file_path))
+        store = SettingsWriter(file_path)
+        store.load()
         return store
 
     def write_settings(self, file_key: str, data_out: dict):
@@ -174,6 +176,9 @@ class SettingsMigration(ABC):
 
         The data_out provided is emitted as yaml directly to the named file. If data_out is actually a
         DataStore, then the store's internal dict is emitted instead.
+
+        This method should not be necessary for modifying an existing file, as the SettingsWriter returned by
+        load_settings() has its own save() method.
 
         Args:
             file_key (str): Key of the settings file to write
@@ -215,4 +220,4 @@ class SettingsMigration(ABC):
         """
         data = self.load_settings(file_key)
         data.set("npc.version", version_string)
-        self.write_settings(file_key, data)
+        data.save()

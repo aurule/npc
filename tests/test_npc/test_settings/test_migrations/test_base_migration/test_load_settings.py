@@ -1,7 +1,7 @@
 import pytest
 from tests.fixtures import tmp_campaign, FakeMigration
 
-from npc.util.errors import ParseError
+from ruamel.yaml.scanner import ScannerError
 
 def test_loads_settings_yaml(tmp_campaign):
     migration = FakeMigration(tmp_campaign.settings)
@@ -30,5 +30,5 @@ def test_does_not_ignore_parse_errors(tmp_campaign):
     with tmp_campaign.settings_dir.joinpath("settings.yaml").open("a") as file:
         file.write("because: %no")
 
-    with pytest.raises(ParseError):
+    with pytest.raises(ScannerError):
         result = migration.load_settings("campaign")
