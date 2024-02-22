@@ -3,6 +3,7 @@ from .planning_filename import PlanningFilename
 from .systems import System
 from .types import TypeSpec
 from .tags import TagSpec, SubTagSpec, DeprecatedTagSpec, MetatagSpec
+from .settings_writer import SettingsWriter
 
 from pathlib import Path
 from click import get_app_dir
