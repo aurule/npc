@@ -11,10 +11,10 @@
         <file alias="help-about">assets/icons/info.svg</file>
         <file alias="list-add">assets/icons/plus.svg</file>
         <file alias="list-remove">assets/icons/trash-bin.svg</file>
-        <file alias="menu-more">assets/icons/dots-horiz-thick.svg</file>
         <file alias="go-next">assets/icons/go-next.svg</file>
         <file alias="hide_table_column">assets/icons/eye-slash.svg</file>
         <file alias="window-pin">assets/icons/map-pin.svg</file>
         <file alias="bug">assets/icons/bug.svg</file>
+        <file alias="document-edit">assets/icons/file-pen.svg</file>
     </qresource>
 </RCC>

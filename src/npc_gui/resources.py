@@ -6,29 +6,7 @@
 from PySide6 import QtCore
 
 qt_resource_data = b"\
-\x00\x00\x013\
-<\
-svg class=\x22w-6 h\
--6 text-gray-800\
- dark:text-white\
-\x22 aria-hidden=\x22t\
-rue\x22 xmlns=\x22http\
-://www.w3.org/20\
-00/svg\x22 fill=\x22cu\
-rrentColor\x22 view\
-Box=\x220 0 14 20\x22>\
-\x0a    <path d=\x22M7\
- 0a7 7 0 0 0-1 1\
-3.92V19a1 1 0 1 \
-0 2 0v-5.08A7 7 \
-0 0 0 7 0Zm0 5.5\
-A1.5 1.5 0 0 0 5\
-.5 7a1 1 0 0 1-2\
- 0A3.5 3.5 0 0 1\
- 7 3.5a1 1 0 0 1\
- 0 2Z\x22/>\x0a  </svg\
->\x0a\
-\x00\x00\x01+\
+\x00\x00\x01E\
 <\
 svg class=\x22w-6 h\
 -6 text-gray-800\
@@ -38,18 +16,20 @@ rue\x22 xmlns=\x22http\
 ://www.w3.org/20\
 00/svg\x22 fill=\x22no\
 ne\x22 viewBox=\x220 0\
- 20 16\x22>\x0a    <pa\
-th stroke=\x22curre\
-ntColor\x22 stroke-\
-linecap=\x22round\x22 \
-stroke-linejoin=\
-\x22round\x22 stroke-w\
-idth=\x221.5\x22 d=\x22M1\
-4.153 15 19 8l-4\
-.847-7H1l4.848 7\
-L1 15h13.153Z\x22/>\
-\x0a  </svg>\x0a\
-\x00\x00\x01F\
+ 24 24\x22>\x0d\x0a    <p\
+ath stroke=\x22curr\
+entColor\x22 stroke\
+-linecap=\x22round\x22\
+ stroke-linejoin\
+=\x22round\x22 stroke-\
+width=\x221.5\x22 d=\x22M\
+12 15a6 6 0 1 0 \
+0-12 6 6 0 0 0 0\
+ 12Zm0 0v6M9.5 9\
+A2.5 2.5 0 0 1 1\
+2 6.5\x22/>\x0d\x0a  </sv\
+g>\x0d\x0a\
+\x00\x00\x01\x0b\
 <\
 svg class=\x22w-6 h\
 -6 text-gray-800\
@@ -59,20 +39,16 @@ rue\x22 xmlns=\x22http\
 ://www.w3.org/20\
 00/svg\x22 fill=\x22no\
 ne\x22 viewBox=\x220 0\
- 18 20\x22>\x0a    <pa\
-th stroke=\x22curre\
-ntColor\x22 stroke-\
-linecap=\x22round\x22 \
-stroke-linejoin=\
-\x22round\x22 stroke-w\
-idth=\x221.5\x22 d=\x22M1\
-6 1v5h-5M2 19v-5\
-h5m10-4a8 8 0 0 \
-1-14.947 3.97M1 \
-10a8 8 0 0 1 14.\
-947-3.97\x22/>\x0a  </\
-svg>\x0a\
-\x00\x00\x01c\
+ 24 24\x22>\x0d\x0a    <p\
+ath stroke=\x22curr\
+entColor\x22 stroke\
+-linecap=\x22round\x22\
+ stroke-linejoin\
+=\x22round\x22 stroke-\
+width=\x221.5\x22 d=\x22m\
+9 5 7 7-7 7\x22/>\x0d\x0a\
+  </svg>\x0d\x0a\
+\x00\x00\x01P\
 <\
 svg class=\x22w-6 h\
 -6 text-gray-800\
@@ -82,22 +58,20 @@ rue\x22 xmlns=\x22http\
 ://www.w3.org/20\
 00/svg\x22 fill=\x22no\
 ne\x22 viewBox=\x220 0\
- 18 20\x22>\x0a    <pa\
-th stroke=\x22curre\
-ntColor\x22 stroke-\
-linecap=\x22round\x22 \
-stroke-linejoin=\
-\x22round\x22 stroke-w\
-idth=\x221.5\x22 d=\x22M1\
- 5h16M7 8v8m4-8v\
-8M7 1h4a1 1 0 0 \
-1 1 1v3H6V2a1 1 \
-0 0 1 1-1ZM3 5h1\
-2v13a1 1 0 0 1-1\
- 1H4a1 1 0 0 1-1\
--1V5Z\x22/>\x0a  </svg\
->\x0a\
-\x00\x00\x01>\
+ 24 24\x22>\x0d\x0a    <p\
+ath stroke=\x22curr\
+entColor\x22 stroke\
+-linecap=\x22round\x22\
+ stroke-linejoin\
+=\x22round\x22 stroke-\
+width=\x221.5\x22 d=\x22M\
+17.7 7.7A7.1 7.1\
+ 0 0 0 5 10.8M18\
+ 4v4h-4m-7.7 8.3\
+A7.1 7.1 0 0 0 1\
+9 13.2M6 20v-4h4\
+\x22/>\x0d\x0a  </svg>\x0d\x0a\
+\x00\x00\x01h\
 <\
 svg class=\x22w-6 h\
 -6 text-gray-800\
@@ -107,19 +81,44 @@ rue\x22 xmlns=\x22http\
 ://www.w3.org/20\
 00/svg\x22 fill=\x22no\
 ne\x22 viewBox=\x220 0\
- 20 20\x22>\x0a    <pa\
-th stroke=\x22curre\
-ntColor\x22 stroke-\
-linecap=\x22round\x22 \
-stroke-linejoin=\
-\x22round\x22 stroke-w\
-idth=\x221.5\x22 d=\x22M8\
- 9h2v5m-2 0h4M9.\
-408 5.5h.01M19 1\
-0a9 9 0 1 1-18 0\
+ 24 24\x22>\x0d\x0a    <p\
+ath stroke=\x22curr\
+entColor\x22 stroke\
+-linecap=\x22round\x22\
+ stroke-linejoin\
+=\x22round\x22 stroke-\
+width=\x221.5\x22 d=\x22M\
+5 7h14m-9 3v8m4-\
+8v8M10 3h4a1 1 0\
+ 0 1 1 1v3H9V4a1\
+ 1 0 0 1 1-1ZM6 \
+7h12v13a1 1 0 0 \
+1-1 1H7a1 1 0 0 \
+1-1-1V7Z\x22/>\x0d\x0a  <\
+/svg>\x0d\x0a\
+\x00\x00\x01@\
+<\
+svg class=\x22w-6 h\
+-6 text-gray-800\
+ dark:text-white\
+\x22 aria-hidden=\x22t\
+rue\x22 xmlns=\x22http\
+://www.w3.org/20\
+00/svg\x22 fill=\x22no\
+ne\x22 viewBox=\x220 0\
+ 24 24\x22>\x0d\x0a    <p\
+ath stroke=\x22curr\
+entColor\x22 stroke\
+-linecap=\x22round\x22\
+ stroke-linejoin\
+=\x22round\x22 stroke-\
+width=\x221.5\x22 d=\x22M\
+10 11h2v5m-2 0h4\
+m-2.6-8.5h0M21 1\
+2a9 9 0 1 1-18 0\
  9 9 0 0 1 18 0Z\
-\x22/>\x0a  </svg>\x0a\
-\x00\x00\x01\x9b\
+\x22/>\x0d\x0a  </svg>\x0d\x0a\
+\x00\x00\x01u\
 <\
 svg class=\x22w-6 h\
 -6 text-gray-800\
@@ -129,25 +128,23 @@ rue\x22 xmlns=\x22http\
 ://www.w3.org/20\
 00/svg\x22 fill=\x22no\
 ne\x22 viewBox=\x220 0\
- 20 18\x22>\x0a    <pa\
-th stroke=\x22curre\
-ntColor\x22 stroke-\
-linecap=\x22round\x22 \
-stroke-linejoin=\
-\x22round\x22 stroke-w\
-idth=\x221.5\x22 d=\x22M1\
-.933 10.909A4.35\
-7 4.357 0 0 1 1 \
-9c0-1 4-6 9-6m7.\
-6 3.8A5.068 5.06\
-8 0 0 1 19 9c0 1\
--3 6-9 6-.314 0-\
-.62-.014-.918-.0\
-4M2 17 18 1m-5 8\
-a3 3 0 1 1-6 0 3\
- 3 0 0 1 6 0Z\x22/>\
-\x0a  </svg>\x0a\
-\x00\x00\x01\xb4\
+ 24 24\x22>\x0d\x0a    <p\
+ath stroke=\x22curr\
+entColor\x22 stroke\
+-linecap=\x22round\x22\
+ stroke-linejoin\
+=\x22round\x22 stroke-\
+width=\x221.5\x22 d=\x22M\
+4 14c-.5-.6-.9-1\
+.3-1-2 0-1 4-6 9\
+-6m7.6 3.8A5 5 0\
+ 0 1 21 12c0 1-3\
+ 6-9 6h-1m-6 1L1\
+9 5m-4 7a3 3 0 1\
+ 1-6 0 3 3 0 0 1\
+ 6 0Z\x22/>\x0d\x0a  </sv\
+g>\x0d\x0a\
+\x00\x00\x01\xc4\
 <\
 svg class=\x22w-6 h\
 -6 text-gray-800\
@@ -157,27 +154,28 @@ rue\x22 xmlns=\x22http\
 ://www.w3.org/20\
 00/svg\x22 fill=\x22no\
 ne\x22 viewBox=\x220 0\
- 20 20\x22>\x0a    <pa\
-th stroke=\x22curre\
-ntColor\x22 stroke-\
-linecap=\x22round\x22 \
-stroke-linejoin=\
-\x22round\x22 stroke-w\
-idth=\x221.5\x22 d=\x22M7\
- 19H1.933A.97.97\
- 0 0 1 1 18V5.82\
-8a2 2 0 0 1 .586\
--1.414l2.828-2.8\
-28A2 2 0 0 1 5.8\
-28 1h8.239A.97.9\
-7 0 0 1 15 2v4M6\
- 1v4a1 1 0 0 1-1\
- 1H1m11 8h4m-2 2\
-v-4m5 2a5 5 0 1 \
-1-10 0 5 5 0 0 1\
- 10 0Z\x22/>\x0a  </sv\
-g>\x0a\
-\x00\x00\x01\x8f\
+ 24 24\x22>\x0d\x0a    <p\
+ath stroke=\x22curr\
+entColor\x22 stroke\
+-linecap=\x22round\x22\
+ stroke-linejoin\
+=\x22round\x22 stroke-\
+width=\x221.5\x22 d=\x22M\
+18 5V4c0-.6-.4-1\
+-1-1H9a1 1 0 0 0\
+-.8.3l-4 4a1 1 0\
+ 0 0-.2.6V20c0 .\
+6.4 1 1 1h12c.6 \
+0 1-.4 1-1v-5M9 \
+3v4c0 .6-.4 1-1 \
+1H4m11.4.8 2.7 2\
+.7m1.2-3.9a2 2 0\
+ 0 1 0 3l-6.6 6.\
+6L9 18l.7-3.7 6.\
+7-6.7a2 2 0 0 1 \
+3 0Z\x22/>\x0d\x0a  </svg\
+>\x0d\x0a\
+\x00\x00\x01\x92\
 <\
 svg class=\x22w-6 h\
 -6 text-gray-800\
@@ -187,24 +185,25 @@ rue\x22 xmlns=\x22http\
 ://www.w3.org/20\
 00/svg\x22 fill=\x22no\
 ne\x22 viewBox=\x220 0\
- 21 18\x22>\x0a    <pa\
-th stroke=\x22curre\
-ntColor\x22 stroke-\
-linecap=\x22round\x22 \
-stroke-linejoin=\
-\x22round\x22 stroke-w\
-idth=\x221.5\x22 d=\x22M2\
-.539 17h12.476l4\
--9H5m-2.461 9a1 \
-1 0 0 1-.914-1.4\
-06L5 8m-2.461 9H\
-2a1 1 0 0 1-1-1V\
-2a1 1 0 0 1 1-1h\
-5.443a1 1 0 0 1 \
-.8.4l2.7 3.6H16a\
-1 1 0 0 1 1 1v2H\
-5\x22/>\x0a  </svg>\x0a\
-\x00\x00\x02\x19\
+ 24 24\x22>\x0d\x0a    <p\
+ath stroke=\x22curr\
+entColor\x22 stroke\
+-linecap=\x22round\x22\
+ stroke-linejoin\
+=\x22round\x22 stroke-\
+width=\x221.5\x22 d=\x22M\
+18 9V4c0-.6-.4-1\
+-1-1H9a1 1 0 0 0\
+-.8.3l-4 4a1 1 0\
+ 0 0-.2.6V20c0 .\
+6.4 1 1 1h4M9 3v\
+4c0 .6-.4 1-1 1H\
+4m11 6v4m-2-2h4m\
+3 0a5 5 0 1 1-10\
+ 0 5 5 0 0 1 10 \
+0Z\x22/>\x0d\x0a  </svg>\x0d\
+\x0a\
+\x00\x00\x01_\
 <\
 svg class=\x22w-6 h\
 -6 text-gray-800\
@@ -214,33 +213,21 @@ rue\x22 xmlns=\x22http\
 ://www.w3.org/20\
 00/svg\x22 fill=\x22no\
 ne\x22 viewBox=\x220 0\
- 19 20\x22>\x0a    <pa\
-th stroke=\x22curre\
-ntColor\x22 stroke-\
-linecap=\x22round\x22 \
-stroke-linejoin=\
-\x22round\x22 stroke-w\
-idth=\x221.5\x22 d=\x22M7\
- 3 6 2V1m5 2 1-1\
-V1M9 7v11M9 7a5 \
-5 0 0 1 5 5M9 7a\
-5 5 0 0 0-5 5m5-\
-5a4.959 4.959 0 \
-0 1 2.973 1H12V6\
-a3 3 0 0 0-6 0v2\
-h.027A4.959 4.95\
-9 0 0 1 9 7Zm-5 \
-5H1m3 0v2a5 5 0 \
-0 0 10 0v-2m3 0h\
--3m-9.975 4H2a1 \
-1 0 0 0-1 1v2m13\
--3h2.025a1 1 0 0\
- 1 1 1v2M13 9h2.\
-025a1 1 0 0 0 1-\
-1V6m-11 3H3a1 1 \
-0 0 1-1-1V6\x22/>\x0a \
- </svg>\x0a\
-\x00\x00\x01\xa3\
+ 24 24\x22>\x0d\x0a    <p\
+ath stroke=\x22curr\
+entColor\x22 stroke\
+-linecap=\x22round\x22\
+ stroke-linejoin\
+=\x22round\x22 stroke-\
+width=\x221.5\x22 d=\x22M\
+3 19V6c0-.6.4-1 \
+1-1h4c.3 0 .6.1.\
+8.4l1.9 2.2c.2.3\
+.5.4.8.4H16c.6 0\
+ 1 .4 1 1v1M3 19\
+l3-8h15l-3 8H3Z\x22\
+/>\x0d\x0a  </svg>\x0d\x0a\
+\x00\x00\x01\xfc\
 <\
 svg class=\x22w-6 h\
 -6 text-gray-800\
@@ -250,26 +237,31 @@ rue\x22 xmlns=\x22http\
 ://www.w3.org/20\
 00/svg\x22 fill=\x22no\
 ne\x22 viewBox=\x220 0\
- 16 20\x22>\x0a    <pa\
-th stroke=\x22curre\
-ntColor\x22 stroke-\
-linecap=\x22round\x22 \
-stroke-linejoin=\
-\x22round\x22 stroke-w\
-idth=\x221.5\x22 d=\x22M6\
- 1v4a1 1 0 0 1-1\
- 1H1m4 6 2 2 4-4\
-m4-8v16a.97.97 0\
- 0 1-.933 1H1.93\
-3A.97.97 0 0 1 1\
- 18V5.828a2 2 0 \
-0 1 .586-1.414l2\
-.828-2.828A2 2 0\
- 0 1 5.828 1h8.2\
-39A.97.97 0 0 1 \
-15 2Z\x22/>\x0a  </svg\
->\x0a\
-\x00\x00\x01\x0a\
+ 24 24\x22>\x0d\x0a    <p\
+ath stroke=\x22curr\
+entColor\x22 stroke\
+-linecap=\x22round\x22\
+ stroke-linejoin\
+=\x22round\x22 stroke-\
+width=\x221.5\x22 d=\x22M\
+10 5 9 4V3m5 2 1\
+-1V3m-3 6v11m0-1\
+1a5 5 0 0 1 5 5m\
+-5-5a5 5 0 0 0-5\
+ 5m5-5c1 0 2.1.4\
+ 3 1h0V8a3 3 0 0\
+ 0-6 0v2h0a5 5 0\
+ 0 1 3-1Zm-5 5H5\
+m2 0v2a5 5 0 0 0\
+ 10 0v-2m2 0h-2M\
+7 18H6a1 1 0 0 0\
+-1 1v2m12-3h1a1 \
+1 0 0 1 1 1v2m-3\
+-10h1a1 1 0 0 0 \
+1-1V8M8 11H7a1 1\
+ 0 0 1-1-1V8\x22/>\x0d\
+\x0a  </svg>\x0d\x0a\
+\x00\x00\x01t\
 <\
 svg class=\x22w-6 h\
 -6 text-gray-800\
@@ -279,37 +271,23 @@ rue\x22 xmlns=\x22http\
 ://www.w3.org/20\
 00/svg\x22 fill=\x22no\
 ne\x22 viewBox=\x220 0\
- 18 18\x22>\x0a    <pa\
-th stroke=\x22curre\
-ntColor\x22 stroke-\
-linecap=\x22round\x22 \
-stroke-linejoin=\
-\x22round\x22 stroke-w\
-idth=\x221.5\x22 d=\x22M9\
- 1v16M1 9h16\x22/>\x0a\
-  </svg>\x0a\
-\x00\x00\x01+\
-<\
-svg class=\x22w-6 h\
--6 text-gray-800\
- dark:text-white\
-\x22 aria-hidden=\x22t\
-rue\x22 xmlns=\x22http\
-://www.w3.org/20\
-00/svg\x22 fill=\x22cu\
-rrentColor\x22 view\
-Box=\x220 0 16 3\x22>\x0a\
-    <path d=\x22M2 \
-0a1.5 1.5 0 1 1 \
-0 3 1.5 1.5 0 0 \
-1 0-3Zm6.041 0a1\
-.5 1.5 0 1 1 0 3\
- 1.5 1.5 0 0 1 0\
--3ZM14 0a1.5 1.5\
- 0 1 1 0 3 1.5 1\
-.5 0 0 1 0-3Z\x22/>\
-\x0a  </svg>\x0a\
-\x00\x00\x01\x8b\
+ 24 24\x22>\x0d\x0a    <p\
+ath stroke=\x22curr\
+entColor\x22 stroke\
+-linecap=\x22round\x22\
+ stroke-linejoin\
+=\x22round\x22 stroke-\
+width=\x221.5\x22 d=\x22M\
+10 3v4c0 .6-.4 1\
+-1 1H5m4 6 2 2 4\
+-4m4-8v16c0 .6-.\
+4 1-1 1H6a1 1 0 \
+0 1-1-1V8c0-.4.1\
+-.6.3-.8l4-4 .6-\
+.2H18c.6 0 1 .4 \
+1 1Z\x22/>\x0d\x0a  </svg\
+>\x0d\x0a\
+\x00\x00\x01\x0e\
 <\
 svg class=\x22w-6 h\
 -6 text-gray-800\
@@ -319,24 +297,16 @@ rue\x22 xmlns=\x22http\
 ://www.w3.org/20\
 00/svg\x22 fill=\x22no\
 ne\x22 viewBox=\x220 0\
- 18 18\x22>\x0a    <pa\
-th stroke=\x22curre\
-ntColor\x22 stroke-\
-linecap=\x22round\x22 \
-stroke-linejoin=\
-\x22round\x22 stroke-w\
-idth=\x221.5\x22 d=\x22M7\
- 11h4m-2 2V9M2 5\
-h14a1 1 0 0 1 1 \
-1v10a1 1 0 0 1-1\
- 1H2a1 1 0 0 1-1\
--1V6a1 1 0 0 1 1\
--1Zm5.443-4H2a1 \
-1 0 0 0-1 1v3h9.\
-943l-2.7-3.6a1 1\
- 0 0 0-.8-.4Z\x22/>\
-\x0a  </svg>\x0a\
-\x00\x00\x01i\
+ 24 24\x22>\x0d\x0a    <p\
+ath stroke=\x22curr\
+entColor\x22 stroke\
+-linecap=\x22round\x22\
+ stroke-linejoin\
+=\x22round\x22 stroke-\
+width=\x221.5\x22 d=\x22M\
+5 12h14m-7 7V5\x22/\
+>\x0d\x0a  </svg>\x0d\x0a\
+\x00\x00\x01\x89\
 <\
 svg class=\x22w-6 h\
 -6 text-gray-800\
@@ -346,22 +316,24 @@ rue\x22 xmlns=\x22http\
 ://www.w3.org/20\
 00/svg\x22 fill=\x22no\
 ne\x22 viewBox=\x220 0\
- 18 18\x22>\x0a    <pa\
-th stroke=\x22curre\
-ntColor\x22 stroke-\
-linecap=\x22round\x22 \
-stroke-linejoin=\
-\x22round\x22 stroke-w\
-idth=\x221.5\x22 d=\x22M1\
- 5v11a1 1 0 0 0 \
-1 1h14a1 1 0 0 0\
- 1-1V6a1 1 0 0 0\
--1-1H1Zm0 0V2a1 \
-1 0 0 1 1-1h5.44\
-3a1 1 0 0 1 .8.4\
-l2.7 3.6H1Z\x22/>\x0a \
- </svg>\x0a\
-\x00\x00\x01\x94\
+ 24 24\x22>\x0d\x0a    <p\
+ath stroke=\x22curr\
+entColor\x22 stroke\
+-linecap=\x22round\x22\
+ stroke-linejoin\
+=\x22round\x22 stroke-\
+width=\x221.5\x22 d=\x22M\
+14 8H4m8 3.5v5M9\
+.5 14h5M4 6v13c0\
+ .6.4 1 1 1h14c.\
+6 0 1-.4 1-1V9c0\
+-.6-.4-1-1-1h-5a\
+1 1 0 0 1-.8-.4l\
+-1.9-2.2a1 1 0 0\
+ 0-.8-.4H5a1 1 0\
+ 0 0-1 1Z\x22/>\x0d\x0a  \
+</svg>\x0d\x0a\
+\x00\x00\x01z\
 <\
 svg class=\x22w-6 h\
 -6 text-gray-800\
@@ -371,24 +343,47 @@ rue\x22 xmlns=\x22http\
 ://www.w3.org/20\
 00/svg\x22 fill=\x22no\
 ne\x22 viewBox=\x220 0\
- 18 18\x22>\x0a    <pa\
-th stroke=\x22curre\
-ntColor\x22 stroke-\
-linecap=\x22round\x22 \
-stroke-linejoin=\
-\x22round\x22 stroke-w\
-idth=\x221.5\x22 d=\x22M1\
-5 11v4.833A1.166\
- 1.166 0 0 1 13.\
-833 17H2.167A1.1\
-67 1.167 0 0 1 1\
- 15.833V4.167A1.\
-166 1.166 0 0 1 \
-2.167 3h4.618m4.\
-447-2H17v5.768M9\
-.111 8.889l7.778\
--7.778\x22/>\x0a  </sv\
-g>\x0a\
+ 24 24\x22>\x0d\x0a    <p\
+ath stroke=\x22curr\
+entColor\x22 stroke\
+-linecap=\x22round\x22\
+ stroke-linejoin\
+=\x22round\x22 stroke-\
+width=\x221.5\x22 d=\x22M\
+13.5 8H4m0-2v13c\
+0 .6.4 1 1 1h14c\
+.6 0 1-.4 1-1V9c\
+0-.6-.4-1-1-1h-5\
+a1 1 0 0 1-.8-.4\
+l-1.9-2.2a1 1 0 \
+0 0-.8-.4H5a1 1 \
+0 0 0-1 1Z\x22/>\x0d\x0a \
+ </svg>\x0d\x0a\
+\x00\x00\x01o\
+<\
+svg class=\x22w-6 h\
+-6 text-gray-800\
+ dark:text-white\
+\x22 aria-hidden=\x22t\
+rue\x22 xmlns=\x22http\
+://www.w3.org/20\
+00/svg\x22 fill=\x22no\
+ne\x22 viewBox=\x220 0\
+ 24 24\x22>\x0d\x0a    <p\
+ath stroke=\x22curr\
+entColor\x22 stroke\
+-linecap=\x22round\x22\
+ stroke-linejoin\
+=\x22round\x22 stroke-\
+width=\x221.5\x22 d=\x22M\
+18 14v4.8a1.2 1.\
+2 0 0 1-1.2 1.2H\
+5.2A1.2 1.2 0 0 \
+1 4 18.8V7.2A1.2\
+ 1.2 0 0 1 5.2 6\
+h4.6m4.4-2H20v5.\
+8m-7.9 2L20 4.2\x22\
+/>\x0d\x0a  </svg>\x0d\x0a\
 "
 
 qt_resource_name = b"\
@@ -421,6 +416,10 @@ qt_resource_name = b"\
 \x00h\
 \x00i\x00d\x00e\x00_\x00t\x00a\x00b\x00l\x00e\x00_\x00c\x00o\x00l\x00u\x00m\x00n\
 \
+\x00\x0d\
+\x03\xc6<$\
+\x00d\
+\x00o\x00c\x00u\x00m\x00e\x00n\x00t\x00-\x00e\x00d\x00i\x00t\
 \x00\x0c\
 \x09<\x9c\xa7\
 \x00d\
@@ -442,10 +441,6 @@ qt_resource_name = b"\
 \x00\xa79\xc4\
 \x00l\
 \x00i\x00s\x00t\x00-\x00a\x00d\x00d\
-\x00\x09\
-\x05\x84\xe1\x05\
-\x00m\
-\x00e\x00n\x00u\x00-\x00m\x00o\x00r\x00e\
 \x00\x0a\
 \x0a\xc8\xa8\x87\
 \x00f\
@@ -466,36 +461,36 @@ qt_resource_struct = b"\
 \x00\x00\x00\x00\x00\x00\x00\x00\
 \x00\x00\x00\x00\x00\x02\x00\x00\x00\x0f\x00\x00\x00\x02\
 \x00\x00\x00\x00\x00\x00\x00\x00\
-\x00\x00\x00\xf4\x00\x00\x00\x00\x00\x01\x00\x00\x0bC\
-\x00\x00\x01\x8dC8\xfa\x0c\
-\x00\x00\x01(\x00\x00\x00\x00\x00\x01\x00\x00\x0f\x07\
-\x00\x00\x01\x8c\xfa\xa8;\xbc\
-\x00\x00\x01\x00\x00\x00\x00\x00\x00\x01\x00\x00\x0d`\
-\x00\x00\x01\x8c\xd6\xe7\x94c\
-\x00\x00\x00x\x00\x00\x00\x00\x00\x01\x00\x00\x05\x17\
-\x00\x00\x01\x8c\xd6\xe7\x94c\
-\x00\x00\x00\x5c\x00\x00\x00\x00\x00\x01\x00\x00\x03\xb0\
-\x00\x00\x01\x8c\xfa\xa8;\xbc\
-\x00\x00\x01\x82\x00\x00\x00\x00\x00\x01\x00\x00\x14@\
-\x00\x00\x01\x8c\xd6\xe7\x94c\
-\x00\x00\x01>\x00\x00\x00\x00\x00\x01\x00\x00\x10\x15\
-\x00\x00\x01\x8d\x1e\xff\xe7\xd1\
-\x00\x00\x01p\x00\x00\x00\x00\x00\x01\x00\x00\x12\xd3\
-\x00\x00\x01\x8c\xd6\xe7\x94c\
-\x00\x00\x00>\x00\x00\x00\x00\x00\x01\x00\x00\x02f\
-\x00\x00\x01\x8c\xd6\xe7\x94c\
-\x00\x00\x00\xba\x00\x00\x00\x00\x00\x01\x00\x00\x07\xf8\
-\x00\x00\x01\x8c\xd6\xe7\x94c\
-\x00\x00\x00\x92\x00\x00\x00\x00\x00\x01\x00\x00\x06Y\
-\x00\x00\x01\x8dC8\xfa\x0c\
-\x00\x00\x01V\x00\x00\x00\x00\x00\x01\x00\x00\x11D\
-\x00\x00\x01\x8c\xd6\xe7\x94c\
+\x00\x00\x01\x14\x00\x00\x00\x00\x00\x01\x00\x00\x0c\x96\
+\x00\x00\x01\x8d\xd7\x90\xb2\xc3\
+\x00\x00\x01H\x00\x00\x00\x00\x00\x01\x00\x00\x10\x0e\
+\x00\x00\x01\x8d\xd7\x93\xfb\xbb\
+\x00\x00\x01 \x00\x00\x00\x00\x00\x01\x00\x00\x0e\x96\
+\x00\x00\x01\x8d\xd7\x92\x1f\x9c\
+\x00\x00\x00x\x00\x00\x00\x00\x00\x01\x00\x00\x05\x18\
+\x00\x00\x01\x8d\xd7\x93\x9c\xb3\
+\x00\x00\x00\xba\x00\x00\x00\x00\x00\x01\x00\x00\x07\xd5\
+\x00\x00\x01\x8d\xd7\x90\x82\x1b\
+\x00\x00\x00\x5c\x00\x00\x00\x00\x00\x01\x00\x00\x03\xac\
+\x00\x00\x01\x8d\xd7\x94.C\
+\x00\x00\x01\x8a\x00\x00\x00\x00\x00\x01\x00\x00\x14+\
+\x00\x00\x01\x8d\xd7\x95(s\
+\x00\x00\x01x\x00\x00\x00\x00\x00\x01\x00\x00\x12\xad\
+\x00\x00\x01\x8d\xd7\x93F\xeb\
+\x00\x00\x00>\x00\x00\x00\x00\x00\x01\x00\x00\x02X\
+\x00\x00\x01\x8d\xd7\x94\x17;\
+\x00\x00\x00\xda\x00\x00\x00\x00\x00\x01\x00\x00\x09\x9d\
+\x00\x00\x01\x8d\xd7\x90\x1a\x0b\
+\x00\x00\x00\x92\x00\x00\x00\x00\x00\x01\x00\x00\x06\x5c\
+\x00\x00\x01\x8d\xd7\x91\xbb{\
+\x00\x00\x01^\x00\x00\x00\x00\x00\x01\x00\x00\x11 \
+\x00\x00\x01\x8d\xd7\x930\xcb\
 \x00\x00\x00\x10\x00\x00\x00\x00\x00\x01\x00\x00\x00\x00\
-\x00\x00\x01\x8dC8\xfa\x0c\
-\x00\x00\x00\xd8\x00\x00\x00\x00\x00\x01\x00\x00\x09\xb0\
-\x00\x00\x01\x8c\xd6\xe7\x94c\
-\x00\x00\x00*\x00\x00\x00\x00\x00\x01\x00\x00\x017\
-\x00\x00\x01\x8dC8\xfa\x0c\
+\x00\x00\x01\x8d\xd7\x93\xc5\xf3\
+\x00\x00\x00\xf8\x00\x00\x00\x00\x00\x01\x00\x00\x0b3\
+\x00\x00\x01\x8d\xd7\x93\x15\xeb\
+\x00\x00\x00*\x00\x00\x00\x00\x00\x01\x00\x00\x01I\
+\x00\x00\x01\x8d\xd7\x93\x81\x13\
 "
 
 def qInitResources():
