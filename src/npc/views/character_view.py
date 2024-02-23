@@ -1,3 +1,5 @@
+from pathlib import Path
+
 from npc.characters import Character
 from .tag_view_collection import TagViewCollection
 
@@ -16,6 +18,7 @@ class CharacterView:
     """
     def __init__(self, character: Character):
         self.type: str = character.type_key
+        self.file_path = character.file_path or Path("")
         self.description: str = character.desc or ""
         self.realname: str = character.realname or ""
         self.mnemonic: str = character.mnemonic or ""
