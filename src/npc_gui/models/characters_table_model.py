@@ -35,6 +35,10 @@ class CharactersTableModel(QAbstractTableModel):
             case Qt.StatusTipRole:
                 return f"{view.realname} - {view.mnemonic}, {view.type}"
 
+    def path_at(self, row: int):
+        view = self.resource_views[row]
+        return view.file_path
+
     def headerData(self, section: int, orientation: Qt.Orientation, role: int = Qt.DisplayRole):
         if role == Qt.DisplayRole:
             if orientation == Qt.Horizontal:

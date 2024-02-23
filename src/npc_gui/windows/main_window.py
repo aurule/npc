@@ -97,6 +97,14 @@ class MainWindow(QMainWindow):
         self.actions["new_character"] = new_character
         self.campaign_actions.append("new_character")
 
+        open_character = QAction("Open in editor")
+        open_character.triggered.connect(self.open_character)
+        open_character.setIcon(theme_or_resource_icon("document-edit"))
+        open_character.setStatusTip("Open the selected character(s) in your text editor")
+        open_character.setShortcut("ctrl+e")
+        open_character.setDisabled(True)
+        self.actions["open_character"] = open_character
+
         # Session actions
 
         session_new = QAction("Next session", self)
@@ -161,6 +169,7 @@ class MainWindow(QMainWindow):
 
         file_menu = QMenu("&File")
         file_menu.addAction(self.actions.get("new_character"))
+        file_menu.addAction(self.actions.get("open_character"))
         file_menu.addSeparator()
         file_menu.addAction(self.actions.get("new"))
         file_menu.addAction(self.actions.get("open"))
@@ -316,13 +325,19 @@ class MainWindow(QMainWindow):
             self.campaign.characters,
             columns
         )
+        self.characters_table.selectionModel().selectionChanged.connect(self.update_character_selection)
         characters_layout.addWidget(self.characters_table)
 
         character_actions_bar = QWidget()
         character_actions_layout = QHBoxLayout(character_actions_bar)
 
-        characters_count = QLabel(f"{self.characters_table.model.rowCount()} characters")
-        character_actions_layout.addWidget(characters_count)
+        self.open_character_button = ActionButton(self.actions.get("open_character"))
+        self.open_character_button.setSizePolicy(fixed_both)
+        character_actions_layout.addWidget(self.open_character_button)
+
+        self.characters_count_label = QLabel(f"{self.characters_table.model.rowCount()} characters")
+        self.characters_count_label.setAlignment(Qt.AlignCenter)
+        character_actions_layout.addWidget(self.characters_count_label)
 
         new_character_button = ActionButton(self.actions.get("new_character"))
         new_character_button.setSizePolicy(fixed_both)
@@ -414,3 +429,18 @@ class MainWindow(QMainWindow):
         if dialog.exec():
             self.campaign.characters.count += 1
             self.characters_table.model.reload()
+
+    def open_character(self, _parent):
+        selection = set(s.row() for s in self.characters_table.selectionModel().selectedIndexes())
+        files = [self.characters_table.model.path_at(index) for index in selection]
+        npc.util.edit_files(files, self.settings)
+
+    def update_character_selection(self, selected, deselected):
+        selection = set(s.row() for s in self.characters_table.selectionModel().selectedIndexes())
+        total = len(selection)
+        action = self.actions.get("open_character")
+        action.setDisabled(not total)
+        if total > 1:
+            action.setText(f"Open {len(selection)} in editor")
+        else:
+            action.setText("Open in editor")
