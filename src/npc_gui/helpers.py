@@ -26,7 +26,7 @@ def find_settings_file(settings, location: str) -> str:
         case "user":
             target_file = settings.personal_dir / "settings.yaml"
         case "campaign":
-            target_file = settings.campaign_dir / "settings.yaml"
+            target_file = settings.campaign_dir / ".npc" / "settings.yaml"
         case _:
             logger.error(f"Unrecognized settings location '{location}'")
             return None
