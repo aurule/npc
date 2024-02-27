@@ -46,36 +46,40 @@ class NewCharacterDialog(QDialog):
         self.init_elements()
 
     def init_elements(self):
-        form_lines = QFormLayout()
+        master_layout = QGridLayout(self)
 
-        # name input
+        name_pair = QHBoxLayout()
         name_input = DebounceLineEdit()
         name_input.debouncedText.connect(self.save_name)
-        form_lines.addRow("&Name:", name_input)
+        name_label = QLabel("&Name:")
+        name_label.setBuddy(name_input)
+        name_pair.addWidget(name_label)
+        name_pair.addWidget(name_input)
+        master_layout.addLayout(name_pair, 0, 0)
 
-        # mnemonic input
+
+        mnemonic_pair = QHBoxLayout()
         mnemonic_input = DebounceLineEdit()
         mnemonic_input.debouncedText.connect(self.save_mnemonic)
-        form_lines.addRow("&Mnemonic:", mnemonic_input)
+        mnemonic_label = QLabel("&Mnemonic:")
+        mnemonic_label.setBuddy(mnemonic_input)
+        mnemonic_pair.addWidget(mnemonic_label)
+        mnemonic_pair.addWidget(mnemonic_input)
+        master_layout.addLayout(mnemonic_pair, 0, 1)
 
-        # type picker
+        type_pair = QHBoxLayout()
         types_model = CharacterTypesModel(self.campaign)
         self.type_picker = QComboBox()
         self.type_picker.setModel(types_model)
         self.type_picker.setPlaceholderText("Pick a character type")
         self.type_picker.setCurrentIndex(-1)
         self.type_picker.currentIndexChanged.connect(self.save_type)
-        form_lines.addRow("&Type:", self.type_picker)
+        type_label = QLabel("&Type:")
+        type_label.setBuddy(mnemonic_input)
+        type_pair.addWidget(type_label)
+        type_pair.addWidget(self.type_picker)
+        master_layout.addLayout(type_pair, 1, 0)
 
-        # path label
-        self.path_preview = QLabel(" ")
-        self.path_preview.setSizePolicy(fixed_vertical)
-        form_lines.addRow("Path:", self.path_preview)
-
-        master_layout = QVBoxLayout(self)
-        master_layout.addLayout(form_lines)
-
-        # special flags
 
         flags_box_layout = QHBoxLayout()
 
@@ -99,25 +103,32 @@ class NewCharacterDialog(QDialog):
 
         flags_box = QGroupBox("Flags")
         flags_box.setLayout(flags_box_layout)
-        master_layout.addWidget(flags_box)
+        master_layout.addWidget(flags_box, 1, 1)
 
-        # description input
 
+        path_pair = QHBoxLayout()
+        path_label = QLabel("Path:")
+        self.path_preview = QLabel(" ")
+        self.path_preview.setSizePolicy(fixed_vertical)
+        path_pair.addWidget(path_label)
+        path_pair.addWidget(self.path_preview)
+        master_layout.addLayout(path_pair, 2, 0, 1, -1)
+
+
+        desc_pair = QVBoxLayout()
         desc_label = QLabel("Description:")
-        master_layout.addWidget(desc_label)
         self.desc_debounce = QTimer()
         self.desc_debounce.setSingleShot(True)
         self.desc_debounce.setInterval(300)
         desc_input = QTextEdit()
         desc_input.textChanged.connect(self.desc_debounce.start)
         self.desc_debounce.timeout.connect(lambda: self.save_desc(desc_input.toMarkdown()))
-        master_layout.addWidget(desc_input)
+        desc_pair.addWidget(desc_label)
+        desc_pair.addWidget(desc_input)
+        master_layout.addLayout(desc_pair, 3, 0)
 
-        # long-form tags: spec.long
 
-        # general tags
-
-        # tag management
+        tags_pair = QVBoxLayout()
         tags_label_line = QHBoxLayout()
         tags_label = QLabel("Tags:")
         tags_label_line.addWidget(tags_label)
@@ -127,13 +138,13 @@ class NewCharacterDialog(QDialog):
         tag_add.setIcon(theme_or_resource_icon("list-add"))
         tag_add.setToolButtonStyle(Qt.ToolButtonIconOnly)
         tags_label_line.addWidget(tag_add)
-        master_layout.addLayout(tags_label_line)
+        tags_pair.addLayout(tags_label_line)
 
         tag_tree = TagTreeView(self.character_id, db=self.db)
-        master_layout.addWidget(tag_tree)
         tag_add.pressed.connect(tag_tree.insert_row)
+        tags_pair.addWidget(tag_tree)
+        master_layout.addLayout(tags_pair, 3, 1)
 
-        # dialog buttons
 
         QBtn = QDialogButtonBox.Save | QDialogButtonBox.Cancel
         buttonBox = QDialogButtonBox(QBtn)
@@ -142,7 +153,7 @@ class NewCharacterDialog(QDialog):
         buttonBox.accepted.connect(self.write_character_file)
         buttonBox.rejected.connect(self.delete_character_entry)
 
-        master_layout.addWidget(buttonBox)
+        master_layout.addWidget(buttonBox, 4, 0, 1, -1)
 
     def write_character_file(self):
         type_spec = self.campaign.get_type(self.character_type)
