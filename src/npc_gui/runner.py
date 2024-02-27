@@ -1,4 +1,5 @@
 import click
+import platform
 
 from .application import NPCApplication
 from .windows import MainWindow
@@ -12,6 +13,8 @@ def run(campaign):
     """Run the NPC GUI interface
     """
     app = NPCApplication([])
+    if platform.system() == "Windows":
+        app.setStyle("Fusion")
 
     mw = MainWindow()
     mw.show()
