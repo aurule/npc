@@ -1,6 +1,7 @@
 from pathlib import Path
-from sqlalchemy import String, Text, select, Select, Boolean
+from sqlalchemy import String, Text, select, Select, Boolean, DateTime
 from sqlalchemy.orm import Mapped, relationship, mapped_column
+from sqlalchemy.sql import func
 from typing import List, Optional
 from .taggable_interface import Taggable
 from .tag_class import Tag
@@ -17,18 +18,20 @@ class Character(BaseModel):
     Handles validating and changing individual characters, as well as fetching specific tag values
 
     Required Attributes:
-        id          int     auto
-        delist      bool    default False
+        id          int         auto
+        delist      bool        default False
         realname    str
-        nolint      bool    default False
-        sticky      bool    default False
-        type_key    str     default "unknown"
+        nolint      bool        default False
+        sticky      bool        default False
+        type_key    str         default "unknown"
+        created_at  datetime    default sql.now()
+        updated_at  datetime    default sql.now(), onupdate sql.now()
     Optional Attributes
         desc        str
         file_body   str
-        file_loc    str     indexed
+        file_loc    str         indexed
         mnemonic    str
-        tags        rel     Tag
+        tags        rel         Tag
     """
 
     # Names of tags which are represented by properties on the Character object, instead of as associated Tags
@@ -59,6 +62,8 @@ class Character(BaseModel):
         cascade="all, delete-orphan"
     )
     type_key: Mapped[str] = mapped_column(String(128), default=DEFAULT_TYPE)
+    created_at: Mapped[str] = mapped_column(DateTime(), server_default=func.now())
+    updated_at: Mapped[str] = mapped_column(DateTime(), server_default=func.now(), onupdate=func.now())
 
     def __repr__(self) -> str:
         return f"Character(id={self.id!r}, realname={self.realname!r}, delist={self.delist!r})"
