@@ -26,7 +26,7 @@ class Character(BaseModel):
     Optional Attributes
         desc        str
         file_body   str
-        file_loc    str
+        file_loc    str     indexed
         mnemonic    str
         tags        rel     Tag
     """
@@ -49,7 +49,7 @@ class Character(BaseModel):
     delist: Mapped[bool] = mapped_column(Boolean, default=False)
     desc: Mapped[Optional[str]] = mapped_column(Text)
     file_body: Mapped[Optional[str]] = mapped_column(Text)
-    file_loc: Mapped[Optional[str]] = mapped_column(String(1024))
+    file_loc: Mapped[Optional[str]] = mapped_column(String(1024), index=True)
     mnemonic: Mapped[Optional[str]] = mapped_column(String(1024))
     realname: Mapped[str] = mapped_column(String(1024))
     nolint: Mapped[bool] = mapped_column(Boolean, default=False)
