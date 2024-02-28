@@ -35,18 +35,32 @@ class CharacterCollection():
 
             return True
 
+        touched = []
         for character_path in self.root.glob("**/*"):
             if not allowed(character_path):
                 continue
 
+            # get record id and updated_at based on character_path
+            if record_id:
+                touched.append(record_id)
+                # get file mtime
+                if record_updated >= mtime:
+                    continue
+
+                # delete record a la self.delete(record_id)
+
             reader = CharacterReader(character_path)
-            self.create(
+            new_id = self.create(
                 realname = reader.name(),
                 mnemonic = reader.mnemonic(),
                 body = reader.body(),
                 tags = reader.tags(),
                 path = reader.character_path,
             )
+
+            touched.append(new_id)
+
+        # delete records where id not in touched
 
     @cached_property
     def allowed_suffixes(self) -> set[str]:
