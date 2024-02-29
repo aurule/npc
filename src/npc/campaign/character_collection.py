@@ -1,3 +1,6 @@
+from typing import Iterator
+from pathlib import Path
+
 from functools import cached_property
 
 from .pathfinder_class import Pathfinder
@@ -11,6 +14,12 @@ class CharacterCollection():
     """
 
     def __init__(self, campaign, *, db: DB = None):
+        """
+        Create a new CharacterCollection object
+
+        Character files are not read immediately. Instead, call seed() to load
+        all available records.
+        """
         self.db = db if db else DB()
 
         self.campaign = campaign
@@ -24,22 +33,8 @@ class CharacterCollection():
         This method is pretty dumb right now and does not check for duplicates at all. It simply reads in npc
         files and creates the corresponding Character record in the database.
         """
-        ignore_paths = [self.root / p for p in self.campaign.settings.get("campaign.characters.ignore_subpaths")]
-        def allowed(file_path):
-            if file_path.suffix not in self.allowed_suffixes:
-                return False
-
-            for ignore_path in ignore_paths:
-                if file_path.is_relative_to(ignore_path):
-                    return False
-
-            return True
-
         touched = []
-        for character_path in self.root.glob("**/*"):
-            if not allowed(character_path):
-                continue
-
+        for character_path in self.valid_character_files():
             # get record id and updated_at based on character_path
             if record_id:
                 touched.append(record_id)
@@ -61,6 +56,33 @@ class CharacterCollection():
             touched.append(new_id)
 
         # delete records where id not in touched
+
+    def valid_character_files(self) -> Iterator[Path]:
+        """Iterate valid character file paths
+
+        This iterator yields all paths within our root dir that match these criteria:
+        * Has an allowed suffix
+        * Not in an ignored subpath
+
+        Returns:
+            Iterator[Path]: Iterator of valid character files
+        """
+        ignore_paths = [self.root / p for p in self.campaign.settings.get("campaign.characters.ignore_subpaths")]
+        def allowed(file_path):
+            if file_path.suffix not in self.allowed_suffixes:
+                return False
+
+            for ignore_path in ignore_paths:
+                if file_path.is_relative_to(ignore_path):
+                    return False
+
+            return True
+
+        for character_path in self.root.glob("**/*"):
+            if not allowed(character_path):
+                continue
+
+            yield character_path
 
     @cached_property
     def allowed_suffixes(self) -> set[str]:
