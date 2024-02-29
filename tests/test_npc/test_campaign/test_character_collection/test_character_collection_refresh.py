@@ -61,6 +61,7 @@ def test_replaces_record_with_updated_file(tmp_campaign, db):
         tags = reader.tags(),
         path = reader.character_path,
     )
+    collection.update(old_id, file_mtime = loc.stat().st_mtime - 10)
     with loc.open('a', newline="\n") as file:
         file.write("\n@delist")
 
