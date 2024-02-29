@@ -18,6 +18,7 @@ def test_shows_conflicts(tmp_campaign, runner):
     runner.invoke(cli, "new person -n 'Test Mann' -m tester")
     char_file = tmp_campaign.characters_dir / "Test Mann - tester.npc"
     extra_dir = tmp_campaign.characters_dir / "extra"
+    extra_dir.mkdir()
     shutil.move(char_file, extra_dir)
     runner.invoke(cli, "new person -n 'Test Mann' -m tester")
 

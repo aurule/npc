@@ -54,11 +54,11 @@ class BaseReorganizer:
         conflicting_paths: set[Path] = set()
 
         unique_paths: set[Path] = set()
-        for recpath in self.relocations:
-            if recpath.ideal_path in unique_paths:
-                conflicting_paths.add(recpath.ideal_path)
+        for reloc in self.relocations:
+            if reloc.ideal_path in unique_paths:
+                conflicting_paths.add(reloc.ideal_path)
             else:
-                unique_paths.add(recpath.ideal_path)
+                unique_paths.add(reloc.ideal_path)
 
         return [f"Multiple files want to use the path '{cpath}'" for cpath in conflicting_paths]
 
