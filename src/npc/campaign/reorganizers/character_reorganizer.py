@@ -41,6 +41,4 @@ class CharacterReorganizer(BaseReorganizer):
         Args:
             relocation (Relocation): The relocation that was just executed.
         """
-        query = character_repository.update_attrs_by_id(relocation.id,
-                                                        {"file_loc": str(relocation.ideal_path)})
-        self.campaign.characters.apply_query(query)
+        self.campaign.characters.update(relocation.id, file_path = relocation.ideal_path)

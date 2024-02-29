@@ -14,8 +14,7 @@ class CharacterCollection():
     """
 
     def __init__(self, campaign, *, db: DB = None):
-        """
-        Create a new CharacterCollection object
+        """Create a new CharacterCollection object
 
         Character files are not read immediately. Instead, call seed() to load
         all available records.
@@ -27,35 +26,62 @@ class CharacterCollection():
         self.count = 0
         self.item_type = "Character"
 
-    def refresh(self):
-        """Load npc files into the db
-
-        This method is pretty dumb right now and does not check for duplicates at all. It simply reads in npc
-        files and creates the corresponding Character record in the database.
-        """
-        touched = []
+    def seed(self):
+        new_characters = []
+        factory = CharacterFactory(self.campaign)
         for character_path in self.valid_character_files():
-            # get record id and updated_at based on character_path
-            if record_id:
-                touched.append(record_id)
-                # get file mtime
-                if record_updated >= mtime:
-                    continue
-
-                # delete record a la self.delete(record_id)
-
             reader = CharacterReader(character_path)
-            new_id = self.create(
+            character = factory.make(
                 realname = reader.name(),
                 mnemonic = reader.mnemonic(),
                 body = reader.body(),
                 tags = reader.tags(),
                 path = reader.character_path,
             )
+            new_characters.append(character)
+        with self.db.session() as session:
+            session.execute(character_repository.destroy_all())
+            session.add_all(new_characters)
+            session.commit()
+        self.count = len(new_characters)
 
-            touched.append(new_id)
+    def refresh(self):
+        """Reload changed npc files into the db
 
-        # delete records where id not in touched
+        This method checks all valid character files. Any that are new are loaded into the db. Any that have
+        changed since they were loaded have their old records deleted and are added as new characters. Any
+        records whose files no longer exist are deleted.
+        """
+        new_characters: list[Character] = []
+        keep: list[int] = []
+        valid_files: list[Path] = list(self.valid_character_files())
+        factory = CharacterFactory(self.campaign)
+        with self.db.session() as session:
+            chars_query = character_repository.find_in(file_loc = [str(f) for f in valid_files])
+            indexed_characters = {c.file_loc: c for (c,) in session.execute(chars_query).all()}
+            for character_path in valid_files:
+                record = indexed_characters.get(str(character_path))
+                if record:
+                    mtime = record.file_path.stat().st_mtime
+                    if record.file_mtime >= mtime:
+                        keep.append(record.id)
+                        continue
+
+                reader = CharacterReader(character_path)
+                character = factory.make(
+                    realname = reader.name(),
+                    mnemonic = reader.mnemonic(),
+                    body = reader.body(),
+                    tags = reader.tags(),
+                    path = reader.character_path,
+                )
+                new_characters.append(character)
+
+            session.execute(character_repository.destroy_others(keep))
+            session.add_all(new_characters)
+            session.commit()
+
+            self.count = len(new_characters) + len(keep)
 
     def valid_character_files(self) -> Iterator[Path]:
         """Iterate valid character file paths
@@ -140,6 +166,13 @@ class CharacterCollection():
         """
         with self.db.session() as session:
             return session.scalar(character_repository.get(id))
+
+    def update(self, id: int, **kwargs):
+        with self.db.session() as session:
+            character = session.scalar(character_repository.get(id))
+            for attr, value in kwargs.items():
+                setattr(character, attr, value)
+            session.commit()
 
     def apply_query(self, query):
         """Run an arbitrary query against this collection

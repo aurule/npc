@@ -102,6 +102,33 @@ def get(id: int) -> Select:
     return select(Character) \
         .where(Character.id == id)
 
+def find_by(**kwargs) -> Select:
+    """Create a db query to get characters using attribute values
+
+    The query assumes that each key-value arg to the function should result in a simple WHERE key = value
+    clause in the query. All clauses are combined with AND.
+
+    Args:
+        **kwargs: Names of model attributes paired with their values.
+
+    Returns:
+        Select: Select object for the character query
+    """
+    query = select(Character)
+
+    for attr, value in kwargs.items():
+        query = query.where(getattr(Character, attr) == value)
+
+    return query
+
+def find_in(**kwargs) -> Select:
+    query = select(Character)
+
+    for attr, value in kwargs.items():
+        query = query.where(getattr(Character, attr).in_(value))
+
+    return query
+
 def destroy(id: int) -> Delete:
     """Create a db query to delete a single Character record
 
@@ -113,6 +140,13 @@ def destroy(id: int) -> Delete:
     """
     return delete(Character) \
         .where(Character.id == id)
+
+def destroy_all() -> Delete:
+    return delete(Character)
+
+def destroy_others(keep_ids: list[int]) -> Delete:
+    return delete(Character) \
+        .where(Character.id.not_in(keep_ids))
 
 def attr_counts(name: str) -> Select:
     """Create a db query to get a count for all values of an attribute
