@@ -87,7 +87,7 @@ def lint(settings, edit):
     """
     campaign = campaign_or_fail(settings)
 
-    campaign.characters.refresh()
+    campaign.characters.seed()
 
     error_characters = []
     for character in campaign.characters.all():
@@ -137,7 +137,7 @@ def list(settings, lang, group, sort, output, header_level):
     """
     campaign = campaign_or_fail(settings)
 
-    campaign.characters.refresh()
+    campaign.characters.seed()
 
     lister = listers.CharacterLister(
         campaign.characters,
@@ -185,7 +185,7 @@ def reorg(settings, keep_empty, interactive, use_existing):
     """
     campaign = campaign_or_fail(settings)
 
-    campaign.characters.refresh()
+    campaign.characters.seed()
 
     reorganizer = CharacterReorganizer(campaign, exists=use_existing)
     reorganizer.gather_paths()

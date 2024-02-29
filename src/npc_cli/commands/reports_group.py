@@ -36,7 +36,7 @@ def values(settings, tag_name, context):
     """
     campaign = campaign_or_fail(settings)
 
-    campaign.characters.refresh()
+    campaign.characters.seed()
 
     spec = campaign.get_tag(tag_name)
     if spec.needs_context and context != "*":
