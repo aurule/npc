@@ -57,7 +57,7 @@ class CharacterCollection():
         valid_files: list[Path] = list(self.valid_character_files())
         factory = CharacterFactory(self.campaign)
         with self.db.session() as session:
-            chars_query = character_repository.find_in(file_loc = [str(f) for f in valid_files])
+            chars_query = character_repository.all()
             indexed_characters = {c.file_loc: c for (c,) in session.execute(chars_query).all()}
             for character_path in valid_files:
                 record = indexed_characters.get(str(character_path))
