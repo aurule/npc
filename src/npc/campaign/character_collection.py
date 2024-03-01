@@ -6,6 +6,7 @@ from functools import cached_property
 from .pathfinder_class import Pathfinder
 from npc.characters import Character, CharacterFactory, CharacterReader, CharacterWriter
 from npc.db import DB, character_repository
+from npc.util.errors import NotFoundError
 
 class CharacterCollection():
     """Class for a group of Character objects, backed by a database
@@ -27,6 +28,11 @@ class CharacterCollection():
         self.item_type = "Character"
 
     def seed(self):
+        """Load all npc filesinto the db
+
+        This method is designed to be used when you want a clean load of all files. It clears out the
+        characters table and loads every character file it can find, without any checking like refresh does.
+        """
         new_characters = []
         factory = CharacterFactory(self.campaign)
         for character_path in self.valid_character_files():
@@ -168,9 +174,26 @@ class CharacterCollection():
             return session.scalar(character_repository.get(id))
 
     def update(self, id: int, **kwargs):
+        """Update a character record's attributes
+
+        This method only allows updating the character's own attributes. Tags are entirely unsupported.
+
+        Args:
+            id (int): ID of the character record
+            **kwargs: Attribute names and values to change on the character
+
+        Raises:
+            NotFoundError: When the ID does not have a character record
+            AttributeError: When trying to set an attribute that does not exist on the record
+        """
         with self.db.session() as session:
             character = session.scalar(character_repository.get(id))
+
+            if not character:
+                raise NotFoundError(f"No character exists with id {id}")
             for attr, value in kwargs.items():
+                if not hasattr(character, attr):
+                    raise AttributeError(name=attr, obj=character)
                 setattr(character, attr, value)
             session.commit()
 

@@ -33,3 +33,15 @@ class SchemaError(Error):
     """
     def __init__(self, strerror: str, path = None, lineno: int = 0, colno: int = 0):
         self.strerror = strerror
+        self.path = path
+        self.lineno = lineno
+        self.colno = colno
+
+class NotFoundError(Error):
+    """Raised when a database record is not found
+
+    Args:
+        strerror: (str): Error message describing what happened
+    """
+    def __init__(self, strerror: str):
+        self.strerror = strerror

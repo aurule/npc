@@ -1,7 +1,5 @@
-from time import sleep
-from sqlalchemy import select, func
 from tests.fixtures import tmp_campaign, db
-from npc.characters import Character, CharacterReader
+from npc.characters import CharacterReader
 from npc.db import character_repository
 
 from npc.campaign import CharacterCollection
