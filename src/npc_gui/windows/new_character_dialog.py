@@ -80,6 +80,10 @@ class NewCharacterDialog(QDialog):
         type_pair.addWidget(self.type_picker)
         master_layout.addLayout(type_pair, 1, 0)
 
+        type_detail = QLabel("An awakened human with access to world-shaping magic.")
+        type_detail.setWordWrap(True)
+        master_layout.addWidget(type_detail, 2, 0)
+
 
         flags_box_layout = QHBoxLayout()
 
@@ -103,7 +107,7 @@ class NewCharacterDialog(QDialog):
 
         flags_box = QGroupBox("Flags")
         flags_box.setLayout(flags_box_layout)
-        master_layout.addWidget(flags_box, 1, 1)
+        master_layout.addWidget(flags_box, 1, 1, 2, 1)
 
 
         path_pair = QHBoxLayout()
@@ -112,7 +116,7 @@ class NewCharacterDialog(QDialog):
         self.path_preview.setSizePolicy(fixed_vertical)
         path_pair.addWidget(path_label)
         path_pair.addWidget(self.path_preview)
-        master_layout.addLayout(path_pair, 2, 0, 1, -1)
+        master_layout.addLayout(path_pair, 3, 0, 1, -1)
 
 
         desc_pair = QVBoxLayout()
@@ -125,7 +129,7 @@ class NewCharacterDialog(QDialog):
         self.desc_debounce.timeout.connect(lambda: self.save_desc(desc_input.toMarkdown()))
         desc_pair.addWidget(desc_label)
         desc_pair.addWidget(desc_input)
-        master_layout.addLayout(desc_pair, 3, 0)
+        master_layout.addLayout(desc_pair, 4, 0)
 
 
         tags_pair = QVBoxLayout()
@@ -143,7 +147,7 @@ class NewCharacterDialog(QDialog):
         tag_tree = TagTreeView(self.character_id, db=self.db)
         tag_add.pressed.connect(tag_tree.insert_row)
         tags_pair.addWidget(tag_tree)
-        master_layout.addLayout(tags_pair, 3, 1)
+        master_layout.addLayout(tags_pair, 4, 1)
 
 
         QBtn = QDialogButtonBox.Save | QDialogButtonBox.Cancel
@@ -153,7 +157,7 @@ class NewCharacterDialog(QDialog):
         buttonBox.accepted.connect(self.write_character_file)
         buttonBox.rejected.connect(self.delete_character_entry)
 
-        master_layout.addWidget(buttonBox, 4, 0, 1, -1)
+        master_layout.addWidget(buttonBox, 5, 0, 1, -1)
 
     def write_character_file(self):
         type_spec = self.campaign.get_type(self.character_type)
