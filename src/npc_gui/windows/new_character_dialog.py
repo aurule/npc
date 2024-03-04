@@ -80,9 +80,9 @@ class NewCharacterDialog(QDialog):
         type_pair.addWidget(self.type_picker)
         master_layout.addLayout(type_pair, 1, 0)
 
-        type_detail = QLabel("An awakened human with access to world-shaping magic.")
-        type_detail.setWordWrap(True)
-        master_layout.addWidget(type_detail, 2, 0)
+        self.type_detail = QLabel()
+        self.type_detail.setWordWrap(True)
+        master_layout.addWidget(self.type_detail, 2, 0)
 
 
         flags_box_layout = QHBoxLayout()
@@ -223,8 +223,10 @@ class NewCharacterDialog(QDialog):
         self.ok_check()
 
     def save_type(self, type_index: int):
-        self.update_attr("type_key", self.type_picker.currentData().key)
-        self.character_type = self.type_picker.currentData().key
+        type_spec = self.type_picker.currentData()
+        self.update_attr("type_key", type_spec.key)
+        self.character_type = type_spec.key
+        self.type_detail.setText(type_spec.desc)
         self.ok_check()
 
     def ok_check(self, *args, **kwargs):
