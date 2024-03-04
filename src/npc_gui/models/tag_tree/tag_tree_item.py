@@ -1,6 +1,7 @@
 from ..abstract_tree import TreeItem
 
 from PySide6.QtCore import Qt
+from PySide6.QtGui import QBrush
 
 from npc.db import DB
 from npc.characters import Tag
@@ -16,6 +17,7 @@ class TagTreeItem(TreeItem):
             tag = session.get(Tag, self.tag_id)
             session.commit()
         self.item_data = [tag.name, tag.value]
+        self.defaults = ["tag name", "tag value"]
 
     def data(self, column: int, role: int = None):
         if column < 0 or column >= len(self.item_data):
@@ -23,9 +25,12 @@ class TagTreeItem(TreeItem):
 
         match role:
             case Qt.DisplayRole:
-                self.item_data[column]
+                return self.item_data[column] or self.defaults[column]
             case Qt.EditRole:
-                self.item_data[column]
+                return self.item_data[column]
+            case Qt.ForegroundRole:
+                if not self.item_data[column]:
+                    return QBrush(Qt.gray)
 
     def insert_children(self, position: int, count: int) -> bool:
         if position < 0 or position > len(self.child_items):

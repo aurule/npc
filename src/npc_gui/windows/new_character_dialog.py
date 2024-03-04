@@ -23,7 +23,6 @@ class NewCharacterDialog(QDialog):
         self.character_type = ""
         self.character_name = ""
         self.character_mnemonic = ""
-        self.character_tags = [] # list of RawTag objects
         self.db = db or DB()
         self.pathfinder = Pathfinder(self.campaign)
         self.writer = CharacterWriter(self.campaign, db=db)
@@ -39,7 +38,6 @@ class NewCharacterDialog(QDialog):
             session.commit()
 
         self.character_id = self.character.id
-        self.next_tag_sequence = 1
 
         self.setWindowTitle("Add a New Character")
 
