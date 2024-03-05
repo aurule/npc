@@ -13,7 +13,7 @@ class CharacterTypesModel(QAbstractListModel):
                 return type_spec.name
             case Qt.UserRole:
                 return type_spec
-            case Qt.StatusTipRole:
+            case Qt.ToolTipRole:
                 return type_spec.desc
 
     def headerData(self, section: int, orientation: Qt.Orientation, role: int = Qt.DisplayRole):
