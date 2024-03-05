@@ -122,6 +122,17 @@ def find_by(**kwargs) -> Select:
     return query
 
 def find_in(**kwargs) -> Select:
+    """Create a db query to get characters using attribute values in a set
+
+    The query assumes that each key-value arg to the function should result in a simple WHERE key IN value
+    clause in the query. All clauses are combined with AND.
+
+    Args:
+        **kwargs: Names of model attributes paired with a list of their values.
+
+    Returns:
+        Select: Select object for the character query
+    """
     query = select(Character)
 
     for attr, value in kwargs.items():
@@ -142,9 +153,24 @@ def destroy(id: int) -> Delete:
         .where(Character.id == id)
 
 def destroy_all() -> Delete:
+    """Create a db query to delete all Character records
+
+    Returns:
+        Delete: Delete object for the query
+    """
     return delete(Character)
 
 def destroy_others(keep_ids: list[int]) -> Delete:
+    """Create a query to delete all Character records not appearing in keep_ids
+
+    If keep_ids is empty, this is identical to destroy_all().
+
+    Args:
+        keep_ids (list[int]): List of Character record ids to preserve
+
+    Returns:
+        Delete: Delete object for the query
+    """
     return delete(Character) \
         .where(Character.id.not_in(keep_ids))
 
