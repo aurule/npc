@@ -26,4 +26,5 @@ Submodules
    npc.settings.helpers
    npc.settings.planning_filename
    npc.settings.settings_class
+   npc.settings.settings_writer
    npc.settings.tag_definer_interface

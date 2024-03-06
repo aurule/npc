@@ -13,6 +13,7 @@ Subpackages
    :maxdepth: 4
 
    npc_gui.models
+   npc_gui.util
    npc_gui.widgets
    npc_gui.windows
 

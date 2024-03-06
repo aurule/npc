@@ -17,5 +17,6 @@ Submodules
    npc.util.errors
    npc.util.functions
    npc.util.legacy
+   npc.util.persistent_cache
    npc.util.singleton
    npc.util.win_sanitize
