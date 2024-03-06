@@ -5,7 +5,7 @@ from PySide6.QtCore import Qt
 
 from npc.db import DB
 from ..models import TagNameItemsModel
-from ..helpers import theme_or_resource_icon
+from ..helpers import fetch_icon
 from .size_policies import *
 from .debounce_line_edit import DebounceLineEdit
 
@@ -39,7 +39,7 @@ class TagEdit(QWidget):
         self.container.addWidget(value_input)
         menu_btn = QToolButton()
         menu_btn.setSizePolicy(fixed_horizontal)
-        menu_btn.setIcon(theme_or_resource_icon("menu-more"))
+        menu_btn.setIcon(fetch_icon("menu-more"))
         menu_btn.setToolButtonStyle(Qt.ToolButtonIconOnly)
         menu_btn.setToolTip("Tag actions...")
         self.container.addWidget(menu_btn)

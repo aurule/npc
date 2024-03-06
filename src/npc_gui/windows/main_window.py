@@ -9,7 +9,7 @@ from PySide6.QtGui import QAction, QIcon, QDesktopServices
 
 import click
 
-from ..helpers import theme_or_resource_icon, find_settings_file
+from ..helpers import fetch_icon, find_settings_file
 from ..widgets import ActionButton, ResourceTable
 from ..widgets.size_policies import *
 from ..util import RecentCampaigns
@@ -49,7 +49,7 @@ class MainWindow(QMainWindow):
 
         exit_action = QAction("E&xit", self)
         exit_action.triggered.connect(self.exit_app)
-        exit_action.setIcon(theme_or_resource_icon("application-exit"))
+        exit_action.setIcon(fetch_icon("application-exit"))
         exit_action.setStatusTip("Quit NPC")
         self.actions["exit"] = exit_action
 
@@ -57,7 +57,7 @@ class MainWindow(QMainWindow):
 
         open_action = QAction("&Open Campaign...", self)
         open_action.triggered.connect(self.open_campaign)
-        open_action.setIcon(theme_or_resource_icon("folder-open"))
+        open_action.setIcon(fetch_icon("folder-open"))
         open_action.setStatusTip("Open an existing campaign")
         open_action.setShortcut("ctrl+o")
         self.actions["open"] = open_action
@@ -69,7 +69,7 @@ class MainWindow(QMainWindow):
 
         new_action = QAction("&New Campaign...", self)
         new_action.triggered.connect(self.new_campaign)
-        new_action.setIcon(theme_or_resource_icon("folder-new"))
+        new_action.setIcon(fetch_icon("folder-new"))
         new_action.setStatusTip("Set up a new campaign")
         self.actions["new"] = new_action
 
@@ -83,7 +83,7 @@ class MainWindow(QMainWindow):
         refresh_action.triggered.connect(self.refresh_campaign)
         refresh_action.setStatusTip("Reload campaign info and characters")
         refresh_action.setShortcut("ctrl+r")
-        refresh_action.setIcon(theme_or_resource_icon("view-refresh"))
+        refresh_action.setIcon(fetch_icon("view-refresh"))
         self.actions["refresh"] = refresh_action
         self.campaign_actions.append("refresh")
 
@@ -91,7 +91,7 @@ class MainWindow(QMainWindow):
 
         new_character = QAction("New Character...")
         new_character.triggered.connect(self.new_character)
-        new_character.setIcon(theme_or_resource_icon("document-new"))
+        new_character.setIcon(fetch_icon("document-new"))
         new_character.setStatusTip("Create a new character")
         new_character.setShortcut("ctrl+n")
         self.actions["new_character"] = new_character
@@ -99,7 +99,7 @@ class MainWindow(QMainWindow):
 
         open_character = QAction("Open in editor")
         open_character.triggered.connect(self.open_character)
-        open_character.setIcon(theme_or_resource_icon("document-edit"))
+        open_character.setIcon(fetch_icon("document-edit"))
         open_character.setStatusTip("Open the selected character(s) in your text editor")
         open_character.setShortcut("ctrl+e")
         open_character.setDisabled(True)
@@ -110,7 +110,7 @@ class MainWindow(QMainWindow):
         session_new = QAction("Next session", self)
         session_new.triggered.connect(self.make_session)
         session_new.setStatusTip("Create and open the next set of session and plot files")
-        session_new.setIcon(theme_or_resource_icon("go-next"))
+        session_new.setIcon(fetch_icon("go-next"))
         self.actions["session"] = session_new
         self.campaign_actions.append("session")
 
@@ -136,14 +136,14 @@ class MainWindow(QMainWindow):
 
         docs_action = QAction("Browse Web &Documentation", self)
         docs_action.triggered.connect(self.browse_docs)
-        docs_action.setIcon(theme_or_resource_icon("emblem-symbolic-link"))
+        docs_action.setIcon(fetch_icon("emblem-symbolic-link"))
         docs_action.setStatusTip("Open the web documentation in your browser")
         self.actions["docs"] = docs_action
 
         about_action = QAction("&About NPC", self)
         about_action.triggered.connect(self.about)
         about_action.setStatusTip("Show information about NPC")
-        about_action.setIcon(theme_or_resource_icon("help-about"))
+        about_action.setIcon(fetch_icon("help-about"))
         self.actions["about"] = about_action
 
         about_qt_action = QAction("About &Qt", self)

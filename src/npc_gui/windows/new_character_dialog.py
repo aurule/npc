@@ -9,7 +9,7 @@ from npc.characters import CharacterFactory, CharacterWriter
 from npc.db import DB, character_repository
 
 from ..models import CharacterTypesModel
-from ..helpers import theme_or_resource_icon
+from ..helpers import fetch_icon
 from ..widgets import DebounceLineEdit, TagTreeView
 from ..widgets.size_policies import *
 
@@ -86,19 +86,19 @@ class NewCharacterDialog(QDialog):
         flags_box_layout = QHBoxLayout()
 
         delist_checkbox = QCheckBox("Delist")
-        delist_checkbox.setIcon(theme_or_resource_icon("hide_table_column"))
+        delist_checkbox.setIcon(fetch_icon("hide_table_column"))
         delist_checkbox.setToolTip("Exclude this character from generated listings")
         delist_checkbox.stateChanged.connect(lambda s: self.save_flag("delist", s))
         flags_box_layout.addWidget(delist_checkbox)
 
         sticky_checkbox = QCheckBox("Sticky")
-        sticky_checkbox.setIcon(theme_or_resource_icon("window-pin"))
+        sticky_checkbox.setIcon(fetch_icon("window-pin"))
         sticky_checkbox.setToolTip("Do not automatically move this character's file")
         sticky_checkbox.stateChanged.connect(lambda s: self.save_flag("sticky", s))
         flags_box_layout.addWidget(sticky_checkbox)
 
         nolint_checkbox = QCheckBox("No Linting")
-        nolint_checkbox.setIcon(theme_or_resource_icon("bug"))
+        nolint_checkbox.setIcon(fetch_icon("bug"))
         nolint_checkbox.setToolTip("Do not check this character for errors")
         nolint_checkbox.stateChanged.connect(lambda s: self.save_flag("nolint", s))
         flags_box_layout.addWidget(nolint_checkbox)
@@ -137,7 +137,7 @@ class NewCharacterDialog(QDialog):
         tag_add = QToolButton()
         tag_add.setIconSize(QSize(8, 8))
         tag_add.setSizePolicy(fixed_horizontal)
-        tag_add.setIcon(theme_or_resource_icon("list-add"))
+        tag_add.setIcon(fetch_icon("list-add"))
         tag_add.setToolButtonStyle(Qt.ToolButtonIconOnly)
         tags_label_line.addWidget(tag_add)
         tags_pair.addLayout(tags_label_line)
