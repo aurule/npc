@@ -46,41 +46,34 @@ class NewCharacterDialog(QDialog):
     def init_elements(self):
         master_layout = QGridLayout(self)
 
-        name_pair = QHBoxLayout()
+        left_form = QFormLayout()
+        left_form.setFieldGrowthPolicy(QFormLayout.AllNonFixedFieldsGrow)
+
         name_input = DebounceLineEdit()
         name_input.debouncedText.connect(self.save_name)
-        name_label = QLabel("&Name:")
-        name_label.setBuddy(name_input)
-        name_pair.addWidget(name_label)
-        name_pair.addWidget(name_input)
-        master_layout.addLayout(name_pair, 0, 0)
+        left_form.addRow("&Name:", name_input)
 
-
-        mnemonic_pair = QHBoxLayout()
-        mnemonic_input = DebounceLineEdit()
-        mnemonic_input.debouncedText.connect(self.save_mnemonic)
-        mnemonic_label = QLabel("&Mnemonic:")
-        mnemonic_label.setBuddy(mnemonic_input)
-        mnemonic_pair.addWidget(mnemonic_label)
-        mnemonic_pair.addWidget(mnemonic_input)
-        master_layout.addLayout(mnemonic_pair, 0, 1)
-
-        type_pair = QHBoxLayout()
         types_model = CharacterTypesModel(self.campaign)
         self.type_picker = QComboBox()
         self.type_picker.setModel(types_model)
         self.type_picker.setPlaceholderText("Pick a character type")
         self.type_picker.setCurrentIndex(-1)
         self.type_picker.currentIndexChanged.connect(self.save_type)
-        type_label = QLabel("&Type:")
-        type_label.setBuddy(mnemonic_input)
-        type_pair.addWidget(type_label)
-        type_pair.addWidget(self.type_picker)
-        master_layout.addLayout(type_pair, 1, 0)
+        left_form.addRow("&Type:", self.type_picker)
 
         self.type_detail = QLabel()
         self.type_detail.setWordWrap(True)
-        master_layout.addWidget(self.type_detail, 2, 0)
+        left_form.addRow(self.type_detail)
+
+        master_layout.addLayout(left_form, 0, 0)
+
+
+        right_form = QFormLayout()
+        right_form.setFieldGrowthPolicy(QFormLayout.AllNonFixedFieldsGrow)
+
+        mnemonic_input = DebounceLineEdit()
+        mnemonic_input.debouncedText.connect(self.save_mnemonic)
+        right_form.addRow("&Mnemonic:", mnemonic_input)
 
 
         flags_box_layout = QHBoxLayout()
@@ -105,7 +98,9 @@ class NewCharacterDialog(QDialog):
 
         flags_box = QGroupBox("Flags")
         flags_box.setLayout(flags_box_layout)
-        master_layout.addWidget(flags_box, 1, 1, 2, 1)
+        # master_layout.addWidget(flags_box, 1, 1, 2, 1)
+        right_form.addRow(flags_box)
+        master_layout.addLayout(right_form, 0, 1)
 
 
         path_pair = QHBoxLayout()
@@ -114,7 +109,7 @@ class NewCharacterDialog(QDialog):
         self.path_preview.setSizePolicy(fixed_vertical)
         path_pair.addWidget(path_label)
         path_pair.addWidget(self.path_preview)
-        master_layout.addLayout(path_pair, 3, 0, 1, -1)
+        master_layout.addLayout(path_pair, 1, 0, 1, -1)
 
 
         desc_pair = QVBoxLayout()
@@ -127,7 +122,7 @@ class NewCharacterDialog(QDialog):
         self.desc_debounce.timeout.connect(lambda: self.save_desc(desc_input.toMarkdown()))
         desc_pair.addWidget(desc_label)
         desc_pair.addWidget(desc_input)
-        master_layout.addLayout(desc_pair, 4, 0)
+        master_layout.addLayout(desc_pair, 3, 0)
 
 
         tags_pair = QVBoxLayout()
@@ -145,7 +140,7 @@ class NewCharacterDialog(QDialog):
         tag_tree = TagTreeView(self.character_id, db=self.db)
         tag_add.pressed.connect(tag_tree.insert_row)
         tags_pair.addWidget(tag_tree)
-        master_layout.addLayout(tags_pair, 4, 1)
+        master_layout.addLayout(tags_pair, 3, 1)
 
 
         QBtn = QDialogButtonBox.Save | QDialogButtonBox.Cancel
@@ -155,7 +150,7 @@ class NewCharacterDialog(QDialog):
         buttonBox.accepted.connect(self.write_character_file)
         buttonBox.rejected.connect(self.delete_character_entry)
 
-        master_layout.addWidget(buttonBox, 5, 0, 1, -1)
+        master_layout.addWidget(buttonBox, 4, 0, 1, -1)
 
     def write_character_file(self):
         type_spec = self.campaign.get_type(self.character_type)
