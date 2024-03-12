@@ -270,11 +270,13 @@ class Campaign:
         2. If one is greater than the other, update the lesser to equal the greater and create a file for the
            lesser. The greater file is left alone.
 
+        Additional files within the plot or session sections are then created using the chosen index.
+
         Returns:
             dict: Dict containing the resulting file paths, whether new or old. They are indexed by type, so
                   "path" and "session" both will have an entry.
         """
-        def create_file(pattern_string: str, contents: str, file_index: int, parent_path: Path):
+        def create_file(pattern_string: str, contents: str, file_index: int, parent_path: Path) -> Path:
             new_filename = PlanningFilename(pattern_string).for_index(file_index)
             new_path = self.root / parent_path / new_filename
             if not new_path.exists():
@@ -312,8 +314,6 @@ class Campaign:
                 parent_path
             )
             return_paths[key] = file_path
-            if not file_path.exists():
-                self.patch_campaign_settings({key: {"latest_index": new_index}})
 
             additional_files = self.settings.get(f"campaign.{key}.additional_files")
             for entry_index, additional_file in enumerate(additional_files):

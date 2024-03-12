@@ -15,6 +15,11 @@ def test_includes_top_level(tmp_campaign, db):
     assert loc in result
 
 def test_includes_subdirs(tmp_campaign, db):
+    tmp_campaign.patch_campaign_settings({
+        "characters": {
+            "ignore_subpaths": ["noplz"]
+        }
+    })
     subdir = tmp_campaign.characters_dir / "yesplz"
     subdir.mkdir()
     loc = subdir / "Test Mann - tester.npc"
