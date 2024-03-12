@@ -4,10 +4,12 @@ from tests.fixtures import tmp_campaign
 from npc.campaign import Campaign
 
 def populate(campaign: Campaign, plots: int = 0, sessions: int = 0) -> None:
-    for index in range(1, plots+1):
-        campaign.plot_dir.joinpath(f"Plot {index:0>2}.md").touch()
-    for index in range(1, sessions+1):
-        campaign.session_dir.joinpath(f"Session {index:0>2}.md").touch()
+    if plots:
+        for index in range(1, plots+1):
+            campaign.plot_dir.joinpath(f"Plot {index:0>2}.md").touch()
+    if sessions:
+        for index in range(1, sessions+1):
+            campaign.session_dir.joinpath(f"Session {index:0>2}.md").touch()
 
 def test_copies_plot_contents(tmp_campaign):
     populate(tmp_campaign, plots = 1, sessions = 1)
@@ -156,6 +158,23 @@ class TestWithMatchingIndexes:
         expected_plot = tmp_campaign.plot_dir.joinpath("Plot 04.md")
         expected_session = tmp_campaign.session_dir.joinpath("Session 04.md")
         assert result["plot"] == expected_plot
+        assert result["session"] == expected_session
+
+class TestWithMissingSession:
+    def test_does_not_increment(self, tmp_campaign):
+        populate(tmp_campaign, plots = 2)
+
+        result = tmp_campaign.bump_planning_files()
+
+        expected_plot = tmp_campaign.plot_dir.joinpath("Plot 02.md")
+        assert result["plot"] == expected_plot
+
+    def test_uses_plot_index(self, tmp_campaign):
+        populate(tmp_campaign, plots = 2)
+
+        result = tmp_campaign.bump_planning_files()
+
+        expected_session = tmp_campaign.session_dir.joinpath("Session 02.md")
         assert result["session"] == expected_session
 
 class TestAdditionalFiles:
