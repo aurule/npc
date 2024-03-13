@@ -30,9 +30,7 @@ class Pathfinder:
         for component in self.make_component_stack(exists):
             component_value = component.value(character, character_path)
             if component_value:
-                working_path = character_path.joinpath(component_value)
-                if (not exists) or working_path.exists():
-                    character_path = working_path
+                character_path = character_path.joinpath(component_value)
 
         return character_path
 
