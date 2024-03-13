@@ -94,7 +94,7 @@ class BaseReorganizer:
             progress_callback = default_progress
 
         for reloc in plan:
-            if not reloc.ideal_path.exists():
+            if not reloc.ideal_path.parent.exists():
                 reloc.ideal_path.parent.mkdir(parents=True, exist_ok=True)
 
             move(reloc.current_path, reloc.ideal_path)
