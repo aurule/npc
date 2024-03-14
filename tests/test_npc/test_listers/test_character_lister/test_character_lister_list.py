@@ -89,6 +89,25 @@ class TestGroupings:
         result = target.getvalue()
         assert "# No org" in result
 
+    def test_reuses_group(self, db):
+        campaign = Campaign(fixture_file("listing", "basic_groups"))
+        campaign.characters.db = db
+        campaign.characters.refresh()
+        lister = CharacterLister(campaign.characters, lang="markdown")
+        target = StringIO()
+
+        lister.list(target=target)
+
+        result = target.getvalue()
+
+        header_loc = result.find("## F")
+        char1_loc = result.find("### Fitz")
+        char2_loc = result.find("### Frank")
+        header2_loc = result.find("# M")
+        assert char1_loc > header_loc
+        assert char2_loc > char1_loc
+        assert header2_loc > char2_loc
+
 class TestFilters():
     def test_renders_markdown(self, db):
         campaign = Campaign(fixture_file("listing", "markdown"))
