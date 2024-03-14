@@ -4,8 +4,11 @@ class UndefinedView(ChainableUndefined):
     """Special Undefined object for jinja templates
 
     In addition to the standard properties (see https://jinja.palletsprojects.com/en/3.1.x/api/#jinja2.ChainableUndefined),
-    this object adds the has method. This makes it safe to write code like character.org.has("role") regardless
-    of whether the character has the org tag.
+    this object adds the `has` method. This makes it safe to write code like character.org.has("role")
+    regardless of whether the character has the org tag.
+
+    Although it is clearly a view class, and meant to be compatible with the CharacterView and TagView
+    classes, it lives in the listers module as it extends a jinja class.
     """
     def has(self, _tag_name: str) -> bool:
         """Get whether this undefined view has a named property
