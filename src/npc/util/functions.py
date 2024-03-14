@@ -122,28 +122,6 @@ def merge_data_dicts(new_data: dict, orig: dict) -> dict:
 
     return dest
 
-def merge_data_lists(new_list: list, orig: list) -> list:
-    """Merge two lists
-
-    This method does not modify the original list.
-
-    Add the values in new_list to the orig list. Values which are already present in orig are skipped.
-
-    Args:
-        new_list (list): List to merge into orig
-        orig (list): List to receive new or updated keys
-
-    Returns:
-        list: Result of the merge
-    """
-    dest: list = list(orig)
-
-    for val in new_list:
-        if val not in dest:
-            dest.append(val)
-
-    return dest
-
 def edit_files(files: list[Path], settings = None, *, debug: bool = False):
     """Edit one or more files
 
