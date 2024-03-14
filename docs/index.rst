@@ -6,13 +6,20 @@
 Welcome to NPC's documentation!
 ===============================
 
-NPC is a tool to make my life easier when I'm running tabletop RPG games. It automates and streamlines a few tedious tasks for me, like
+NPC is a tool to make my life easier when I'm running tabletop RPG games. It automates and streamlines a few tedious tasks for me, like:
 
 - Creating new session logs
 - Creating new plot planning files
 - Creating and organizing character files
 - Generating a list of characters to publish
 - And more!
+
+Unlike other game management systems, NPC is designed to use plain text files to manage each game's resources, from characters to session notes. This means that even on devices which can't run NPC, you still have full access to all of your game's data. For more on how NPC organizes campaigns, see :ref:`basics`.
+
+To get started in general, take a look at :ref:`install` and :ref:`guide_cli_quickstart`.
+
+Disclaimer
+----------
 
 NPC is very much a personal project. It works well enough for me to use for my weekly games, and I think it might be useful for others. That said, if you use it and come up with suggestions or bugs, open an issue! I'll at least take a look!
 

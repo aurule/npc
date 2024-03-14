@@ -2,7 +2,7 @@
 
 .. _cust_campaign:
 
-Configuring Campaigns
+Campaigns
 =====================
 
 Campaigns are configured using the :file:`settings.yaml` file in the campaign's :file:`.npc/` directory. All of the campaign settings are under the ``campaign`` key.

@@ -2,8 +2,8 @@
 
 .. _basics:
 
-Basic Usage
-===========
+Overview
+============
 
 NPC is based around using plain text files to manage the characters, sessions, plots, and other important information of a tabletop RPG game. By standardizing file locations and adding just a touch of formatting, NPC is able to parse that campaign info and speed up many repetitive tasks for the GM.
 

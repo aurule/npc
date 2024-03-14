@@ -2,7 +2,7 @@
 
 .. _cust_systems:
 
-Configuring Systems
+Game Systems
 ===============================
 
 NPC supports custom game systems in addition to its built-in systems. Custom systems can be defined within your user settings directory, or within a campaign's settings directory. See :ref:`cust_file_locations` for how to find these.

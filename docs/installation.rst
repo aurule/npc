@@ -29,7 +29,7 @@ To do so, follow these steps:
 After that, you can update with a simple `git pull`.
 
 Development
-===========
+-----------
 
 For working on NPC, follow these steps:
 

@@ -2,7 +2,7 @@
 
 .. _conf_home:
 
-Basic Configuration
+Core Configuration
 ===============================
 
 You can change NPC's settings for your user and for each individual campaign. User settings override the built-in defaults, and campaign settings override user settings and defaults.
