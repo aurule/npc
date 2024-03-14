@@ -189,10 +189,10 @@ class CharacterTagger():
             metatag (MetatagSpec): MetatagSpec object to use for creating tags
             metatag_value (str): Raw value for the metatag, applied to match tags
         """
-        def try_contexts(spec):
+        def get_spec_in_context(spec):
             for rawtag in reversed(self.context_stack):
-                if context := spec.in_context(rawtag.name):
-                    return context
+                if context_spec := spec.in_context(rawtag.name):
+                    return context_spec
             return UndefinedTagSpec(spec.name)
 
         def find_matching_value(spec, working_value):
@@ -207,7 +207,7 @@ class CharacterTagger():
 
         for name in metatag.match:
             spec = self.get_tag_spec(name)
-            spec = try_contexts(spec)
+            spec = get_spec_in_context(spec)
             if matching_value := find_matching_value(spec, working_value):
                 self.apply_raw_tag(RawTag(name, matching_value))
                 working_value = working_value.removeprefix(matching_value).lstrip(metatag.separator)
