@@ -65,9 +65,6 @@ def make_hide_tags(character: Character, *, db: DB = None) -> list[ConTag]:
     def build_hides(examined_tags: list[Tag], preamble: str = "") -> set[ConTag]:
         hide_tags = set()
 
-        if examined_tags is None:
-            return hide_tags
-
         for tag in examined_tags:
             match tag.hidden:
                 case "all":
