@@ -253,7 +253,7 @@ Example:
           - assoc
           - rest
 
-campaign.subpath_components :octicon:`list_ordered`
+campaign.subpath_components :octicon:`list-ordered`
 ---------------------------------------------------
 
 :bdg-info:`type: list`
