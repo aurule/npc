@@ -5,13 +5,13 @@
 Installing NPC
 ===============================
 
-The best way to install NPC right now is to download the binaries from the `latest release <https://github.com/aurule/npc/releases/latest>`_. Once downloaded, you'll have to unpack the archive and ensure the :file:`npc_cli` binary is in your path. I like to symlink it to :file:`npc` on my posix systems. Binaries are available for Linux and Windows.
+The best way to install NPC right now is to download the binaries from the `latest release <https://github.com/aurule/npc/releases/latest>`_. Once downloaded, you'll have to unpack the archive and ensure the :file:`npc_cli` and :file:`npc_gui` binaries are in your path. I like to symlink :file:`npc_cli` to :file:`npc` on my posix systems. Binaries are available for Linux and Windows.
 
 .. note::
 
     I have not created bespoke packages or installers yet. These instructions will be updated if those become available.
 
-Once installed, you'll have access to the ``npc`` cli utility. See :ref:`cli_home` and :ref:`guide_cli_quickstart` for an intro to using this program.
+Once installed, you'll have access to the ``npc`` cli utility and gui app. See :ref:`cli_home` and :ref:`guide_cli_quickstart` for an intro to using the command line program, and :ref:`gui_home` and :ref:`guide_gui_quickstart` for the graphical app.
 
 Installing from Source
 -----------------------

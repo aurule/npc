@@ -14,9 +14,9 @@ NPC is a tool to make my life easier when I'm running tabletop RPG games. It aut
 - Generating a list of characters to publish
 - And more!
 
-Unlike other game management systems, NPC is designed to use plain text files to manage each game's resources, from characters to session notes. This means that even on devices which can't run NPC, you still have full access to all of your game's data. For more on how NPC organizes campaigns, see :ref:`basics`.
+To get started with NPC, see :ref:`install` and check out the :ref:`guide_cli_quickstart` or :ref:`guide_gui_quickstart`.
 
-To get started in general, take a look at :ref:`install` and :ref:`guide_cli_quickstart`.
+Unlike other game management systems, NPC is designed to use plain text files to manage each game's resources, from characters to session notes. This means that even on devices which can't run NPC, you still have full access to all of your game's data. For more on how NPC campaigns work, see :ref:`basics`.
 
 Disclaimer
 ----------
@@ -28,8 +28,6 @@ NPC is very much a personal project. It works well enough for me to use for my w
 
    installation
    basics
-   customization/index
-   cli/quickstart
 
 .. toctree::
    :caption: Customization
@@ -64,6 +62,7 @@ NPC is very much a personal project. It works well enough for me to use for my w
    :hidden:
 
    gui/index
+   gui/quickstart
 
 .. toctree::
    :caption: NPC API
