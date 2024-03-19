@@ -42,11 +42,13 @@ Newly created campaigns are given a few directories by default:
 - :file:`Plot/` (from ``campaign.plot.path``)
 - :file:`Session History/` (from ``campaign.session.path``)
 
+Since the campaign does not yet have its own settings file, the values for new campaigns are read from your user settings file. See :ref:`cookbook_open_settings` for how to edit that file.
+
 An empty directy is also created for each entry in ``campaign.create_on_init``.
 
 The new campaign's :file:`.npc/settings.yaml` file is populated with the chosen ``name`` and ``system``, as well as the current ``npc.version``.
 
-See :ref:`cli_init` for how to set up a new campaign using the CLI.
+See :ref:`cookbook_new_campaign` for how to set up a new campaign.
 
 .. _cust_campaign_plot_sess:
 
@@ -145,7 +147,7 @@ If a directory would be added that doesn't already exist, it will be skipped ent
 
 .. hint::
 
-    Some cli commands (like :ref:`cmd_reorg`) have an option to create these missing directories instead.
+    Some cli commands (like :ref:`cli_reorg`) have an option to create these missing directories instead.
 
 .. important::
 

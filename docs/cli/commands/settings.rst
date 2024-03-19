@@ -10,7 +10,7 @@ Browse to the campaign or user settings.
 
 .. seealso::
 
-    The files opened by ``npc settings`` are described in more detail in :ref:`cust_file_locations`.
+    The directories opened by ``npc settings`` are described in more detail in :ref:`cust_file_locations`.
 
 Example:
 
