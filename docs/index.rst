@@ -28,6 +28,8 @@ NPC is very much a personal project. It works well enough for me to use for my w
 
    installation
    basics
+   characters
+   cookbook/index
 
 .. toctree::
    :caption: Customization

@@ -15,6 +15,21 @@ Campaigns are configured using the :file:`settings.yaml` file in the campaign's 
 :session: :octicon:`code-square` Object that defines how session files are stored
 :create_on_init: :octicon:`list-ordered` List of additional folder names to create for every new campaign
 
+.. code-block:: yaml
+    :caption: A basic campaign's settings.yaml file
+
+    campaign:
+        name: The First or the Last
+        desc: My First Campaign
+        plot:
+            latest_index: 1
+        session:
+            latest_index: 1
+        system: dnd5
+    npc:
+        version: 2.0.1
+
+
 .. _cust_campaign_new:
 
 New Campaigns
@@ -22,10 +37,10 @@ New Campaigns
 
 Newly created campaigns are given a few directories by default:
 
-- :file:`.npc`
-- :file:`Characters` (from ``campaign.characters.path``)
-- :file:`Plot` (from ``campaign.plot.path``)
-- :file:`Session History` (from ``campaign.session.path``)
+- :file:`.npc/`
+- :file:`Characters/` (from ``campaign.characters.path``)
+- :file:`Plot/` (from ``campaign.plot.path``)
+- :file:`Session History/` (from ``campaign.session.path``)
 
 An empty directy is also created for each entry in ``campaign.create_on_init``.
 
@@ -46,6 +61,26 @@ Plot and session files are configured in the ``campaign.plot`` and ``campaign.se
 :filename_contents: :octicon:`book` What to put in the file
 :additional_files: :octicon:`list-ordered` Other files to create alongside the plot or session file
 
+.. code-block:: yaml
+    :caption: Fully qualified plot and session blocks
+
+    campaign:
+        plot:
+            path: Plot
+            latest_index: 0
+            filename_pattern: Plot ((NN)).md
+            file_contents: ((COPY))
+            additional_files: []
+        session:
+            path: Session History
+            latest_index: 0
+            filename_pattern: Session ((NN)).md
+            file_contents: |
+                Played:
+
+                # (in-game date and time)
+            additional_files: []
+
 Naming and Indexes
 ~~~~~~~~~~~~~~~~~~
 
@@ -60,6 +95,22 @@ Additional Files
 ~~~~~~~~~~~~~~~~
 
 Each entry in the ``additional_files`` list is an object with a ``filename_pattern`` and ``file_contents`` property. These properties act just like the ones for the main plot and session files.
+
+.. code-block:: yaml
+    :caption: An example of additional session files
+
+    campaign:
+        session:
+            additional_files:
+                - filename_pattern: Session ((NN)) Recap.md
+                  file_contents: "# Recap for Session NN"
+                - filename_pattern: Session ((NN)) Journals.md
+                  file_contents: |
+                    # Character Journals for Session NN
+
+                    ## Tybalt
+
+                    ## Jolene
 
 *Added in 2.0.1*
 

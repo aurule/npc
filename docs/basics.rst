@@ -7,10 +7,12 @@ Campaigns
 
 NPC is built around using a single campaign folder to contain all of the files relevant to a given tabletop RPG game. Files for characters, sessions, plots, and other important information is organized within the campaign directory in specific folders following various (configurable) rules.
 
-Subdirectories
---------------
+Campaign Structure
+------------------
 
-These are the standard directories within a campaign that's compatible with NPC. While nearly all of them can be customized (see :ref:`cust_campaign`), the :file:`.npc` directory is special. It's what holds NPC's own configuration files for that campaign. A directory without a :file:`.npc` folder inside will not be recognized as a campaign by NPC and the tools will not work.
+NPC is very flexible and requires only a single folder to be present in order to treat a folder as a campaign: :file:`.npc/`. That special directory holds NPC's configuration files for the campaign. All other directories can be customized (see :ref:`cust_campaign`).
+
+Without extra customization, these are the standard directories found in a campaign:
 
 .. code-block::
     :caption: Default campaign directory layout
@@ -68,37 +70,3 @@ As of version 2.0.0, NPC manages the following campaign files:
 - :file:`Session History/Session NN.md`
 
 Other directories, and other files or folders within the Plot and Session History subdirectories, are not touched by NPC. Use them however you want!
-
-.. warning::
-
-    The files within :file:`.npc/` are critical to NPC. While they are there to be edited, read the section on :ref:`cust_campaign` first and make a backup of the campaign if you want to be really cautious.
-
-Character Files
----------------
-
-While the contents of plot and session files are largely up to you, character files have an additional constraint: tags. NPC uses the tags in each file to keep track of important data about that character.
-
-File Name
-~~~~~~~~~
-
-.. include:: /reference/snippets/character_file_names.rst
-
-File Contents
-~~~~~~~~~~~~~
-
-Character files start with their tag section. That section ends with the first header line, which is usually ``--Notes--``.
-
-Here are some sample contents for ``Badd Mann - bad guy.npc``:
-
-.. code::
-
-    @org Evil League of Evil
-    @role Member
-
-    @location Hartsford, CT
-
-    --Notes--
-
-    Badd is the evil member of the Mann family. Hates his brother Caoil.
-
-As of NPC 2.0.0, everything after the first header can be formatted as you like. This may change in the future.

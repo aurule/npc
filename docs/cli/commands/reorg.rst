@@ -16,13 +16,9 @@ Reorganize character files.
 
     This command only works within an existing campaign.
 
-As moving around a bunch of files can be disruptive, this command by default
-uses "interactive" mode, where the changes which would be made are displayed
-and you are prompted whether to apply them. In batch mode, the changes are
-applied automatically.
+As moving around a bunch of files can be disruptive, this command by default uses "interactive" mode, where the changes which would be made are displayed and you are prompted whether to apply them. In batch mode, the changes are applied automatically.
 
-If two or more characters would try to claim the same file, errors are
-shown.
+If two or more characters would try to claim the same file, errors are shown.
 
 ``npc reorg`` uses the same subpaths that :ref:`cli_new` uses to pick a directory for new characters. See :ref:`cust_campaign_char_subpaths` for how to configure these.
 
