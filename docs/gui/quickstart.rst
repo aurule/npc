@@ -24,8 +24,8 @@ Once a campaign is open, you'll see a screen that shows the characters for that 
 Opening Files
 -------------
 
-To open one or more character files, select them in the list then click :guilabel:`Open Characters` on the bottom left.
+To open one or more character files, select them in the list then click :guilabel:`Open in editor` on the bottom left.
 
-.. image:: screenshots/open-chars.png
+.. image:: screenshots/open-characters.png
 
 This will open the selected character files in your editor of choice. See :ref:`setting_editor` for how to configure this if the default doesn't work.
