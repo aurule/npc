@@ -291,16 +291,15 @@ class MainWindow(QMainWindow):
         if self.settings.package_outdated(location):
             package_version = self.settings.versions.get("package")
             file_version = self.settings.versions.get(location)
-            warning_result = QMessageBox.warning(
+            outdated_choice = QMessageBox.warning(
                 self,
                 "NPC is Outdated",
                 f"The installed version of NPC ({package_version}) is older than the one which last updated your {location} settings ({file_version}). Because of this, NPC may behave incorrectly.\n\nDo you want to download the latest release?",
                 buttons = QMessageBox.StandardButtons.Yes | QMessageBox.StandardButtons.Ignore,
                 defaultButton = QMessageBox.StandardButtons.Yes
             )
-            if warning_result:
+            if outdated_choice == QMessageBox.StandardButtons.Yes:
                 QDesktopServices.openUrl(QUrl("https://github.com/aurule/npc/releases/latest"))
-
 
     def open_campaign(self, _parent):
         target = QFileDialog.getExistingDirectory(self, "Open Campaign")
@@ -320,7 +319,6 @@ class MainWindow(QMainWindow):
             return
 
         self.campaign = campaign.Campaign(campaign_root)
-        # outdated and migrations?
         self.setWindowTitle(f"{self.campaign.name} | NPC")
 
         self.campaign.characters.seed()
@@ -328,6 +326,8 @@ class MainWindow(QMainWindow):
         self.init_recent_campaigns()
         self.init_tables()
         self.update_campaign_availability()
+
+        self.warn_if_outdated("campaign")
 
     def update_campaign_availability(self):
         campaign_available = self.campaign != None
