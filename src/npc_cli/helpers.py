@@ -1,7 +1,6 @@
 import os
 import click
 from pathlib import Path
-from packaging.version import Version
 
 import npc
 from npc.db import DB
@@ -9,7 +8,6 @@ from npc.settings import Settings, app_settings
 from npc.campaign import Campaign, Pathfinder
 from npc.characters import Character, RawTag, CharacterWriter
 from npc.settings.migrations import SettingsMigrator
-from npc import __version__ as npc_version
 from npc_cli.errors import CampaignNotFoundException
 
 import logging
@@ -36,7 +34,11 @@ def get_campaign(settings: Settings) -> Campaign:
     logger.info(f"Found campaign root at {campaign_root}")
 
     campaign = Campaign(campaign_root, settings = settings)
-    check_outdated(settings, "campaign")
+    if not settings.package_outdated("campaign"):
+        npc_version = settings.versions.get("package")
+        our_version = settings.versions.get("campaign", npc_version)
+        click.echo(f"WARNING: Installed version of NPC ({npc_version}) is older than the one which last updated your campaign settings ({our_version}). NPC may behave incorrectly. Please upgrade to the latest release as soon as possible.")
+
     try_migrating(settings, "campaign")
 
     return campaign
@@ -99,37 +101,6 @@ def find_or_make_settings_file(settings: Settings, location: str) -> str:
         target_file.write_text("npc: {}", newline="\n")
 
     return str(target_file)
-
-def check_outdated(settings: Settings, location: str):
-    """Check if a loaded settings file is from a newer version of NPC
-
-    This function just prints a warning statement and does not prevent execution of commands. NPC is intended
-    to be strongly backwards compatable within major versions, with breaking changes to settings handled by
-    the migration system.
-
-    Args:
-        settings (Settings): Settings object to check
-        location (str): Settings location to check. One of "user" or "campaign".
-    """
-
-    # Skip outdated warning during unrelated testing. The cli tests often run
-    # with intentionally incomplete or incorrect settings.
-    current_test = os.getenv("PYTEST_CURRENT_TEST", None)
-    if current_test and not "test_check_outdated" in current_test:
-        return False
-
-    our_version = Version(npc_version)
-    raw_settings_version = settings.versions.get(location, npc_version)
-    if raw_settings_version:
-        settings_version = Version(raw_settings_version)
-    else:
-        settings_version = our_version
-
-    if our_version < settings_version:
-        click.echo(f"WARNING: Installed version of NPC ({our_version}) is older than the one which last updated your {location} settings ({settings_version}). NPC may behave incorrectly. Please upgrade to the latest release as soon as possible.")
-        return True
-
-    return False
 
 def try_migrating(settings: Settings, location: str):
     """Test settings for migration and prompt to migrate

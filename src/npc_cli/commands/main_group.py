@@ -3,7 +3,7 @@ from os import get_terminal_size
 
 from npc import __version__ as npc_version
 from npc.settings import Settings, app_settings
-from npc_cli.helpers import check_outdated, try_migrating
+from npc_cli.helpers import try_migrating
 
 arg_settings: Settings = app_settings()
 
@@ -26,5 +26,7 @@ def cli(ctx):
 
     ctx.show_default = True
 
-    check_outdated(arg_settings, "user")
+    if not arg_settings.package_outdated("user"):
+        our_version = arg_settings.versions.get("user", npc_version)
+        click.echo(f"WARNING: Installed version of NPC ({npc_version}) is older than the one which last updated your user settings ({our_version}). NPC may behave incorrectly. Please upgrade to the latest release as soon as possible.")
     try_migrating(arg_settings, "user")

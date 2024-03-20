@@ -6,6 +6,8 @@ import yaml
 from collections import defaultdict
 from importlib import resources
 from functools import cached_property
+from packaging.version import Version
+from os import getenv
 
 from pathlib import Path
 from npc import __version__ as npc_version
@@ -91,6 +93,30 @@ class Settings(DataStore):
             self.loaded_paths[file_key] = settings_file
 
         self.merge_data(loaded, namespace)
+
+    def package_outdated(self, location: str):
+        """Check if a loaded settings file is from a newer version of NPC
+
+        NPC is intended to be strongly backwards compatable within major versions,
+        with breaking changes to settings handled by the migration system. This means
+        that it's usually ok to simply warn the user instead of interrupt the action
+        they want to take.
+
+        Args:
+            location (str): Settings location to check. Typically one of "user" or "campaign".
+        """
+
+        # Skip outdated warning during unrelated testing. Other tests often run
+        # with intentionally incomplete or incorrect settings.
+        current_test = getenv("PYTEST_CURRENT_TEST", None)
+        if current_test and not "test_package_outdated" in current_test:
+            return False
+
+        package_version = Version(npc_version)
+        raw_settings_version = self.versions.get(location) or npc_version
+        settings_version = Version(raw_settings_version)
+
+        return package_version < settings_version
 
     def load_systems(self, systems_dir: Path) -> None:
         """Parse and load all system configs in systems_dir
