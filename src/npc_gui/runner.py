@@ -16,6 +16,7 @@ def run(campaign):
 
     mw = MainWindow()
     mw.show()
+    mw.warn_if_outdated("user")
     if campaign:
         mw.load_campaign_dir(campaign)
 

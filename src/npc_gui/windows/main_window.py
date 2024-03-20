@@ -287,6 +287,21 @@ class MainWindow(QMainWindow):
             return self.campaign.settings
         return self.default_settings
 
+    def warn_if_outdated(self, location: str):
+        if self.settings.package_outdated(location):
+            package_version = self.settings.versions.get("package")
+            file_version = self.settings.versions.get(location)
+            warning_result = QMessageBox.warning(
+                self,
+                "NPC is Outdated",
+                f"The installed version of NPC ({package_version}) is older than the one which last updated your {location} settings ({file_version}). Because of this, NPC may behave incorrectly.\n\nDo you want to download the latest release?",
+                buttons = QMessageBox.StandardButtons.Yes | QMessageBox.StandardButtons.Ignore,
+                defaultButton = QMessageBox.StandardButtons.Yes
+            )
+            if warning_result:
+                QDesktopServices.openUrl(QUrl("https://github.com/aurule/npc/releases/latest"))
+
+
     def open_campaign(self, _parent):
         target = QFileDialog.getExistingDirectory(self, "Open Campaign")
         if target:
@@ -297,7 +312,11 @@ class MainWindow(QMainWindow):
         db.reset()
         campaign_root = campaign.find_campaign_root(campaign_path)
         if not campaign_root:
-            QMessageBox.critical(self, "No Campaign", f"The folder {campaign_path} is not an NPC campaign, nor are any of its parent directories.")
+            QMessageBox.critical(
+                self,
+                "No Campaign",
+                f"The folder {campaign_path} is not an NPC campaign, nor are any of its parent directories."
+            )
             return
 
         self.campaign = campaign.Campaign(campaign_root)
