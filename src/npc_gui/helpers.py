@@ -1,4 +1,6 @@
+from contextlib import contextmanager
 from PySide6.QtGui import QIcon
+from PySide6.QtWidgets import QDialog
 
 from npc.settings import Settings
 
@@ -64,3 +66,11 @@ def find_settings_file(settings: Settings, location: str) -> str:
         return None
 
     return str(target_file)
+
+@contextmanager
+def guard(dialog: QDialog):
+    def on_ok():
+        yield dialog.result
+
+    dialog.accepted.connect(on_ok)
+    dialog.open()

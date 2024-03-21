@@ -18,6 +18,7 @@ import npc
 from npc import campaign
 from npc import __version__ as npc_version
 from npc.settings import app_settings
+from npc.settings.migrations import SettingsMigrator
 
 class MainWindow(QMainWindow):
     def __init__(self, campaign_dir: str = None):
@@ -297,6 +298,32 @@ class MainWindow(QMainWindow):
         if self.settings.package_outdated(location):
             outdated_dialog = SettingsOutdatedDialog(self.settings, location, self)
             outdated_dialog.open()
+
+    def try_settings_migration(self, location: str):
+
+        # if user needs migration
+        #   if they migrate, continue
+        #   if not, exit immediately
+        migrator = SettingsMigrator(self.settings)
+        if migrator.can_migrate(location):
+            migrate_dialog = QMessageBox(self)
+            migrate_dialog.setIcon(QMessageBox.Critical)
+            migrate_dialog.setText("Settings Are Out of Date")
+            migrate_dialog.setInformativeText(f"Your {location} settings are out of date and need to be migrated. Do you want to migrate now, open the files for manual inspection, or abort?")
+            migrate_dialog.setDetailedText(f"")
+            migrate_button = migrate_dialog.addButton("Migrate", QMessageBox.YesRole)
+            migrate_dialog.addButton(QMessageBox.Open)
+            migrate_dialog.addButton(QMessageBox.Abort)
+            migrate_dialog.setDefaultButton(migrate_button)
+            migrate_choice = migrate_dialog.open()
+            print("whee")
+            match migrate_dialog.buttonRole(migrate_choice):
+                case QMessageBox.YesRole:
+                    print("migrate!")
+                case QMessageBox.AcceptRole:
+                    print("open the thing")
+                case QMessageBox.RejectRole:
+                    print("abort! abort!")
 
     def open_campaign(self, _parent):
         target = QFileDialog.getExistingDirectory(self, "Open Campaign")
