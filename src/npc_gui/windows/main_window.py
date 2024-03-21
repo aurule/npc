@@ -20,15 +20,15 @@ from npc import __version__ as npc_version
 from npc.settings import app_settings
 
 class MainWindow(QMainWindow):
-    def __init__(self):
+    def __init__(self, campaign_dir: str = None):
         super().__init__()
 
-        self.campaign = None
-        self.default_settings = app_settings()
-        self.recent_campaigns = RecentCampaigns()
+        self.campaign: Campaign = None
+        self.default_settings: Settings = app_settings()
+        self.recent_campaigns: RecentCampaigns = RecentCampaigns()
 
-        self.campaign_actions = []
-        self.actions = {}
+        self.campaign_actions: list[QAction] = []
+        self.actions: dict[str, QAction] = {}
 
         self.setWindowTitle(self.tr("NPC Campaign Manager"))
         self.setMinimumSize(QSize(700, 600))
@@ -44,6 +44,9 @@ class MainWindow(QMainWindow):
 
         self.update_campaign_availability()
 
+
+        if campaign_dir:
+            self.load_campaign_dir(campaign_dir)
     def init_actions(self):
         # General actions
 

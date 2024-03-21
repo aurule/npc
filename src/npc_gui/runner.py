@@ -14,10 +14,7 @@ def run(campaign):
     """
     app = NPCApplication([])
 
-    mw = MainWindow()
+    mw = MainWindow(campaign)
     mw.show()
-    mw.warn_if_outdated("user")
-    if campaign:
-        mw.load_campaign_dir(campaign)
 
     app.exec()
