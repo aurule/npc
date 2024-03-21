@@ -13,7 +13,7 @@ from ..helpers import fetch_icon, find_settings_file
 from ..widgets import ActionButton, ResourceTable
 from ..widgets.size_policies import *
 from ..util import RecentCampaigns
-from . import NewCampaignDialog, NewCharacterDialog
+from . import NewCampaignDialog, NewCharacterDialog, SettingsOutdatedDialog
 import npc
 from npc import campaign
 from npc import __version__ as npc_version
@@ -44,9 +44,12 @@ class MainWindow(QMainWindow):
 
         self.update_campaign_availability()
 
+        self.warn_if_outdated("user")
+        self.try_settings_migration("user")
 
         if campaign_dir:
             self.load_campaign_dir(campaign_dir)
+
     def init_actions(self):
         # General actions
 
@@ -292,17 +295,8 @@ class MainWindow(QMainWindow):
 
     def warn_if_outdated(self, location: str):
         if self.settings.package_outdated(location):
-            package_version = self.settings.versions.get("package")
-            file_version = self.settings.versions.get(location)
-            outdated_choice = QMessageBox.warning(
-                self,
-                "NPC is Outdated",
-                f"The installed version of NPC ({package_version}) is older than the one which last updated your {location} settings ({file_version}). Because of this, NPC may behave incorrectly.\n\nDo you want to download the latest release?",
-                buttons = QMessageBox.StandardButtons.Yes | QMessageBox.StandardButtons.Ignore,
-                defaultButton = QMessageBox.StandardButtons.Yes
-            )
-            if outdated_choice == QMessageBox.StandardButtons.Yes:
-                QDesktopServices.openUrl(QUrl("https://github.com/aurule/npc/releases/latest"))
+            outdated_dialog = SettingsOutdatedDialog(self.settings, location, self)
+            outdated_dialog.open()
 
     def open_campaign(self, _parent):
         target = QFileDialog.getExistingDirectory(self, "Open Campaign")
@@ -323,6 +317,8 @@ class MainWindow(QMainWindow):
 
         self.campaign = campaign.Campaign(campaign_root)
         self.setWindowTitle(f"{self.campaign.name} | NPC")
+        self.warn_if_outdated("campaign")
+        self.try_settings_migration("campaign")
 
         self.campaign.characters.seed()
         self.recent_campaigns.add(self.campaign)
@@ -330,7 +326,6 @@ class MainWindow(QMainWindow):
         self.init_tables()
         self.update_campaign_availability()
 
-        self.warn_if_outdated("campaign")
 
     def update_campaign_availability(self):
         campaign_available = self.campaign != None
