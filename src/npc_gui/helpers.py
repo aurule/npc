@@ -66,11 +66,3 @@ def find_settings_file(settings: Settings, location: str) -> str:
         return None
 
     return str(target_file)
-
-@contextmanager
-def guard(dialog: QDialog):
-    def on_ok():
-        yield dialog.result
-
-    dialog.accepted.connect(on_ok)
-    dialog.open()

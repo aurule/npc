@@ -13,7 +13,7 @@ from ..helpers import fetch_icon, find_settings_file
 from ..widgets import ActionButton, ResourceTable
 from ..widgets.size_policies import *
 from ..util import RecentCampaigns
-from . import NewCampaignDialog, NewCharacterDialog, SettingsOutdatedDialog
+from . import NewCampaignDialog, NewCharacterDialog, SettingsOutdatedDialog, SettingsMigrationPrompt
 import npc
 from npc import campaign
 from npc import __version__ as npc_version
@@ -46,7 +46,7 @@ class MainWindow(QMainWindow):
         self.update_campaign_availability()
 
         self.warn_if_outdated("user")
-        self.try_settings_migration("user")
+        self.try_settings_migration("user", on_rejected = self.exit_app)
 
         if campaign_dir:
             self.load_campaign_dir(campaign_dir)
@@ -282,7 +282,7 @@ class MainWindow(QMainWindow):
 
         self.setCentralWidget(hello_container)
 
-    def exit_app(self, _parent):
+    def exit_app(self, _parent = None):
         QApplication.quit()
 
     def browse_docs(self, _parent):
@@ -299,31 +299,17 @@ class MainWindow(QMainWindow):
             outdated_dialog = SettingsOutdatedDialog(self.settings, location, self)
             outdated_dialog.open()
 
-    def try_settings_migration(self, location: str):
+    def try_settings_migration(self, location: str, on_rejected = None):
+        def do_migrate():
+            print("migrate the thing!")
 
-        # if user needs migration
-        #   if they migrate, continue
-        #   if not, exit immediately
         migrator = SettingsMigrator(self.settings)
         if migrator.can_migrate(location):
-            migrate_dialog = QMessageBox(self)
-            migrate_dialog.setIcon(QMessageBox.Critical)
-            migrate_dialog.setText("Settings Are Out of Date")
-            migrate_dialog.setInformativeText(f"Your {location} settings are out of date and need to be migrated. Do you want to migrate now, open the files for manual inspection, or abort?")
-            migrate_dialog.setDetailedText(f"")
-            migrate_button = migrate_dialog.addButton("Migrate", QMessageBox.YesRole)
-            migrate_dialog.addButton(QMessageBox.Open)
-            migrate_dialog.addButton(QMessageBox.Abort)
-            migrate_dialog.setDefaultButton(migrate_button)
-            migrate_choice = migrate_dialog.open()
-            print("whee")
-            match migrate_dialog.buttonRole(migrate_choice):
-                case QMessageBox.YesRole:
-                    print("migrate!")
-                case QMessageBox.AcceptRole:
-                    print("open the thing")
-                case QMessageBox.RejectRole:
-                    print("abort! abort!")
+            migrate_dialog = SettingsMigrationPrompt(migrator, location, self)
+            migrate_dialog.accepted.connect(do_migrate)
+            if on_rejected:
+                migrate_dialog.rejected.connect(on_rejected)
+            migrate_dialog.open()
 
     def open_campaign(self, _parent):
         target = QFileDialog.getExistingDirectory(self, "Open Campaign")
@@ -345,7 +331,7 @@ class MainWindow(QMainWindow):
         self.campaign = campaign.Campaign(campaign_root)
         self.setWindowTitle(f"{self.campaign.name} | NPC")
         self.warn_if_outdated("campaign")
-        self.try_settings_migration("campaign")
+        self.try_settings_migration("campaign", on_rejected = self.close_campaign)
 
         self.campaign.characters.seed()
         self.recent_campaigns.add(self.campaign)
@@ -413,7 +399,7 @@ class MainWindow(QMainWindow):
             )
             self.load_campaign_dir(picker.campaign_path)
 
-    def close_campaign(self, _parent):
+    def close_campaign(self, _parent = None):
         self.campaign = None
         self.update_campaign_availability()
         self.init_hello()
