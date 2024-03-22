@@ -83,7 +83,6 @@ class Settings(DataStore):
             if file_key and any([f.exists() for f in fallbacks]):
                 file_version = "1.0.0"
                 self.versions[file_key] = "1.0.0"
-                print(self.versions)
                 self.loaded_paths[file_key] = settings_file.parent
             return
 

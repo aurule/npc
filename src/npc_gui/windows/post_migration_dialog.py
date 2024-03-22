@@ -7,5 +7,5 @@ class PostMigrationDialog(QMessageBox):
         self.setIcon(QMessageBox.Information)
         self.setText("Settings Updated")
         self.setInformativeText(f"Your {location} settings have been updated.")
-        self.setDetailedText("\n".join(messages))
+        self.setDetailedText("\n".join([m.message for m in messages]))
         self.addButton(QMessageBox.StandardButtons.Ok)
