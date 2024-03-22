@@ -13,7 +13,10 @@ from ..helpers import fetch_icon, find_settings_file
 from ..widgets import ActionButton, ResourceTable
 from ..widgets.size_policies import *
 from ..util import RecentCampaigns
-from . import NewCampaignDialog, NewCharacterDialog, SettingsOutdatedDialog, SettingsMigrationPrompt
+from . import (
+    NewCampaignDialog, NewCharacterDialog, SettingsOutdatedDialog,
+    SettingsMigrationPrompt, PostMigrationDialog
+)
 import npc
 from npc import campaign
 from npc import __version__ as npc_version
@@ -301,7 +304,9 @@ class MainWindow(QMainWindow):
 
     def try_settings_migration(self, location: str, on_rejected = None):
         def do_migrate():
-            print("migrate the thing!")
+            messages = migrator.migrate(location)
+            post_migration = PostMigrationDialog(location, messages, self)
+            post_migration.open()
 
         migrator = SettingsMigrator(self.settings)
         if migrator.can_migrate(location):

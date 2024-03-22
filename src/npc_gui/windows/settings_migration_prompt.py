@@ -15,7 +15,6 @@ class SettingsMigrationPrompt(QMessageBox):
         self.setIcon(QMessageBox.Critical)
         self.setText("Settings Are Out of Date")
         self.setInformativeText(f"Your {location} settings are out of date and need to be migrated. Do you want to migrate now, open the files for manual inspection, or abort?")
-        self.setDetailedText(f"") # get from migrator
         migrate_button = self.addButton("Migrate", QMessageBox.AcceptRole)
         browse_button = self.addButton("Browse", QMessageBox.RejectRole)
         browse_button.pressed.connect(self.browse_settings)

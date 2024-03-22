@@ -2,5 +2,6 @@ from .new_campaign_dialog import NewCampaignDialog
 from .new_character_dialog import NewCharacterDialog
 from .settings_outdated_dialog import SettingsOutdatedDialog
 from .settings_migration_prompt import SettingsMigrationPrompt
+from .post_migration_dialog import PostMigrationDialog
 
 from .main_window import MainWindow
