@@ -21,4 +21,6 @@ class StatsCache(PersistentCache):
             TypeError: Raised when accessing a list
         """
         super().set(key, value)
+        if not self.cache_file_path.parent.exists():
+            self.cache_file_path.parent.mkdir(parents = True)
         self.save()
