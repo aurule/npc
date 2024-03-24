@@ -6,6 +6,7 @@ from npc.settings.migrations.migration_1to2 import Migration1to2
 
 def test_ignores_legacy_dir_if_nothing_present(tmp_campaign):
     tmp_campaign.settings_file.unlink()
+    tmp_campaign.cache_dir.rmdir()
     migration = Migration1to2(tmp_campaign.settings)
 
     migration.archive_legacy_files("campaign")

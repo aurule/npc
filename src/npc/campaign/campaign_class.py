@@ -127,9 +127,7 @@ class Campaign:
         Returns:
             Path: Path to the campaign's cache directory, or None if root is not set
         """
-        dir_path = self.settings_dir / "cache"
-        dir_path.mkdir(exist_ok = True)
-        return dir_path
+        return self.settings_dir / "cache"
 
     @property
     def outdated(self) -> bool:

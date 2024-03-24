@@ -49,8 +49,10 @@ def init(campaign_path: str, *, name: str, system: str, desc: str = None, settin
 
     campaign_dir = Path(campaign_path)
     config_dir = campaign_dir / ".npc"
+    cache_dir = config_dir / "cache"
 
     config_dir.mkdir(exist_ok = True)
+    cache_dir.mkdir(exist_ok = True)
     config_file = config_dir / "settings.yaml"
     if config_file.exists():
         logger.info("Campaign settings exists, leaving it alone")
