@@ -24,7 +24,7 @@ class DataStore:
         """
         return bool(self.data)
 
-    def get(self, key, default=None) -> any:
+    def get(self, key: str, default: any = None) -> any:
         """
         Get the value of a key
 

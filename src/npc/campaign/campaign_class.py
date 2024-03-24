@@ -11,6 +11,7 @@ from npc.settings.types import make_types, TypeSpec, UndefinedTypeSpec
 from npc.settings.tags import make_tags, make_metatag_specs, TagSpec, UndefinedTagSpec
 from npc.settings.tag_definer_interface import TagDefiner
 from .character_collection import CharacterCollection
+from .stats_cache import StatsCache
 
 @TagDefiner.register
 class Campaign:
@@ -24,6 +25,7 @@ class Campaign:
         self.settings.campaign_dir = campaign_path
         self.settings.load_settings_file(self.settings_file, file_key="campaign")
         self.settings.load_systems(self.settings_dir / "systems")
+        self.stats = StatsCache(self)
 
         self.characters = CharacterCollection(self)
 
@@ -114,6 +116,20 @@ class Campaign:
             Path: Path to the campaign's settings file, or None if root is not set
         """
         return self.settings_dir / "settings.yaml"
+
+    @property
+    def cache_dir(self) -> Path:
+        """Get the path to the current campaign cache directory
+
+        The cache directory is supposed to hold campaign-scoped cache files and nothing else. The goal of
+        these files is to speed up certain operations when present, but not cause errors if they're deleted.
+
+        Returns:
+            Path: Path to the campaign's cache directory, or None if root is not set
+        """
+        dir_path = self.settings_dir / "cache"
+        dir_path.mkdir(exist_ok = True)
+        return dir_path
 
     @property
     def outdated(self) -> bool:

@@ -14,6 +14,8 @@ class CharacterCollection():
     Manages the loading, creation, and fetching of Characters
     """
 
+    CACHE_KEY = "characters"
+
     def __init__(self, campaign, *, db: DB = None):
         """Create a new CharacterCollection object
 
@@ -24,8 +26,33 @@ class CharacterCollection():
 
         self.campaign = campaign
         self.root = campaign.characters_dir
-        self.count = 0
+        self._count = 0
         self.item_type = "Character"
+
+    @property
+    def count(self) -> int:
+        """Total number of characters in this collection
+
+        This is here to prevent unnecessary sql count queries.
+
+        Returns:
+            int: Number of characters in the collection
+        """
+        return self._count
+
+    @count.setter
+    def count(self, value: int):
+        """Set the number of characters in this collection
+
+        This stores the new count locally as well as caches it in the campaign. Because of the file write for
+        the cache, setting the character count is a relatively expensive operation that should be done as
+        rarely as possible.
+
+        Args:
+            value (int): New value for the count of all characters
+        """
+        self._count = value
+        self.campaign.stats.set(self.CACHE_KEY, value)
 
     def seed(self):
         """Load all npc filesinto the db
