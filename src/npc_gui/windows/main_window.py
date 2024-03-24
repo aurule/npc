@@ -344,7 +344,6 @@ class MainWindow(QMainWindow):
         self.init_tables()
         self.update_campaign_availability()
 
-
     def update_campaign_availability(self):
         campaign_available = self.campaign != None
         for action_key in self.campaign_actions:

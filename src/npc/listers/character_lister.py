@@ -1,5 +1,5 @@
 from jinja2 import Environment
-from typing import TextIO
+from typing import TextIO, Callable
 from functools import cached_property, cache
 import mistletoe
 
@@ -55,7 +55,7 @@ class CharacterLister:
         self.sort_by: list[str] = arg_or_default(sort_by, settings.get("campaign.characters.listing.sort_by"))
         self.base_header_level: int = arg_or_default(base_header_level, settings.get("campaign.characters.listing.base_header_level"))
 
-    def list(self, target: TextIO, progress_callback = None):
+    def list(self, target: TextIO, progress_callback: Callable = None):
         """Generate a complete listing of all characters
 
         This gets the characters and generates a listing entry for each one, emitting it to the given target.

@@ -1,4 +1,4 @@
-from tests.fixtures import tmp_campaign, db
+from tests.fixtures import tmp_campaign, db, ProgressCounter
 from npc.characters import CharacterReader
 from npc.db import character_repository
 
@@ -68,3 +68,14 @@ def test_replaces_record_with_updated_file(tmp_campaign, db):
     with db.session() as session:
         result = session.execute(character_repository.all()).scalar()
         assert result.delist == True
+
+def test_updates_progress(tmp_campaign, db):
+    loc = tmp_campaign.characters_dir / "Test Mann - tester.npc"
+    with loc.open('w', newline="\n") as file:
+        file.write("@type person")
+    collection = CharacterCollection(tmp_campaign, db=db)
+    counter = ProgressCounter()
+
+    collection.refresh(progress_callback = counter.progress)
+
+    assert counter.count == 1

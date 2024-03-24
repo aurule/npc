@@ -1,4 +1,4 @@
-from typing import Iterator
+from typing import Iterator, Callable
 from pathlib import Path
 
 from functools import cached_property
@@ -54,12 +54,20 @@ class CharacterCollection():
         self._count = value
         self.campaign.stats.set(self.CACHE_KEY, value)
 
-    def seed(self):
+    def seed(self, progress_callback: Callable = None):
         """Load all npc filesinto the db
 
         This method is designed to be used when you want a clean load of all files. It clears out the
         characters table and loads every character file it can find, without any checking like refresh does.
+
+        Args:
+            progress_callback (Callable): Optional callback to update a progress bar
         """
+        def default_progress():
+            pass
+        if progress_callback is None:
+            progress_callback = default_progress
+
         new_characters = []
         factory = CharacterFactory(self.campaign)
         for character_path in self.valid_character_files():
@@ -72,19 +80,28 @@ class CharacterCollection():
                 path = reader.character_path,
             )
             new_characters.append(character)
+            progress_callback()
         with self.db.session() as session:
             session.execute(character_repository.destroy_all())
             session.add_all(new_characters)
             session.commit()
         self.count = len(new_characters)
 
-    def refresh(self):
+    def refresh(self, progress_callback: Callable = None):
         """Reload changed npc files into the db
 
         This method checks all valid character files. Any that are new are loaded into the db. Any that have
         changed since they were loaded have their old records deleted and are added as new characters. Any
         records whose files no longer exist are deleted.
+
+        Args:
+            progress_callback (Callable): Optional callback to update a progress bar
         """
+        def default_progress():
+            pass
+        if progress_callback is None:
+            progress_callback = default_progress
+
         new_characters: list[Character] = []
         keep: list[int] = []
         valid_files: list[Path] = list(self.valid_character_files())
@@ -109,6 +126,7 @@ class CharacterCollection():
                     path = reader.character_path,
                 )
                 new_characters.append(character)
+                progress_callback()
 
             session.execute(character_repository.destroy_others(keep))
             session.add_all(new_characters)
