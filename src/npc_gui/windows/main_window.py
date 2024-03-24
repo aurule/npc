@@ -15,7 +15,7 @@ from ..widgets.size_policies import *
 from ..util import RecentCampaigns
 from . import (
     NewCampaignDialog, NewCharacterDialog, SettingsOutdatedDialog,
-    SettingsMigrationPrompt, PostMigrationDialog
+    SettingsMigrationPrompt, PostMigrationDialog, NoCampaignDialog
 )
 import npc
 from npc import campaign
@@ -322,16 +322,14 @@ class MainWindow(QMainWindow):
             self.load_campaign_dir(target)
 
     def load_campaign_dir(self, campaign_path: str):
-        db = npc.db.DB()
-        db.reset()
         campaign_root = campaign.find_campaign_root(campaign_path)
         if not campaign_root:
-            QMessageBox.critical(
-                self,
-                "No Campaign",
-                f"The folder {campaign_path} is not an NPC campaign, nor are any of its parent directories."
-            )
+            no_campaign = NoCampaignDialog(campaign_path, self)
+            no_campaign.open()
             return
+
+        db = npc.db.DB()
+        db.reset()
 
         self.campaign = campaign.Campaign(campaign_root)
         self.setWindowTitle(f"{self.campaign.name} | NPC")

@@ -3,5 +3,6 @@ from .new_character_dialog import NewCharacterDialog
 from .settings_outdated_dialog import SettingsOutdatedDialog
 from .settings_migration_prompt import SettingsMigrationPrompt
 from .post_migration_dialog import PostMigrationDialog
+from .no_campaign_dialog import NoCampaignDialog
 
 from .main_window import MainWindow
