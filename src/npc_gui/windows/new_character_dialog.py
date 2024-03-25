@@ -40,6 +40,7 @@ class NewCharacterDialog(QDialog):
         self.character_id = self.character.id
 
         self.setWindowTitle("Add a New Character")
+        self.setModal(False)
 
         self.init_elements()
 
