@@ -3,22 +3,33 @@ from PySide6.QtWidgets import (
     QHBoxLayout, QLineEdit, QComboBox, QTextEdit, QVBoxLayout,
     QApplication, QFileDialog
 )
-from PySide6.QtCore import Qt
+from PySide6.QtCore import Qt, Signal
+
+from npc.campaign import init as init_campaign
+from npc.settings import Settings
 
 from ..models import SystemListModel
 from ..widgets.size_policies import *
 
 class NewCampaignDialog(QDialog):
-    def __init__(self, campaign_path: str, parent):
+    campaign_ready = Signal(str)
+
+    def __init__(self, campaign_path: str, settings: Settings, parent = None):
         super().__init__(parent=parent)
 
         self.campaign_path = campaign_path
         self.campaign_name = ""
         self.campaign_system = ""
         self.campaign_desc = ""
+        self.settings = settings
 
         self.setWindowTitle("Create a New Campaign")
 
+        self.init_elements()
+
+        self.accepted.connect(self.emit_campaign_ready)
+
+    def init_elements(self):
         form_lines = QFormLayout()
 
         # directory display and picker button
@@ -44,7 +55,7 @@ class NewCampaignDialog(QDialog):
         form_lines.addRow("&Name:", name_input)
 
         # system picker
-        systems_model = SystemListModel(parent.settings)
+        systems_model = SystemListModel(self.settings)
         self.system_picker = QComboBox()
         self.system_picker.setModel(systems_model)
         self.system_picker.setPlaceholderText("Pick a game system")
@@ -95,3 +106,13 @@ class NewCampaignDialog(QDialog):
             self.campaign_name \
             and self.campaign_system
         ))
+
+    def emit_campaign_ready(self):
+        init_campaign(
+            self.campaign_path,
+            name = self.campaign_name,
+            desc = self.campaign_desc.strip(),
+            system = self.campaign_system,
+            settings = self.settings
+        )
+        self.campaign_ready.emit(self.campaign_path)

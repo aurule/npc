@@ -4,7 +4,7 @@ from PySide6.QtWidgets import (
 )
 from PySide6.QtCore import Qt, QTimer, QSize
 
-from npc.campaign import Pathfinder
+from npc.campaign import Pathfinder, Campaign
 from npc.characters import CharacterFactory, CharacterWriter
 from npc.db import DB, character_repository
 
@@ -14,10 +14,10 @@ from ..widgets import DebounceLineEdit, TagTreeView
 from ..widgets.size_policies import *
 
 class NewCharacterDialog(QDialog):
-    def __init__(self, parent, db: DB = None):
+    def __init__(self, campaign: Campaign, parent = None, db: DB = None):
         super().__init__(parent = parent)
 
-        self.campaign = parent.campaign
+        self.campaign = campaign
         self.base_dir = self.campaign.characters_dir
 
         self.character_type = ""

@@ -390,16 +390,9 @@ class MainWindow(QMainWindow):
         if not campaign_path:
             return
 
-        picker = NewCampaignDialog(campaign_path, parent=self)
-        if picker.exec():
-            campaign.init(
-                picker.campaign_path,
-                name=picker.campaign_name,
-                desc=picker.campaign_desc.strip(),
-                system=picker.campaign_system,
-                settings=app_settings()
-            )
-            self.load_campaign_dir(picker.campaign_path)
+        picker = NewCampaignDialog(campaign_path, self.default_settings, parent=self)
+        picker.campaign_ready.connect(self.load_campaign_dir)
+        picker.open()
 
     def close_campaign(self, _parent = None):
         self.campaign = None
@@ -457,10 +450,13 @@ class MainWindow(QMainWindow):
         click.launch(str(target_file), locate=True)
 
     def new_character(self, _parent):
-        dialog = NewCharacterDialog(parent=self)
-        if dialog.exec():
-            self.campaign.characters.count += 1
-            self.characters_table.model.reload()
+        dialog = NewCharacterDialog(self.campaign, parent = self)
+        dialog.accepted.connect(self.finalize_new_character)
+        dialog.show()
+
+    def finalize_new_character(self):
+        self.campaign.characters.count += 1
+        self.characters_table.model.reload()
 
     def open_character(self, _parent):
         selection = set(s.row() for s in self.characters_table.selectionModel().selectedIndexes())
