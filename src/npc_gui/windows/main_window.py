@@ -10,7 +10,7 @@ from PySide6.QtGui import QAction, QIcon, QDesktopServices
 import click
 
 from ..helpers import fetch_icon, find_settings_file
-from ..widgets import ActionButton, ResourceTable
+from ..widgets import ActionButton, ResourceTable, LoadingBar
 from ..widgets.size_policies import *
 from ..util import RecentCampaigns
 from . import (
@@ -336,7 +336,35 @@ class MainWindow(QMainWindow):
         self.warn_if_outdated("campaign")
         self.try_settings_migration("campaign", on_rejected = self.close_campaign)
 
-        self.campaign.characters.seed()
+        loading_container = QWidget()
+        big_box = QVBoxLayout(loading_container)
+        big_box.addSpacing(20)
+
+        loading_label = QLabel(f"Loading {self.campaign.name}...")
+        loading_label.setAlignment(Qt.AlignCenter)
+        font = loading_label.font()
+        font.setPointSize(18)
+        loading_label.setFont(font)
+        loading_label_sizing = QSizePolicy()
+        loading_label_sizing.setHorizontalPolicy(QSizePolicy.Expanding)
+        loading_label.setSizePolicy(loading_label_sizing)
+        big_box.addWidget(loading_label)
+        big_box.addSpacing(20)
+
+        bars_layout = QFormLayout()
+        big_box.addLayout(bars_layout)
+
+        characters_bar = LoadingBar(self.campaign.stats.get(campaign.CharacterCollection.CACHE_KEY))
+        bars_layout.addRow("Characters", characters_bar)
+
+        self.setCentralWidget(loading_container)
+
+        app = QApplication.instance()
+        def characters_callback():
+            characters_bar.next()
+            app.processEvents()
+
+        self.campaign.characters.seed(progress_callback = characters_callback)
         self.recent_campaigns.add(self.campaign)
         self.init_recent_campaigns()
         self.init_tables()
