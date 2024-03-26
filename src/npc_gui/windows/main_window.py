@@ -2,7 +2,7 @@ from PySide6.QtWidgets import (
     QMainWindow, QTabWidget, QToolBar, QStatusBar,
     QMenuBar, QMenu, QApplication, QTableView, QVBoxLayout, QHBoxLayout,
     QLabel, QWidget, QFileDialog, QMessageBox, QPushButton, QSizePolicy,
-    QFormLayout
+    QFormLayout, QGroupBox
 )
 from PySide6.QtCore import QSize, Qt, QUrl
 from PySide6.QtGui import QAction, QIcon, QDesktopServices
@@ -354,7 +354,7 @@ class MainWindow(QMainWindow):
         bars_layout = QFormLayout()
         big_box.addLayout(bars_layout)
 
-        characters_bar = LoadingBar(self.campaign.stats.get(campaign.CharacterCollection.CACHE_KEY))
+        characters_bar = LoadingBar(self.campaign.stats.get(campaign.CharacterCollection.CACHE_KEY) or 0)
         bars_layout.addRow("Characters", characters_bar)
 
         self.setCentralWidget(loading_container)
@@ -377,6 +377,45 @@ class MainWindow(QMainWindow):
 
     def init_tables(self):
         table_tabs = QTabWidget()
+
+        campaign_tab = QWidget()
+        campaign_layout = QVBoxLayout(campaign_tab)
+
+        title_label = QLabel(self.campaign.name)
+        title_label.setAlignment(Qt.AlignCenter)
+        font = title_label.font()
+        font.setPointSize(18)
+        title_label.setFont(font)
+        title_sizing = QSizePolicy()
+        title_sizing.setHorizontalPolicy(QSizePolicy.Expanding)
+        title_sizing.setVerticalPolicy(QSizePolicy.Fixed)
+        title_label.setSizePolicy(title_sizing)
+        campaign_layout.addWidget(title_label)
+
+        system_label = QLabel(self.campaign.system.name)
+        system_label.setAlignment(Qt.AlignCenter)
+        system_sizing = QSizePolicy()
+        system_sizing.setHorizontalPolicy(QSizePolicy.Expanding)
+        system_sizing.setVerticalPolicy(QSizePolicy.Fixed)
+        system_label.setSizePolicy(system_sizing)
+        campaign_layout.addWidget(system_label)
+
+        desc_box = QGroupBox("About")
+        desc_layout = QVBoxLayout(desc_box)
+        desc_label = QLabel(self.campaign.desc)
+        desc_layout.addWidget(desc_label)
+        campaign_layout.addWidget(desc_box)
+
+        stats_box = QFormLayout()
+        campaign_layout.addLayout(stats_box)
+
+        sessions_count = QLabel(str(self.campaign.latest_session_index))
+        stats_box.addRow("Sessions:", sessions_count)
+
+        characters_count = QLabel(str(self.campaign.characters.count))
+        stats_box.addRow("Characters:", characters_count)
+
+        table_tabs.addTab(campaign_tab, "Campaign")
 
         characters_tab = QWidget()
         characters_layout = QVBoxLayout(characters_tab)
